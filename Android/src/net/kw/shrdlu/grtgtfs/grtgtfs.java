@@ -48,10 +48,7 @@ public class grtgtfs extends MapActivity {
         itemizedoverlay = new GrtItemizedOverlay(drawable, this);
         
         // Waterloo
-//        GeoPoint point = new GeoPoint(43462580, -80518990);
-//        OverlayItem overlayitem = new OverlayItem(point, "Snippet", "Title");
-//        itemizedoverlay.addOverlay(overlayitem);
-//        mapOverlays.add(itemizedoverlay);
+//      GeoPoint point = new GeoPoint(43462580, -80518990);
         
         dbHelper = new DatabaseHelper(this);
         DB = dbHelper.getReadableDatabase();
