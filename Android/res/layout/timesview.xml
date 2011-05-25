@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  
+    <LinearLayout
+        android:id="@+id/title_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="18dip"
+            android:layout_height="18dip"
+            android:layout_marginLeft="10dip"
+            android:visibility="invisible"
+            android:indeterminateOnly="true"
+            android:indeterminateDrawable="@drawable/progress_spin"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDuration="3500" />
+
+        <TextView
+           android:id="@+id/title"
+           android:paddingLeft="3dip"
+           android:text="@string/times_loading"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           style="@style/ListTitle" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/detail_area"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+         <ListView
+            android:id="@id/android:list"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:divider="#FF0F0A03"
+            android:dividerHeight="3dip"
+            android:headerDividersEnabled="true"
+            android:footerDividersEnabled="false" />
+        
+    </LinearLayout>
+
+</LinearLayout>
+ 

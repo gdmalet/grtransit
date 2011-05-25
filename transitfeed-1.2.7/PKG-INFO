@@ -1,0 +1,20 @@
+Metadata-Version: 1.0
+Name: transitfeed
+Version: 1.2.7
+Summary: Google Transit Feed Specification library and tools
+Home-page: http://code.google.com/p/googletransitdatafeed/
+Author: Tom Brown
+Author-email: tom.brown.code@gmail.com
+License: Apache License, Version 2.0
+Download-URL: http://googletransitdatafeed.googlecode.com/files/transitfeed-1.2.7.tar.gz
+Description: This module provides a library for reading, writing and validating Google Transit Feed Specification files. It includes some scripts that validate a feed, display it using the Google Maps API and the start of a KML importer and exporter.
+Platform: OS Independent
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Other Audience
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering :: GIS
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
