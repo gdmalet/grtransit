@@ -42,7 +42,7 @@ public class GrtItemizedOverlay extends ItemizedOverlay {
 				  String q = String.format(
 						  "select departure_time as _id from stop_times where stop_id = \"%s\" and trip_id in (select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\") order by departure_time",
 						  mStopid, route_id, headsign);
-				  Cursor csr = grtgtfs.DB.rawQuery(q, null);
+				  Cursor csr = GrtGtfs.DB.rawQuery(q, null);
 
 				  timesdialog.setCursor(csr, null, "_id");
 				  timesdialog.show();
@@ -63,7 +63,7 @@ public class GrtItemizedOverlay extends ItemizedOverlay {
 	  String q = String.format(
 			  "select distinct route_id || \" - \" || trip_headsign as _id from trips where trip_id in (select trip_id from stop_times where stop_id = \"%s\")",
 			  item.getTitle());
-	  mCsr = grtgtfs.DB.rawQuery(q, null);
+	  mCsr = GrtGtfs.DB.rawQuery(q, null);
 
 	  dialog.setCursor(mCsr, mClick, "_id");
 	  dialog.show();

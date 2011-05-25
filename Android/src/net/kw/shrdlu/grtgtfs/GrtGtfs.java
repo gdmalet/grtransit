@@ -21,7 +21,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.widget.LinearLayout;
 
-public class grtgtfs extends MapActivity {
+public class GrtGtfs extends MapActivity {
 	private static final String TAG = "grtgtfs";
 
 	LinearLayout linearLayout;
