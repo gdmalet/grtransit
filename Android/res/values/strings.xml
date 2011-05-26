@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="times_loading">Loading the bus times....</string>
-    <string name="app_name">GRT-GTFS</string>
+    <string name="app_name">GrtGtfs</string>
+    <string name="activity_desc">thedescr</string>
+    <string name="activity_label">thelabel</string>
+    <string name="activity_name">thename</string>
 </resources>

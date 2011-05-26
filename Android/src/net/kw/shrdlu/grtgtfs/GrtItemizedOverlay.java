@@ -3,10 +3,14 @@ package net.kw.shrdlu.grtgtfs;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.maps.ItemizedOverlay;
@@ -32,20 +36,23 @@ public class GrtItemizedOverlay extends ItemizedOverlay {
 				  String route = mCsr.getString(0);
 				  Log.i(TAG, "clicked position " + which + ": route " + route);
 
-				  AlertDialog.Builder timesdialog = new AlertDialog.Builder(mContext);
-				  timesdialog.setTitle("Stop times for Route " + route); 
-
+//				  AlertDialog.Builder timesdialog = new AlertDialog.Builder(mContext);
+//				  timesdialog.setTitle("Stop times for Route " + route); 
+//				  timesdialog.setCursor(csr, null, "_id");
+//				  timesdialog.show();
 				  int split = route.indexOf(" - ");
 				  String route_id = route.substring(0,split);
 				  String headsign = route.substring(split+3);
+//				  String q = String.format(
+//						  "select departure_time as _id from stop_times where stop_id = \"%s\" and trip_id in (select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\") order by departure_time",
+//						  mStopid, route_id, headsign);
+//				  Cursor csr = GrtGtfs.DB.rawQuery(q, null);
 
-				  String q = String.format(
-						  "select departure_time as _id from stop_times where stop_id = \"%s\" and trip_id in (select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\") order by departure_time",
-						  mStopid, route_id, headsign);
-				  Cursor csr = GrtGtfs.DB.rawQuery(q, null);
-
-				  timesdialog.setCursor(csr, null, "_id");
-				  timesdialog.show();
+				  Intent bustimes = new Intent(mContext, BustimesActivity.class);
+				  bustimes.putExtra("route_id", route_id);
+				  bustimes.putExtra("headsign", headsign);
+				  bustimes.putExtra("stop_id", mStopid);
+				  mContext.startActivity(bustimes);
 			  }
 		  }
 	  };

@@ -14,16 +14,19 @@
     
         <uses-library android:name="com.google.android.maps" />
         
-        <activity android:label="@string/app_name" android:name="grtgtfs">
+        <activity class=".GrtGtfs" android:name=".GrtGtfs">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="BustimesActivity">
+        <activity class=".BustimesActivity"
+             android:label="@string/activity_label"
+             android:description="@string/activity_desc"
+             android:name=".BustimesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"></action>
-                <category android:name="android.intent.category.INFO"></category>
+                <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
 
