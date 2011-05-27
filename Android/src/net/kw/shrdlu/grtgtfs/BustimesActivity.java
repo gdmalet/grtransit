@@ -1,5 +1,6 @@
 package net.kw.shrdlu.grtgtfs;
 
+import ca.uwaterloo.android.UWWeather.ListArrayAdapter;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,12 +27,14 @@ public class BustimesActivity extends ListActivity {
         		stop_id, route_id, headsign);
         Cursor csr = GrtGtfs.DB.rawQuery(q, null);
         
+    	setListAdapter(new ListCursorAdapter(this, csr));
+
         // TODO - not advised on main thread.
-        String [] froms = { "_id" };
-        int [] tos = { android.R.id.list };
-        SimpleCursorAdapter ca = new SimpleCursorAdapter(this, R.layout.timesview, csr, froms, tos);
-        setListAdapter(ca);
-        
+//        String [] froms = { "_id" };
+//        int [] tos = { R.id.time };
+//        SimpleCursorAdapter ca = new SimpleCursorAdapter(this, R.layout.rowlayout, csr, froms, tos);
+//        setListAdapter(ca);
+
 //        ListView lv = (ListView) findViewById(R.id.bustimes);
 //        lv.
     }
