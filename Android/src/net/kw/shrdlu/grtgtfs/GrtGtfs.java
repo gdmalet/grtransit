@@ -56,7 +56,7 @@ public class GrtGtfs extends MapActivity {
     	Cursor csr;
     	try {
 //    		csr = DB.query("stops", DbFields, null, null, null, null, null);
-    		csr = DB.query("stops", DbFields, null, null, null, null, null, "300");
+    		csr = DB.query("stops", DbFields, null, null, null, null, null, "100");
     	} catch (SQLException e) {
     		Log.e(TAG, "Querying stops failed: " + e.getMessage());
     		return;
@@ -82,6 +82,8 @@ public class GrtGtfs extends MapActivity {
    	        itemizedoverlay.addOverlay(overlayitem);
    	        more = csr.moveToNext();
    		}
+   		csr.close();
+   		
    		itemizedoverlay.populateOverlay();
         mapOverlays.add(itemizedoverlay);
         

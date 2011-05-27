@@ -3,50 +3,65 @@
  */
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-/**
- * @author gdmalet
- *
- */
-public class ListCursorAdapter extends SimpleCursorAdapter {
-	private final Activity context;
-	private final Cursor details;
+public class ListCursorAdapter extends CursorAdapter {
+	private static final String TAG = "ListCursorAdapter";
+
+	private final LayoutInflater mInflater;
+	private final ListActivity mContext;
 	
-	public ListCursorAdapter(Activity context, int layout, Cursor details, String[] from, int[] to) {
-		super(context, layout, details, from, to);
-		this.context = context;
-		this.details = details;
-		
+	public ListCursorAdapter(ListActivity context, Cursor cursor) {
+    	super(context, cursor, true);
+    	Log.v(TAG, "ListCursorAdapter()");
+    
+    	this.mContext = context;
+		this.mInflater = LayoutInflater.from(context);
 	}
 	
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = context.getLayoutInflater();
-		View rowView = inflater.inflate(R.layout.rowlayout, null, true);
+	public void bindView(View view, Context context, Cursor cursor) {
+    	Log.v(TAG, "bindView()");
+    	Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
 
-		String str;
-		
-		TextView label = (TextView) rowView.findViewById(R.id.label);
-//		str = details.get(position).first;
-//		label.setText(str);
+    	View rowView = mInflater.inflate(R.layout.rowlayout, null, true);
+    	
+    	TextView labelview = (TextView) rowView.findViewById(R.id.label);
+    	String bus_time = cursor.getString(cursor.getColumnIndex("_id"));
+		labelview.setText(bus_time);
 
-		TextView value = (TextView) rowView.findViewById(R.id.value);
-//		str = details.get(position).second;
-//		value.setText(str);
+		// Get and translate the service id
+		String trip_id = cursor.getString(cursor.getColumnIndex("trip_id"));
+		String q = String.format("select service_id from trips where trip_id = \"%s\"", trip_id);
+        Cursor csr = GrtGtfs.DB.rawQuery(q, null);
+        csr.moveToFirst();
+        String service_id = csr.getString(0);
+        csr.close();
+        
+		TextView valueview = (TextView)rowView.findViewById(R.id.value);
+		valueview.setText(service_id);
 		
-		return rowView;
+		mContext.addContentView(rowView, new ViewGroup.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT));
+		
+		cursor.moveToNext();
+		Log.v(TAG, "bound <" + bus_time + ">, <" + service_id + ">");
+}
+ 
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    	Log.v(TAG, "newView()");
+    	Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
+		cursor.moveToNext();
+		return mInflater.inflate(R.layout.timesview, parent, false);
 	}
 }

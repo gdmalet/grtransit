@@ -46,6 +46,20 @@
             android:dividerHeight="3dip"
             android:headerDividersEnabled="true"
             android:footerDividersEnabled="false" />
+
+    <TextView
+    android:id="@+id/label"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+   android:minWidth="185sp"
+   style="@style/List.Label" />
+
+  <TextView
+   android:id="@+id/value"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+   style="@style/List.Content" />
+
         
     </LinearLayout>
 

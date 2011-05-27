@@ -36,17 +36,9 @@ public class GrtItemizedOverlay extends ItemizedOverlay {
 				  String route = mCsr.getString(0);
 				  Log.i(TAG, "clicked position " + which + ": route " + route);
 
-//				  AlertDialog.Builder timesdialog = new AlertDialog.Builder(mContext);
-//				  timesdialog.setTitle("Stop times for Route " + route); 
-//				  timesdialog.setCursor(csr, null, "_id");
-//				  timesdialog.show();
 				  int split = route.indexOf(" - ");
 				  String route_id = route.substring(0,split);
 				  String headsign = route.substring(split+3);
-//				  String q = String.format(
-//						  "select departure_time as _id from stop_times where stop_id = \"%s\" and trip_id in (select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\") order by departure_time",
-//						  mStopid, route_id, headsign);
-//				  Cursor csr = GrtGtfs.DB.rawQuery(q, null);
 
 				  Intent bustimes = new Intent(mContext, BustimesActivity.class);
 				  bustimes.putExtra("route_id", route_id);
