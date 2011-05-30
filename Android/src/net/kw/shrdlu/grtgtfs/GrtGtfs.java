@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class GrtGtfs extends MapActivity {
 	private static final String TAG = "grtgtfs";
@@ -50,13 +51,18 @@ public class GrtGtfs extends MapActivity {
         // Waterloo
 //      GeoPoint point = new GeoPoint(43462580, -80518990);
         
+		Toast t = Toast.makeText(this,
+				"Slurping up the bus stops",
+				Toast.LENGTH_LONG);
+		t.show();
+		
         dbHelper = new DatabaseHelper(this);
         DB = dbHelper.getReadableDatabase();
     	String[] DbFields = {"stop_lat","stop_lon","stop_id","stop_name"};
     	Cursor csr;
     	try {
-//    		csr = DB.query("stops", DbFields, null, null, null, null, null);
-    		csr = DB.query("stops", DbFields, null, null, null, null, null, "100");
+    		csr = DB.query("stops", DbFields, null, null, null, null, null);
+//    		csr = DB.query("stops", DbFields, null, null, null, null, null, "300");
     	} catch (SQLException e) {
     		Log.e(TAG, "Querying stops failed: " + e.getMessage());
     		return;

@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = "DatabaseHelper";
@@ -19,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	//The Android's default system path of your application database.
 	private static String DB_PATH;
 	private static String DB_NAME = "GRT.db";
-	private final Context myContext;
+	private final Context mContext;
 	private boolean mustCopy = false;
 	
 	/**
@@ -29,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public DatabaseHelper(Context context) {
 		super(context, DB_NAME, null, 1);
-		this.myContext = context;
+		this.mContext = context;
 		
 		DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
 	}	
@@ -42,6 +43,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private void copyDatabase() throws IOException {
 		Log.v(TAG, "Copying new database " + DB_NAME);
 
+		Toast t = Toast.makeText(mContext,
+				"Preparing database for first use -- please be patient",
+				Toast.LENGTH_LONG);
+		t.show();
+		
 		// Open the empty db as the output stream
 		OutputStream myOutput = new FileOutputStream(DB_PATH + DB_NAME);
 
@@ -55,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			// Open local db piece as the input stream
 			InputStream myInput;
 			try {
-				myInput = myContext.getAssets().open(input);
+				myInput = mContext.getAssets().open(input);
 			} catch (IOException e) {
 				break;	// no more files
 			}
