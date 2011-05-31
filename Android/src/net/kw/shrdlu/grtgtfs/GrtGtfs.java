@@ -61,8 +61,8 @@ public class GrtGtfs extends MapActivity {
     	String[] DbFields = {"stop_lat","stop_lon","stop_id","stop_name"};
     	Cursor csr;
     	try {
-    		csr = DB.query("stops", DbFields, null, null, null, null, null);
-//    		csr = DB.query("stops", DbFields, null, null, null, null, null, "300");
+//    		csr = DB.query("stops", DbFields, null, null, null, null, null);
+    		csr = DB.query("stops", DbFields, null, null, null, null, null, "100");
     	} catch (SQLException e) {
     		Log.e(TAG, "Querying stops failed: " + e.getMessage());
     		return;

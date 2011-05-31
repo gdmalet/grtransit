@@ -32,11 +32,11 @@ public class ListCursorAdapter extends CursorAdapter {
     	Log.v(TAG, "bindView()");
     	Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
 
-    	LayoutInflater inflater = LayoutInflater.from(context);
-    	View rowView = inflater.inflate(R.layout.rowlayout, null, false);
-//    	View rowView = mInflater.inflate(R.layout.rowlayout, null, false);
-  
-    	TextView labelview = (TextView) rowView.findViewById(R.id.label);
+//    	LayoutInflater inflater = LayoutInflater.from(context);
+//    	View rowView = inflater.inflate(R.layout.rowlayout, null, false);
+//View rowView = view;
+
+    	TextView labelview = (TextView) view.findViewById(R.id.label);
     	String bus_time = cursor.getString(cursor.getColumnIndex("_id"));
 		labelview.setText(bus_time);
 
@@ -48,13 +48,13 @@ public class ListCursorAdapter extends CursorAdapter {
         String service_id = csr.getString(0);
         csr.close();
         
-		TextView valueview = (TextView)rowView.findViewById(R.id.value);
+		TextView valueview = (TextView)view.findViewById(R.id.value);
 		valueview.setText(service_id);
-		
-		ListActivity foo = (ListActivity)context;
-		foo.addContentView(rowView, new ViewGroup.LayoutParams(
-				ViewGroup.LayoutParams.WRAP_CONTENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT));
+
+//		ListActivity foo = (ListActivity)context;
+//		foo.addContentView(rowView, new ViewGroup.LayoutParams(
+//				ViewGroup.LayoutParams.WRAP_CONTENT,
+//				ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		Log.v(TAG, "Bound <" + bus_time + ">, <" + service_id + ">");
 }
@@ -62,9 +62,8 @@ public class ListCursorAdapter extends CursorAdapter {
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
     	Log.v(TAG, "newView()");
-    	Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
-
+    	
     	LayoutInflater inflater = LayoutInflater.from(context);
-    	return inflater.inflate(R.layout.timesview, parent, false);
+    	return inflater.inflate(R.layout.rowlayout, parent, false);
 	}
 }

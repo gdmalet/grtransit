@@ -14,8 +14,9 @@ public class BustimesActivity extends ListActivity {
         super.onCreate(savedInstanceState);
     	Log.v(TAG, "OnCreate()");
     	
-        setContentView(R.layout.timesview);
-        
+        setContentView(R.layout.timeslayout);
+//        setContentView(R.layout.testlayout);
+
         Intent intent = getIntent();
         String route_id = intent.getStringExtra("route_id");
         String headsign = intent.getStringExtra("headsign");

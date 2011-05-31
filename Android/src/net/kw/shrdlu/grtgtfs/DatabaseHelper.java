@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		OutputStream myOutput = new FileOutputStream(DB_PATH + DB_NAME);
 
 		//transfer bytes from the inputfile to the outputfile
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[8*1024];
 		int i;
 		for (i=0; ; i++) {
 			// Loop and pick up all pieces of the file, an concatenate into one.

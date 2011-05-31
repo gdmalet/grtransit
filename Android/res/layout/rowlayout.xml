@@ -10,7 +10,6 @@
  
   <TextView
    android:id="@+id/label"
-   android:minWidth="185sp"
    style="@style/List.Label" />
 
   <TextView
