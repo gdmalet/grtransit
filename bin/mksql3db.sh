@@ -49,6 +49,7 @@ $SQ3 $DB <<-EOT
   create index trips_trip_id on trips ( trip_id );
   create index stop_times_stop_id on stop_times ( stop_id );
   create index trips_route_id on trips ( route_id );
+  create index shapes_shape_id on shapes ( shape_id );
   vacuum;
 EOT
 

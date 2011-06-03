@@ -5,6 +5,7 @@ import java.util.List;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -121,15 +122,18 @@ public class BusroutesActivity extends MapActivity {
         // Convert geo points to points on the canvas
     	Projection proj = mapView.getProjection();
     	Point pt_scr = new Point(0,0);
-    	float[] scrpoints = new float[count*2];
-    	for (int i=0; i< count; i++) {
+    	Path path = new Path();
+
+		proj.toPixels(new GeoPoint(points[0], points[1]), pt_scr);
+		path.moveTo(pt_scr.x, pt_scr.y);
+
+		for (int i=1; i< count; i++) {
     		proj.toPixels(new GeoPoint(points[i*2], points[(i*2)+1]), pt_scr);
-    		scrpoints[i*2] = pt_scr.x;
-    		scrpoints[(i*2)+1] = pt_scr.y;
+    		path.lineTo(pt_scr.x, pt_scr.y);
     	}
     	
     	// Draw a line connecting the points
-    	itemizedoverlay.stashRoute(scrpoints);
+    	itemizedoverlay.stashPath(path);
    		itemizedoverlay.populateOverlay();
         mapOverlays.add(itemizedoverlay);
     	

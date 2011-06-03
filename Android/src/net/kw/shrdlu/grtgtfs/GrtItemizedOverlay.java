@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import com.google.android.maps.ItemizedOverlay;
@@ -21,15 +22,15 @@ public class GrtItemizedOverlay extends ItemizedOverlay {
 	private Context mContext;
 	private Cursor mCsr;
 	private String mStopid;
-	private float[] mRoute = null;
+	private Path mPath = null;
 	
 	public GrtItemizedOverlay(Drawable defaultMarker, Context context) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
 	}
 
-	public void stashRoute(float[] route) {
-		mRoute = route;
+	public void stashPath(Path path) {
+		mPath = path;
 	}
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.
 	private DialogInterface.OnClickListener mClick = new DialogInterface.OnClickListener() {
@@ -84,13 +85,15 @@ public class GrtItemizedOverlay extends ItemizedOverlay {
 	
 	@Override
 	public void draw(Canvas canvas, MapView view, boolean shadow) {
+		Log.v(TAG, "draw " + shadow);
+		
 		if (shadow)
 			return;
 	
-		if (mRoute != null) {
+		if (mPath != null) {
 			Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 			paint.setColor(0xffaf0000);
-			canvas.drawLines(mRoute, paint);
+			canvas.drawPath(mPath, paint);
 		}
 	}
 	public void addOverlay(OverlayItem overlay) {
