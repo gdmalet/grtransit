@@ -21,7 +21,7 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 
-public class RouteActivity extends MapActivity {
+public class BusroutesActivity extends MapActivity {
 	private static final String TAG = "RouteActivity";
 	
 	LinearLayout linearLayout;

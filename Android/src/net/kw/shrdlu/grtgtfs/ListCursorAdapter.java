@@ -39,7 +39,7 @@ public class ListCursorAdapter extends CursorAdapter {
 		// Get and translate the service id
 		String trip_id = cursor.getString(cursor.getColumnIndex("trip_id"));
 		String q = String.format("select service_id from trips where trip_id = \"%s\"", trip_id);
-        Cursor csr = GrtGtfs.DB.rawQuery(q, null);
+        Cursor csr = BusstopsActivity.DB.rawQuery(q, null);
         csr.moveToFirst();
         String service_id = csr.getString(0);
         csr.close();

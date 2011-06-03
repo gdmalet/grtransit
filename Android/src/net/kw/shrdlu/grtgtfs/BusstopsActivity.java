@@ -22,7 +22,7 @@ import android.util.Pair;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class GrtGtfs extends MapActivity {
+public class BusstopsActivity extends MapActivity {
 	private static final String TAG = "grtgtfs";
 
 	LinearLayout linearLayout;

@@ -64,7 +64,7 @@ public class GrtItemizedOverlay extends ItemizedOverlay {
 	  String q = String.format(
 			  "select distinct route_id || \" - \" || trip_headsign as _id from trips where trip_id in (select trip_id from stop_times where stop_id = \"%s\")",
 			  item.getTitle());
-	  mCsr = GrtGtfs.DB.rawQuery(q, null);
+	  mCsr = BusstopsActivity.DB.rawQuery(q, null);
 
 	  dialog.setCursor(mCsr, mClick, "_id");
 	  dialog.show();
