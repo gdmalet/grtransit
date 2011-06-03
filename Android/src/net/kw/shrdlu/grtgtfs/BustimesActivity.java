@@ -15,7 +15,6 @@ public class BustimesActivity extends ListActivity {
     	Log.v(TAG, "OnCreate()");
     	
         setContentView(R.layout.timeslayout);
-//        setContentView(R.layout.testlayout);
 
         Intent intent = getIntent();
         String route_id = intent.getStringExtra("route_id");

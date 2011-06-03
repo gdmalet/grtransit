@@ -2,9 +2,12 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -21,19 +24,67 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
+import com.google.android.maps.Overlay;
 
 public class BusroutesActivity extends MapActivity {
 	private static final String TAG = "RouteActivity";
 	
-	LinearLayout linearLayout;
 	MapView mapView;
 	
 	List<Overlay> mapOverlays;
 	Drawable drawable;
-	GrtItemizedOverlay itemizedoverlay;
+	BusstopsOverlay busstopsoverlay;
 	private DatabaseHelper dbHelper;
 	
 	public static SQLiteDatabase DB = null;
+	
+	private class RouteOverlay extends Overlay {
+		private static final String TAG = "RouteOverlay";
+		private int[] mPoints = null;
+		private int mCount = 0;
+		
+		public RouteOverlay(int[] points, int count) {
+			super();
+			mPoints = points;
+			mCount = count;
+		}
+		
+		@Override
+		public void draw(Canvas canvas, MapView view, boolean shadow) {
+			Log.v(TAG, "draw " + shadow);
+			
+			if (shadow || mPoints == null || mCount <= 0)
+				return;
+		
+	        // Convert geo points to points on the canvas
+	    	Projection proj = mapView.getProjection();
+	    	Point pt_scr = new Point(0,0);
+	    	Path path = new Path();
+
+			proj.toPixels(new GeoPoint(mPoints[0], mPoints[1]), pt_scr);
+			Log.v(TAG, "point (" + mPoints[0] + "," + mPoints[1] + ") -> (" + pt_scr.x + ", " + pt_scr.y + ")");
+			path.moveTo(pt_scr.x, pt_scr.y);
+
+			for (int i=1; i<mCount; i++) {
+	    		proj.toPixels(new GeoPoint(mPoints[i*2], mPoints[(i*2)+1]), pt_scr);
+//	    		Log.v(TAG, "point (" + mPoints[i*2] + "," + mPoints[(i*2)+1] + ") -> (" + pt_scr.x + ", " + pt_scr.y + ")");
+	    		path.lineTo(pt_scr.x, pt_scr.y);
+	    	}
+
+			Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+			paint.setColor(0xffaf0000);
+			canvas.drawPath(path, paint);
+/*				
+			paint.setColor(0xff00af00);
+			canvas.drawLine(100, 100, 200, 100, paint);
+			paint.setColor(0xff0000af);
+			canvas.drawLine(200, 100, 200, 200, paint);
+			canvas.drawLine(200, 200, 100, 200, paint);
+			paint.setColor(0xff00afaf);
+			canvas.drawLine(100, 200, 150, 150, paint);
+*/			
+		}
+	}
 	
     /** Called when the activity is first created. */
     @Override
@@ -46,38 +97,31 @@ public class BusroutesActivity extends MapActivity {
         
         mapOverlays = mapView.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.bluepin);
-        itemizedoverlay = new GrtItemizedOverlay(drawable, this);
-        
-        // Waterloo
-        itemizedoverlay.addOverlay(new OverlayItem(
-        		new GeoPoint(43462580, -80518990),
-        		"Waterloo", "Le Pad"));
-  
-		Toast t = Toast.makeText(this,
-				"Drawing route",
-				Toast.LENGTH_LONG);
-		t.show();
-		
+
         dbHelper = new DatabaseHelper(this);
         DB = dbHelper.getReadableDatabase();
-    	Cursor csr;
-/*
-   		// Need to work out zoom before we can draw, else the projection is wrong.
-    	String[] LimitFields = {"min(shape_pt_lat)","max(shape_pt_lat)", "min(shape_pt_lon)", "max(shape_pt_lon)"};
-    	try {
-    		csr = DB.query("shapes", LimitFields, "shape_id = 1201", null, null, null, null);
-    	} catch (SQLException e) {
-    		Log.e(TAG, "Querying shapes limits failed: " + e.getMessage());
-    		return;
-    	}
+
+//        Intent intent = getIntent();
+//        String route_id = intent.getStringExtra("route_id");
+//        String headsign = intent.getStringExtra("headsign");
+        String route_id = "12", headsign = "Conestoga Mall";
         
-        csr.moveToPosition(0);
-    	int minlat = (int)(csr.getFloat(0) * 1000000); // microdegrees
-    	int maxlat = (int)(csr.getFloat(1) * 1000000);
-    	int minlon = (int)(csr.getFloat(2) * 1000000);
-    	int maxlon = (int)(csr.getFloat(3) * 1000000);
-*/
-    	
+        String q = String.format(
+        		"select stop_lat, stop_lon, stop_id, stop_name from stops where stop_id in " +
+        		"(select stop_id from stop_times where trip_id = " +
+        		"(select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\"))",
+        		route_id, headsign);
+  	  	Cursor csr = DB.rawQuery(q, null);
+
+  	  	busstopsoverlay = new BusstopsOverlay(drawable, this, csr);
+        mapOverlays.add(busstopsoverlay);
+        csr.close();
+
+        // Center the map
+        MapController mcp = mapView.getController();
+        mcp.setCenter(busstopsoverlay.getCenter());
+        mcp.zoomToSpan(busstopsoverlay.getLatSpanE6(), busstopsoverlay.getLonSpanE6());
+
         // Now draw the route
     	String[] DbFields = {"shape_pt_lat","shape_pt_lon"};
     	try {
@@ -88,21 +132,12 @@ public class BusroutesActivity extends MapActivity {
     	}
 
         csr.moveToPosition(0);
-   		int minlon = 360000000, maxlon = -360000000, minlat = 360000000, maxlat = -360000000;	// track boundaries
    		int count = csr.getCount();
    		int [] points = new int[count*2];
    		
    		for (int i=0; i<count; i++) {
    			int pt_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
    			int pt_lon = (int)(csr.getFloat(1) * 1000000);
-   			if (pt_lon < minlon)
-   				minlon = pt_lon;
-   			if (pt_lon > maxlon)
-   				maxlon = pt_lon;
-   			if (pt_lat < minlat)
-   				minlat = pt_lat;
-   			if (pt_lat > maxlat)
-   				maxlat = pt_lat;
 
    			points[i*2] = pt_lat;
    			points[(i*2)+1] = pt_lon;
@@ -111,31 +146,9 @@ public class BusroutesActivity extends MapActivity {
    		}
    		csr.close();
    		
-        // Center the map
-        GeoPoint mapcenter = new GeoPoint(
-        		minlat + ((maxlat-minlat)/2),
-        		minlon + ((maxlon-minlon)/2));
-        MapController mcp = mapView.getController();
-        mcp.setCenter(mapcenter);
-        mcp.zoomToSpan(maxlat-minlat, maxlon-minlon);
-
-        // Convert geo points to points on the canvas
-    	Projection proj = mapView.getProjection();
-    	Point pt_scr = new Point(0,0);
-    	Path path = new Path();
-
-		proj.toPixels(new GeoPoint(points[0], points[1]), pt_scr);
-		path.moveTo(pt_scr.x, pt_scr.y);
-
-		for (int i=1; i< count; i++) {
-    		proj.toPixels(new GeoPoint(points[i*2], points[(i*2)+1]), pt_scr);
-    		path.lineTo(pt_scr.x, pt_scr.y);
-    	}
-    	
     	// Draw a line connecting the points
-    	itemizedoverlay.stashPath(path);
-   		itemizedoverlay.populateOverlay();
-        mapOverlays.add(itemizedoverlay);
+		RouteOverlay routeoverlay = new RouteOverlay(points, count);
+        mapOverlays.add(routeoverlay);
     	
     	MyLocationOverlay mylocation = new MyLocationOverlay(this, mapView);
         mylocation.enableMyLocation();

@@ -6,32 +6,39 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-public class GrtItemizedOverlay extends ItemizedOverlay {
+public class BusstopsOverlay extends ItemizedOverlay {
 	private static final String TAG = "GrtItemizedOverlay";
 
 	private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>();
 	private Context mContext;
 	private Cursor mCsr;
 	private String mStopid;
-	private Path mPath = null;
 	
-	public GrtItemizedOverlay(Drawable defaultMarker, Context context) {
+	public BusstopsOverlay(Drawable defaultMarker, Context context, Cursor csr) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
+		
+   		boolean more = csr.moveToPosition(0);
+
+   		while (more) {
+   			int stop_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
+   			int stop_lon = (int)(csr.getFloat(1) * 1000000);
+   			
+   			GeoPoint point = new GeoPoint(stop_lat, stop_lon);
+   			OverlayItem overlayitem = new OverlayItem(point, csr.getString(2), csr.getString(3));
+   		    mOverlayItems.add(overlayitem);
+   	        more = csr.moveToNext();
+   		}
+		populate();
 	}
 
-	public void stashPath(Path path) {
-		mPath = path;
-	}
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.
 	private DialogInterface.OnClickListener mClick = new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int which) {
@@ -82,27 +89,4 @@ public class GrtItemizedOverlay extends ItemizedOverlay {
 	public int size() {
 		return mOverlayItems.size();
 	}
-	
-	@Override
-	public void draw(Canvas canvas, MapView view, boolean shadow) {
-		Log.v(TAG, "draw " + shadow);
-		
-		if (shadow)
-			return;
-	
-		if (mPath != null) {
-			Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-			paint.setColor(0xffaf0000);
-			canvas.drawPath(mPath, paint);
-		}
-	}
-	public void addOverlay(OverlayItem overlay) {
-	    mOverlayItems.add(overlay);
-//	    populate();
-	}
-
-	public void populateOverlay() {
-		populate();
-	}
-
 }

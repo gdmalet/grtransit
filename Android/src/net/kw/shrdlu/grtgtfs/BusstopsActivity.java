@@ -25,12 +25,11 @@ import android.widget.Toast;
 public class BusstopsActivity extends MapActivity {
 	private static final String TAG = "grtgtfs";
 
-	LinearLayout linearLayout;
 	MapView mapView;
 	
 	List<Overlay> mapOverlays;
 	Drawable drawable;
-	GrtItemizedOverlay itemizedoverlay;
+	BusstopsOverlay busstopsoverlay;
 	private DatabaseHelper dbHelper;
 	
 	public static SQLiteDatabase DB = null;
@@ -46,18 +45,13 @@ public class BusstopsActivity extends MapActivity {
         
         mapOverlays = mapView.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.bluepin);
-        itemizedoverlay = new GrtItemizedOverlay(drawable, this);
         
+        dbHelper = new DatabaseHelper(this);
+        DB = dbHelper.getReadableDatabase();
+
         // Waterloo
 //      GeoPoint point = new GeoPoint(43462580, -80518990);
         
-		Toast t = Toast.makeText(this,
-				"Slurping up the bus stops",
-				Toast.LENGTH_LONG);
-		t.show();
-		
-        dbHelper = new DatabaseHelper(this);
-        DB = dbHelper.getReadableDatabase();
     	String[] DbFields = {"stop_lat","stop_lon","stop_id","stop_name"};
     	Cursor csr;
     	try {
@@ -68,43 +62,21 @@ public class BusstopsActivity extends MapActivity {
     		return;
     	}
 	
-   		boolean more = csr.moveToPosition(0);
-   		int minlon = 360000000, maxlon = -360000000, minlat = 360000000, maxlat = -360000000;	// track boundaries
-
-   		while (more) {
-   			int stop_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
-   			int stop_lon = (int)(csr.getFloat(1) * 1000000);
-   			if (stop_lon < minlon)
-   				minlon = stop_lon;
-   			if (stop_lon > maxlon)
-   				maxlon = stop_lon;
-   			if (stop_lat < minlat)
-   				minlat = stop_lat;
-   			if (stop_lat > maxlat)
-   				maxlat = stop_lat;
-   			
-   			GeoPoint point = new GeoPoint(stop_lat, stop_lon);
-   			OverlayItem overlayitem = new OverlayItem(point, csr.getString(2), csr.getString(3));
-   	        itemizedoverlay.addOverlay(overlayitem);
-   	        more = csr.moveToNext();
-   		}
-   		csr.close();
-   		
-   		itemizedoverlay.populateOverlay();
-        mapOverlays.add(itemizedoverlay);
+        busstopsoverlay = new BusstopsOverlay(drawable, this, csr);
         
+        // Center the map
+        MapController mcp = mapView.getController();
+        mcp.setCenter(busstopsoverlay.getCenter());
+        mcp.zoomToSpan(busstopsoverlay.getLatSpanE6(), busstopsoverlay.getLonSpanE6());
+
+        csr.close();
+        mapOverlays.add(busstopsoverlay);
+
         MyLocationOverlay mylocation = new MyLocationOverlay(this, mapView);
         mylocation.enableMyLocation();
         mylocation.enableCompass();
         mapOverlays.add(mylocation);
 
-        // Center the map
-        GeoPoint mapcenter = new GeoPoint(
-        		minlat + ((maxlat-minlat)/2),
-        		minlon + ((maxlon-minlon)/2));
-        MapController mcp = mapView.getController();
-        mcp.setCenter(mapcenter);
-        mcp.zoomToSpan(maxlat-minlat, maxlon-minlon);
     }
     
     @Override
