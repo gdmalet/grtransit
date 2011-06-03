@@ -14,7 +14,8 @@
     
         <uses-library android:name="com.google.android.maps" />
         
-        <activity class=".GrtGtfs" android:name=".GrtGtfs">
+<!--    <activity class=".GrtGtfs" android:name=".GrtGtfs">  --> 
+        <activity class=".RouteActivity" android:name=".RouteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
