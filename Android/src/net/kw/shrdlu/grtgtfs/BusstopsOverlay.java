@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -20,12 +22,43 @@ public class BusstopsOverlay extends ItemizedOverlay {
 	private Context mContext;
 	private Cursor mCsr;
 	private String mStopid;
+	private DatabaseHelper dbHelper;
+	public static SQLiteDatabase DB = null;
 	
-	public BusstopsOverlay(Drawable defaultMarker, Context context, Cursor csr) {
+	// Use if no limit on stops
+	public BusstopsOverlay(Drawable defaultMarker, Context context) {
+		this(defaultMarker, context, null);
+	}
+
+	// Used to limit which stops are displayed
+	public BusstopsOverlay(Drawable defaultMarker, Context context, String whereclause) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
-		
-   		boolean more = csr.moveToPosition(0);
+
+		// Only open the DB once. Everything else uses this copy.
+		if (DB == null) {
+			dbHelper = new DatabaseHelper(context);
+			DB = dbHelper.getReadableDatabase();
+		}
+
+        // Waterloo
+//      GeoPoint point = new GeoPoint(43462580, -80518990);
+
+    	String q = "select stop_lat, stop_lon, stop_id, stop_name from stops";
+    	if (whereclause != null)
+    		q += " where " + whereclause;
+    	// TODO
+//    	q += " limit 100";
+    	
+        Cursor csr;
+    	try {
+    		csr = DB.rawQuery(q, null);
+    	} catch (SQLException e) {
+    		Log.e(TAG, "DB query failed: \"" + q + "\", " + e.getMessage());
+    		return;
+    	}
+
+		boolean more = csr.moveToPosition(0);
 
    		while (more) {
    			int stop_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
@@ -72,7 +105,7 @@ public class BusstopsOverlay extends ItemizedOverlay {
 	  String q = String.format(
 			  "select distinct route_id || \" - \" || trip_headsign as _id from trips where trip_id in (select trip_id from stop_times where stop_id = \"%s\")",
 			  item.getTitle());
-	  mCsr = BusstopsActivity.DB.rawQuery(q, null);
+	  mCsr = DB.rawQuery(q, null);
 
 	  dialog.setCursor(mCsr, mClick, "_id");
 	  dialog.show();

@@ -30,9 +30,6 @@ public class BusstopsActivity extends MapActivity {
 	List<Overlay> mapOverlays;
 	Drawable drawable;
 	BusstopsOverlay busstopsoverlay;
-	private DatabaseHelper dbHelper;
-	
-	public static SQLiteDatabase DB = null;
 	
     /** Called when the activity is first created. */
     @Override
@@ -45,31 +42,14 @@ public class BusstopsActivity extends MapActivity {
         
         mapOverlays = mapView.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.bluepin);
-        
-        dbHelper = new DatabaseHelper(this);
-        DB = dbHelper.getReadableDatabase();
 
-        // Waterloo
-//      GeoPoint point = new GeoPoint(43462580, -80518990);
-        
-    	String[] DbFields = {"stop_lat","stop_lon","stop_id","stop_name"};
-    	Cursor csr;
-    	try {
-    		csr = DB.query("stops", DbFields, null, null, null, null, null);
-//    		csr = DB.query("stops", DbFields, null, null, null, null, null, "100");
-    	} catch (SQLException e) {
-    		Log.e(TAG, "Querying stops failed: " + e.getMessage());
-    		return;
-    	}
-	
-        busstopsoverlay = new BusstopsOverlay(drawable, this, csr);
+        busstopsoverlay = new BusstopsOverlay(drawable, this);
         
         // Center the map
         MapController mcp = mapView.getController();
         mcp.setCenter(busstopsoverlay.getCenter());
         mcp.zoomToSpan(busstopsoverlay.getLatSpanE6(), busstopsoverlay.getLonSpanE6());
 
-        csr.close();
         mapOverlays.add(busstopsoverlay);
 
         MyLocationOverlay mylocation = new MyLocationOverlay(this, mapView);

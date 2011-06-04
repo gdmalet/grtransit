@@ -14,21 +14,24 @@
     
         <uses-library android:name="com.google.android.maps" />
         
-<!--    <activity class=".BusstopsActivity" android:name=".BusstopsActivity">  --> 
-        <activity class=".BusroutesActivity" android:name="BusroutesActivity">
+        <activity class=".BusstopsActivity" android:name=".BusstopsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity class=".BustimesActivity"
+        
+        <activity class=".BustimesActivity" android:name=".BustimesActivity"
              android:label="@string/activity_label"
-             android:description="@string/activity_desc"
-             android:name=".BustimesActivity">
-            <intent-filter>
+             android:description="@string/activity_desc">
+<!--            <intent-filter>
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
+-->
+        </activity>
+        
+        <activity class=".BusroutesActivity" android:name="BusroutesActivity">
         </activity>
 
     </application>
