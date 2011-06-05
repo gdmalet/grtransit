@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="times_loading">Loading the bus times....</string>
-    <string name="app_name">GrtGtfs</string>
-    <string name="activity_desc">thedescr</string>
-    <string name="activity_label">thelabel</string>
+    <string name="loadingstops">Loading bus stops....</string>
+    <string name="app_name">GRT Busses</string>
+    <string name="activity_desc">Grand River Transit Bus Stops</string>
+    <string name="activity_label">GRT Busses</string>
     <string name="activity_name">thename</string>
+    <string name="times_loading">Loading the bus times....</string>
+    <string name="buttonshow">Show</string>
 </resources>

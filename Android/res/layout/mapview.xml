@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mainlayout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <LinearLayout
+        android:id="@+id/title_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="18dip"
+            android:layout_height="18dip"
+            android:layout_marginLeft="10dip"
+            android:visibility="invisible"
+            android:indeterminateOnly="true"
+            android:indeterminateDrawable="@drawable/progress_spin"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDuration="3500" />
+
+        <TextView
+           android:id="@+id/title"
+           android:paddingLeft="3dip"
+           android:text="@string/loadingstops"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           style="@style/ListTitle" />
+    </LinearLayout>
+
     <com.google.android.maps.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:apiKey="0PRfBeQykUNmI_uc01CC8E7vAD2Ru6RUWt3_mBw"
     />
 
-</RelativeLayout>
+</LinearLayout>

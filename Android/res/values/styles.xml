@@ -45,11 +45,11 @@
     </style>
     
     <style name="List.Label">
-        <item name="android:textColor">@android:color/secondary_text_light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
     <style name="List.Content">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>
 </resources>

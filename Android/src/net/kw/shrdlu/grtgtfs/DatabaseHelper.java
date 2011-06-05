@@ -42,12 +42,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * */
 	private void copyDatabase() throws IOException {
 		Log.v(TAG, "Copying new database " + DB_NAME);
-
-		Toast t = Toast.makeText(mContext,
+/*
+		Toast.makeText(mContext,
 				"Preparing database for first use -- please be patient",
-				Toast.LENGTH_LONG);
-		t.show();
-		
+				Toast.LENGTH_LONG)
+				.show();
+*/	
 		// Open the empty db as the output stream
 		OutputStream myOutput = new FileOutputStream(DB_PATH + DB_NAME);
 
