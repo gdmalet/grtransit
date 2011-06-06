@@ -10,13 +10,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
-import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
@@ -99,8 +96,6 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         @Override
         protected BusstopsOverlay doInBackground(Void... foo) {
         	Log.v(TAG, "doInBackground()");
-
-//        	publishProgress("");
 
             BusstopsOverlay overlay = new BusstopsOverlay(mStopmarker, mContext);
 

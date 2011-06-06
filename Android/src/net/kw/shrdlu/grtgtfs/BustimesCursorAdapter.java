@@ -3,9 +3,13 @@
  */
 package net.kw.shrdlu.grtgtfs;
 
+import java.util.HashMap;
+import java.util.Hashtable;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,21 +18,22 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 public class BustimesCursorAdapter extends CursorAdapter {
-	private static final String TAG = "ListCursorAdapter";
+	private static final String TAG = "BustimesCursorAdapter";
 
 	private final LayoutInflater mInflater;
+	private final ServiceCalendar mServiceCalendar;
 	
 	public BustimesCursorAdapter(ListActivity context, Cursor cursor) {
     	super(context, cursor, true);
     	Log.v(TAG, "BustimesCursorAdapter()");
     
+    	mServiceCalendar = new ServiceCalendar();
 		this.mInflater = LayoutInflater.from(context);
 	}
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-//    	Log.v(TAG, "bindView()");
-//    	Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
+//    	Log.v(TAG, "bindview(): cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
 
     	TextView labelview = (TextView) view.findViewById(R.id.label);
     	String bus_time = cursor.getString(cursor.getColumnIndex("_id"));
@@ -43,9 +48,7 @@ public class BustimesCursorAdapter extends CursorAdapter {
         csr.close();
         
 		TextView valueview = (TextView)view.findViewById(R.id.value);
-		valueview.setText(service_id);
-		
-//		Log.v(TAG, "Bound <" + bus_time + ">, <" + service_id + ">");
+		valueview.setText(service_id + " " + mServiceCalendar.getDays(service_id));
 }
  
 	@Override
