@@ -94,8 +94,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         }
 
         /**
-         * Perform the background query using {@link GetWeathe}, which
-         * may return an error message as the result.
+         * Perform the background query.
          */
         @Override
         protected BusstopsOverlay doInBackground(Void... foo) {
@@ -109,8 +108,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         }
 
         /**
-         * When finished, push the newly-found entry content into our
-	     * {@link WebView} and hide the {@link ProgressBar}.
+         * When finished, link in the new overlay.
 	     */
 	    @Override
 	    protected void onPostExecute(BusstopsOverlay overlay) {
@@ -123,12 +121,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             mapOverlays.add(overlay);
 	        
             mTitle.setText(R.string.activity_desc);
-/*
-            // Center the map
-	        MapController mcp = mMapview.getController();
-	        mcp.setCenter(overlay.getCenter());
-	        mcp.zoomToSpan(overlay.getLatSpanE6(), mBusstopsoverlay.getLonSpanE6());
-*/	    }
+	    }
 	}
 
     /**

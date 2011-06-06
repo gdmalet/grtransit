@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -61,27 +62,31 @@ public class BustimesActivity extends ListActivity {
     	t.setToNow();
     	String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
         int count = csr.getCount(), pos;
+    	String csrtime = null;
         csr.moveToFirst();
         for (pos=0; pos<count; pos++) {
-        	String csrtime = csr.getString(0);
+        	csrtime = csr.getString(0);
         	Log.v(TAG, "compare \"" + csrtime + "\" to \"" + timenow + "\"");
         	if (csrtime.compareTo(timenow) >= 0)
         		break;
         	csr.moveToNext();
         }
-    	setSelection(pos);
-    	Toast.makeText(mContext, "set selection to " + pos, Toast.LENGTH_LONG).show();
+    	
+    	// Calculate the time difference
+    	Toast msg;
+    	if (pos < count) {
+        	setSelection(pos); // position the list at the next bus
+    		int hourdiff = Integer.parseInt(csrtime.substring(0, 2));
+    		hourdiff -= t.hour;
+    		hourdiff *= 60;
+    		int mindiff = Integer.parseInt(csrtime.substring(3, 5));
+    		mindiff -= t.minute;
+    		hourdiff += mindiff;
+    		msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minutes", Toast.LENGTH_LONG);
+    	} else {
+    		msg = Toast.makeText(mContext, "No more busses today", Toast.LENGTH_LONG);
+    	}
+		msg.setGravity(Gravity.TOP, 0, 0);
+		msg.show();
     }
-/*
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position + ", id " + id);
-		
-		Intent busroutes = new Intent(this, BusroutesActivity.class);
-		busroutes.putExtra("route_id", mRoute_id);
-		busroutes.putExtra("headsign", mHeadsign);
-		busroutes.putExtra("stop_id", mStop_id);
-		startActivity(busroutes);
-	}
-*/	
 }

@@ -54,11 +54,12 @@ public class BusroutesActivity extends MapActivity {
         // Now draw the route
 		BusrouteOverlay routeoverlay = new BusrouteOverlay(this, route_id, headsign);
         mapOverlays.add(routeoverlay);    	
-/*
+
     	MyLocationOverlay mylocation = new MyLocationOverlay(this, mapView);
         mylocation.enableMyLocation();
         mylocation.enableCompass();
         mapOverlays.add(mylocation);
+/*
         // Center the map over the bus stops
         MapController mcp = mapView.getController();
         mcp.setCenter(busstopsoverlay.getCenter());
