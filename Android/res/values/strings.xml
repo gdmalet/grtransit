@@ -2,9 +2,16 @@
 <resources>
     <string name="loadingstops">Loading bus stops....</string>
     <string name="app_name">GRT Busses</string>
+    <string name="about">About</string>
     <string name="activity_desc">Grand River Transit Bus Stops</string>
     <string name="activity_label">GRT Busses</string>
     <string name="activity_name">thename</string>
+    <string name="location">Location</string>
+    <string name="showallbusses">Show all busses</string>
+    <string name="showtodaysbusses">Show today\'s busses"</string>
     <string name="times_loading">Loading the bus times....</string>
     <string name="buttonshow">Show</string>
+    <string name="app_descrip">Grand River Transit details for Waterloo, Ontario, Canada.\n\nAll data for this application is freely available in Google GTFS format from http://www.grt.ca</string>
+    <string name="app_credits">Author: Giles Malet\ngdmalet@gmail.com</string>
+    
 </resources>

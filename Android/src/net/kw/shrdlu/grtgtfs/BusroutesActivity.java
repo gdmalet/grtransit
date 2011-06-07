@@ -59,12 +59,6 @@ public class BusroutesActivity extends MapActivity {
         mylocation.enableMyLocation();
         mylocation.enableCompass();
         mapOverlays.add(mylocation);
-/*
-        // Center the map over the bus stops
-        MapController mcp = mapView.getController();
-        mcp.setCenter(busstopsoverlay.getCenter());
-        mcp.zoomToSpan(busstopsoverlay.getLatSpanE6(), busstopsoverlay.getLonSpanE6());
-*/        
     }
 
     @Override

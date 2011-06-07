@@ -2,6 +2,8 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
 
+import com.google.android.maps.MapView;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,6 +12,9 @@ import android.text.format.Time;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -23,6 +28,8 @@ public class BustimesActivity extends ListActivity {
 	private String mRoute_id, mHeadsign, mStop_id;
     private TextView mTitle;
 	private ServiceCalendar mServiceCalendar = new ServiceCalendar();
+	
+	private static boolean mShowTodayOnly = true;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +89,7 @@ public class BustimesActivity extends ListActivity {
             svs.moveToFirst();
             String service_id = svs.getString(0);
             svs.close();
-        	String daysstr = mServiceCalendar.getDays(service_id, datenow, false);
+        	String daysstr = mServiceCalendar.getDays(service_id, datenow, mShowTodayOnly);
 
         	// Only add if the bus runs on this day.
         	if (daysstr != null) {
@@ -119,5 +126,49 @@ public class BustimesActivity extends ListActivity {
     	}
 		msg.setGravity(Gravity.TOP, 0, 0);
 		msg.show();
+    }
+
+    // This is only called once....
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.timesmenu, menu);
+/*        MenuItem item = menu.findItem(R.id.menu_showallbusses);
+        item.setEnabled(mShowTodayOnly);
+        item = menu.findItem(R.id.menu_showtodaysbusses);
+        item.setEnabled(!mShowTodayOnly);
+*/        return true;
+    }
+	// This is called when redisplaying the menu
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.menu_showallbusses);
+        item.setEnabled(mShowTodayOnly);
+        item = menu.findItem(R.id.menu_showtodaysbusses);
+        item.setEnabled(!mShowTodayOnly);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_showallbusses: {
+            	mShowTodayOnly = false;
+            	// Just start again
+            	// TODO - should replace existing activity, not put a new one on the stack
+                Intent defineIntent = getIntent();
+                startActivity(defineIntent);
+                return true;
+            }
+            case R.id.menu_showtodaysbusses: {
+            	mShowTodayOnly = true;
+            	// Just start again
+            	// TODO - should replace existing activity, not put a new one on the stack
+                Intent defineIntent = getIntent();
+                startActivity(defineIntent);
+                return true;
+            }
+        }
+        return false;
     }
 }

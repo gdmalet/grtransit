@@ -2,18 +2,26 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
@@ -27,11 +35,10 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
     private Animation mSlideIn;
     private Animation mSlideOut;
     private ProgressBar mProgress;
-
     private MapView mMapview;
 	private List<Overlay> mapOverlays;
 	private Drawable mStopmarker;
-	private BusstopsOverlay mBusstopsoverlay;
+	private MyLocationOverlay mMylocation;
 	
     /** Called when the activity is first created. */
     @Override
@@ -57,10 +64,10 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         mapOverlays = mMapview.getOverlays();
         mStopmarker = this.getResources().getDrawable(R.drawable.bluepin);
 
-        MyLocationOverlay mylocation = new MyLocationOverlay(this, mMapview);
-        mylocation.enableMyLocation();
-        mylocation.enableCompass();
-        mapOverlays.add(mylocation);
+        mMylocation = new MyLocationOverlay(this, mMapview);
+        mMylocation.enableMyLocation();
+        mMylocation.enableCompass();
+        mapOverlays.add(mMylocation);
 
         // Get the busstop overlay set up in the background
         new LookupTask().execute();
@@ -69,6 +76,56 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
     @Override
     protected boolean isRouteDisplayed() {
     	return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.busstopsmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_location: {
+                // Center the map over the current location
+            	GeoPoint locn = mMylocation.getMyLocation(); 
+            	if (locn != null) {
+            		MapController mcp = mMapview.getController();
+            		mcp.setCenter(locn);
+            		//mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            	} else {
+            		Toast.makeText(mContext, "No location fix!", Toast.LENGTH_LONG).show();
+            	}
+            	return true;
+            }
+            case R.id.menu_about: {
+                showAbout();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Show an about dialog that cites data sources.
+     */
+    protected void showAbout() {
+        View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
+
+        // When linking text, force to always use default color. This works
+        // around a pressed color state bug.
+        TextView textView = (TextView) messageView.findViewById(R.id.about_credits);
+        int defaultColor = textView.getTextColors().getDefaultColor();
+        textView.setTextColor(defaultColor);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.grticon);
+        builder.setTitle(R.string.app_name);
+        builder.setView(messageView);
+        builder.create();
+        builder.show();
     }
 
     /**
@@ -111,10 +168,14 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 
 	    	mTitleBar.startAnimation(mSlideOut);
 	        mProgress.setVisibility(View.INVISIBLE);
-	
-	        mBusstopsoverlay = overlay;
-            mapOverlays.add(overlay);
+
+	        mapOverlays.add(overlay);
 	        
+            // Center the map over the bus stops
+            MapController mcp = mMapview.getController();
+            mcp.setCenter(overlay.getCenter());
+            mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+
             mTitle.setText(R.string.activity_desc);
 	    }
 	}
