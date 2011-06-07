@@ -50,6 +50,8 @@ $SQ3 $DB <<-EOT
   create index stop_times_stop_id on stop_times ( stop_id );
   create index trips_route_id on trips ( route_id );
   create index shapes_shape_id on shapes ( shape_id );
+  create index calendar_service_id on calendar ( service_id );
+  create index calendar_dates_service_id on calendar_dates ( service_id );
   vacuum;
 EOT
 
