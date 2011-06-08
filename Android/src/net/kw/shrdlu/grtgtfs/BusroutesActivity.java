@@ -5,10 +5,15 @@ import java.util.List;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -18,28 +23,30 @@ import com.google.android.maps.Overlay;
 public class BusroutesActivity extends MapActivity {
 	private static final String TAG = "RouteActivity";
 	
-	private MapView mapView;
+	private MapActivity mContext;
+	private MapView mMapview;
 	private List<Overlay> mapOverlays;
 	private Drawable drawable;	
     private TextView mTitle;
-
+    private MyLocationOverlay mMylocation;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.mapview);
         
-        mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
+        mMapview = (MapView) findViewById(R.id.mapview);
+        mMapview.setBuiltInZoomControls(true);
         
-        mapOverlays = mapView.getOverlays();
+        mapOverlays = mMapview.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.bluepin);
 
         Intent intent = getIntent();
         String route_id = intent.getStringExtra("route_id");
         String headsign = intent.getStringExtra("headsign");
-        String stop_id = intent.getStringExtra("stop_id");	// TODO show position?
-//        String route_id = "12", headsign = "Conestoga Mall";
+//        String stop_id = intent.getStringExtra("stop_id");	// TODO show position?
     
         mTitle = (TextView) findViewById(R.id.title);
         mTitle.setText(route_id + " - " + headsign);
@@ -55,10 +62,10 @@ public class BusroutesActivity extends MapActivity {
 		BusrouteOverlay routeoverlay = new BusrouteOverlay(this, route_id, headsign);
         mapOverlays.add(routeoverlay);    	
 
-    	MyLocationOverlay mylocation = new MyLocationOverlay(this, mapView);
-        mylocation.enableMyLocation();
-        mylocation.enableCompass();
-        mapOverlays.add(mylocation);
+    	mMylocation = new MyLocationOverlay(this, mMapview);
+        mMylocation.enableMyLocation();
+        mMylocation.enableCompass();
+        mapOverlays.add(mMylocation);
     }
 
     @Override
@@ -66,4 +73,40 @@ public class BusroutesActivity extends MapActivity {
     	return false;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.busstopsmenu, menu);
+        return true;
+    }
+
+    // This is called when redisplaying the menu
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.menu_about);
+        item.setEnabled(false); // only put the about button on the home screen.
+        item.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_location: {
+                // Center the map over the current location
+            	GeoPoint locn = mMylocation.getMyLocation(); 
+            	if (locn != null) {
+            		MapController mcp = mMapview.getController();
+            		mcp.animateTo(locn);
+            		while (mMapview.getZoomLevel()<17)
+            			if (!mcp.zoomIn())
+            				break;
+            	} else {
+            		Toast.makeText(mContext, "No location fix!", Toast.LENGTH_LONG).show();
+            	}
+            	return true;
+            }
+        }
+        return false;
+    }
 }

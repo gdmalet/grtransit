@@ -78,7 +78,7 @@ public class BusrouteOverlay extends Overlay {
 		}
 
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint.setColor(0xff0000af);
+		paint.setColor(0xffaf0f00);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setAlpha(96);
 		paint.setStrokeWidth(5);

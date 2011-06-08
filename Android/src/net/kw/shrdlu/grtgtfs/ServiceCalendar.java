@@ -10,6 +10,10 @@ import android.util.TimeFormatException;
 public class ServiceCalendar {
 	private static final String TAG = "ServiceCalendar";
 	private static final String mDBQuery = "select * from %s where service_id = \"%s\"";
+
+	// Cache some results, to save db lookups
+	private static final HashMap<String,String> truemap = new HashMap<String, String>(32);
+	private static final HashMap<String,String> falsemap = new HashMap<String, String>(32);
 	
 	// Match day number to a string and an abbreviation
 	private static final String[] mWeekDays = {
@@ -86,12 +90,34 @@ public class ServiceCalendar {
 	// run on the given data. Limit to correct days of week, or not.
 	public String getDays(String service_id, String date, boolean limit) {
 		
+		String retstr;
+		
+		// First check the cache
+		if (limit) {
+			if (truemap.containsKey(service_id+date)) {
+				retstr = truemap.get(service_id+date);
+//				Log.v(TAG, "Retrieved " + service_id+":"+date + " -> " + retstr + " from truecache");
+				return retstr;
+			}
+		} else {
+			if (falsemap.containsKey(service_id+date)) {
+				retstr = falsemap.get(service_id+date);
+//				Log.v(TAG, "Retrieved " + service_id+":"+date + " -> " + retstr + " from falsecache");
+				return retstr;
+			}
+		}
+		
 		String q = String.format(mDBQuery, "calendar", service_id);
 		Cursor csr = BusstopsOverlay.DB.rawQuery(q, null);
-	
-		String retstr = process_db(service_id, date, limit, csr);
-		
+		retstr = process_db(service_id, date, limit, csr);
 		csr.close();
+		
+		// Save in cache
+		if (limit)
+			truemap.put(service_id+date, retstr);
+		else
+			falsemap.put(service_id+date, retstr);
+		
 		return retstr;
 	}
 }

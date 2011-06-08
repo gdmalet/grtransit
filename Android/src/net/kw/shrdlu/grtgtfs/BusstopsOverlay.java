@@ -41,14 +41,11 @@ public class BusstopsOverlay extends ItemizedOverlay {
 			DB = dbHelper.getReadableDatabase();
 		}
 
-        // Waterloo
-//      GeoPoint point = new GeoPoint(43462580, -80518990);
-
     	String q = "select stop_lat, stop_lon, stop_id, stop_name from stops";
     	if (whereclause != null)
     		q += " where " + whereclause;
     	// TODO
-    	q += " limit 200";
+//    	q += " limit 200";
     	
         Cursor csr;
     	try {
@@ -114,7 +111,6 @@ public class BusstopsOverlay extends ItemizedOverlay {
 	  return true;
 	}
 
-	  
 	@Override
 	protected OverlayItem createItem(int i) {
 	  return mOverlayItems.get(i);

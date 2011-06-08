@@ -93,8 +93,10 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             	GeoPoint locn = mMylocation.getMyLocation(); 
             	if (locn != null) {
             		MapController mcp = mMapview.getController();
-            		mcp.setCenter(locn);
-            		//mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            		mcp.animateTo(locn);
+            		while (mMapview.getZoomLevel()<17)
+            			if (!mcp.zoomIn())
+            				break;
             	} else {
             		Toast.makeText(mContext, "No location fix!", Toast.LENGTH_LONG).show();
             	}

@@ -155,17 +155,16 @@ public class BustimesActivity extends ListActivity {
             case R.id.menu_showallbusses: {
             	mShowTodayOnly = false;
             	// Just start again
-            	// TODO - should replace existing activity, not put a new one on the stack
-                Intent defineIntent = getIntent();
-                startActivity(defineIntent);
+                Intent intent = getIntent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 return true;
             }
             case R.id.menu_showtodaysbusses: {
             	mShowTodayOnly = true;
-            	// Just start again
-            	// TODO - should replace existing activity, not put a new one on the stack
-                Intent defineIntent = getIntent();
-                startActivity(defineIntent);
+                Intent intent = getIntent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 return true;
             }
         }

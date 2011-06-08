@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="loadingstops">Loading bus stops....</string>
-    <string name="app_name">GRT Busses</string>
+    <string name="app_name">GRTransit</string>
     <string name="about">About</string>
     <string name="activity_desc">Grand River Transit Bus Stops</string>
     <string name="activity_label">GRT Busses</string>
