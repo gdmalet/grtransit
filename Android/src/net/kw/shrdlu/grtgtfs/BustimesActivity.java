@@ -133,11 +133,7 @@ public class BustimesActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.timesmenu, menu);
-/*        MenuItem item = menu.findItem(R.id.menu_showallbusses);
-        item.setEnabled(mShowTodayOnly);
-        item = menu.findItem(R.id.menu_showtodaysbusses);
-        item.setEnabled(!mShowTodayOnly);
-*/        return true;
+        return true;
     }
 	// This is called when redisplaying the menu
     @Override

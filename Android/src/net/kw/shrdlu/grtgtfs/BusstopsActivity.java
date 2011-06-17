@@ -70,9 +70,21 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         mapOverlays.add(mMylocation);
 
         // Get the busstop overlay set up in the background
-        new LookupTask().execute();
+        new PrepareOverlay().execute();
     }
-    
+
+    /**
+     * Handle new incoming intents from searches
+     */
+    @Override
+    public void onNewIntent(Intent intent) {    	
+        String stop_id = intent.getStringExtra("stop_id");
+        Log.v(TAG, "OnNewIntent(" + stop_id + ")");
+        
+        // TODO get geopoint and zoom to it
+        new PrepareOverlay().execute();
+    }
+
     @Override
     protected boolean isRouteDisplayed() {
     	return false;
@@ -98,12 +110,20 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             			if (!mcp.zoomIn())
             				break;
             	} else {
-            		Toast.makeText(mContext, "No location fix!", Toast.LENGTH_LONG).show();
+            		Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
             	}
             	return true;
             }
             case R.id.menu_about: {
                 showAbout();
+                return true;
+            }
+            case R.id.menu_searchstops: {
+            	onSearchRequested();
+                return true;
+            }
+            case R.id.menu_searchroutes: {
+            	onSearchRequested();
                 return true;
             }
         }
@@ -136,7 +156,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
      * background query to the DB. When finished, it transitions
      * back to the GUI thread where it updates with the newly-found entries.
      */
-    private class LookupTask extends AsyncTask<Void, Void, BusstopsOverlay> {
+    private class PrepareOverlay extends AsyncTask<Void, Void, BusstopsOverlay> {
     	static final String TAG = "LookupTask";
     	
         /**
@@ -175,6 +195,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 	        
             // Center the map over the bus stops
             MapController mcp = mMapview.getController();
+            // TODO center & zoom to a stop if searching
             mcp.setCenter(overlay.getCenter());
             mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
 

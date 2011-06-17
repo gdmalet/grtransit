@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android">
-        <item
+    <group android:menuCategory="container" android:id="@+id/menu_searchgroup">
+        <item android:id="@+id/menu_searchstops" android:icon="@android:drawable/ic_menu_search" android:title="@string/find_stop"></item>
+        <item android:id="@+id/menu_searchroutes" android:icon="@android:drawable/ic_menu_search" android:title="@string/find_route"></item>
+    </group><item
         android:title="@string/location"
         android:id="@+id/menu_location"
         android:icon="@android:drawable/ic_menu_mylocation">
@@ -12,5 +15,7 @@
         android:id="@+id/menu_about"
         android:icon="@android:drawable/ic_menu_info_details">
     </item>
+
+    
     
 </menu>

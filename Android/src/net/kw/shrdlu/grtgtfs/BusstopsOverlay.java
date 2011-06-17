@@ -45,7 +45,7 @@ public class BusstopsOverlay extends ItemizedOverlay {
     	if (whereclause != null)
     		q += " where " + whereclause;
     	// TODO
-//    	q += " limit 200";
+    	q += " limit 200";
     	
         Cursor csr;
     	try {
