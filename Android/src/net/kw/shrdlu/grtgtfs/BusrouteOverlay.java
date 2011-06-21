@@ -57,6 +57,8 @@ public class BusrouteOverlay extends Overlay {
 		
 	@Override
 	public void draw(Canvas canvas, MapView view, boolean shadow) {
+		super.draw(canvas, view, shadow);
+		
 //		Log.v(TAG, "draw " + shadow);
 			
 		if (shadow || mPoints == null || mCount <= 0)
@@ -64,7 +66,7 @@ public class BusrouteOverlay extends Overlay {
 		
 		// Convert geo points to points on the canvas
 		Projection proj = view.getProjection();
-		Point pt_scr = new Point(0,0);
+		Point pt_scr = new Point();
 		Path path = new Path();
 
 		proj.toPixels(new GeoPoint(mPoints[0], mPoints[1]), pt_scr);
@@ -78,9 +80,8 @@ public class BusrouteOverlay extends Overlay {
 		}
 
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint.setColor(0xffaf0f00);
+		paint.setARGB(96, 0, 64, 224);
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setAlpha(96);
 		paint.setStrokeWidth(5);
 		canvas.drawPath(path, paint);
 	}

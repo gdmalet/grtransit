@@ -6,13 +6,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.content.pm.ApplicationInfo;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = "DatabaseHelper";
@@ -32,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		super(context, DB_NAME, null, 1);
 		this.mContext = context;
 		
-		DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+		DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
 	}	
 
 	/**

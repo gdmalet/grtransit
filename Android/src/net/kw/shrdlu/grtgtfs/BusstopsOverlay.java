@@ -8,12 +8,18 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
+import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.google.android.maps.Projection;
 
 public class BusstopsOverlay extends ItemizedOverlay {
 	private static final String TAG = "GrtItemizedOverlay";
@@ -83,9 +89,10 @@ public class BusstopsOverlay extends ItemizedOverlay {
 				  String headsign = route.substring(split+3);
 
 				  Intent bustimes = new Intent(mContext, BustimesActivity.class);
-				  bustimes.putExtra("route_id", route_id);
-				  bustimes.putExtra("headsign", headsign);
-				  bustimes.putExtra("stop_id", mStopid);
+				  String pkgstr = mContext.getApplicationContext().getPackageName();
+				  bustimes.putExtra(pkgstr + ".route_id", route_id);
+				  bustimes.putExtra(pkgstr + ".headsign", headsign);
+				  bustimes.putExtra(pkgstr + ".stop_id", mStopid);
 				  mContext.startActivity(bustimes);
 			  }
 		  }
@@ -119,5 +126,41 @@ public class BusstopsOverlay extends ItemizedOverlay {
 	@Override
 	public int size() {
 		return mOverlayItems.size();
+	}
+
+	/*
+	 * Override this so we can add text labels to each pin.
+	 * @see com.google.android.maps.ItemizedOverlay#draw(android.graphics.Canvas, com.google.android.maps.MapView, boolean)
+	 */
+	@Override
+	public void draw(Canvas canvas, MapView view, boolean shadow) {
+		super.draw(canvas, view, shadow);
+		
+		if (shadow || view.getZoomLevel() <= 15)
+			return;
+		
+		Log.v(TAG, "draw " + shadow + ", zoom is " + view.getZoomLevel());
+		
+        //Paint
+		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(10);
+        paint.setARGB(228,0,64,224);
+
+		// Convert geo points to points on the canvas
+		Projection proj = view.getProjection();
+		Point pt_scr = new Point();
+		GeoPoint pt_geo;
+		
+		for (int i=0; i<mOverlayItems.size(); i++) {
+			OverlayItem item = mOverlayItems.get(i);
+			pt_geo = item.getPoint();
+			proj.toPixels(pt_geo, pt_scr);
+			
+            //show text to the right of the icon
+            canvas.drawText(item.getTitle(), pt_scr.x, pt_scr.y+12, paint);
+            if (view.getZoomLevel() >= 18)
+            	canvas.drawText(item.getSnippet(), pt_scr.x, pt_scr.y-15, paint);
+		}
 	}
 }

@@ -43,18 +43,20 @@ public class BustimesActivity extends ListActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
+                String pkgstr = mContext.getApplicationContext().getPackageName();
         		Intent busroutes = new Intent(mContext, BusroutesActivity.class);
-        		busroutes.putExtra("route_id", mRoute_id);
-        		busroutes.putExtra("headsign", mHeadsign);
-        		busroutes.putExtra("stop_id", mStop_id);
+        		busroutes.putExtra(pkgstr + ".route_id", mRoute_id);
+        		busroutes.putExtra(pkgstr + ".headsign", mHeadsign);
+        		busroutes.putExtra(pkgstr + ".stop_id", mStop_id);
         		startActivity(busroutes);
             }
         });
         
+        String pkgstr = mContext.getApplicationContext().getPackageName();
         Intent intent = getIntent();
-        mRoute_id = intent.getStringExtra("route_id");
-        mHeadsign = intent.getStringExtra("headsign");
-        mStop_id = intent.getStringExtra("stop_id");
+        mRoute_id = intent.getStringExtra(pkgstr + ".route_id");
+        mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
+        mStop_id  = intent.getStringExtra(pkgstr + ".stop_id");
         
         mTitle = (TextView) findViewById(R.id.timestitle);
         mTitle.setText(mRoute_id + " - " + mHeadsign);

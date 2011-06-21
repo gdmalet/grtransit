@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 	private List<Overlay> mapOverlays;
 	private Drawable mStopmarker;
 	private MyLocationOverlay mMylocation;
+	private String mStopId;
+	private BusstopsOverlay mOverlay = null;;
 	
     /** Called when the activity is first created. */
     @Override
@@ -69,19 +72,14 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         mMylocation.enableCompass();
         mapOverlays.add(mMylocation);
 
-        // Get the busstop overlay set up in the background
-        new PrepareOverlay().execute();
-    }
+        // See if we're entering as a result of a search
+        String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
+        Intent intent = getIntent();
+        mStopId = intent.getStringExtra(stopstr);
+        if (mStopId != null)
+            Log.v(TAG, "New intent with stop id " + mStopId);
 
-    /**
-     * Handle new incoming intents from searches
-     */
-    @Override
-    public void onNewIntent(Intent intent) {    	
-        String stop_id = intent.getStringExtra("stop_id");
-        Log.v(TAG, "OnNewIntent(" + stop_id + ")");
-        
-        // TODO get geopoint and zoom to it
+        // Get the busstop overlay set up in the background
         new PrepareOverlay().execute();
     }
 
@@ -176,9 +174,9 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         protected BusstopsOverlay doInBackground(Void... foo) {
         	Log.v(TAG, "doInBackground()");
 
-            BusstopsOverlay overlay = new BusstopsOverlay(mStopmarker, mContext);
-
-            return overlay;
+        	mOverlay = new BusstopsOverlay(mStopmarker, mContext);
+            
+            return mOverlay;
         }
 
         /**
@@ -196,8 +194,21 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             // Center the map over the bus stops
             MapController mcp = mMapview.getController();
             // TODO center & zoom to a stop if searching
-            mcp.setCenter(overlay.getCenter());
-            mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            if (mStopId == null) {
+            	mcp.setCenter(overlay.getCenter());
+            	mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            } else {
+        		String q = String.format("select stop_lat, stop_lon from stops where stop_id = \"%s\"", mStopId);
+                Cursor locn = BusstopsOverlay.DB.rawQuery(q, null);
+                locn.moveToFirst();
+       			int stop_lat = (int)(locn.getFloat(0) * 1000000); // microdegrees
+       			int stop_lon = (int)(locn.getFloat(1) * 1000000);       			
+                locn.close();
+
+       			GeoPoint point = new GeoPoint(stop_lat, stop_lon);
+       			mcp.setCenter(point);
+            	mcp.setZoom(19);
+            }
 
             mTitle.setText(R.string.activity_desc);
 	    }

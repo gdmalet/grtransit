@@ -43,10 +43,11 @@ public class BusroutesActivity extends MapActivity {
         mapOverlays = mMapview.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.bluepin);
 
+        String pkgstr = mContext.getApplicationContext().getPackageName();
         Intent intent = getIntent();
-        String route_id = intent.getStringExtra("route_id");
-        String headsign = intent.getStringExtra("headsign");
-//        String stop_id = intent.getStringExtra("stop_id");	// TODO show position?
+        String route_id = intent.getStringExtra(pkgstr + ".route_id");
+        String headsign = intent.getStringExtra(pkgstr + ".headsign");
+//        String stop_id = intent.getStringExtra(pkgstr + ".stop_id");	// TODO show position?
     
         mTitle = (TextView) findViewById(R.id.title);
         mTitle.setText(route_id + " - " + headsign);
