@@ -24,16 +24,25 @@
             <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
         </activity>
 
-        <activity class=".BusstopsearchActivity" android:name=".BusstopsearchActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        <activity class=".BusroutesActivity" android:name="BusroutesActivity">
+            <meta-data android:name="android.app.default_searchable" android:value=".RoutesearchActivity" />
         </activity>
         
         <activity class=".BustimesActivity" android:name=".BustimesActivity" />
         
-        <activity class=".BusroutesActivity" android:name="BusroutesActivity"/>
-
+        <activity class=".BusstopsearchActivity" android:name=".BusstopsearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/busstopsearchable"/>
+        </activity>
+        
+        <activity class=".RoutesearchActivity" android:name=".RoutesearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/routesearchable"/>
+        </activity>
+        
     </application>
 </manifest>

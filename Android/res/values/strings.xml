@@ -16,6 +16,7 @@
     <string name="find_stop">Find a stop</string>
     <string name="find_route">Find a route</string>
     <string name="no_location_fix">Sorry, don\'t have a location fix!</string>
-    <string name="search_hint">Search for GRT bus stops or routes</string>
+    <string name="search_bus_hint">Search GRT bus stops</string>
+    <string name="search_route_hint">Search GRT bus routes</string>
     
 </resources>

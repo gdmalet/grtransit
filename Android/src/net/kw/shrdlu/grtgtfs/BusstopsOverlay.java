@@ -51,7 +51,7 @@ public class BusstopsOverlay extends ItemizedOverlay {
     	if (whereclause != null)
     		q += " where " + whereclause;
     	// TODO
-    	q += " limit 200";
+//    	q += " limit 200";
     	
         Cursor csr;
     	try {
@@ -144,7 +144,7 @@ public class BusstopsOverlay extends ItemizedOverlay {
         //Paint
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(10);
+        paint.setTextSize(20);
         paint.setARGB(228,0,64,224);
 
 		// Convert geo points to points on the canvas

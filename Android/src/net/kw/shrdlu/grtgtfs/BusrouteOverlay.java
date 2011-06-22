@@ -38,7 +38,7 @@ public class BusrouteOverlay extends Overlay {
     	}
 
     	// TODO -- caching points in an array -- perhaps better to just cache the
-    	// cursor, and reqpeat the query on draw()?
+    	// cursor, and repeat the query on draw()?
         csr.moveToPosition(0);
         mCount = csr.getCount();
    		mPoints = new int[mCount*2];
@@ -70,17 +70,15 @@ public class BusrouteOverlay extends Overlay {
 		Path path = new Path();
 
 		proj.toPixels(new GeoPoint(mPoints[0], mPoints[1]), pt_scr);
-//		Log.v(TAG, "point (" + mPoints[0] + "," + mPoints[1] + ") -> (" + pt_scr.x + ", " + pt_scr.y + ")");
 		path.moveTo(pt_scr.x, pt_scr.y);
 
 		for (int i=1; i<mCount; i++) {
 			proj.toPixels(new GeoPoint(mPoints[i*2], mPoints[(i*2)+1]), pt_scr);
-//	  		Log.v(TAG, "point (" + mPoints[i*2] + "," + mPoints[(i*2)+1] + ") -> (" + pt_scr.x + ", " + pt_scr.y + ")");
 	  		path.lineTo(pt_scr.x, pt_scr.y);
 		}
 
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint.setARGB(96, 0, 64, 224);
+		paint.setARGB(128, 224, 64, 32);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(5);
 		canvas.drawPath(path, paint);

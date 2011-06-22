@@ -11,11 +11,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class BusstopsearchActivity extends ListActivity {
-	private static final String TAG = "BusstopsearchActivity";
+public class RoutesearchActivity extends ListActivity {
+	private static final String TAG = "RoutesearchActivity";
 
-	private BusstopsearchActivity mContext;
+	private RoutesearchActivity mContext;
     private TextView mTitle;
+	private Cursor mCsr;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,31 +31,36 @@ public class BusstopsearchActivity extends ListActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
             mTitle = (TextView) findViewById(R.id.timestitle);
-            mTitle.setText("Stops matching `" + query + "'");
+            mTitle.setText("Routes matching `" + query + "'");
         
             // Hide the `Show' button used for showing routes.
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
         
             String q = String.format(
-        		"select stop_id as _id, stop_name as descr from stops where stop_id like \"%s%%\" or stop_name like \"%%%s%%\"",
+        		"select route_id as _id, route_long_name as descr from routes where route_id like \"%s%%\" or route_long_name like \"%%%s%%\"",
         		query, query);
-            Cursor csr = BusstopsOverlay.DB.rawQuery(q, null);
-            startManagingCursor(csr);
+            mCsr = BusstopsOverlay.DB.rawQuery(q, null);
+            startManagingCursor(mCsr);
 
-	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, csr);
+	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
 	    	setListAdapter(adapter);
         }	
     }
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position + ", stop number " + id);
+		Log.v(TAG, "clicked position " + position + ", route number " + id);
 		
-        String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
-		Intent busstop = new Intent(mContext, BusstopsActivity.class);
-		busstop.putExtra(stopstr, Integer.toString((int)id));
-        busstop.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		startActivity(busstop);
+        String pkgstr = mContext.getApplicationContext().getPackageName();
+        String routestr = pkgstr + ".route_id";
+        String headsign = pkgstr + ".headsign";
+
+		Intent route = new Intent(mContext, BusroutesActivity.class);
+		route.putExtra(routestr, Integer.toString((int)id));
+		mCsr.moveToPosition(position);
+		route.putExtra(headsign, mCsr.getString(1));	// TODO - this is not actually the headsign...
+        route.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		startActivity(route);
 	}
 }

@@ -13,14 +13,14 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-public class BusstopsearchCursorAdapter extends CursorAdapter {
-	private static final String TAG = "BusstopsearchCursorAdapter";
+public class SearchCursorAdapter extends CursorAdapter {
+	private static final String TAG = "SearchCursorAdapter";
 
 	private final LayoutInflater mInflater;
 	
-	public BusstopsearchCursorAdapter(ListActivity context, Cursor cursor) {
+	public SearchCursorAdapter(ListActivity context, Cursor cursor) {
     	super(context, cursor, true);
-    	Log.v(TAG, "BusstopsearchCursorAdapter()");
+    	Log.v(TAG, "SearchCursorAdapter()");
     
 		this.mInflater = LayoutInflater.from(context);
 	}
@@ -31,14 +31,14 @@ public class BusstopsearchCursorAdapter extends CursorAdapter {
     	Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
 
     	TextView labelview = (TextView) view.findViewById(R.id.label);
-    	String bus_stop = cursor.getString(cursor.getColumnIndex("_id"));
-		labelview.setText(bus_stop);
+    	String item = cursor.getString(cursor.getColumnIndex("_id"));
+		labelview.setText(item);
 
 		TextView valueview = (TextView)view.findViewById(R.id.value);
     	String descr = cursor.getString(cursor.getColumnIndex("descr"));
 		valueview.setText(descr);
 		
-		Log.v(TAG, "Bound <" + bus_stop + ">, <" + descr + ">");
+//		Log.v(TAG, "Bound <" + item + ">, <" + descr + ">");
 }
  
 	@Override

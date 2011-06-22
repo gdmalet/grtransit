@@ -193,7 +193,6 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 	        
             // Center the map over the bus stops
             MapController mcp = mMapview.getController();
-            // TODO center & zoom to a stop if searching
             if (mStopId == null) {
             	mcp.setCenter(overlay.getCenter());
             	mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
