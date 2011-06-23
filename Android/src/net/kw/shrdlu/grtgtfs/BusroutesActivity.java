@@ -114,7 +114,7 @@ public class BusroutesActivity extends MapActivity {
             			if (!mcp.zoomIn())
             				break;
             	} else {
-            		Toast.makeText(mContext, "No location fix!", Toast.LENGTH_LONG).show();
+            		Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
             	}
             	return true;
             }

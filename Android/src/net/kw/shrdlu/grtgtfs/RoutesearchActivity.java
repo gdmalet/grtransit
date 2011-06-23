@@ -36,10 +36,13 @@ public class RoutesearchActivity extends ListActivity {
             // Hide the `Show' button used for showing routes.
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
-        
+        // TODO order by numeric _id
             String q = String.format(
-        		"select route_id as _id, route_long_name as descr from routes where route_id like \"%s%%\" or route_long_name like \"%%%s%%\"",
-        		query, query);
+            		"select distinct route_id as _id, trip_headsign as descr from trips where route_id like \"%s%%\" or trip_headsign like \"%%%s%%\" order by cast(route_id as integer)",
+            		query, query);
+//			TODO Or use the routes file?            
+//        		"select route_id as _id, route_long_name as descr from routes where route_id like \"%s%%\" or route_long_name like \"%%%s%%\"",
+//        		query, query);
             mCsr = BusstopsOverlay.DB.rawQuery(q, null);
             startManagingCursor(mCsr);
 

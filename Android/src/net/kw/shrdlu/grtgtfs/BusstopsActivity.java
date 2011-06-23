@@ -194,8 +194,11 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             // Center the map over the bus stops
             MapController mcp = mMapview.getController();
             if (mStopId == null) {
-            	mcp.setCenter(overlay.getCenter());
-            	mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            	GeoPoint center = overlay.getCenter();
+            	if (center != null) {
+            		mcp.setCenter(overlay.getCenter());
+            		mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            	}
             } else {
         		String q = String.format("select stop_lat, stop_lon from stops where stop_id = \"%s\"", mStopId);
                 Cursor locn = BusstopsOverlay.DB.rawQuery(q, null);

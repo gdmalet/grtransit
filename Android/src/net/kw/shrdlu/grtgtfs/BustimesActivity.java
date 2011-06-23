@@ -94,6 +94,7 @@ public class BustimesActivity extends ListActivity {
         	String daysstr = mServiceCalendar.getDays(service_id, datenow, mShowTodayOnly);
 
         	// Only add if the bus runs on this day.
+        	// TODO - short circuit if we found the last bus?
         	if (daysstr != null) {
         		pair = new Pair<String,String>(departure_time, daysstr);
         		details.add(pair);
@@ -122,8 +123,12 @@ public class BustimesActivity extends ListActivity {
     		int mindiff = Integer.parseInt(nextdeparture.substring(3, 5));
     		mindiff -= t.minute;
     		hourdiff += mindiff;
-    		msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minutes", Toast.LENGTH_LONG);
+    		if (hourdiff >= 60)
+    			msg = Toast.makeText(mContext, "Next bus leaves at " + nextdeparture, Toast.LENGTH_LONG);
+    		else
+    			msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minutes", Toast.LENGTH_LONG);
     	} else {
+        	setSelection(count); // position the list at the last bus
     		msg = Toast.makeText(mContext, "No more busses today", Toast.LENGTH_LONG);
     	}
 		msg.setGravity(Gravity.TOP, 0, 0);

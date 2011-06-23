@@ -33,7 +33,7 @@
     <style name="ListTitle">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#AA000FFF</item>
+<!--        <item name="android:textColor">#AA000FFF</item>  --> 
     </style>
     
     <style name="List">

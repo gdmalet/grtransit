@@ -27,8 +27,8 @@ public class SearchCursorAdapter extends CursorAdapter {
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-    	Log.v(TAG, "bindView()");
-    	Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
+//    	Log.v(TAG, "bindView()");
+//    	Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
 
     	TextView labelview = (TextView) view.findViewById(R.id.label);
     	String item = cursor.getString(cursor.getColumnIndex("_id"));
