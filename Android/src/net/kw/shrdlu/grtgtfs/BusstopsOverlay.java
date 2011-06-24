@@ -29,15 +29,16 @@ public class BusstopsOverlay extends ItemizedOverlay {
 	private Cursor mCsr;
 	private String mStopid;
 	private DatabaseHelper dbHelper;
+	private GeoPoint mCenter;
 	public static SQLiteDatabase DB = null;
 	
 	// Use if no limit on stops
 	public BusstopsOverlay(Drawable defaultMarker, Context context) {
-		this(defaultMarker, context, null);
+		this(defaultMarker, context, null, null);
 	}
 
 	// Used to limit which stops are displayed
-	public BusstopsOverlay(Drawable defaultMarker, Context context, String whereclause) {
+	public BusstopsOverlay(Drawable defaultMarker, Context context, String whereclause, String [] selectargs) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
 
@@ -47,25 +48,37 @@ public class BusstopsOverlay extends ItemizedOverlay {
 			DB = dbHelper.getReadableDatabase();
 		}
 
-    	String q = "select stop_lat, stop_lon, stop_id, stop_name from stops";
-    	if (whereclause != null)
-    		q += " where " + whereclause;
-    	// TODO
-//    	q += " limit 200";
-    	
+//		final String table = "stops";
+		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
+
+		// TODO - limit under debug
+		String table = "stops";
+//    	if (whereclause == null) table += " limit 200";
+
         Cursor csr;
     	try {
-    		csr = DB.rawQuery(q, null);
+    		csr = DB.query(table, columns, whereclause, selectargs, null,null,null);
     	} catch (SQLException e) {
-    		Log.e(TAG, "DB query failed: \"" + q + "\", " + e.getMessage());
+    		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;
     	}
 
+    	// Going to calculate our center
+    	int min_lat = 360000000, min_lon = 360000000, max_lat = -360000000, max_lon = -360000000;
+    	
 		boolean more = csr.moveToPosition(0);
-
    		while (more) {
    			int stop_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
    			int stop_lon = (int)(csr.getFloat(1) * 1000000);
+   			
+   			if (stop_lat < min_lat)
+   				min_lat = stop_lat;
+   			if (stop_lat > max_lat)
+   				max_lat = stop_lat;
+   			if (stop_lon < min_lon)
+   				min_lon = stop_lon;
+   			if (stop_lon > max_lon)
+   				max_lon = stop_lon;
    			
    			GeoPoint point = new GeoPoint(stop_lat, stop_lon);
    			OverlayItem overlayitem = new OverlayItem(point, csr.getString(2), csr.getString(3));
@@ -74,7 +87,9 @@ public class BusstopsOverlay extends ItemizedOverlay {
    		}
    		csr.close();
    		
-		populate();
+   		mCenter = new GeoPoint(min_lat + (max_lat-min_lat), min_lon + (max_lon-min_lon));
+   		
+		populate();	// chomps up a lot of time....
 	}
 
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.
@@ -96,9 +111,15 @@ public class BusstopsOverlay extends ItemizedOverlay {
 				  mContext.startActivity(bustimes);
 			  }
 		  }
-	  };
+	};
 
-	  // This is called when a bus stop is clicked on in the map.
+	@Override
+	// Default returns `first ranked item' - WTF is that?
+	public GeoPoint getCenter() {
+		return mCenter;
+	}
+	
+	// This is called when a bus stop is clicked on in the map.
 	@Override
 	protected boolean onTap(int index) {
 	  OverlayItem item = mOverlayItems.get(index);
@@ -108,10 +129,11 @@ public class BusstopsOverlay extends ItemizedOverlay {
 	  dialog.setTitle("Routes using stop " + mStopid + ", " + item.getSnippet()); 
 
 	  // Find which routes use the given stop.
-	  String q = String.format(
-			  "select distinct route_id || \" - \" || trip_headsign as _id from trips where trip_id in (select trip_id from stop_times where stop_id = \"%s\")",
-			  item.getTitle());
-	  mCsr = DB.rawQuery(q, null);
+	  final String table = "trips";
+	  final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
+	  final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
+	  final String [] selectargs = {item.getTitle()};
+	  mCsr = DB.query(table, select, where, selectargs, null,null,null);
 
 	  dialog.setCursor(mCsr, mClick, "_id");
 	  dialog.show();
@@ -139,7 +161,7 @@ public class BusstopsOverlay extends ItemizedOverlay {
 		if (shadow || view.getZoomLevel() <= 15)
 			return;
 		
-		Log.v(TAG, "draw " + shadow + ", zoom is " + view.getZoomLevel());
+//		Log.v(TAG, "draw " + shadow + ", zoom is " + view.getZoomLevel());
 		
         //Paint
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);

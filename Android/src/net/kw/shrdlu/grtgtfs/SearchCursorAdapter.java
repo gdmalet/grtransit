@@ -43,7 +43,7 @@ public class SearchCursorAdapter extends CursorAdapter {
  
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-    	Log.v(TAG, "newView()");
+//    	Log.v(TAG, "newView()");
     	
     	return mInflater.inflate(R.layout.rowlayout, parent, false);
 	}

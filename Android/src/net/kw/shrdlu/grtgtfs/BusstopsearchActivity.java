@@ -44,6 +44,9 @@ public class BusstopsearchActivity extends ListActivity {
 
 	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, csr);
 	    	setListAdapter(adapter);
+        } else {
+        	// Called from another activity, so put up search box
+        	onSearchRequested();
         }	
     }
 	

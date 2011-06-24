@@ -116,7 +116,6 @@ public class BustimesActivity extends ListActivity {
     	// Calculate the time difference
     	Toast msg;
     	if (pos >= 0) {
-        	setSelection(pos); // position the list at the next bus
     		int hourdiff = Integer.parseInt(nextdeparture.substring(0, 2));
     		hourdiff -= t.hour;
     		hourdiff *= 60;
@@ -127,6 +126,7 @@ public class BustimesActivity extends ListActivity {
     			msg = Toast.makeText(mContext, "Next bus leaves at " + nextdeparture, Toast.LENGTH_LONG);
     		else
     			msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minutes", Toast.LENGTH_LONG);
+    		getListView().setSelectionFromTop(pos, 50);	// position next bus just below top
     	} else {
         	setSelection(count); // position the list at the last bus
     		msg = Toast.makeText(mContext, "No more busses today", Toast.LENGTH_LONG);

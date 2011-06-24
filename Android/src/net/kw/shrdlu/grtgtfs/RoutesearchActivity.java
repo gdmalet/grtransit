@@ -36,9 +36,10 @@ public class RoutesearchActivity extends ListActivity {
             // Hide the `Show' button used for showing routes.
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
-        // TODO order by numeric _id
             String q = String.format(
-            		"select distinct route_id as _id, trip_headsign as descr from trips where route_id like \"%s%%\" or trip_headsign like \"%%%s%%\" order by cast(route_id as integer)",
+            		"select distinct route_id as _id, trip_headsign as descr from trips "
+            		+ "where route_id like \"%s%%\" or trip_headsign like \"%%%s%%\" "
+            		+ "order by cast(route_id as integer)",
             		query, query);
 //			TODO Or use the routes file?            
 //        		"select route_id as _id, route_long_name as descr from routes where route_id like \"%s%%\" or route_long_name like \"%%%s%%\"",
@@ -48,7 +49,10 @@ public class RoutesearchActivity extends ListActivity {
 
 	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
 	    	setListAdapter(adapter);
-        }	
+        } else {
+        	// Called from another activity, so put up search box
+        	onSearchRequested();
+        }
     }
 	
 	@Override
@@ -62,7 +66,7 @@ public class RoutesearchActivity extends ListActivity {
 		Intent route = new Intent(mContext, BusroutesActivity.class);
 		route.putExtra(routestr, Integer.toString((int)id));
 		mCsr.moveToPosition(position);
-		route.putExtra(headsign, mCsr.getString(1));	// TODO - this is not actually the headsign...
+		route.putExtra(headsign, mCsr.getString(1));	// TODO - this is not actually the headsign if using routes file...
         route.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(route);
 	}

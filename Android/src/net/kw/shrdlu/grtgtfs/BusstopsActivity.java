@@ -121,8 +121,10 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
                 return true;
             }
             case R.id.menu_searchroutes: {
-        		Intent routesearch = new Intent(mContext, RoutesearchActivity.class);
-                routesearch.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        		Intent routesearch = new Intent(getIntent());
+        		routesearch.setClass(mContext, RoutesearchActivity.class);
+        		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+        		routesearch.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         		startActivity(routesearch);
                 return true;
             }
@@ -193,25 +195,35 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 
 	        mapOverlays.add(overlay);
 	        
-            // Center the map over the bus stops
+            // Center the map over given bus stop, else location, else the whole area
             MapController mcp = mMapview.getController();
+            GeoPoint center;
             if (mStopId == null) {
-            	GeoPoint center = overlay.getCenter();
+            	center = mMylocation.getMyLocation(); 
             	if (center != null) {
-            		mcp.setCenter(overlay.getCenter());
-            		mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            		mcp.animateTo(center);
+            		while (mMapview.getZoomLevel()<17)
+            			if (!mcp.zoomIn())
+            				break;
+            	} else {
+            		center = overlay.getCenter();
+            		if (center != null) {
+            			mcp.setCenter(overlay.getCenter());
+            			mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            		}
             	}
             } else {
-        		String q = String.format("select stop_lat, stop_lon from stops where stop_id = \"%s\"", mStopId);
-                Cursor locn = BusstopsOverlay.DB.rawQuery(q, null);
-                locn.moveToFirst();
-       			int stop_lat = (int)(locn.getFloat(0) * 1000000); // microdegrees
-       			int stop_lon = (int)(locn.getFloat(1) * 1000000);       			
-                locn.close();
-
-       			GeoPoint point = new GeoPoint(stop_lat, stop_lon);
-       			mcp.setCenter(point);
-            	mcp.setZoom(19);
+            	final String table = "stops", where = "stop_id = ?";
+            	final String [] columns = {"stop_lat", "stop_lon"}, selectargs = {mStopId};
+                Cursor locn = BusstopsOverlay.DB.query(table, columns, where, selectargs, null,null,null);
+                if (locn.moveToFirst()) {
+                	int stop_lat = (int)(locn.getFloat(0) * 1000000); // microdegrees
+                	int stop_lon = (int)(locn.getFloat(1) * 1000000);       			
+                	center = new GeoPoint(stop_lat, stop_lon);
+                	mcp.setCenter(center);
+                	mcp.setZoom(19);
+                }
+            	locn.close();
             }
 
             mTitle.setText(R.string.activity_desc);

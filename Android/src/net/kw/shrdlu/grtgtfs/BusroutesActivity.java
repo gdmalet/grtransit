@@ -70,14 +70,8 @@ public class BusroutesActivity extends MapActivity {
         mMylocation.enableCompass();
         mapOverlays.add(mMylocation);
         
-        // TODO -- trip_headsign is wrong with route searches....
-        String q = String.format("stop_id in " +
-        		"(select stop_id from stop_times where trip_id = " +
-        		"(select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\"))",
-        		mRoute_id, mHeadsign);
-
         // Do the rest off the main thread
-        new PrepareOverlays().execute(q);
+        new PrepareOverlays().execute();
     }
 
     @Override
@@ -119,7 +113,11 @@ public class BusroutesActivity extends MapActivity {
             	return true;
             }
             case R.id.menu_searchstops: {
-            	onSearchRequested();
+        		Intent stopsearch = new Intent(getIntent());
+        		stopsearch.setClass(mContext, BusstopsearchActivity.class);
+        		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+        		stopsearch.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        		startActivity(stopsearch);
                 return true;
             }
             case R.id.menu_searchroutes: {
@@ -133,7 +131,7 @@ public class BusroutesActivity extends MapActivity {
     /**
      * Background task to handle initial load of the overlays.
      */
-    private class PrepareOverlays extends AsyncTask<String, Void, BusstopsOverlay> {
+    private class PrepareOverlays extends AsyncTask<Void, Void, BusstopsOverlay> {
     	static final String TAG = "LookupTask";
     	
         /**
@@ -150,10 +148,20 @@ public class BusroutesActivity extends MapActivity {
          * Perform the background query.
          */
         @Override
-        protected BusstopsOverlay doInBackground(String... query) {
+        protected BusstopsOverlay doInBackground(Void... foo) {
         	Log.v(TAG, "doInBackground()");
 
-            BusstopsOverlay busstopsoverlay = new BusstopsOverlay(drawable, mContext, query[0]);
+            // TODO -- trip_headsign is wrong with route searches....
+/*            String q = String.format("stop_id in " +
+            		"(select stop_id from stop_times where trip_id = " +
+            		"(select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\"))",
+            		mRoute_id, mHeadsign);
+*/            String whereclause = "stop_id in "
+            	+ "(select stop_id from stop_times where trip_id = "
+            	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
+            String [] selectargs = {mRoute_id, mHeadsign};
+
+            BusstopsOverlay busstopsoverlay = new BusstopsOverlay(drawable, mContext, whereclause, selectargs);
             mapOverlays.add(busstopsoverlay);
 
             // Now draw the route
@@ -180,9 +188,10 @@ public class BusroutesActivity extends MapActivity {
             	Log.e(TAG, "no center found for map!");
             	mcp.setCenter(center);
             	mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            	mcp.zoomOut(); // pull back a bit to show whole route.
             }
 
-            mTitle.setText(mRoute_id + " - " + mHeadsign);
+            mTitle.setText("Rt " + mRoute_id + " - " + mHeadsign);
 	    }
 	}
 }
