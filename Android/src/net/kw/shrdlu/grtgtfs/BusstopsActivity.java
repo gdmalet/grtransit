@@ -86,8 +86,8 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
     @Override
     protected boolean isRouteDisplayed() {
     	return false;
-    }
-
+    } 
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -121,7 +121,9 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
                 return true;
             }
             case R.id.menu_searchroutes: {
-            	onSearchRequested();
+        		Intent routesearch = new Intent(mContext, RoutesearchActivity.class);
+                routesearch.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        		startActivity(routesearch);
                 return true;
             }
         }
