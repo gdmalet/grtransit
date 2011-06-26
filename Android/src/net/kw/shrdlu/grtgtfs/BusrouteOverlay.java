@@ -24,16 +24,22 @@ public class BusrouteOverlay extends Overlay {
 	public BusrouteOverlay(Context context, String route, String headsign) {
 		super();
 		
-        String q = String.format(
-				"select shape_pt_lat, shape_pt_lon from shapes where shape_id = " +
-				"(select shape_id from trips where route_id = \"%s\" and trip_headsign = \"%s\")",
-        		route, headsign);
+		final String table = "shapes";
+		final String [] columns = {"shape_pt_lat", "shape_pt_lon"};
+		final String whereclause = "shape_id = (select shape_id from trips where route_id = ? and trip_headsign = ?)";
+		String [] selectargs = {route, headsign};
+		
+//        String q = String.format(
+//				"select shape_pt_lat, shape_pt_lon from shapes where shape_id = " +
+//				"(select shape_id from trips where route_id = \"%s\" and trip_headsign = \"%s\")",
+//        		route, headsign);
 
     	Cursor csr;
     	try {
-    		csr = BusstopsOverlay.DB.rawQuery(q, null);
+//    		csr = BusstopsOverlay.DB.rawQuery(q, null);
+    		csr = BusstopsOverlay.DB.query(table, columns, whereclause, selectargs, null,null,null);
     	} catch (SQLException e) {
-    		Log.e(TAG, "DB query failed: \"" + q + "\", " + e.getMessage());
+    		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;
     	}
 

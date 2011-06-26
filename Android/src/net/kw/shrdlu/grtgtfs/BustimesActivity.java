@@ -61,10 +61,13 @@ public class BustimesActivity extends ListActivity {
         mTitle = (TextView) findViewById(R.id.timestitle);
         mTitle.setText(mRoute_id + " - " + mHeadsign);
         
-        String q = String.format(
-        		"select departure_time as _id, trip_id from stop_times where stop_id = \"%s\" and trip_id in (select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\") order by departure_time",
-        		mStop_id, mRoute_id, mHeadsign);
-        Cursor csr = BusstopsOverlay.DB.rawQuery(q, null);
+//        String q = String.format(
+//        		"select departure_time as _id, trip_id from stop_times where stop_id = \"%s\" and trip_id in (select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\") order by departure_time",
+//        		mStop_id, mRoute_id, mHeadsign);
+        final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
+        	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
+        String [] selectargs = {mStop_id, mRoute_id, mHeadsign};
+        Cursor csr = BusstopsOverlay.DB.rawQuery(q, selectargs);
         startManagingCursor(csr);
 
     	// Will find where to position the list of bus departure times
@@ -86,8 +89,10 @@ public class BustimesActivity extends ListActivity {
         	String trip_id = csr.getString(1);
         	
             // Get and translate the service id
-    		q = String.format("select service_id from trips where trip_id = \"%s\"", trip_id);
-            Cursor svs = BusstopsOverlay.DB.rawQuery(q, null);
+    		final String svsq = "select service_id from trips where trip_id = ?";
+    		String [] svsargs = {trip_id};
+            Cursor svs = BusstopsOverlay.DB.rawQuery(svsq, svsargs);
+
             svs.moveToFirst();
             String service_id = svs.getString(0);
             svs.close();

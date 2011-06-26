@@ -9,7 +9,8 @@ import android.util.TimeFormatException;
 
 public class ServiceCalendar {
 	private static final String TAG = "ServiceCalendar";
-	private static final String mDBQuery = "select * from %s where service_id = \"%s\"";
+	private static final String mDBQuery = "select * from calendar where service_id = ?";
+	private static final String mDBQueryDate  = "select * from calendar_dates where service_id = ? and date = ?";
 
 	// Cache some results, to save db lookups
 	private static final HashMap<String,String> truemap = new HashMap<String, String>(32);
@@ -48,7 +49,8 @@ public class ServiceCalendar {
 		// Make sure it's in a current schedule period
 		String start = csr.getString(csr.getColumnIndex("start_date"));
 		String end = csr.getString(csr.getColumnIndex("end_date"));
-		if (date.compareTo(start) < 0 || date.compareTo(end) >0)
+		if (date.compareTo(start) < 0 || date.compareTo(end) > 0)
+			// return "Schedule data has expired!";
 			return null;
 
 		// If we're not limiting the display, return what we have
@@ -56,9 +58,8 @@ public class ServiceCalendar {
 			return getDays(csr);
 		
 		// Check for exceptions
-		String q = String.format(mDBQuery, "calendar_dates", service_id);
-		q += "and date = \"" + date + "\"";
-		Cursor exp = BusstopsOverlay.DB.rawQuery(q, null);
+		String [] selectargs = {service_id, date};
+		Cursor exp = BusstopsOverlay.DB.rawQuery(mDBQueryDate, selectargs);
 		if (exp.moveToFirst()) {
 			int exception = exp.getInt(exp.getColumnIndex("exception_type"));
 			if (exception == 2)			// service removed for this day
@@ -87,7 +88,7 @@ public class ServiceCalendar {
 	}
 	
 	// Return a string showing the days a bus runs, or null if it doesn't
-	// run on the given data. Limit to correct days of week, or not.
+	// run on the given date. Limit to correct days of week, or not.
 	public String getDays(String service_id, String date, boolean limit) {
 		
 		String retstr;
@@ -107,8 +108,8 @@ public class ServiceCalendar {
 			}
 		}
 		
-		String q = String.format(mDBQuery, "calendar", service_id);
-		Cursor csr = BusstopsOverlay.DB.rawQuery(q, null);
+		String [] selectargs = {service_id};
+		Cursor csr = BusstopsOverlay.DB.rawQuery(mDBQuery, selectargs);
 		retstr = process_db(service_id, date, limit, csr);
 		csr.close();
 		

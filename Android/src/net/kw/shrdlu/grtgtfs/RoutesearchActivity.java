@@ -36,15 +36,23 @@ public class RoutesearchActivity extends ListActivity {
             // Hide the `Show' button used for showing routes.
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
-            String q = String.format(
-            		"select distinct route_id as _id, trip_headsign as descr from trips "
-            		+ "where route_id like \"%s%%\" or trip_headsign like \"%%%s%%\" "
-            		+ "order by cast(route_id as integer)",
-            		query, query);
+            
+//          String q = String.format(
+//          		"select distinct route_id as _id, trip_headsign as descr from trips "
+//          		+ "where route_id like \"%s%%\" or trip_headsign like \"%%%s%%\" "
+//          		+ "order by cast(route_id as integer)",
+//          		query, query);
 //			TODO Or use the routes file?            
-//        		"select route_id as _id, route_long_name as descr from routes where route_id like \"%s%%\" or route_long_name like \"%%%s%%\"",
-//        		query, query);
-            mCsr = BusstopsOverlay.DB.rawQuery(q, null);
+//    		"select route_id as _id, route_long_name as descr from routes where route_id like \"%s%%\" or route_long_name like \"%%%s%%\"",
+//    		query, query);
+//          mCsr = BusstopsOverlay.DB.rawQuery(q, null);
+
+            final String table = "trips";
+            final String [] columns = {"distinct route_id as _id", "trip_headsign as descr"};
+            final String whereclause = "route_id like ? || '%' or trip_headsign like '%' || ? || '%'";
+            String [] selectargs = {query, query};
+            final String orderby = "cast(route_id as integer)";
+            mCsr = BusstopsOverlay.DB.query(table, columns, whereclause, selectargs, null, null, orderby, null); 
             startManagingCursor(mCsr);
 
 	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);

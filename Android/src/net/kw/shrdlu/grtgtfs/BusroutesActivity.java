@@ -156,7 +156,7 @@ public class BusroutesActivity extends MapActivity {
             		"(select stop_id from stop_times where trip_id = " +
             		"(select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\"))",
             		mRoute_id, mHeadsign);
-*/            String whereclause = "stop_id in "
+*/           final String whereclause = "stop_id in "
             	+ "(select stop_id from stop_times where trip_id = "
             	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
             String [] selectargs = {mRoute_id, mHeadsign};

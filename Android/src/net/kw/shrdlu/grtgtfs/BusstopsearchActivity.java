@@ -36,10 +36,16 @@ public class BusstopsearchActivity extends ListActivity {
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
         
-            String q = String.format(
-        		"select stop_id as _id, stop_name as descr from stops where stop_id like \"%s%%\" or stop_name like \"%%%s%%\"",
-        		query, query);
-            Cursor csr = BusstopsOverlay.DB.rawQuery(q, null);
+//          String q = String.format(
+//    		"select stop_id as _id, stop_name as descr from stops where stop_id like \"%s%%\" or stop_name like \"%%%s%%\"",
+//    		query, query);
+//          Cursor csr = BusstopsOverlay.DB.rawQuery(q, null);
+
+            final String table = "stops";
+            final String [] columns = {"stop_id as _id", "stop_name as descr"};
+            final String whereclause = "stop_id like ? || '%' or stop_name like '%' || ? || '%'";
+            String [] selectargs = {query, query};
+            Cursor csr = BusstopsOverlay.DB.query(table, columns, whereclause, selectargs, null, null, null, null);
             startManagingCursor(csr);
 
 	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, csr);
