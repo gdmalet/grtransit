@@ -5,9 +5,11 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +43,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 	private Drawable mStopmarker;
 	private MyLocationOverlay mMylocation;
 	private String mStopId;
-	private BusstopsOverlay mOverlay = null;;
+	private BusstopsOverlay mOverlay = null;
 	
     /** Called when the activity is first created. */
     @Override
@@ -49,7 +51,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.mapview);
-        
+
     	// Load animations used to show/hide progress bar
         mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
         mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
@@ -120,13 +122,19 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             	onSearchRequested();
                 return true;
             }
-            case R.id.menu_searchroutes: {
+/*          case R.id.menu_restart: {
+        		Intent restart = new Intent(getIntent());
+        		restart.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        		startActivity(restart);
+        		return true;
+            }
+*/          case R.id.menu_searchroutes: {
         		Intent routesearch = new Intent(getIntent());
         		routesearch.setClass(mContext, RoutesearchActivity.class);
         		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		routesearch.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        		routesearch.setFlags(/*Intent.FLAG_ACTIVITY_CLEAR_TOP |*/ Intent.FLAG_ACTIVITY_NO_HISTORY);
         		startActivity(routesearch);
-                return true;
+        		return true;
             }
         }
         return false;

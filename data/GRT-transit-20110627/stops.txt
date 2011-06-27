@@ -1,0 +1,2739 @@
+stop_lat,zone_id,stop_lon,stop_id,stop_name,location_type
+43.498785,,-80.498918,2031,Meadowvale / Dansbury,0
+43.433097,,-80.436623,1869,Kinzie / Walker,0
+43.434163,,-80.43499,1868,Kinzie / Obermeyer,0
+43.417153,,-80.387097,2318,Maple Grove / Cherry Blossom,0
+43.45187,,-80.487045,2319,Weber / Queen,0
+43.42906,,-80.379022,2316,Loblaws,0
+43.423803,,-80.38154,2317,Maple Grove / Fountain,0
+43.41628,,-80.37569,2314,Fountain / Toyota Gate 1,0
+43.418968,,-80.376648,2315,Fountain / Toyota Gate 2,0
+43.407695,,-80.37656,2313,Ats,0
+43.415303,,-80.383427,2310,Cherry Blossom / Barnes,0
+43.4827,,-80.5239,3773,Columbia / Weber,0
+43.483,,-80.5236,3772,Columbia / Weber,0
+43.4841,,-80.5205,3771,Columbia / Marsland,0
+43.4875,,-80.5185,3770,Lexington / Dearborn,0
+43.4969,,-80.5459,3777,Parkside / Northfield,0
+43.4949,,-80.5445,3776,551 Parkside Dr,0
+43.4934,,-80.5444,3775,Parkside / Weber,0
+43.4945,,-80.5484,3774,Weber / Glen Forrest,0
+43.460452,,-80.507893,3234,Moore / Graham,0
+43.35859,,-80.317492,2268,Grand / South Square,0
+43.354137,,-80.302748,2269,Christopher / Elliott,0
+43.342903,,-80.327752,2262,Fourth / Vincent,0
+43.34317,,-80.331443,2263,Fourth / St Andrews,0
+43.340993,,-80.32386,2260,Culham / Tait,0
+43.343533,,-80.324195,2261,Tait / Fourth,0
+43.350137,,-80.336173,2266,Southwood / Cedar,0
+43.351588,,-80.328497,2267,Cedar / Osborne,0
+43.344695,,-80.331595,2264,Southwood / St Andrews,0
+43.346087,,-80.334843,2265,Southwood / Westwood,0
+43.469296,,-80.484374,2442,Lancaster / Ash,0
+43.468057,,-80.484342,2443,Lancaster / Arnold,0
+43.47506,,-80.48445,2440,Lancaster / Hamel,0
+43.471371,,-80.484452,2441,Lancaster / Union,0
+43.462147,,-80.483798,2446,Lancaster / Louisa,0
+43.460708,,-80.484153,2447,Wellington / Major,0
+43.465378,,-80.4843,2444,Lancaster / Guelph,0
+43.46412,,-80.484247,2445,Lancaster / Hill,0
+43.45983,,-80.486818,2448,Wellington / St Leger,0
+43.458697,,-80.490313,2449,Wellington / Margaret,0
+43.499703,,-80.537457,2046,Conestogo / Colby,0
+43.498483,,-80.536587,2047,Conestogo / Durward,0
+43.51014,,-80.519108,2044,Bridge / Labrador,0
+43.489672,,-80.527735,2045,King / Waterloo Inn,0
+43.505628,,-80.510583,2042,Bridge / Chesapeake,0
+43.504567,,-80.50592,2040,Eastbridge / Mayflower,0
+43.504167,,-80.50841,2041,Eastbridge / Acadia,0
+43.495753,,-80.532875,2048,483 Conestogo Rd W,0
+43.496408,,-80.531728,2049,Conestogo / Bauer,0
+43.458655,,-80.490548,2839,Margaret / Wellington,0
+43.46072,,-80.492793,2838,Margaret / Wilhelm,0
+43.471145,,-80.51389,2835,Weber / Lincoln,0
+43.402215,,-80.346653,3519,Concession / Trico,0
+43.399862,,-80.330815,3518,Industrial / Langs,0
+43.429465,,-80.304333,3513,Rife / Bella,0
+43.429685,,-80.288827,3512,Kerwood / Ellis,0
+43.427642,,-80.318508,3511,Queen / Winston,0
+43.421238,,-80.313745,3510,Winston / Heather,0
+43.391123,,-80.319857,3517,Cambridge Centre Terminal,0
+43.391227,,-80.320352,3516,Cambridge Centre Terminal,0
+43.411617,,-80.307628,3514,Pinebush / Franklin,0
+43.454479,,-80.520774,2688,Union / Earl,0
+43.454901,,-80.519047,2689,Belmont / Union,0
+43.45514,,-80.528448,2684,Westmount / Norman,0
+43.454347,,-80.52766,2685,Westmount / John,0
+43.452182,,-80.524937,2686,Union / Westmount,0
+43.453229,,-80.522523,2687,Union / Dunbar,0
+43.459042,,-80.536837,2680,Westmount / Erb,0
+43.457612,,-80.53533,2681,Westmount / Lourdes,0
+43.456923,,-80.53224,2682,Westmount / Dietz,0
+43.456318,,-80.52991,2683,Westmount / Douglas,0
+43.400075,,-80.362027,1436,Eagle / William,0
+43.398303,,-80.363702,1437,Eagle / King,0
+43.466694,,-80.586075,3392,Erbsville / White Elm,0
+43.398437,,-80.342633,1432,Langs / Fairview Mennonite,0
+43.41879,,-80.325147,1275_merged_999106,Holiday Inn / Groh,
+43.398698,,-80.345453,1433,Concession / Winterhalt,0
+43.446045,,-80.553957,1991,Thorndale / Appledale,0
+43.389973,,-80.346597,1622,King / Bishop,0
+43.388777,,-80.344222,1621,King / Brower,0
+43.387912,,-80.342513,1620,King / Concession,0
+43.399072,,-80.364283,1627,King / Chopin,0
+43.430645,,-80.533965,3202,Bankside / Golden Terrace,0
+43.394625,,-80.355777,1625,King / Lowther,0
+43.393177,,-80.352915,1624,King / Dolph,0
+43.45949,,-80.536275,1999,Erb / Westmount,0
+43.456555,,-80.541867,1998,Erb / Mcdougall,0
+43.396142,,-80.372962,1629,Fountain / Bauman,0
+43.399956,,-80.368,1628,King / Fountain,0
+43.434542,,-80.534373,3209,Victoria / Path To Wexford,0
+43.43357,,-80.538688,3208,Victoria / Eastforest,0
+43.435892,,-80.447073,2860,Franklin / Prospect,0
+43.431922,,-80.438915,2861,Weber / Kinzie,0
+43.429262,,-80.43487,2862,King / Kingsbury,0
+43.425355,,-80.490287,2863,Grt Strasburg Transit Garage,0
+43.424732,,-80.495277,2864,Chandler / Bonfield,0
+43.423855,,-80.496687,2865,Elmsdale / Chandler,0
+43.42201,,-80.49421,2866,Elmsdale / Ottawa,0
+43.42122,,-80.497252,2867,Ottawa / Howland,0
+43.420673,,-80.500573,2868,Ottawa / Path To Chandler,0
+43.420357,,-80.50258,2869,Ottawa / Westmount,0
+43.496233,,-80.548257,1199,Northfield / Weber,0
+43.495625,,-80.54993,1198,Northfield / Weber,0
+43.433163,,-80.510683,3348,Queens / Westmount,0
+43.43406,,-80.508183,3349,Queens / Blueridge,0
+43.491093,,-80.564262,1191,Highpoint / Northfield,0
+43.48914,,-80.562982,1190,Highpoint / Rolling Hills,0
+43.493622,,-80.563955,1193,Northlake / Highpoint,0
+43.493208,,-80.564582,1192,Highpoint / Cornerbrook,0
+43.494148,,-80.556752,1195,Skylark / Northlake,0
+43.494712,,-80.559533,1194,Northlake / Green Meadow,0
+43.494357,,-80.553547,1197,Northfield / Northgate,0
+43.493527,,-80.555927,1196,Northfield / Skylark,0
+43.40878,,-80.443455,1759,Wabanaki / Kevco,0
+43.406957,,-80.448535,1758,Manitou / Wabanaki,0
+43.405483,,-80.448345,1757,334 Manitou Dr.,0
+43.40185,,-80.447687,1756,Manitou / Cayuga,0
+43.398292,,-80.446698,1755,Doon Village / Farrier,0
+43.393583,,-80.443617,1754,Doon Village / Wheatfield Park,0
+43.391897,,-80.440588,1753,Doon Village / Bechtel,0
+43.389998,,-80.444377,1752,Bechtel / Anvil,0
+43.389137,,-80.448528,1751,Bechtel / Sabrina,0
+43.391645,,-80.450683,1750,Pioneer / Black Walnut,0
+43.490542,,-80.539163,1177,Albert / Longwood,0
+43.48815,,-80.541385,1176,Albert / Greenbrier,0
+43.485738,,-80.539433,1175,Hazel / Albert,0
+43.485675,,-80.537293,1174,Hazel / Blythwood,0
+43.483773,,-80.535095,1173,Hazel / Smallwood,0
+43.481543,,-80.532912,1172,Hazel / Austin,0
+43.479566,,-80.531347,1171,Waterloo Ci,0
+43.478533,,-80.530555,1170,Waterloo Ci,0
+43.49266,,-80.544787,1179,Parkside / Weber,0
+43.492042,,-80.537633,1178,Weber / Albert,0
+43.403585,,-80.35481,1284,Eagle / Hexam,0
+43.404093,,-80.351697,1283,Eagle / Shettleston,0
+43.40467,,-80.348197,1282,Eagle / Concession,0
+43.40332,,-80.35546,1289,Laurel / Eagle,0
+43.394808,,-80.37774,1579,Preston / Hillview,0
+43.396447,,-80.377657,1578,Preston / Parkview,0
+43.407827,,-80.391363,1573,Gateway Park / Sportsworld,0
+43.408985563,,-80.3938566,1571,Sportsworld Crossing,0
+43.409226842,,-80.39381845,1570,Sportsworld Crossing,0
+43.39853,,-80.377978,1577,Preston / Kiwanis Village,0
+43.399365,,-80.376857,1576,Preston / Linden,0
+43.399647,,-80.375538,1575,Shantz Hill / Preston Pkwy,0
+43.406267,,-80.38917,1574,Tu Lane / Gateway Park,0
+43.438698,,-80.298918,1240,Melran / Mccormick,0
+43.436943,,-80.293683,1243,Mcmeeken / Mccormick,0
+43.504595,,-80.496582,2035,University / Lexington,0
+43.38885,,-80.28531,1371,Burnett / Mctague,0
+43.386238,,-80.288258,1370,Burnett / Chimney Hill,0
+43.390437,,-80.29201,1373,Saginaw / Stonecairn,0
+43.389898,,-80.2883,1372,Saginaw / Fairgreen,0
+43.391526,,-80.300126,1375,St Benedict Css,0
+43.38973,,-80.296317,1374,Saginaw / Cowan,0
+43.39165,,-80.300673,1377,St Benedict Css,0
+43.391573,,-80.300315,1376,St Benedict Css,0
+43.391123,,-80.30861,1379,Elgin / Bushnell,0
+43.39139,,-80.302953,1378,Elgin / Franklin,0
+43.500373,,-80.500822,2032,Meadowvale / Lexington,0
+43.5102,,-80.5495,3834,Farmers Market / Walmart,0
+43.3915,,-80.3441,3835,Bishop / Pineview,0
+43.5159,,-80.5573,3836,King / Lobsinger,0
+43.554798,,-80.555367,3837,Arthur / Gerrat,0
+43.5377,,-80.5539,3830,King / Cedar,0
+43.5319,,-80.5549,3831,King / Henry,0
+43.5284,,-80.5554,3832,King / Printery,0
+43.5099,,-80.5558,3833,Farmers Market / Benjamin,0
+43.498052,,-80.499417,2030,Dansbury / Canterbury,0
+43.5671,,-80.5613,3838,Arthur / Scotch Line,0
+43.5671,,-80.5615,3839,Arthur / Scotch Line,0
+43.429097,,-80.289172,1245,Ellis / Kerwood,0
+43.430943,,-80.293117,1244,Kerwood / Gees,0
+43.447772,,-80.559623,1987,Westvale / Foxhill,0
+43.416413,,-80.386348,2309,Cherry Blossom / Maple Grove,0
+43.387473,,-80.411953,2308,Homer Watson,0
+43.35629,,-80.300775,2301,Main / Lowrey,0
+43.356033,,-80.298927,2300,Chalmers / Main,0
+43.356812,,-80.30622,2303,Main / Arthur White,0
+43.356538,,-80.303102,2302,Main / Cathay,0
+43.357148,,-80.307967,2304,Main / Spruce,0
+43.428063,,-80.295037,1246,Ellis / Cooper,0
+43.49,,-80.5169,3748,Lexington / Dearborn Blvd,0
+43.498,,-80.505,3749,Lexington / Bridge,0
+43.3937,,-80.4367,3746,Pioneer / Bechtel,0
+43.4843,,-80.5197,3747,Columbia / Marsland,0
+43.4571,,-80.495,3744,Wellington / Weber,0
+43.4914,,-80.578,3745,Conservation / Waterton,0
+43.4611,,-80.5219,3743,William / Caroline,0
+43.3867,,-80.475,3740,Huron / Cranshaw,0
+43.3889,,-80.4718,3741,Huron / Newcastle,0
+43.445138,,-80.529582,3253,Westwood / Westwood Cres.,0
+43.347993,,-80.304617,2275,Glenview / Mcdonald,0
+43.347808,,-80.306497,2274,Mckay / Glenview,0
+43.346242,,-80.299985,2277,Champlain / Christopher,0
+43.346405,,-80.303265,2276,Mcdonald / Dorset,0
+43.350275,,-80.302827,2271,Ballantyne / East,0
+43.352072,,-80.301957,2270,Christopher / South,0
+43.349588,,-80.306918,2273,Ballantyne / Mckay,0
+43.349923,,-80.304908,2272,Ballantyne / Mcdonald,0
+43.341327,,-80.300928,2279,Christopher / Myers,0
+43.343818,,-80.300958,2278,Christopher / Tutton,0
+43.469538,,-80.447385,2337,1373 Victoria St.,0
+43.453283,,-80.490448,2459,Weber / Young,0
+43.45116,,-80.4929,2458,King / Gaukel,0
+43.453817,,-80.50143,2455,King / Breithaupt,0
+43.454508,,-80.502919,2454,Wellington / King,0
+43.451736,,-80.494754,2457,King / Water,0
+43.452887,,-80.498582,2456,King / Victoria,0
+43.456577,,-80.496683,2451,Wellington / Duke,0
+43.4578,,-80.49296,2450,Wellington / Ahrens,0
+43.455098,,-80.501085,2453,Wellington / Moore,0
+43.455805,,-80.498992,2452,Wellington / Waterloo,0
+43.498617,,-80.53218,2051,Conestogo / King,0
+43.498554,,-80.532046,2050,Conestogo / King,0
+43.496668,,-80.535205,2053,530 Conestogo Rd.,0
+43.495837,,-80.532947,2052,Conestogo / Bauer,0
+43.499713,,-80.537278,2055,Conestogo / Northfield,0
+43.498572,,-80.536503,2054,Conestogo / Durward,0
+43.4509,,-80.5721,3690,Erbsville / Royal Beech,0
+43.4533,,-80.5719,3691,Path To Erbsville,0
+43.4558,,-80.5732,3692,Keats / Keatswood,0
+43.4565,,-80.5711,3693,Keats / Beechwood,0
+43.4575,,-80.5682,3694,Keats / Leighland,0
+43.4567,,-80.5649,3695,Keats Way / Brynhurst,0
+43.4907,,-80.5813,3697,Lake Louise / Kelso,0
+43.357147,,-80.293797,1506,Main / Alexander,0
+43.356593,,-80.296798,1507,Main / Elgin,0
+43.39945,,-80.354483,3526,Westminster / Laurel,0
+43.379983,,-80.319342,3527,Hespeler / Abbotsford,0
+43.386152,,-80.389268,3524,Fountain / Blair,0
+43.385395,,-80.39139,3525,Fountain / Blair,0
+43.400862,,-80.354707,3522,Laurel / North,0
+43.393222,,-80.367597,3520,Dover / Rose,0
+43.390792,,-80.363468,3521,Rose / Westminster,0
+43.355848,,-80.301208,1508,Concession / Scrimger,0
+43.384015,,-80.303455,1364,Glamis / The Greenway,0
+43.355378,,-80.304092,1509,Concession / Peck,0
+43.370457,,-80.313927,1601,Dundas / Hopeton,0
+43.440148,,-80.508363,2699,Belmont / Burn,0
+43.372232,,-80.316883,1600,Dundas / Haddington,0
+43.442205,,-80.51075,2697,Belmont / Edgewood,0
+43.443235,,-80.512007,2696,Belmont / Victoria,0
+43.445037,,-80.512965,2695,Belmont / Karn,0
+43.447603,,-80.514288,2694,Belmont / Gage,0
+43.449407,,-80.515485,2693,551  Belmont Ave.,0
+43.3659,,-80.3063,1603,Dundas / Beverly,0
+43.451697,,-80.516993,2691,Belmont / Glasgow,0
+43.453123,,-80.517838,2690,Belmont / Claremont,0
+43.3674,,-80.3089,1602,Dundas / Cambridge,0
+43.359238,,-80.31141,1605,Wellington / Main,0
+43.363,,-80.3089,1604,Beverly / Kerr,0
+43.364605,,-80.307198,1607,Beverly / Mill Creek Trail,0
+43.36199,,-80.309622,1606,Beverly / Kerr,0
+43.38111,,-80.307262,1362,Elgin / Glamis,0
+43.457597,,-80.502798,3232,Moore / Briar,0
+43.45894,,-80.504977,3233,Moore / Guelph,0
+43.45484,,-80.501108,3230,Moore / Wellington,0
+43.45653,,-80.502163,3231,Moore / Shanley,0
+43.456514,,-80.542359,1968,Erb / Mulberry,0
+43.455717,,-80.544418,1969,Erb / Amos,0
+43.38386,,-80.335978,1618,Coronation / Blue Heron,0
+43.385793,,-80.338892,1619,Coronation / Oriole,0
+43.381342,,-80.331768,1616,697 Coronation,0
+43.382493,,-80.333703,1617,Coronation / Highland,0
+43.378152,,-80.326393,1614,Coronation / Oliver,0
+43.458883,,-80.515292,3239,Union / King,0
+43.463747,,-80.524582,1960,Caroline / Erb,0
+43.46414,,-80.525997,1961,Erb / Father David Bauer,0
+43.370595,,-80.313938,1610,Dundas / Roxboro,0
+43.372242,,-80.316608,1611,Dundas / Jarvis,0
+43.381787,,-80.304962,1363,Glamis / Carter,0
+43.414648,,-80.503563,2873,Williamsburg / Dinison,0
+43.416247,,-80.505322,2872,Williamsburg / Pinedale,0
+43.418562,,-80.507933,2871,Williamsburg / Ottawa,0
+43.419653,,-80.506583,2870,Ottawa / Howe,0
+43.415867,,-80.496163,2877,Dunsmere / Colebrook,0
+43.414675,,-80.498168,2876,Dunsmere / Radcliffe,0
+43.41426,,-80.499869,2875,Dunsmere / Bosworth,0
+43.41327,,-80.502035,2874,Williamsburg / Dinison,0
+43.414867,,-80.492465,2879,Laurentian / Briar Knoll,0
+43.416309,,-80.493656,2878,Dunsmere / Laurentian,0
+43.440595,,-80.498447,3355,Queens / Highland,0
+43.439347,,-80.499678,3354,Queens / Spadina,0
+43.438092,,-80.510585,3357,Highland / Lawrence,0
+43.439443,,-80.508153,3356,Highland / Belmont,0
+43.43633,,-80.503788,3351,Queens / Belmont,0
+43.435197,,-80.505828,3350,Queens / Community Trail,0
+43.437675,,-80.500898,3353,Queens / St Marys Hospital,0
+43.437062,,-80.502088,3352,Queens / South,0
+43.426763,,-80.529348,3359,Queens / Westheights,0
+43.43639,,-80.513563,3358,Highland / Westmount,0
+43.5091,,-80.5173,3781,Chesapeake / Brigantine,0
+43.4126,,-80.3751,2312_merged_999101,Cherry Blossom / Fountain,
+43.414458,,-80.479017,1768,Forest Glen Terminal,0
+43.414385,,-80.478892,1769,Forest Glen Terminal,0
+43.382662,,-80.309812,1361,Elgin / Regal,0
+43.413472,,-80.442312,1762,Wilson /Kuntz Electroplating,0
+43.415405,,-80.44227,1763,Wilson / Goodrich,0
+43.409265,,-80.441278,1760,Wabanaki / Wilson,0
+43.410893,,-80.441718,1761,Wilson / Wabanaki,0
+43.414117,,-80.478895,1766,Forest Glen Terminal,0
+43.414263,,-80.478952,1767,Forest Glen Terminal,0
+43.420792,,-80.442552,1764,Wilson / Fairway,0
+43.41392,,-80.478842,1765,Forest Glen Terminal,0
+43.493252,,-80.564747,1142,Highpoint / Cornerbrook,0
+43.491195,,-80.564522,1143,Highpoint / Wintergreen,0
+43.49483,,-80.559548,1140,Northlake / Green Meadow,0
+43.493962,,-80.562523,1141,Northlake / Pine Island,0
+43.484945,,-80.559987,1146,Highpoint / Toll Gate,0
+43.487193,,-80.556668,1147,Toll Gate / Glen Forrest,0
+43.488437,,-80.563307,1144,Highpoint / Rolling Hills,0
+43.48682,,-80.563315,1145,Highpoint / Dogwood,0
+43.486143,,-80.553573,1148,Glen Forrest / Teakwood,0
+43.48567,,-80.55156,1149,Cedarbrae / Glen Forrest,0
+43.41026,,-80.510513,2966,Wilderness / Activa,0
+43.498,,-80.4944,3787,Dansbury / Forestlawn,0
+43.403633,,-80.305995,1546,Franklin / Turnbull,0
+43.405675,,-80.306625,1547,Franklin / Sheldon,0
+43.39893,,-80.304452,1544,Franklin / Bishop,0
+43.40122,,-80.305217,1545,Franklin / Raglin,0
+43.392358,,-80.302303,1542,Franklin / Saginaw,0
+43.396343,,-80.303648,1543,Franklin / Lindsay,0
+43.381108,,-80.29918,1540,Franklin / Avenue,0
+43.385247,,-80.300802,1541,Franklin / Robson,0
+43.407877,,-80.307348,1548,Franklin / Stafford,0
+43.410413,,-80.30808,1549,Franklin / Pinebush,0
+43.4981,,-80.5036,3784,Bridge / Lexington,0
+43.399795,,-80.473807,1784,Trillium / Mcbrine,0
+43.400977,,-80.468495,1785,Trillium / Strasburg,0
+43.402248,,-80.463315,1787,Trillium / Adam Ferrie,0
+43.391406,,-80.319366,1388,Cambridge Centre Terminal,0
+43.39136,,-80.319659,1389,Cambridge Centre Terminal,0
+43.383328,,-80.32022,1384,Hespeler / Munch,0
+43.391227,,-80.319608,1385,Cambridge Centre Terminal,0
+43.391255,,-80.31942,1386,Cambridge Centre Terminal,0
+43.391296,,-80.319152,1387,Cambridge Centre Terminal,0
+43.388972,,-80.311752,1380,Elgin / Glenbrook,0
+43.386723,,-80.313593,1381,Elgin / Sekura,0
+43.384022,,-80.313643,1382,Munch / Kovac,0
+43.383192,,-80.317802,1383,Munch / Sekura,0
+43.5773,,-80.5632,3827,Arthur / Listowel,0
+43.5827,,-80.5624,3826,Arthur / South Parkwood,0
+43.5845,,-80.5623,3825,Arthur / Whippoorwill,0
+43.5894,,-80.5615,3824,Arthur / Howard,0
+43.5923,,-80.5634,3823,First / Snyder,0
+43.5934,,-80.5642,3822,Snyder / Second,0
+43.5952453,,-80.56395574,3821,Snyder / Brubacher,0
+43.5969,,-80.5637,3820,Snyder / South,0
+43.5406,,-80.5534,3829,King / Front,0
+43.5441,,-80.5491,3828,Sawmill / Parkside,0
+43.455053,,-80.519694,2768,Union / Severn,0
+43.419163,,-80.326232,1276_merged_999116,Holiday Inn Terminal,
+43.44357,,-80.512032,2762,Belmont / Victoria,0
+43.478062,,-80.484493,1945,Lancaster / Lang,0
+43.383328,,-80.29228,1369,Burnett / Buchanan,0
+43.461177,,-80.46435,1077,Frederick / Lois,0
+43.5076,,-80.5266,3759,Frobisher / Mcmurray,0
+43.5102,,-80.5244,3758,Frobisher / Superior,0
+43.5078,,-80.4974,3751,University / Woolwich Place,0
+43.5108,,-80.4975,3750,University / New Bedford,0
+43.5189,,-80.5087,3753,University / Country Squire,0
+43.518,,-80.5028,3752,University / Sportsplex,0
+43.5146,,-80.5195,3755,Northfield / Toman,0
+43.5172,,-80.5179,3754,Northfield / University,0
+43.5119,,-80.5233,3757,Frobisher / Bridge,0
+43.5119,,-80.5213,3756,Northfield / Bridge,0
+43.366572,,-80.320853,2190,George / James,0
+43.368322,,-80.324853,2191,Sunset / Saxony,0
+43.370475,,-80.326118,2192,Sunset / Bismark,0
+43.37258,,-80.327552,2193,Sunset / Blair Road Ps,0
+43.373758,,-80.330522,2194,Sunset / Clearview,0
+43.372443,,-80.33362,2195,Clearview / Blair,0
+43.370847,,-80.332097,2196,Blair / Bismark,0
+43.369503,,-80.330407,2197,Blair / Kenmore,0
+43.367765,,-80.32828,2198,Blair / Sherwood,0
+43.366732,,-80.327037,2199,Blair / Grant,0
+43.363907,,-80.322992,2200,Blair / James,0
+43.361612,,-80.32138,2201,Blenheim / Lansdowne,0
+43.361587,,-80.325605,2202,Blenheim / Vair,0
+43.359542,,-80.332065,2203,Parkwood / Blenheim,0
+43.357222,,-80.332275,2204,Salisbury / Corwin,0
+43.356268,,-80.333147,2205,Hillcrest / Highland,0
+43.353757,,-80.332297,2206,Hillcrest / Churchill,0
+43.35389,,-80.330515,2207,Churchill / Westgate,0
+43.354722,,-80.326698,2208,Churchill / Forest,0
+43.354715,,-80.325333,2209,Churchill / Barrie,0
+43.436422,,-80.314835,1301,Fisher Mills / Fearnwood,0
+43.478127,,-80.471872,2428,Bridge / Tagge,0
+43.4777,,-80.466575,2429,Stanley / Schueller,0
+43.467846,,-80.484189,2420,Lancaster / Arnold,0
+43.469186,,-80.484229,2421,Lancaster / Ash,0
+43.47109,,-80.484275,2422,Lancaster / Union,0
+43.47526,,-80.484337,2423,Lancaster / Hamel,0
+43.481807,,-80.48285,2424,Lancaster / Bridge,0
+43.481207,,-80.480298,2425,Bridge / Tyson,0
+43.480457,,-80.478282,2426,Bridge / Bloomingdale,0
+43.478953,,-80.474195,2427,Bridge / Schweitzer,0
+43.448,,-80.5725,3689,656 Erb St.,0
+43.4472,,-80.5691,3688,634 Erb St.,0
+43.4689,,-80.5391,3683,University / Seagram,0
+43.4752,,-80.5282,3682,Hazel / University,0
+43.4895,,-80.4943,3681,Bridge / University,0
+43.4921,,-80.4971,3680,Bridge / Crimson,0
+43.448,,-80.5666,3687,Erb / Erbsville,0
+43.4509,,-80.5583,3686,Erb / Beechwood,0
+43.4479,,-80.5726,3685,Erbsville / Erb,0
+43.4516,,-80.5564,3684,Erb / Beechwood,0
+43.472737,,-80.547978,2518,Uw - University Club,0
+43.473932,,-80.546227,2519,Uw - B.C. Matthews Hall,0
+43.451332,,-80.572178,1980,Erbsville / Brandenburg,0
+43.477972,,-80.537435,2514,Columbia / Lester,0
+43.4686,,-80.540275,2515,Uw - South Campus Hall,0
+43.467795,,-80.543577,2516,Uw - Environment 2,0
+43.470633,,-80.5444,2517,Uw - Biology 2,0
+43.481632,,-80.527198,2510,Columbia / Spruce,0
+43.480703,,-80.529687,2511,Columbia / Holly,0
+43.479797,,-80.532193,2512,Columbia / Hazel,0
+43.478785,,-80.535027,2513,Columbia / Albert,0
+43.422137,,-80.449348,2734,Traynor / Balfour,0
+43.423595,,-80.447118,2735,Traynor / Wilson,0
+43.422207,,-80.449305,2736,Traynor / Balfour,0
+43.421325,,-80.452087,2737,Traynor / Belwood,0
+43.423793,,-80.458998,2730,Vanier / Shelley,0
+43.4217,,-80.456727,2731,Vanier / Siebert,0
+43.420568,,-80.454853,2732,Traynor / Vanier,0
+43.421303,,-80.451867,2733,Traynor / Belwood,0
+43.420688,,-80.45485,2738,Traynor / Vanier,0
+43.421843,,-80.45676,2739,Vanier / Siebert,0
+43.421942,,-80.38379,3531,Maple Grove / Saltsman,0
+43.409504843,,-80.39332,3530,Sportsworld Crossing,0
+43.389377,,-80.360732,3532,Rose / Lowther,0
+43.358803,,-80.310165,3535,Main / Harris,0
+43.353643,,-80.322523,3534,St Andrews / Gilholm,0
+43.386303,,-80.32104,3537,Hespeler / Can-Amera,0
+43.359972,,-80.311453,3536,Wellington / Dickson,0
+43.383093,,-80.32048,3539,Hespeler / Isherwood,0
+43.386365,,-80.321347,3538,Hespeler / Can-Amera,0
+43.389415,,-80.456202,1814,Biehn / Kilkerran,0
+43.38639,,-80.456198,1815,Biehn / Kilkerran,0
+43.385542,,-80.458825,1816,End Of Biehn Dr,0
+43.386713,,-80.455763,1817,Biehn / Caryndale,0
+43.39721,,-80.457932,1810,Old Huron / Maxwell,0
+43.396023,,-80.4555,1811,Biehn / Carlyle,0
+43.3944,,-80.455552,1812,Biehn / Maxwell,0
+43.392182,,-80.455908,1813,Biehn / Marl Meadow,0
+43.389403,,-80.456042,1818,Biehn / Robertson,0
+43.391372,,-80.455957,1819,Biehn / Marl Meadow,0
+43.471462,,-80.592458,1107,Laurelwood / Erbsville,0
+43.367545,,-80.308725,1609,Dundas / Cambridge,0
+43.366263,,-80.306508,1608,Dundas / Grantham,0
+43.42294,,-80.487324,3229,Ottawa / Strasburg,0
+43.422984,,-80.441007,3228,Fairview Park Terminal,0
+43.452757,,-80.57191,1979,Erbsville / Path To Lausanne,0
+43.455908,,-80.573273,1978,Keats Way / Erbsville,0
+43.4567,,-80.571037,1977,Keats Way / Beechwood,0
+43.457638,,-80.568322,1976,Keats Way / Leighland,0
+43.456957,,-80.564897,1975,Keats Way / Sandford Fleming,0
+43.452625,,-80.49812,3226,Victoria / King,0
+43.457883,,-80.55867,1973,Keats Way / Fischer-Hallman,0
+43.45291,,-80.553685,1972,Fischer-Hallman / Erb,0
+43.453375,,-80.551127,1971,Erb / Churchill,0
+43.454637,,-80.547535,1970,Erb / Culpepper,0
+43.445132,,-80.469868,2848,Weber / Onward,0
+43.444737,,-80.465332,2849,Ottawa / Mckenzie,0
+43.446412,,-80.475312,2846,Weber / Stirling,0
+43.445533,,-80.470935,2847,Weber / Borden,0
+43.448518,,-80.480057,2844,Weber / Madison,0
+43.446963,,-80.476525,2845,Weber / Fairview,0
+43.451397,,-80.48633,2842,Weber / Frederick,0
+43.44908,,-80.481287,2843,Weber / Cedar,0
+43.455962,,-80.488827,2840,Margaret / Victoria,0
+43.454545,,-80.48566,2841,Margaret / Queen,0
+43.417872,,-80.534615,3320,Driftwood / Westheights,0
+43.416467,,-80.534233,3321,Driftwood / Royal Orchard,0
+43.413483,,-80.535675,3322,Driftwood / Parkland,0
+43.412305,,-80.537833,3323,Driftwood / Driftwood Park,0
+43.413208,,-80.539873,3324,Yellow Birch / Driftwood,0
+43.411948,,-80.542053,3325,Yellow Birch / Cedar Crest,0
+43.4114,,-80.545153,3326,Yellow Birch / Stonehenge,0
+43.412363,,-80.549067,3327,Yellow Birch / Golden Meadow,0
+43.415237,,-80.550615,3328,Golden Meadow / Highview,0
+43.415675,,-80.54721,3329,Highview / Sugar Maple,0
+43.406412,,-80.47482,1775,Strasburg / Bleams,0
+43.407405,,-80.475148,1774,Strasburg / Bleams,0
+43.404475,,-80.474385,1777,Mcintyre / Strasburg,0
+43.405623,,-80.474402,1776,Strasburg / Shoemaker,0
+43.414052,,-80.478805,1771,Forest Glen Terminal,0
+43.414213,,-80.47885,1770,Forest Glen Terminal,0
+43.410878,,-80.476208,1773,Strasburg / Old Country,0
+43.41389,,-80.47875,1772,Forest Glen Terminal,0
+43.402877,,-80.480323,1779,222 Mcintyre Dr.,0
+43.403002,,-80.477342,1778,Mcintyre / Mcbrine,0
+43.496873,,-80.515888,2806,Davenport / Path To Anndale,0
+43.356033038,,-80.29892697,2312_merged_999110,Cherry Blossom / Fountain,
+43.402057,,-80.51224,2998,Activa / Periwinkle,0
+43.485792,,-80.537551,1159,Hazel / Blythwood,0
+43.485729,,-80.539087,1158,Hazel / Wildwood,0
+43.402567,,-80.510258,2999,Activa / Sweet William,0
+43.491555,,-80.537553,1155,Albert / Weber,0
+43.492592,,-80.544622,1154,Parkside / Weber,0
+43.487638,,-80.541565,1157,Albert / Quiet,0
+43.490535,,-80.539497,1156,Albert / Longwood,0
+43.48878,,-80.549708,1151,Cedarbrae / Glen Manor,0
+43.487868,,-80.550127,1150,Cedarbrae / Heasley Park Tr,0
+43.490203,,-80.545167,1153,Parkside / Glenelm,0
+43.489614,,-80.54806,1152,Cedarbrae / Sprucehill,0
+43.497722,,-80.518018,2807,Davenport / Kidsability,0
+43.411707,,-80.473785,3038,Old Country / Century Hill,0
+43.411113,,-80.471162,3039,Path To Sandsprings,0
+43.423214,,-80.441326,1551,Fairview Park Terminal,0
+43.417307,,-80.310245,1550,Franklin / Holiday Inn,0
+43.422908,,-80.440976,1553,Fairview Park Terminal,0
+43.423105,,-80.441178,1552,Fairview Park Terminal,0
+43.42313,,-80.441286,1555,Fairview Park Terminal,0
+43.423019,,-80.441131,1554,Fairview Park Terminal,0
+43.423055,,-80.440865,1557,Fairview Park Terminal,0
+43.423247,,-80.441435,1556,Fairview Park Terminal,0
+43.423065,,-80.44293,1559,Kingsway / Wilson,0
+43.423331,,-80.441231,1558,Fairview Park Terminal,0
+43.410458,,-80.522233,2992,David Bergey / Ottawa,0
+43.406785,,-80.518875,2993,David Bergey / Peach Blossom,0
+43.405392,,-80.518447,2994,David Bergey / Activa,0
+43.403375,,-80.520135,2995,Activa / Isaiah,0
+43.402748,,-80.518067,2996,Activa / Snowdrop,0
+43.40248,,-80.514448,2997,Activa / Reistview,0
+43.412582,,-80.517777,2990,Ottawa / International,0
+43.493468,,-80.512032,2804,Lexington / Anndale,0
+43.411965,,-80.519432,2991,Path To Wake Robin,0
+43.41136,,-80.476057,3036,Old Country / Strasburg,0
+43.411282,,-80.475882,3037,Old Country / Strasburg,0
+43.413895,,-80.472605,3030,Country Hill / Old Country,0
+43.41414,,-80.470667,3031,Country Hill / Coach Hill,0
+43.494327,,-80.51354,2805,Davenport / Foxhunt,0
+43.463842,,-80.52188,1906,Uptown Waterloo,0
+43.419323,,-80.325685,1277_merged_999117,Holiday Inn Terminal,
+43.41349,,-80.467383,3032,Country Hill / Four Seasons,0
+43.464092,,-80.521908,1907,Uptown Waterloo,0
+43.410978,,-80.466968,3033,Country Hill / Martinglen,0
+43.460267,,-80.518952,1904,King / Allen,0
+43.461687,,-80.521262,1905,King / William,0
+43.458475,,-80.515339,1902,King / Union,0
+43.45938,,-80.517412,1903,King / John,0
+43.457088,,-80.511103,1900,Grand River Hospital,0
+43.38815,,-80.341618,1399,Dunbar / Grand Valley,0
+43.387712,,-80.3377,1398,Dunbar / St George,0
+43.38811,,-80.335402,1397,Dunbar / Pine,0
+43.388525,,-80.333057,1396,Dunbar / Eastdowns,0
+43.388882,,-80.330847,1395,Dunbar / Biscayne,0
+43.389357,,-80.328913,1394,Dunbar / Daleview,0
+43.390008,,-80.32668,1393,Dunbar / Briarwood,0
+43.39043,,-80.324102,1392,Dunbar / Hespeler,0
+43.391276,,-80.320195,1391,Cambridge Centre Terminal,0
+43.391317,,-80.319935,1390,Cambridge Centre Terminal,0
+43.584,,-80.5621,3812,Arthur / Southfield,0
+43.5891,,-80.5614,3813,Arthur / Oriole,0
+43.5769,,-80.563,3810,Arthur / Union,0
+43.5821,,-80.5624,3811,Arthur / Earl Martin,0
+43.598,,-80.5592,3816,Arthur / Wyatt,0
+43.5993,,-80.5581,3817,Arthur / Mill,0
+43.5945,,-80.5607,3814,Arthur / Brubacher,0
+43.5967,,-80.5601,3815,Arthur / Park,0
+43.6001,,-80.5592,3818,Church / Maple,0
+43.6001,,-80.5633,3819,Snyder / Church,0
+43.401157,,-80.327595,1425,Langs / Hespeler,0
+43.46496,,-80.461597,2331,Victoria / Turner,0
+43.348447,,-80.300417,2183,Christopher / Foster,0
+43.346553,,-80.298995,2182,Champlain / Christopher,0
+43.34704,,-80.296975,2181,Champlain / Brierdale,0
+43.348192,,-80.293223,2180,Elgin / Champlain,0
+43.359225,,-80.31783,2187,North Square / Grand,0
+43.359037,,-80.315072,2186,Main / Water,0
+43.353953,,-80.30261,2185,Christopher / Elliott,0
+43.350428,,-80.301195,2184,Christopher / Ballantyne,0
+43.363587,,-80.318665,2189,George / Hobson,0
+43.361503,,-80.318717,2188,George / Blair,0
+43.356925,,-80.307672,2213,Main / Bruce,0
+43.358818,,-80.313267,2212,Main / Mill,0
+43.356507,,-80.317897,2211,St Andrews / Grand,0
+43.354713,,-80.32269,2210,Churchill / Brant,0
+43.358248,,-80.286907,2217,Main / Franklin,0
+43.356565,,-80.296663,2216,Main / Elgin,0
+43.356247,,-80.301283,2215,Main / Lincoln,0
+43.356562,,-80.304448,2214,Main / Peck,0
+43.351493,,-80.289607,2219,Franklin / Morning,0
+43.353522,,-80.288838,2218,Franklin /Path To Elliott,0
+43.481115,,-80.47975,2439,Bridge / Tyson,0
+43.481107,,-80.477495,2438,Bloomingdale / Horning,0
+43.482733,,-80.463877,2433,Schweitzer / Daniel,0
+43.481575,,-80.467317,2432,Schweitzer / Nelson,0
+43.480963,,-80.46903,2431,Stanley / Schweitzer,0
+43.479298,,-80.46795,2430,Stanley / Tagge,0
+43.481855,,-80.475285,2437,Bloomingdale / Prince,0
+43.483318,,-80.47112,2436,Bloomingdale / Stanley,0
+43.484165,,-80.468855,2435,Bloomingdale / Nelson,0
+43.485293,,-80.465382,2434,Daniel / Bloomingdale,0
+43.481577,,-80.53308,1161,Hazel / Austin,0
+43.482332,,-80.526352,2509,King / Columbia,0
+43.484057,,-80.526747,2508,King / Weber,0
+43.487533,,-80.527452,2507,King / Blue Springs,0
+43.490015,,-80.528003,2506,King / Waterloo Inn,0
+43.491693,,-80.528482,2505,King / Manulife,0
+43.496628,,-80.529428,2504,King / Path To Bauer,0
+43.451932,,-80.48761,2503,Weber / Queen,0
+43.453245,,-80.490778,2502,Weber / Ontario,0
+43.453955,,-80.492452,2501,Weber / Water,0
+43.454867,,-80.493902,2500,Weber / Victoria,0
+43.42836,,-80.464242,2727,Walton / Vanier,0
+43.427743,,-80.465945,2726,Walton / Kipling,0
+43.428842,,-80.468278,2725,Courtland / Overland,0
+43.433082,,-80.472407,2724,Courtland / Carwood,0
+43.434052,,-80.47437,2723,Courtland / Mill,0
+43.435822,,-80.475275,2722,Courtland / Sydney,0
+43.436942,,-80.477137,2721,Courtland / Ottawa,0
+43.43806,,-80.479028,2720,Courtland / Borden,0
+43.424928,,-80.460222,2729,Vanier / Kipling,0
+43.427303,,-80.462805,2728,Vanier / Erie,0
+43.5101,,-80.5064,3782,Chesapeake / Sandy Cove,0
+43.5007,,-80.5064,3783,Bridge / Whitmore,0
+43.5113,,-80.5097,3780,Chesapeake / Seawind,0
+43.404182,,-80.473435,1804,Strasburg / Mcintyre,0
+43.404472,,-80.474062,1803,Mcintyre / Strasburg,0
+43.403057,,-80.476862,1802,Mcintyre / Mcbrine,0
+43.402755,,-80.480038,1801,221 Mcintyre Dr.,0
+43.4965,,-80.501,3785,Dansbury / Camille,0
+43.4965,,-80.5013,3788,Dansbury / Bridge,0
+43.4986,,-80.5039,3789,Bridge / Lexington,0
+43.39597,,-80.461437,1809,Battler / Old Huron,0
+43.3926,,-80.466775,1808,Huron Heights Ss,0
+43.38418,,-80.294483,1368,Cowan / Wallace,0
+43.443648,,-80.540149,3258,Westwood / Glasgow,0
+43.443022,,-80.542182,3259,Glasgow / Fischer-Hallman,0
+43.474952,,-80.490273,1948,Bridgeport / Lang,0
+43.472563,,-80.498712,1949,Bridgeport / Goldbeck,0
+43.3553,,-80.303903,1525,Concession / Peck,0
+43.482767,,-80.484757,1942,Bridge / Woolwich,0
+43.4816,,-80.48313,1943,Lancaster / Jones,0
+43.486597,,-80.485895,1940,Bridle / Dartmoor,0
+43.484192,,-80.486928,1941,Bridge / Bridgeport Ps,0
+43.476513,,-80.485118,1946,Bridgeport / Lancaster,0
+43.475548,,-80.487322,1947,Bridgeport / Mackie,0
+43.479282,,-80.48452,1944,Lancaster / General,0
+43.441892,,-80.537297,3257,Westwood / Dayman,0
+43.357055,,-80.293553,1527,Main / Alexander,0
+43.35713,,-80.313083,1520,Ainslie Street Terminal,0
+43.357017,,-80.313194,1521,Ainslie Street Terminal,0
+43.437872,,-80.445957,2859,Franklin / Shuh,0
+43.431403,,-80.544275,3207,Westforest / Victoria,0
+43.356965,,-80.313486,1522,Ainslie Street Terminal,0
+43.428273,,-80.544327,3206,Westforest / Westmeadow,0
+43.447702,,-80.458223,2851,Ottawa / Nottingham,0
+43.445442,,-80.463412,2850,Ottawa / Hwy 7 Ramp,0
+43.448213,,-80.450697,2853,Franklin / Ottawa,0
+43.448128,,-80.453353,2852,Ottawa / Dreger,0
+43.444595,,-80.448475,2855,Franklin / Bradley,0
+43.426443,,-80.544447,3205,Bankside / Westforest,0
+43.441762,,-80.447238,2857,Franklin / Kenneth,0
+43.443362,,-80.447945,2856,Franklin / Dalewood,0
+43.397657,,-80.30425,1490,Franklin / Bishop,0
+43.3912,,-80.302187,1491,Franklin / Elgin,0
+43.385592,,-80.301185,1492,Franklin / Glamis,0
+43.416327,,-80.542825,3330,Highview / Highview Place,0
+43.380067,,-80.29899,1494,Franklin / Avenue,0
+43.375257,,-80.297082,1495,Franklin / Athlone,0
+43.371453,,-80.293852,1496,Clyde / Bluerock,0
+43.372542,,-80.29021,1497,Clyde / Bluerock,0
+43.373138,,-80.28708,1498,Clyde / Dobbie,0
+43.427965,,-80.538048,3203,Bankside / Bankside Pk,0
+43.421548,,-80.522407,3338,Mcgarry / Pinehurst,0
+43.452602,,-80.55283,1994,Erb / Fischer-Hallman,0
+43.41116,,-80.442052,1700,Wilson / Wabanaki,0
+43.409202,,-80.442243,1701,Wabanaki / Kevco,0
+43.40829,,-80.447465,1702,Wabanaki / Manitou,0
+43.407097,,-80.448785,1703,Manitou / Sasaga,0
+43.404088,,-80.448362,1704,421 Manitou Dr.,0
+43.401483,,-80.447778,1705,Manitou / Cayuga,0
+43.398035,,-80.446822,1706,Doon Village / Millwood,0
+43.393467,,-80.443803,1707,Doon Village / Wheatfield Park,0
+43.391789,,-80.440746,1708,Doon Village / Bechtel,0
+43.390492,,-80.443025,1709,Bechtel / Pathfinder,0
+43.454545,,-80.54732,1996,Erb / Culpepper,0
+43.463893,,-80.522139,3658,Uptown Waterloo,0
+43.3943,,-80.3032,3659,Franklin / Can-Amera,0
+43.498076,,-80.52883,1128,Conestoga Mall Terminal,0
+43.498071,,-80.528619,1129,Conestoga Mall Terminal,0
+43.473523,,-80.516183,2834,Weber / Noecker,0
+43.473167,,-80.55048,1120,Columbia / Village 1,0
+43.47458,,-80.546505,1121,Columbia / Uw Entrance,0
+43.474192,,-80.545442,1122,Uw - B. C. Matthews Hall,0
+43.47273,,-80.541218,1123,Uw - Davis Centre,0
+43.469388,,-80.539398,1124,Uw - Engineering,0
+43.498032,,-80.528561,1125,Conestoga Mall Terminal,0
+43.498035,,-80.52877,1126,Conestoga Mall Terminal,0
+43.498042,,-80.528997,1127,Conestoga Mall Terminal,0
+43.411813,,-80.515837,2989,Wilderness / Grey Fox,0
+43.410733,,-80.51387,2988,Wilderness / Mountain Mint,0
+43.415793,,-80.47479,3029,Country Hill / Cherry Hill,0
+43.416705,,-80.475453,3028,Country Hill / Block Line,0
+43.423667,,-80.519395,2983,Fischer-Hallman / Mcgarry,0
+43.426167,,-80.521777,2982,Forest Heights Ci,0
+43.428217,,-80.523405,2981,Fischer-Hallman / Queens,0
+43.430424,,-80.525302,2980,Highland Hills Mall Terminal,0
+43.41046,,-80.51003,2987,Activa / Wilderness,0
+43.413152,,-80.508993,2986,Activa / Grey Fox,0
+43.416377,,-80.510997,2985,Fischer-Hallman / Ottawa,0
+43.421347,,-80.516505,2984,Fischer-Hallman / Greenbrook,0
+43.447285,,-80.442388,1018,River / Conway,0
+43.445728,,-80.441425,1019,River / Bradley,0
+43.454288,,-80.446665,1014,River / Hickson,0
+43.45284,,-80.445712,1015,River / Path To Secord,0
+43.451233,,-80.444683,1016,River / Ottawa,0
+43.448708,,-80.443133,1017,River / Stanley Park Mall,0
+43.461830996,,-80.46165777,1010,Frederick / River,0
+43.459288,,-80.458902,1011,River / Islington,0
+43.458467,,-80.454168,1012,River / Manchester,0
+43.457475,,-80.450417,1013,River / Halliwell,0
+43.49848,,-80.55178,1234,Golden Eagle / Weber,0
+43.424274,,-80.323206,1235,Queen / Rooshill,0
+43.429882,,-80.313782,1236,Queen / Harvey,0
+43.433445,,-80.30735,1237,Queen / Hungerford,0
+43.5021,,-80.5498,1230,Randall / Conrad,0
+43.501223,,-80.552262,1231,Randall / Weber,0
+43.502452,,-80.554887,1232,Northlake / Swallow,0
+43.498857,,-80.554092,1233,Northlake / Mayview,0
+43.435822,,-80.304628,1238,Queen / Panabaker,0
+43.439152,,-80.30165,1239,River / Queen,0
+43.419323,,-80.325685,1277_merged_999108,Groh / Holiday Inn,
+43.465298,,-80.488253,2487,Guelph / Edwin,0
+43.5448,,-80.5508,3809,Sawmill / Parkside,0
+43.5281,,-80.5553,3808,King / Printery,0
+43.3739,,-80.3362,3805,Blair / Esther,0
+43.3842,,-80.411,3804,Conestoga College Residence,0
+43.5107,,-80.5494,3807,Farmers Market / Walmart,0
+43.3949,,-80.3258,3806,Bishop / Hespeler,0
+43.3859,,-80.4124,3801,Conestoga College / Pinnacle,0
+43.4984,,-80.5291,3800,Conestoga Mall Terminal,0
+43.3844,,-80.4112,3803,Conestoga College Residence,0
+43.3855,,-80.4129,3802,Conestoga College / Pinnacle,0
+43.471185,,-80.484648,2481,Union / Lancaster,0
+43.457447,,-80.540497,1967,Erb / Mcdougall,0
+43.358507,,-80.317615,2245,Grand / South Square,0
+43.40465,,-80.495155,2949,Erinbrook / Rockwood,0
+43.404427,,-80.492742,2948,Erinbrook / Tara,0
+43.408297,,-80.485185,2945,Erinbrook / Goundry,0
+43.409577,,-80.484605,2944,Rittenhouse / Mccabe,0
+43.46226,,-80.53032,1963,Erb / Avondale,0
+43.34372,,-80.284105,2228,Gatehouse / Myers,0
+43.343637,,-80.285745,2229,Myers / Franklin,0
+43.341312,,-80.280263,2226,Gatehouse / Wheeler,0
+43.341585,,-80.282627,2227,Gatehouse / Flockhart,0
+43.344857,,-80.280268,2224,Lisbon Pines / Myers,0
+43.343165,,-80.279163,2225,Gatehouse / Mcnichol,0
+43.34955,,-80.281205,2222,Lisbon Pines / Champlain,0
+43.34646,,-80.280827,2223,Lisbon Pines / Santa Maria,0
+43.348318,,-80.287612,2220,Champlain / Franklin,0
+43.34919,,-80.284602,2221,Champlain / Carlos,0
+43.505112,,-80.525867,2088,Northfield / Wissler,0
+43.502133,,-80.533728,2089,King / Northfield,0
+43.500217,,-80.561388,2082,Northlake / Monarch,0
+43.502195,,-80.556478,2083,Northlake / Black Forest,0
+43.495908,,-80.566085,2080,Northlake / Conservation,0
+43.498635,,-80.564637,2081,Northlake / Twinflower,0
+43.514277,,-80.498555,2086,University / Woolwich St.,0
+43.51567,,-80.500062,2087,University / New Hampshire,0
+43.497617,,-80.55065,2084,Weber / Northfield,0
+43.425283,,-80.526045,3342,Elm Ridge / Hillbrook,0
+43.458271,,-80.515238,2538,King / Union,0
+43.457533,,-80.512888,2539,King / Mt Hope,0
+43.427607,,-80.52634,3343,Queens / Highland Hills Mall,0
+43.47835,,-80.525515,2532,King / Hickory,0
+43.475428,,-80.524983,2533,King / University,0
+43.481918,,-80.524828,2531,Regina / Columbia,0
+43.460296,,-80.519303,2536,King / Allen,0
+43.459389,,-80.517741,2537,King / John,0
+43.473257,,-80.524433,2534,King / Bricker,0
+43.469807,,-80.523732,2535,King / Central,0
+43.448483,,-80.488785,2712,Charles / Benton,0
+43.44747,,-80.4894,2713,Benton / Church,0
+43.44934,,-80.492913,2710,Charles St. Terminal,0
+43.448865,,-80.491814,2711,Charles St. Terminal,0
+43.442307,,-80.486292,2716,Courtland / Madison,0
+43.440668,,-80.483505,2717,Courtland / Vernon,0
+43.445963,,-80.491028,2714,Benton / Courtland,0
+43.44411,,-80.489403,2715,Courtland / Peter,0
+43.431543,,-80.515265,3346,Queens / Warren,0
+43.439872,,-80.482138,2718,Courtland / Palmer,0
+43.438807,,-80.480262,2719,Courtland / Kent,0
+43.432382,,-80.512898,3347,Queens / Cecile,0
+43.429507,,-80.520355,3344,Queens / Bonfair,0
+43.430235,,-80.51814,3345,Queens / Silverspring,0
+43.391513,,-80.451182,1832,Black Walnut / Pioneer,0
+43.392792,,-80.453572,1833,Black Walnut / Carlyle,0
+43.393693,,-80.433307,1830,Old Carriage/Pioneer,0
+43.391832,,-80.440417,1831,Bechtel / Doon Village,0
+43.397163,,-80.455622,1836,Biehn / Old Huron,0
+43.397262,,-80.45813,1837,Old Huron / Maxwell,0
+43.393253,,-80.455257,1834,Black Walnut / Biehn,0
+43.39548,,-80.455363,1835,Biehn / Carlyle,0
+43.3693,,-80.3407,3795,Bismark / Westcliff,0
+43.3704,,-80.3446,3794,Princess / Westcliff,0
+43.395925,,-80.460573,1838,Old Huron / Battler,0
+43.392648,,-80.46571,1839,Huron / Strasburg,0
+43.3944,,-80.4334,3791,Pioneer / Old Carriage,0
+43.5014,,-80.507,3790,Bridge / Whitmore,0
+43.3723,,-80.3415,3793,Princess / Rosslinn,0
+43.3749,,-80.3397,3792,Blair / Esther,0
+43.34732,,-80.32223,2154,Stanley / Glenmorris,0
+43.34682,,-80.319702,2155,First / Caen,0
+43.348587,,-80.318055,2156,Middleton / Francis,0
+43.451047,,-80.477302,2405,Krug / Samuel,0
+43.349245,,-80.329338,2150,Woodside / Victoria,0
+43.347905,,-80.327917,2151,St Gregorys / St Andrews,0
+43.346312,,-80.328045,2152,Stanley / Borden,0
+43.34668,,-80.325525,2153,Stanley / Tait,0
+43.353032,,-80.31729,2158,Grand / Cedar,0
+43.354475,,-80.313477,2159,Ainslie / Veterans,0
+43.450598,,-80.48426,2408,Weber / Scott,0
+43.454898,,-80.501357,2409,Wellington / Moore,0
+43.476343,,-80.5098,2829,Marshall / Lincoln,0
+43.46917,,-80.515232,1955,Bridgeport / Devitt,0
+43.469837,,-80.51365,1954,Bridgeport / Weber,0
+43.467337,,-80.523077,1957,King / Bridgeport,0
+43.468115,,-80.520247,1956,Bridgeport / Peppler,0
+43.472357,,-80.504592,1951,Bridgeport / Margaret,0
+43.472512,,-80.501147,1950,Bridgeport / Bluevale,0
+43.471198,,-80.509963,1953,Bridgeport / L'Harmonie,0
+43.471638,,-80.508025,1952,Bridgeport / Ellis,0
+43.461685,,-80.521525,1959,King / William,0
+43.464927,,-80.522385,1958,King / Erb,0
+43.449587,,-80.523667,3249,Glasgow / Westmount,0
+43.450088,,-80.522238,3248,Glasgow / Westmount Ps,0
+43.454373,,-80.510632,3243,Park / Glasgow,0
+43.455787,,-80.513562,3242,Park / Wood,0
+43.456432,,-80.515537,3241,Park / Union,0
+43.457295,,-80.516278,3240,Union / Park,0
+43.451038,,-80.519508,3247,Glasgow / Avondale,0
+43.451763,,-80.517483,3246,Glasgow / Belmont,0
+43.452394,,-80.515711,3245,Glasgow / Eden,0
+43.453325,,-80.513162,3244,Glasgow / York,0
+43.336132,,-80.30371,2284,Langlaw / Enfield,0
+43.45066,,-80.551705,1993,Fischer-Hallman / Westridge,0
+43.411678,,-80.324663,1483,Smartcentres Cambridge,0
+43.410387,,-80.322738,1482,Smartcentres South,0
+43.407278,,-80.327625,1481,Hespeler / Eagle,0
+43.403548,,-80.326417,1480,561 Hespeler Rd.,0
+43.406523,,-80.307098,1487,Franklin / Sheldon,0
+43.40794,,-80.307512,1486,Franklin / Stafford,0
+43.411118,,-80.308485,1485,Franklin / Pinebush,0
+43.41744,,-80.310437,1484,Franklin / Holiday Inn,0
+43.428553,,-80.524327,3306,Queens / Fischer-Hallman,0
+43.427698,,-80.526523,3307,Queens / Highland Hills Mall,0
+43.40088,,-80.30528,1489,Franklin / Raglin,0
+43.403475,,-80.3061,1488,Franklin / Turnbull,0
+43.43313,,-80.517245,3302,Overlea / Ralgreen,0
+43.430555,,-80.51773,3303,Queens / Silverspring,0
+43.432157,,-80.51392,3300,Queens / Cecile,0
+43.433545,,-80.515513,3301,Cecile / Overlea,0
+43.393923,,-80.448552,1713,Pioneer / Vintage,0
+43.456232,,-80.497412,2411,Wellington / Duke,0
+43.389722,,-80.449372,1711,Bechtel / Wheatfield,0
+43.389977,,-80.444883,1710,Bechtel / Anvil,0
+43.394266,,-80.433365,1717,Pioneer / Old Carriage,0
+43.393938,,-80.441627,1715,Pioneer / Upper Canada,0
+43.39528,,-80.445152,1714,Pioneer / Doon Village,0
+43.396097,,-80.429912,1719,Green Valley / Pioneer,0
+43.395605,,-80.43151,1718,Pioneer / Homer Watson,0
+43.457585,,-80.493278,2413,Wellington / Ahrens,0
+43.353403,,-80.340965,2144,Kent / Hillsboro,0
+43.459662,,-80.487077,2415,Wellington / St Leger,0
+43.458712,,-80.489938,2414,Wellington / Margaret,0
+43.494805,,-80.55713,1139,Northlake / Black Oak,0
+43.493625,,-80.556175,1138,Northfield / Skylark,0
+43.356545,,-80.336592,2141,Salisbury / Southgate,0
+43.500295,,-80.537427,1132,Northfield / Colby,0
+43.501633,,-80.53392,1131,Northfield / King,0
+43.498071,,-80.528415,1130,Conestoga Mall Terminal,0
+43.494482,,-80.55376,1137,Northfield / Northgate,0
+43.495593,,-80.550702,1136,Northfield / Weber,0
+43.49618,,-80.548988,1135,Northfield / Weber,0
+43.497323,,-80.545668,1134,Northfield / Parkside,0
+43.504283,,-80.538005,2060,Wyman / Colby,0
+43.506978,,-80.53429,2061,Rupert / Northland,0
+43.509382,,-80.536043,2062,Bathurst / Rupert,0
+43.417113,,-80.48115,3018,Strasburg / Blackhorne,0
+43.418672,,-80.482857,3019,Strasburg / Selkirk,0
+43.406163,,-80.4866,3012,Erinbrook / Thistledown,0
+43.408398,,-80.485075,3013,Erinbrook / Goundry,0
+43.404372,,-80.491223,3010,Erinbrook / Marlis,0
+43.404652,,-80.489897,3011,Erinbrook / Rushbrook,0
+43.41375,,-80.483188,3016,Rittenhouse / Block Line,0
+43.416213,,-80.480103,3017,Strasburg / Block Line,0
+43.409317,,-80.485223,3014,Erinbrook / Rittenhouse,0
+43.410582,,-80.482558,3015,Rittenhouse / Tuerr,0
+43.507282,,-80.526847,2066,Mcmurray / Frobisher,0
+43.46092,,-80.464627,1009,Frederick / Lois,0
+43.460002,,-80.467642,1008,Frederick / Bruce,0
+43.459292,,-80.469787,1007,Frederick / Ann,0
+43.457928,,-80.473572,1006,Frederick Street Mall,0
+43.457003,,-80.475385,1005,Frederick / Dunham,0
+43.455737,,-80.477842,1004,Frederick / Lydia,0
+43.454642,,-80.479885,1003,Frederick / Samuel,0
+43.453003,,-80.482905,1002,Frederick / Otto,0
+43.452327,,-80.48418,1001,Frederick / Irvin,0
+43.449667,,-80.487195,1000,Frederick / King,0
+43.499817,,-80.541767,1227,Kumpf / Northfield,0
+43.500883,,-80.53866,1226,Colby / Colby Dr.,0
+43.503888,,-80.54154,1225,601 Colby Dr,0
+43.505638,,-80.542803,1224,612 Colby Dr,0
+43.507375,,-80.542742,1223,621 Colby Dr.,0
+43.506382,,-80.5406,1222,Colby / Colby Crt.,0
+43.504427,,-80.538053,1221,Wyman / Colby,0
+43.505877,,-80.535618,1220,Northland / Frobisher,0
+43.506748554,,-80.54607737,1229,Kumpf / Rim,0
+43.501265,,-80.542702,1228,585 Kumpf Dr.,0
+43.413442,,-80.486295,2882,Block Line / Mclennan Park,0
+43.413802,,-80.483542,2883,Block Line / Rittenhouse,0
+43.412783,,-80.491957,2880,Laurentian / Block Line,0
+43.412637,,-80.491428,2881,Block Line / Laurentian,0
+43.414148,,-80.482905,2886,Block Line / Rittenhouse,0
+43.413538,,-80.48675,2887,Block Line / Mclennan Park,0
+43.415538,,-80.479552,2884,Strasburg / Block Line,0
+43.41574,,-80.480338,2885,Block Line / Strasburg,0
+43.412768,,-80.491483,2888,Block Line / Laurentian,0
+43.41515,,-80.49245,2889,Laurentian / Briar Knoll,0
+43.39304566,,-80.33635571,3878,Bishop / Mary,0
+43.39,,-80.2839,3870,Saginaw / Chalk,0
+43.377136479,,-80.31332217,3871,Brooklyne / Glen,0
+43.592566773,,-80.5609297,3873,Arthur / First,0
+43.406530859,,-80.49884806,3874,Westmount / Fischer-Hallman,0
+43.393269,,-80.33465462,3877,954 Bishop,0
+43.402828,,-80.515262,2958,Activa / Henhoeffer,0
+43.451143,,-80.518977,3276,Glasgow / Marina,0
+43.451617,,-80.5176,3277,Glasgow / Belmont,0
+43.443407,,-80.523163,3118,Chopin / Westmount,0
+43.449377,,-80.523978,3274,Glasgow / Westmount,0
+43.448312,,-80.527105,3273,Glasgow / Aberdeen,0
+43.445065,,-80.529752,3270,Westwood / Westwood Cres.,0
+43.445189,,-80.527392,3271,Westwood / Inwood,0
+43.447803,,-80.503305,3112,Victoria / Henry,0
+43.369698,,-80.283968,1534,Dobbie / Orion,0
+43.365565,,-80.314563,1471,Ainslie / Market,0
+43.347108,,-80.310308,2239,Glenview / Albert,0
+43.347335,,-80.308947,2238,Glenview / Henry,0
+43.342247,,-80.29406,2231,Myers / Greenbrier,0
+43.342687,,-80.291482,2230,Myers / Elgin,0
+43.341467,,-80.300803,2233,Christopher / Myers,0
+43.346338,,-80.30014,2235,Champlain / Christopher,0
+43.343933,,-80.300675,2234,Christopher / Tutton,0
+43.348073,,-80.304885,2237,Glenview / Mcdonald,0
+43.34624,,-80.303125,2236,Mcdonald / Dorset,0
+43.438925,,-80.46068,3576,Weber / Eastwood Ss,0
+43.418112,,-80.509308,3498,Ottawa / Valleyview,0
+43.40998,,-80.499323,3499,Westmount / Tillsley,0
+43.408343,,-80.510985,3496,Activa / Copper Leaf,0
+43.414987,,-80.513617,3494,Ottawa / Sunrise Centre,0
+43.406477,,-80.512383,3495,Activa / Max Becker,0
+43.420907,,-80.49728,3492,Howland / Ottawa,0
+43.417663,,-80.510273,3493,Ottawa / Nine Pines,0
+43.418272,,-80.494462,3490,Laurentian / Shea,0
+43.418948,,-80.495937,3491,Howland / Laurentian,0
+43.505035,,-80.537332,2095,King / Northland,0
+43.54058,,-80.553365,2094,King / Front,0
+43.366438,,-80.305462,2097,Beverly / Dundas,0
+43.50141,,-80.533218,2096,King / Northfield,0
+43.510057,,-80.555878,2091,Farmers Market/ Benjamin,0
+43.504827,,-80.536775,2090,King / Northland,0
+43.537857,,-80.553773,2093,King / Cedar,0
+43.532993,,-80.554562,2092,King / Henry,0
+43.419475,,-80.539277,3655,Westheights / Driftwood,0
+43.509923,,-80.505552,3656,Chesapeake / New Bedford,0
+43.472052,,-80.4843,3657,Lancaster / Hwy 85 Ramp,0
+43.370495,,-80.303505,2099,Samuelson / Beverly,0
+43.368718,,-80.304048,2098,Beverly/Samuelson,0
+43.414908,,-80.38188,3652,Cherry Blossom / Barnes,0
+43.416297,,-80.38556,3653,Cherry Blossom / Maple Grove,0
+43.480792,,-80.52907,2525,Columbia / Holly,0
+43.480035,,-80.531125,2524,Columbia / Hazel,0
+43.480923,,-80.524758,2527,Regina / Columbia,0
+43.481648,,-80.526592,2526,Columbia / King,0
+43.476808,,-80.540192,2521,Columbia / Phillip,0
+43.475432,,-80.54412,2520,Columbia / Railway Tracks,0
+43.478547,,-80.535328,2523,Columbia / Albert,0
+43.477857,,-80.537262,2522,Columbia / Lester,0
+43.478192,,-80.525173,2529,Hickory / King,0
+43.478708,,-80.524295,2528,Regina / Hickory,0
+43.449247,,-80.492813,2709,Charles St. Terminal,0
+43.448912,,-80.491987,2708,Charles St. Terminal,0
+43.444567,,-80.49445,2705,Queen / Schneider,0
+43.442617,,-80.496425,2704,Queen / Homewood,0
+43.44667,,-80.4922,2707,Queen / Courtland,0
+43.445643,,-80.49334,2706,Queen / Courtland,0
+43.440507,,-80.50552,2701,Highland / Patricia,0
+43.440082,,-80.506768,2700,Highland / North,0
+43.441125,,-80.499503,2703,Highland / Garden,0
+43.441168,,-80.502095,2702,Highland / West,0
+43.391498,,-80.431277,1829,119 Old Carriage Dr.,0
+43.391018,,-80.428047,1828,Old Carriage/Homer Watson,0
+43.392087,,-80.432585,1825,Old Carriage Court,0
+43.3939,,-80.434227,1824,Pioneer / Old Carriage,0
+43.390953,,-80.427853,1827,Old Carriage/Homer Watson,0
+43.391312,,-80.431097,1826,100 Old Carriage Dr.,0
+43.392528,,-80.45336,1821,Black Walnut Place,0
+43.393135,,-80.455148,1820,Black Walnut / Biehn,0
+43.391957,,-80.439926,1823,Bechtel / Doon Village,0
+43.39136,,-80.450672,1822,Black Walnut / Pioneer,0
+43.350165,,-80.336583,2147,Cedar / Southwood,0
+43.349883,,-80.339482,2146,Kent / Cedar,0
+43.352287,,-80.340915,2145,Kent / Sim,0
+43.45693,,-80.495315,2412,Wellington / Weber,0
+43.355227,,-80.341738,2143,Kent / Salisbury,0
+43.356782,,-80.339105,2142,Salisbury / Murray,0
+43.461987,,-80.483587,2417,Lancaster / Louisa,0
+43.356112,,-80.332932,2140,Hillcrest / Highland,0
+43.465495,,-80.484077,2419,Lancaster / Guelph,0
+43.464377,,-80.484092,2418,Lancaster / Hill,0
+43.349988,,-80.332693,2149,Woodside / Cedar,0
+43.35057,,-80.334265,2148,Cedar / Woodside,0
+43.505215,,-80.525552,1920,Northfield / Wissler,0
+43.51125,,-80.521492,1921,Northfield / Bridge,0
+43.510022,,-80.51924,1922,Bridge / Labrador,0
+43.45052,,-80.52072,3275,Glasgow / Dunbar,0
+43.447605,,-80.528332,3272,Inwood / Glasgow,0
+43.504145,,-80.50813,1925,Eastbridge / Acadia,0
+43.504483,,-80.505975,1926,Eastbridge / Mayflower,0
+43.506133,,-80.50193,1927,Eastbridge / Bonavista,0
+43.508598,,-80.50048,1928,Eastbridge / Bonavista,0
+43.51062,,-80.500477,1929,Eastbridge / New Bedford,0
+43.452935,,-80.513885,3278,Glasgow / York,0
+43.454682,,-80.510795,3279,Park / Green,0
+43.4219,,-80.468168,3474,St Marys Hs,0
+43.421667,,-80.468017,3475,St Marys Hs,0
+43.421453,,-80.46789,3476,St Marys Hs,0
+43.421258,,-80.467712,3477,St Marys Hs,0
+43.422082,,-80.468292,3473,St Marys Hs,0
+43.421057,,-80.467453,3478,St Marys Hs,0
+43.420917,,-80.467153,3479,St Marys Hs,0
+43.385225,,-80.301457,1365,Glamis / Franklin,0
+43.44886,,-80.558158,1986,Westvale / Heather Hill,0
+43.419185,,-80.533138,3319,Westheights / Lorilee,0
+43.419552,,-80.53039,3318,Westheights / Mcgarry,0
+43.422587,,-80.522692,3311,Elm Ridge / Ramblewood,0
+43.423747,,-80.525033,3310,Elm Ridge / Silver Aspen,0
+43.420128,,-80.51942,3313,Forestwood / Forest Glen,0
+43.421483,,-80.521598,3312,Forestwood / Mcgarry,0
+43.418107,,-80.522345,3315,Forestwood / Meadowbrook,0
+43.418898,,-80.520047,3314,Forestwood / Glen Avon,0
+43.419538,,-80.528697,3317,Mcgarry / Royal Orchard,0
+43.41955,,-80.526467,3316,Forestwood / Meadowlane,0
+43.388705,,-80.41127,1728,Conestoga College Entrance,0
+43.38523,,-80.412057,1729,Conestoga College Residence,0
+43.3898,,-80.4144,1726,Doon Valley / Pinnacle,0
+43.390815,,-80.41018,1727,Doon Valley / Conestoga,0
+43.392182,,-80.414307,1724,Pinnacle / Amherst,0
+43.389872,,-80.415377,1725,Pinnacle / Doon Valley,0
+43.394292,,-80.417852,1722,Old Mill / Roos,0
+43.393372,,-80.414295,1723,Old Mill / Pinnacle,0
+43.395152,,-80.426995,1720,Green Valley / Arrowhead,0
+43.395893,,-80.42589,1721,Green Valley / Mill Park,0
+43.450587,,-80.558591,1984,Erb / Gateview,0
+43.408988,,-80.498035,3005,Tillsley / Westmount,0
+43.411439,,-80.49826,3004,Block Line / Westmount,0
+43.407222,,-80.496185,3007,Erinbrook / Ridgeway,0
+43.408972,,-80.4968,3006,Tillsley / Erinbrook,0
+43.40414,,-80.503495,3001,Max Becker / Commonwealth,0
+43.403383,,-80.508098,3000,Max Becker / Copper Leaf,0
+43.410512,,-80.499282,3003,Westmount / Block Line,0
+43.404815,,-80.501677,3002,Max Becker / Helena Feasby,0
+43.450058,,-80.557611,1985,Gateview / Westvale,0
+43.404308,,-80.493175,3009,Erinbrook / Tamvale,0
+43.404395,,-80.494788,3008,Erinbrook / Rockwood,0
+43.39418,,-80.355288,1588,King / Lowther,0
+43.392957,,-80.352845,1589,King / Dolph,0
+43.395375,,-80.373453,1582,Fountain / Bauman,0
+43.397713,,-80.371205,1583,Fountain / Shantz Hill,0
+43.391887,,-80.377486,1580,Preston / Woods,0
+43.39084,,-80.375315,1581,Preston / Fountain,0
+43.397257,,-80.361195,1586,King / Waterloo,0
+43.395625,,-80.358055,1587,King / Westminster,0
+43.399824,,-80.368443,1584,King / Fountain,0
+43.399033,,-80.364447,1585,King / Chopin,0
+43.441435,,-80.418078,1038,Fairway / Idle Creek,0
+43.436777,,-80.42629,1039,Fairway / Old Chicopee,0
+43.446511,,-80.570329,1982,Erb / Ira Needles,0
+43.456695,,-80.429128,1032,Lackner / Plaza,0
+43.45587,,-80.428012,1033,Lackner / Path To Gray,0
+43.455388,,-80.432517,1030,Ottawa / Oldfield,0
+43.45671,,-80.431618,1031,Ottawa / Lackner,0
+43.447017,,-80.42144,1036,Lackner / Daimler,0
+43.444772,,-80.416537,1037,Lackner / Corfield,0
+43.451868,,-80.42481,1034,Lackner / Quaiser,0
+43.449693,,-80.423827,1035,Lackner / Oldfield,0
+43.513498,,-80.525308,1212,Bathurst / Bridge,0
+43.511757,,-80.526233,1213,Superior / Bathurst,0
+43.50709,,-80.526702,1210,Frobisher / Mcmurray,0
+43.512635,,-80.523345,1211,Bridge / Frobisher,0
+43.511095,,-80.531618,1216,Bathurst / Mcmurray,0
+43.510245,,-80.533948,1217,Bathurst / Rankin,0
+43.510018,,-80.5247,1214,Superior / Frobisher,0
+43.509115,,-80.528723,1215,Mcmurray / Northland,0
+43.508975,,-80.536588,1218,Rupert / Bathurst,0
+43.506807,,-80.534284,1219,Rupert / Northland,0
+43.448022,,-80.566038,1983,Erb / Erbsville,0
+43.46065,,-80.484048,2416,Wellington / Major,0
+43.420222,,-80.502148,2899,Ottawa / Westmount,0
+43.419853,,-80.504665,2898,Ottawa / Pinedale,0
+43.414832,,-80.503497,2895,Williamsburg / Littlefield,0
+43.413218,,-80.501492,2894,Williamsburg / Dinison,0
+43.418535,,-80.507583,2897,Williamsburg / Ottawa,0
+43.416538,,-80.50538,2896,Williamsburg / Pinedale,0
+43.41592,,-80.49635,2891,Dunsmere / Colebrook,0
+43.416332,,-80.493978,2890,Dunsmere / Laurentian,0
+43.414297,,-80.50025,2893,Dunsmere / Westmount,0
+43.414923,,-80.498018,2892,Dunsmere / Radcliffe,0
+43.465173,,-80.584187,1106,Erbsville / Willowwood,0
+43.396073,,-80.358562,1455,King / Westminster,0
+43.4117,,-80.323612,1456,Smartcentres Cambridge,0
+43.410248,,-80.322898,1457,Smartcentres South,0
+43.387988,,-80.335522,1450,Dunbar / Pine,0
+43.388338,,-80.333547,1451,Dunbar / Eastdowns,0
+43.388732,,-80.331053,1452,Dunbar / Biscayne,0
+43.389923,,-80.326677,1453,Dunbar / Briarwood,0
+43.406692,,-80.327903,1458,Hespeler / Eagle,0
+43.404173,,-80.327063,1459,588 Hespeler Rd.,0
+43.472752,,-80.589498,1108,Laurelwood / Birchmount,0
+43.472042,,-80.585092,1109,Laurelwood / Brookmill,0
+43.3951,,-80.275,3869,Saginaw / Middlemiss,0
+43.353423,,-80.318077,3863,Cedar / Grand,0
+43.353243,,-80.317621,3862,Cedar / Grand,0
+43.352326,,-80.323958,3861,Cedar / St Andrews,0
+43.378732,,-80.308561,3860,Avenue / Elgin,0
+43.352572,,-80.323319,3864,Cedar / Glenmorris,0
+43.453725,,-80.500792,1894,King / Breithaupt,0
+43.454293,,-80.502501,1895,King / Wellington,0
+43.454549,,-80.503249,1896,King / Wellington,0
+43.455008,,-80.504835,1897,King / Agnes,0
+43.450445,,-80.490607,1890,King / Ontario,0
+43.451509,,-80.493726,1891,King / College,0
+43.452292,,-80.496107,1892,King / Francis,0
+43.452862,,-80.497921,1893,King / Victoria,0
+43.429578,,-80.309311,1310_merged_999118,Franklin / Adam,
+43.346782,,-80.325512,2131,Stanley / Tait,0
+43.417072,,-80.49382,3489,Laurentian / Dunsmere,0
+43.417062,,-80.476083,3488,Block Line / Country Hill,0
+43.511990297,,-80.52253964,3593_merged_999102,Bridge / Frobisher,
+43.420853,,-80.466833,3481,St Marys Hs,0
+43.420885,,-80.467008,3480,St Marys Hs,0
+43.420828,,-80.46654,3483,St Marys Hs,0
+43.420823,,-80.466652,3482,St Marys Hs,0
+43.420842,,-80.46638,3484,St Marys Hs,0
+43.417152,,-80.476262,3486,Block Line / Country Hill,0
+43.425612,,-80.373865,3649,Vondrau / Maple Grove,0
+43.429887,,-80.375042,3648,Boxwood / Vondrau,0
+43.430573,,-80.371108,3647,Boxwood / Vondrau,0
+43.42813,,-80.365,3646,Boxwood / Maple Grove,0
+43.424225,,-80.378415,3645,Fountain / Maple Grove,0
+43.412635,,-80.374372,3644,Fountain / Cherry Blossom,0
+43.414702,,-80.381808,3643,25 Cherry Blossom,0
+43.435022,,-80.449717,3642,Weber / Broadview,0
+43.38847,,-80.41105,3641,Conestoga College Entrance,0
+43.43392,,-80.510372,3640,Queensmount Public School,0
+43.449168,,-80.492105,2550,Charles St. Terminal,0
+43.449258,,-80.492318,2551,Charles St. Terminal,0
+43.449406,,-80.492675,2552,Charles St. Terminal,0
+43.449542,,-80.492968,2553,Charles St. Terminal,0
+43.449249,,-80.492182,2554,Charles St. Terminal,0
+43.449007,,-80.492207,2555,Charles St. Terminal,0
+43.449088,,-80.492453,2556,Charles St. Terminal,0
+43.449386,,-80.493123,2557,Charles St. Terminal,0
+43.449238,,-80.492669,2558,Charles St. Terminal,0
+43.44908,,-80.492309,2559,Charles St. Terminal,0
+43.457502,,-80.460928,2396,Krug / Sherwood,0
+43.455287,,-80.462488,2397,Cambridge / Sherwood,0
+43.457767,,-80.448838,2394,Lorraine / Birkshire,0
+43.45833,,-80.458298,2395,Krug / River,0
+43.460348,,-80.44897,2392,Confederation / Carson,0
+43.45852,,-80.447233,2393,Carson / Lorraine,0
+43.461357,,-80.442993,2390,Confederation / Tupper,0
+43.461305,,-80.446173,2391,Confederation / Amber,0
+43.42316,,-80.48165,3022,Kingswood / Flint,0
+43.453465,,-80.462152,2398,Smithson / Belleview,0
+43.452712,,-80.464874,2399,Becker / Belleview,0
+43.462455,,-80.538915,2778,Father David Bauer,0
+43.464042,,-80.540582,2779,Westmount / University,0
+43.452277,,-80.525484,2770,Union / Westmount,0
+43.452915,,-80.526198,2771,Westmount / Rusholme,0
+43.454447,,-80.527605,2772,Westmount / John,0
+43.455893,,-80.529068,2773,Westmount / William,0
+43.45684,,-80.530902,2774,Westmount / Alexandra,0
+43.457417,,-80.534658,2775,Westmount / Lourdes,0
+43.459078,,-80.536658,2776,Westmount / Erb,0
+43.46117,,-80.538322,2777,Westmount Place,0
+43.434128,,-80.496052,3076,Stirling / Mausser,0
+43.494565,,-80.510352,2803,Lexington / Dunvegan,0
+43.395928,,-80.324343,1428,Hespeler / Bishop,0
+43.49352,,-80.504429,2800,Lee / Dunvegan,0
+43.416423,,-80.450942,1858,Manitou / Webster,0
+43.415633,,-80.449853,1859,Manitou / Cress,0
+43.494485,,-80.504678,2801,Lee / Dansbury,0
+43.416373,,-80.450643,1850,Manitou/Webster,0
+43.419483,,-80.451733,1851,Fairway / Food Basics,0
+43.419985,,-80.448717,1852,589 Fairway Rd. South,0
+43.42053,,-80.445617,1853,Fairway / Wilson,0
+43.420873,,-80.444332,1854,Fairway / Wilson,0
+43.420382,,-80.44735,1855,500 Fairway Rd.,0
+43.41968,,-80.451485,1856,Fairway / Food Basics,0
+43.418278,,-80.45307,1857,Manitou / Fairway,0
+43.364433,,-80.29376,2172,Alison / Hilltop,0
+43.36435,,-80.292267,2173,Hilltop / Franklin,0
+43.368808,,-80.297187,2170,Alison / Radford,0
+43.367032,,-80.29479,2171,Alison / Lauris,0
+43.355755,,-80.289117,2176,Dundas / Franklin,0
+43.35494,,-80.295902,2177,Elgin / Elliott,0
+43.356878,,-80.286255,2174,Franklin / Green Gate,0
+43.354892,,-80.287357,2175,Franklin / Dundas,0
+43.353702,,-80.295403,2178,Elgin / South,0
+43.351875,,-80.29467,2179,Elgin / Woolley,0
+43.43528,,-80.45475,2604,Kingsway / Second,0
+43.434355,,-80.456888,2605,First / Eckert,0
+43.43463,,-80.459198,2606,Eckert / Dixon,0
+43.435673,,-80.459082,2607,Dixon / Rockway,0
+43.427998,,-80.454997,2600,Wilson / Fifth,0
+43.429755,,-80.455385,2601,Fourth / Wilson,0
+43.431045,,-80.45468,2602,Fourth / Connaught,0
+43.434425,,-80.45261,2603,Fourth / Kingsway,0
+43.43552,,-80.45926,2608,Dixon / Rockway,0
+43.438057,,-80.458337,2609,Montgomery / Weber,0
+43.501448,,-80.50022,1933,Lexington / Bertha,0
+43.502657,,-80.49848,1932,Lexington / Malabar,0
+43.5043,,-80.496627,1931,University / Lexington,0
+43.441348,,-80.553492,3262,Westvale / Middlebury,0
+43.441181,,-80.547371,3265,University / Resurrection Ss,0
+43.440023,,-80.551142,3264,University / Countrystone Pl.,0
+43.498284,,-80.499227,1935,Dansbury / Meadowvale,0
+43.443403,,-80.540043,3266,Westwood / Glasgow,0
+43.445005,,-80.531147,3269,Westwood / Fernwood,0
+43.44227,,-80.535675,3268,Westwood / Gallarno,0
+43.488818754,,-80.49030554,1939,Auburn / Percheron,0
+43.490498,,-80.491558,1938,Auburn / University,0
+43.400312,,-80.331317,1424,Langs / Industrial,0
+43.457713,,-80.55844,3464,Keats / Fischer-Hallman,0
+43.456003,,-80.561735,3463,Keats Way / Sandford Fleming,0
+43.45581,,-80.563838,3462,Keats / Path To Sandy Ridge,0
+43.45721,,-80.565443,3461,Keats / Beckwith,0
+43.464653,,-80.57452,3460,Columbia / Bennington,0
+43.400423,,-80.33158,1429,Langs / Hespeler,0
+43.450422,,-80.479057,2406,Krug / Rose,0
+43.45385,,-80.549322,1995,Erb / Roosevelt,0
+43.449822,,-80.48077,2407,Krug / Lancaster,0
+43.394223,,-80.417507,1739,Old Mill / Roos,0
+43.393325,,-80.414135,1738,Pinnacle / Old Mill,0
+43.389633,,-80.408063,1731,Conestoga College Rec Centre,0
+43.391965,,-80.404124,1733,Conestoga College Daycare,0
+43.390297,,-80.403508,1732,Conestoga College Door 3,0
+43.390217,,-80.413482,1735,Doon Valley / Pinnacle,0
+43.391205,,-80.409805,1734,Doon Valley / Orchard Mill,0
+43.391403,,-80.414752,1737,Pinnacle / Amherst,0
+43.390028,,-80.415297,1736,Pinnacle / Doon Valley,0
+43.451932,,-80.474747,2404,Krug / Lydia,0
+43.4283,,-80.544532,3134,Westforest / Westmeadow,0
+43.394628,,-80.46794,1807,Huron Heights Ss,0
+43.398638,,-80.467535,1806,Strasburg / Battler,0
+43.401755,,-80.468572,1805,Strasburg / Trillium,0
+43.383617,,-80.336123,1595,Coronation / Blue Heron,0
+43.385672,,-80.33928,1594,Coronation / Oriole,0
+43.378437,,-80.327413,1597,Cambridge Memorial Hospital,0
+43.380667,,-80.331128,1596,Galt Country Club,0
+43.38979,,-80.346618,1591,King / Bishop,0
+43.402882,,-80.517938,2959,Activa / Snowdrop,0
+43.38769,,-80.342343,1593,King / Blue Heron,0
+43.388738,,-80.344435,1592,King / Brower,0
+43.404262,,-80.50315,2954,Max Becker / Commonwealth,0
+43.403603,,-80.50743,2955,Max Becker / Copper Leaf,0
+43.403077,,-80.509797,2956,Activa / Donnenwerth,0
+43.402197,,-80.512098,2957,Activa / Periwinkle,0
+43.374763,,-80.32115,1599,Coronation / Wright,0
+43.37691,,-80.324802,1598,Coronation / Islandview,0
+43.409005,,-80.49868,2952,Tillsley / Westmount,0
+43.405715,,-80.50051,2953,Max Becker / Fischer-Hallman,0
+43.448917,,-80.428858,1025,Edenbridge / Oldfield,0
+43.448642,,-80.433355,1024,Edenbridge / Darlington,0
+43.453003,,-80.430713,1027,Oldfield / Casey,0
+43.450825,,-80.429715,1026,Oldfield / Batterswood,0
+43.445825,,-80.437942,1021,Kenora / Parkview,0
+43.444812,,-80.439733,1020,Kenora / Wren,0
+43.447793,,-80.436033,1023,Old Chicopee / Edenbridge,0
+43.447135,,-80.435653,1022,Kenora / Old Chicopee,0
+43.403293,,-80.484252,1800,Mcintyre / Trillium,0
+43.454457,,-80.433667,1029,Shaftsbury / Ottawa,0
+43.453703,,-80.43213,1028,Shaftsbury / Holborn,0
+43.506061,,-80.52799,1209,151 Frobisher Dr.,0
+43.505358,,-80.529208,1208,Frobisher / Davenport,0
+43.499948,,-80.52561,1205,Davenport / Old Abbey,0
+43.502517,,-80.52807,1204,Davenport / Northfield,0
+43.503923,,-80.528718,1207,Davenport / Northfield,0
+43.503145,,-80.528257,1206,Davenport / Northfield,0
+43.500237,,-80.537123,1201,Northfield / Conestogo,0
+43.496948,,-80.54621,1200,Northfield / Parkside,0
+43.502625,,-80.530465,1203,Northfield / Kraus,0
+43.501425,,-80.533822,1202,Northfield / King,0
+43.443022,,-80.49345,3108,Mill / Queen,0
+43.452308,,-80.498568,3109,Victoria / King,0
+43.435898,,-80.4922,3104,Stirling / Lorne,0
+43.438677,,-80.492817,3105,Highland / Spadina,0
+43.439252,,-80.489715,3106,Spadina / Mill,0
+43.440492,,-80.490718,3107,Mill / Lansdowne,0
+43.429513,,-80.496655,3100,Greenbrook / Stirling,0
+43.432833,,-80.496008,3101,Stirling / Lakeside Park,0
+43.433675,,-80.495942,3102,Stirling At Mausser,0
+43.435333,,-80.49378,3103,Stirling / Lorne,0
+43.389022,,-80.340902,1447,Fairview / Grand Valley,0
+43.471615,,-80.581587,1110,Laurelwood / Beaver Crk. Cr.,0
+43.472557,,-80.571113,1113,Fischer-Hallman / Path,0
+43.474318,,-80.574573,1112,Laurelwood / Laurel Gate,0
+43.39108,,-80.349227,1443,King / Montrose,0
+43.392543,,-80.357517,1442,Lowther / Hamilton,0
+43.469093,,-80.561785,1117,Columbia / Beechlawn,0
+43.391183,,-80.364293,1440,Rose / Argyle,0
+43.471385,,-80.55546,1119,Columbia / Ron Eydt Village,0
+43.469858,,-80.559685,1118,Columbia / Old Post,0
+43.38761,,-80.337572,1449,Dunbar / St George,0
+43.387988,,-80.341603,1448,Dunbar / Grand Valley,0
+43.393492,,-80.27774,1350,Saginaw / Granite Hill,0
+43.425118,,-80.419762,1565,King / River,0
+43.441746,,-80.313094,3856,Baldwin / Scott,0
+43.426838,,-80.309961,3857,Franklin / Edward,0
+43.44562,,-80.306557,3854,Baldwin / Henwood,0
+43.441675,,-80.307278,3855,Baldwin / Silverthorne,0
+43.449195,,-80.307709,3852,Baldwin / Osgoode,0
+43.447597,,-80.307184,3853,Baldwin / Horton,0
+43.394304,,-80.329605,3850,Bishop / Industrial,0
+43.394335,,-80.328684,3851,Bishop / Industrial,0
+43.389283,,-80.328698,3858,Dunbar / Industrial,0
+43.411835,,-80.367193,3859,Reuter / Rim,0
+43.410622,,-80.399815,1567,King / Deer Ridge,0
+43.455993,,-80.562198,1974,Keats Way / Sandford Fleming,0
+43.342228,,-80.293497,2288,Myers / Greenbrier,0
+43.3426,,-80.2912,2289,Myers / Cheese Factory,0
+43.512082,,-80.522668,3593_merged_999111,Frobisher / Bridge,
+43.4935,,-80.5085,3678,Dunvegan / Bairstow,0
+43.4959,,-80.502,3679,Dansbury / Bridge,0
+43.4901,,-80.4947,3672,Bridge / University,0
+43.4929,,-80.4977,3673,Bridge / Crimson,0
+43.4956,,-80.4905,3670,University / Wismer,0
+43.4919,,-80.4913,3671,University / Pastern,0
+43.4936,,-80.5084,3676,Dunvegan / Bairstow,0
+43.4945,,-80.5102,3677,Lexington / Dunvegan,0
+43.4958,,-80.5024,3674,Dansbury / Eiwo,0
+43.4947,,-80.5047,3675,Dansbury / Lee,0
+43.455042,,-80.505262,2543,King / Agnes,0
+43.455825,,-80.507668,2542,King / Central Fresh Market,0
+43.456345,,-80.509412,2541,King / Green,0
+43.456932,,-80.511155,2540,Grand River Hospital,0
+43.449148,,-80.491925,2547,Charles St. Terminal,0
+43.449412,,-80.492551,2546,Charles St. Terminal,0
+43.449496,,-80.492761,2545,Charles St. Terminal,0
+43.454393,,-80.503203,2544,King / Wellington,0
+43.449074,,-80.491859,2549,Charles St. Terminal,0
+43.449035,,-80.491684,2548,Charles St. Terminal,0
+43.46401,,-80.576783,1104,Columbia / Cavendish,0
+43.449298,,-80.442323,2381,Holborn / Holborn Ct.,0
+43.45004,,-80.440307,2380,65 Holborn Dr.,0
+43.450328,,-80.439693,2383,Holborn / Old Chicopee,0
+43.449358,,-80.441768,2382,Holborn / Holborn Ct.,0
+43.457507,,-80.432275,2385,Lackner / Ottawa,0
+43.452063,,-80.440472,2384,Old Chicopee / Ottawa,0
+43.461667,,-80.438328,2387,Lorraine / Wimbleton,0
+43.45913,,-80.434871,2386,Lackner / Banbury,0
+43.460342,,-80.442357,2389,Confederation / Lorraine,0
+43.460862,,-80.439878,2388,Lorraine / Heritage,0
+43.465053,,-80.573765,1103,Columbia / Chancery,
+43.455165,,-80.493923,3580,Weber / Via Rail Station,0
+43.471967,,-80.524161,3581,King / Ezra,0
+43.453741,,-80.522501,2769,Union / Dunbar,0
+43.472393,,-80.595552,3583,Sir John A Macdonald Ss,0
+43.472128,,-80.595332,3584,Sir John A Macdonald Ss,0
+43.464462,,-80.56321,3585,Fischer-Hallman / Roxton,0
+43.455348,,-80.55564,3587,Fischer-Hallman / Winchester,0
+43.445182,,-80.512882,2763,Belmont / Karn,0
+43.464499,,-80.541456,3589,University / Westmount,0
+43.442303,,-80.51066,2761,Belmont / Jack,0
+43.441035,,-80.509133,2760,Belmont / Metzloff,0
+43.453589,,-80.517951,2767,Belmont / Claremont,0
+43.451808,,-80.51683,2766,Belmont / Glasgow,0
+43.45016,,-80.515742,2765,564 Belmont,0
+43.447733,,-80.514148,2764,Belmont / Gage,0
+43.412547,,-80.4501,1849,Bleams / Manitou,0
+43.412212,,-80.452405,1848,Bleams / Otonabee,0
+43.402655,,-80.469412,1843,1455 Strasburg Rd,0
+43.400947,,-80.467867,1842,Strasburg / Trillium,0
+43.398702,,-80.467292,1841,Strasburg / Battler,0
+43.394878,,-80.46784,1840,Strasburg / Huron Heights Ss,0
+43.41035,,-80.459887,1847,Bleams / Homer Watson,0
+43.408898,,-80.46561,1846,Bleams / Century Hill,0
+43.405985,,-80.474382,1845,Strasburg / Shoemaker,0
+43.404563,,-80.473608,1844,Strasburg / Mcintyre,0
+43.448555,,-80.526717,3250,Glasgow / Aberdeen,0
+43.368168,,-80.300328,2169,Alison / Elgin,0
+43.366563,,-80.300438,2168,Elgin / Marion,0
+43.44756,,-80.528498,3251,Inwood / Glasgow,0
+43.360845,,-80.298112,2165,Elgin / Dundas,0
+43.358893,,-80.297777,2164,Pollock / Elgin,0
+43.365038,,-80.299832,2167,Elgin / Manchester,0
+43.362018,,-80.298598,2166,Elgin / Linnwood,0
+43.358565,,-80.30246,2161,Rich / Lincoln,0
+43.357267,,-80.30718,2160,Oak / Main,0
+43.358412,,-80.300123,2163,Pollock / Chalmers,0
+43.357968,,-80.301578,2162,Pollock / Lincoln,0
+43.433875,,-80.43499,2617,Kinzie / Guerin,0
+43.432992,,-80.436478,2616,Kinzie / Walker,0
+43.432085,,-80.438048,2615,Kinzie / Weber,0
+43.433322,,-80.441387,2614,Weber / Fergus,0
+43.433353,,-80.444067,2613,Weber / Arlington,0
+43.434313,,-80.447392,2612,Weber / Franklin,0
+43.43558,,-80.45114,2611,Weber / Dellroy,0
+43.436393,,-80.453613,2610,Weber / Wilfred,0
+43.444945,,-80.531647,3254,Westwood / Knell,0
+43.434085,,-80.431283,2619,Thaler / Kinzie,0
+43.435455,,-80.432897,2618,Kinzie / Thaler,0
+43.434167,,-80.508267,3298,Queens / Hahn,0
+43.433278,,-80.510848,3299,Queens / Westmount,0
+43.465333,,-80.522305,1908,King / Erb,0
+43.467892,,-80.523,1909,King / Bridgeport,0
+43.439215,,-80.50004,3294,Queens / Spadina,0
+43.438515,,-80.501655,3295,Queens / St Marys Hospital,0
+43.43667,,-80.50353,3296,Queens / Belmont,0
+43.435275,,-80.505955,3297,Queens / Community Trail,0
+43.457858,,-80.503087,3290,Moore / Emma,0
+43.45638,,-80.502182,3291,Moore / Shanley,0
+43.454498,,-80.501023,3292,Moore / Breithaupt,0
+43.457817,,-80.513312,1901,King / Mt Hope,0
+43.457928,,-80.57638,3452,Erbsville / Leighland,0
+43.461778,,-80.58048,3453,Erbsville / Columbia,0
+43.45094,,-80.570378,3450,Royal Beech / Pinerow,0
+43.456025,,-80.574313,3451,Erbsville / Keats,0
+43.457547,,-80.576227,3456,Erbsville / Leighland,0
+43.464902,,-80.584188,3454,Erbsville / Columbia Forest,0
+43.462255,,-80.581285,3455,Erbsville / Columbia,0
+43.440382,,-80.498818,3293,Queens / Highland,0
+43.4873,,-80.556698,1186,Toll Gate / Glen Forrest,0
+43.485683,,-80.551702,1184,Cedarbrae / Glen Forrest,0
+43.439752,,-80.446367,2858,Franklin / Trafalgar,0
+43.401493,,-80.485648,1799,Trillium / Washburn,0
+43.430535,,-80.486868,3063,Hoffman / Highland,0
+43.433473,,-80.489007,3062,Heiman / Highland,0
+43.434582,,-80.487143,3061,Heiman / Kehl,0
+43.435428,,-80.485685,3060,Heiman / Mill,0
+43.431788,,-80.479768,3067,Hoffman / Ottawa,0
+43.431985,,-80.480962,3066,Hoffman / Donley,0
+43.431972,,-80.482695,3065,Hoffman / Meinzinger,0
+43.431255,,-80.484925,3064,Hoffman / Kehl,0
+43.405108,,-80.489425,2947,Erinbrook / Hedgestone,0
+43.406173,,-80.487043,2946,Erinbrook / Pipers Green,0
+43.444733,,-80.49452,3069,Queen / Schneider,0
+43.44715,,-80.491977,3068,Queen / St George,0
+43.410848,,-80.482708,2943,Rittenhouse / Tuerr,0
+43.412772,,-80.482963,2942,Rittenhouse / Brookfield,0
+43.416687,,-80.480903,2941,Strasburg / Blackhorne,0
+43.41872,,-80.483175,2940,Strasburg / Selkirk,0
+43.432223,,-80.42991,1050,Fairway / Thaler,0
+43.433375,,-80.428873,1051,Fairway / Grulke,0
+43.435613,,-80.42759,1052,Fairway / North Hill,0
+43.441452,,-80.417823,1053,Fairway / Fairway Cr.,0
+43.44449,,-80.415998,1054,Lackner / Corfield,0
+43.446927,,-80.420418,1055,Lackner / Daimler,0
+43.449357,,-80.423478,1056,Lackner / Oldfield,0
+43.456417,,-80.432047,1057,Ottawa / Oldfield,0
+43.45361,,-80.432197,1058,Shaftsbury / Holborn,0
+43.452395,,-80.430773,1059,Oldfield / Jadestone,0
+43.434643,,-80.42857,1696,River / Fairway,0
+43.420553,,-80.44274,1697,Wilson / Fairway,0
+43.438962,,-80.433197,1694,River / Old Chicopee,0
+43.436615,,-80.43066,1695,River / Kinzie,0
+43.451828,,-80.441787,1692,Ottawa / Breckenridge,0
+43.442938,,-80.439112,1693,River / Rennie,0
+43.453987,,-80.435492,1690,Ottawa / Mcgee,0
+43.45284,,-80.438895,1691,Ottawa / Montcalm,0
+43.42274,,-80.445072,2595,Wilson / Balfour,0
+43.416237,,-80.442388,1698,Wilson / Webster,0
+43.413463,,-80.442477,1699,Wilson / Kuntz Electroplating,0
+43.421505,,-80.31098,1270,Winston / Scottdale,0
+43.421907,,-80.314563,1271,Winston / Hipel,0
+43.424145,,-80.316075,1272,Winston / Edward,0
+43.426893,,-80.318827,1273,Winston / Queen,0
+43.424292,,-80.32333,1274,Queen / Rooshill,0
+43.44634,,-80.44953,2854,Franklin / Penrose,0
+43.419118,,-80.326117,1278_merged_999114,Holiday Inn Terminal,
+43.418353,,-80.53508,3333,Westheights / Driftwood  Cntr,0
+43.44069,,-80.526673,3119,Chopin / Hazelglen,0
+43.419118,,-80.538958,3332,Driftwood / Westheights,0
+43.439743,,-80.520727,3117,Victoria / Westmount,0
+43.44068,,-80.517703,3116,Victoria / Paulander,0
+43.441828,,-80.515257,3115,Victoria / Alice,0
+43.443015,,-80.512288,3114,Victoria / Belmont,0
+43.444337,,-80.508725,3113,Victoria / Patricia,0
+43.417263,,-80.54062,3331,Driftwood / Rolling Meadows,0
+43.449512,,-80.50142,3111,Victoria / Bramm,0
+43.45078,,-80.500063,3110,Victoria / Joseph,0
+43.3687,,-80.316888,1472,Water / Samuelson,0
+43.37064,,-80.317547,1473,Galt Collegiate,0
+43.363688,,-80.314085,1470,Ainslie / Park Hill,0
+43.383278,,-80.300255,1493,Path To The Greenway,0
+43.381383,,-80.31968,1476,167 Hespeler Rd.,0
+43.395792,,-80.323905,1477,Hespeler / Bishop,0
+43.372143,,-80.318095,1474,Water / Todd,0
+43.376922,,-80.31854,1475,Hespeler / Avenue,0
+43.420658,,-80.524857,3337,Mcgarry / Meadowbrook,0
+43.398573,,-80.324797,1478,499 Hespeler Rd.,0
+43.400472,,-80.325418,1479,Hespeler / Langs,0
+43.465333981,,-80.57294754,1102_merged_999104,Columbia / Gatestone,
+43.419918,,-80.526953,3336,Mcgarry / Forestwood,0
+43.43906,,-80.32024,1304,Scott / Milton,0
+43.441417,,-80.317413,1305,Poplar / Scott,0
+43.445409,,-80.316205,1306,Poplar / Dawn,0
+43.436957,,-80.312165,1307,Guelph / Fisher Mills,0
+43.434447,,-80.311528,1300,Guelph / Sheffield,0
+43.419442,,-80.528395,3335,Mcgarry / Royal Orchard,0
+43.435448,,-80.320128,1302,Fisher Mills / Scott,0
+43.43752,,-80.321073,1303,Scott / Nickolas,0
+43.419178,,-80.532307,3334,Westheights / Lorilee,0
+43.434915,,-80.311715,1308,Guelph / Sheffield,0
+43.430485,,-80.309755,1309,Adam / Tannery,0
+43.425007,,-80.449325,2597,Wilson / Woodhaven,0
+43.372852,,-80.285292,1499,Dobbie / Clyde,0
+43.440088,,-80.554128,3263,Portsmouth / Springfield,0
+43.431055,,-80.454008,2590,Connaught / Fifth,0
+43.42916,,-80.455892,2591,Fourth / Wilson,0
+43.426873,,-80.453045,2592,Wilson / Franklin,0
+43.424467,,-80.448563,2593,Wilson / Fairlawn,0
+43.5154,,-80.5576,3841,King / Lobsinger,0
+43.55407,,-80.555247,3840,Arthur / Gerrat,0
+43.394361,,-80.464395,3843,Huron / Strasburg,0
+43.51808,,-80.513429,3842,University / Rim,0
+43.394525,,-80.316688,3845,Conestoga Transit Garage,0
+43.394542,,-80.464009,3844,Huron / Templewood,0
+43.503584,,-80.535701,3847,King / Northland,0
+43.443031,,-80.314236,3846,Guelph / Fletcher,0
+43.425376,,-80.372999,3849,Maple Grove / Vondrau,0
+43.503824,,-80.535628,3848,King / Northland,0
+43.4927,,-80.4904,3665,University / University Downs,0
+43.4392,,-80.5537,3664,University / Countrystone Dr.,0
+43.4975,,-80.4929,3667,Auburn / Bronco,0
+43.4952,,-80.49,3666,University / Wismer,0
+43.4344,,-80.4588,3661,Eckert / Dixon,0
+43.3945,,-80.303,3660,Franklin / Can-Amera,0
+43.437848,,-80.557482,3663,University / Baker,0
+43.437591,,-80.55871511,3662,University / Baker,0
+43.340192,,-80.306097,2280,Myers / Woodland,0
+43.339282,,-80.307928,2281,Edgemere / Sandalwood,0
+43.338035,,-80.307013,2282,Edgemere / Ploughmans,0
+43.335867,,-80.306327,2283,Edgemere / Langlaw,0
+43.4976,,-80.492,3669,Auburn / University,0
+43.338007,,-80.29948,2285,Christopher / Wheatland,0
+43.340515,,-80.300523,2286,Christopher / Myers,0
+43.3415,,-80.297702,2287,Myers / Lorraine,0
+43.429878,,-80.450621,2578,Connaught / Franklin,0
+43.429371,,-80.449003,2579,Connaught / Ninth,0
+43.431368,,-80.454597,2576,Fourth / Connaught,0
+43.430572,,-80.452806,2577,Connaught / Sixth,0
+43.43506,,-80.454298,2574,Kingsway / Third,0
+43.434252,,-80.452805,2575,Fourth / Kingsway,0
+43.437975,,-80.462012,2572,King / Rockway Gardens,0
+43.434548,,-80.456578,2573,First / Eckert,0
+43.440959,,-80.469511,2570,King / Sydney,0
+43.439763,,-80.466372,2571,King / Preston,0
+43.45926,,-80.435245,2378,Lackner / Banbury,0
+43.451223,,-80.439905,2379,Old Chicopee / Holborn,0
+43.45877,,-80.447307,2374,Carson / Lorraine,0
+43.460125,,-80.448832,2375,Carson / Confederation,0
+43.461218,,-80.446023,2376,Confederation / Amber,0
+43.461745,,-80.437253,2377,Lorraine / Lackner,0
+43.456022,,-80.462377,2370,Krug / Eton,0
+43.457235,,-80.461087,2371,Krug / Sherwood,0
+43.458326,,-80.457814,2372,Krug / River,0
+43.457825,,-80.448255,2373,Lorraine / Birkshire,0
+43.423543,,-80.446804,2594,Wilson / Traynor,0
+43.50591,,-80.535415,3592,Northland / Frobisher,0
+43.423913,,-80.447103,2596,Traynor / Wilson,0
+43.4527,,-80.55381,3590,Fischer-Hallman / Erb,0
+43.51495,,-80.49962,3597,University / Path To Angler,0
+43.516365,,-80.501177,3596,University / Parkwood Manor,0
+43.51108,,-80.50092,3595,New Bedford / Eastbridge,0
+43.510612,,-80.50429,3594,New Bedford / Starboard,0
+43.510068,,-80.50566,3599,New Bedford / Chesapeake,0
+43.510665,,-80.504433,3598,New Bedford / Starboard,0
+43.425735,,-80.45069,2598,Wilson / Ninth,0
+43.426813,,-80.452782,2599,Wilson / Franklin,0
+43.437128,,-80.454733,1876,Weber / Ross,0
+43.437745,,-80.45874,1877,Montgomery / Weber,0
+43.43561,,-80.450977,1874,Weber / Euler,0
+43.436287,,-80.453045,1875,Weber / Wilfred,0
+43.433647,,-80.444558,1872,Weber / Arlington,0
+43.434513,,-80.447507,1873,Weber / Franklin,0
+43.432485,,-80.43931,1870,Weber / Kinzie,0
+43.433675,,-80.442185,1871,Weber / Fergus,0
+43.437505,,-80.460237,1878,King / Montgomery,0
+43.439105,,-80.464473,1879,King / Jackson,0
+43.362743,,-80.296988,2118,Lauris / Linnwood,0
+43.36271,,-80.300677,2119,Dundas / Dundas Lane,0
+43.37394,,-80.303458,2110,Elgin / Galt,0
+43.372402,,-80.302885,2111,Elgin / Bronson,0
+43.370977,,-80.299903,2112,Clyde / Mill Creek,0
+43.370785,,-80.295112,2113,Franklin / Clyde,0
+43.367685,,-80.293018,2114,470 Franklin Blvd.,0
+43.365368,,-80.292183,2115,Franklin / Savage,0
+43.364393,,-80.292462,2116,Hilltop / Franklin,0
+43.363898,,-80.29488,2117,Hilltop / Alison,0
+43.429513,,-80.435175,2622,King / Kingsbury,0
+43.430618,,-80.43721,2623,Weber / Hwy 8 Ramp,0
+43.432785,,-80.429758,2620,Thaler / Fairway,0
+43.428915,,-80.433215,2621,King / Morgan,0
+43.440142,,-80.446385,2626,Franklin / Trafalgar,0
+43.441233,,-80.446843,2627,Franklin / Kenneth,0
+43.436072,,-80.446872,2624,Franklin / Prospect,0
+43.437875,,-80.445795,2625,Franklin / Shuh,0
+43.443235,,-80.447703,2628,Franklin / Dalewood,0
+43.444665,,-80.448343,2629,Franklin / Bradley,0
+43.494987,,-80.528827,1919,King / Hwy 85 Ramp,0
+43.491207,,-80.528023,1918,King / Manulife,0
+43.458968,,-80.505402,3289,Moore / Guelph,0
+43.45991,,-80.507465,3288,Moore / Peltz,0
+43.471913,,-80.523932,1911,King / James,0
+43.470105,,-80.523578,1910,King / Elgin,0
+43.47604,,-80.52479,1913,King / University,0
+43.460602,,-80.514108,3284,Union / Herbert,0
+43.459452,,-80.514837,3283,Union / Mary,0
+43.458278,,-80.515557,3282,Union / King,0
+43.457445,,-80.516048,3281,Union / Park,0
+43.484995,,-80.526667,1916,King / Weber,0
+43.449055,,-80.566798,3448,Erbsville / Erb,0
+43.466893,,-80.565577,3445,Fischer-Hallman / Columbia,0
+43.509732,,-80.516098,3444,Chesapeake / Spinnaker,0
+43.450895,,-80.57024,3447,Royal Beech / Erbsville,0
+43.455112,,-80.573673,3446,Erbsville / Keats,0
+43.511678,,-80.510272,3443,Chesapeake / Seawind,0
+43.50671,,-80.508917,3442,Chesapeake / Mariner,0
+43.486075,,-80.486767,2024,Bridle / Dartmoor,0
+43.487045,,-80.485708,2025,Auburn / Exmoor,0
+43.488975,,-80.490265,2026,Auburn / Percheron,0
+43.49065,,-80.491592,2027,Auburn / University,0
+43.477923,,-80.484325,2020,Lancaster / Lang,0
+43.479285,,-80.484325,2021,Lancaster / General,0
+43.482795,,-80.484398,2022,Bridge / Woolwich,0
+43.442625,,-80.486487,2751,Courtland / Madison,0
+43.478745,,-80.508278,2828,Lincoln / Margaret,0
+43.440708,,-80.505272,2758,Highland / Patricia,0
+43.440023,,-80.507973,2759,Belmont / Highland,0
+43.447243,,-80.548868,3147,Fischer-Hallman / Warrington,0
+43.430723,,-80.525483,2978,Highland Hills Mall Terminal,0
+43.430587,,-80.525404,2979,Highland Hills Mall Terminal,0
+43.432938,,-80.488807,3058,Highland / Heiman,0
+43.434613,,-80.486853,3059,Heiman / Kehl,0
+43.425792,,-80.521238,2972,Forest Heights Ci,0
+43.427142,,-80.522302,2973,Fischer-Hallman / Summit,0
+43.421388,,-80.516335,2970,Fischer-Hallman / Greenbrook,0
+43.42342,,-80.51881,2971,Fischer-Hallman / Mcgarry,0
+43.43063,,-80.525534,2976,Highland Hills Mall Terminal,0
+43.430776,,-80.525639,2977,Highland Hills Mall Terminal,0
+43.430328,,-80.525318,2974,Highland Hills Mall Terminal,0
+43.430482,,-80.525418,2975,Highland Hills Mall Terminal,0
+43.427547,,-80.432882,1043,Fairway / King,0
+43.428827,,-80.432143,1042,Fairway / King,0
+43.430213,,-80.431948,1041,Fairway / Morgan,0
+43.433277,,-80.429143,1040,Fairway / Grulke,0
+43.424008,,-80.434677,1047,Fairway / Walmart,0
+43.422838,,-80.440838,1046,Fairview Park Terminal,0
+43.421823,,-80.439085,1045,Fairway / Fairview Park,0
+43.422715,,-80.437213,1044,Fairway / Wabanaki,0
+43.430452,,-80.431652,1049,Fairway / Morgan,0
+43.428883,,-80.431855,1048,Fairway / King,0
+43.465643,,-80.44647,1681,Natchez / Matthew,0
+43.41815,,-80.473332,3027,Kingswood / Block Line,0
+43.461787,,-80.445658,1683,Halifax / Confederation,0
+43.463528,,-80.445557,1682,Halifax / Natchez,0
+43.460782,,-80.439733,1685,Lorraine / Heritage,0
+43.460242,,-80.442412,1684,Confederation / Lorraine,0
+43.463475,,-80.431728,1687,Keewatin / Glencliffe,0
+43.464982,,-80.436105,1686,Keewatin / Lackner,0
+43.454482,,-80.434392,1689,Ottawa / Shaftsbury,0
+43.460802,,-80.42782,1688,Keewatin / Ottawa,0
+43.420845,,-80.475112,3025,Kingswood / Gracefield,0
+43.421747,,-80.307085,1269,Winston / Westbury,0
+43.421378,,-80.304445,1268,Winston / Gunn,0
+43.427881,,-80.29794,1263,Cooper / Ellis,0
+43.429687,,-80.300355,1262,Cooper / Rife,0
+43.429325,,-80.304797,1261,Rife / Kribs,0
+43.42965,,-80.30826,1260,Adam / Bergey,0
+43.421762,,-80.301917,1267,Winston / Karl,0
+43.421323,,-80.29779,1266,Winston / Darren,0
+43.422132,,-80.292838,1265,Winston / Cooper,0
+43.42558,,-80.293662,1264,Cooper / Adler,0
+43.461132,,-80.508838,3287,Moore / Roger,0
+43.43811,,-80.294027,1242,Mcmeeken / Werstine,0
+43.421432,,-80.48456,3021,Kingswood / Lucerne,0
+43.462943,,-80.510807,3286,Moore / Union,0
+43.420998,,-80.485432,3020,Strasburg / Kingswood,0
+43.462668,,-80.51234,3285,Union / Lucan,0
+43.437527,,-80.526728,3128,Victoria / Fenwick,0
+43.473487,,-80.524257,1912,King / Lodge,0
+43.440225,,-80.534303,3122,Ingleside / Hazelglen,0
+43.481803,,-80.526007,1915,King / Columbia,0
+43.44074,,-80.527032,3120,Victoria Hills Plaza,0
+43.44148,,-80.53157,3121,Hazelglen / Markwood,0
+43.438627,,-80.524195,3126,Hazelglen / Victoria,0
+43.440447,,-80.528352,3124,Dalegrove / Ingleside,0
+43.477728,,-80.525157,1914,King / Hickory,0
+43.361892,,-80.313522,1469,Ainslie / Colborne,0
+43.487478,,-80.527263,1917,King / Blue Springs,0
+43.364768,,-80.3143,1465,Ainslie / Simcoe,0
+43.36981,,-80.317463,1464,Galt Collegiate,0
+43.359987,,-80.313678,1467,Ainslie / Dickson,0
+43.362708,,-80.314153,1466,Ainslie / Park Hill,0
+43.379808,,-80.319585,1461,Hespeler / Wilmot,0
+43.381163,,-80.319957,1460,Hespeler / Wauchope,0
+43.372382,,-80.318462,1463,Water / Augusta,0
+43.377242,,-80.319012,1462,Hespeler / Jaffray,0
+43.417515,,-80.324265,1317,Heritage Bible College,0
+43.416512,,-80.321533,1316,The Holiday Inn,0
+43.417205,,-80.31662,1315,Jacob Hespeler Ss,0
+43.417987,,-80.31196,1314,Holiday Inn / Cheval,0
+43.421783,,-80.31037,1313,Franklin / Winston,0
+43.424335,,-80.310203,1312,Franklin / Thomas,0
+43.394842,,-80.316672,1319,Conestoga Transit Garage,0
+43.392683,,-80.315282,1318,Conestoga / Lena,0
+43.439785,,-80.531192,3123,Ingleside / Ingleside Place,0
+43.440644379,,-80.55961863,3879_merged_999112,University / Westvale,
+43.441147,,-80.498968,2756,Highland / Queen,0
+43.441318,,-80.502043,2757,Highland / West,0
+43.445883,,-80.493352,2754,Queen / Courtland,0
+43.442465,,-80.496753,2755,Queen / Homewood,0
+43.450037,,-80.572765,1981,Erbsville / Chablis,0
+43.44412,,-80.489182,2752,Courtland / Peter,0
+43.44524,,-80.491145,2753,Courtland / Benton,0
+43.441398,,-80.484513,2750,Courtland / Stirling,0
+43.484315,,-80.486892,2023,Bridge / Bridgeport Ps,0
+43.419118,,-80.326117,1278_merged_999105,Groh / Holiday Inn,
+43.45524,,-80.545303,1997,Erb / Amos,0
+43.459177,,-80.480408,2324,Victoria / Chestnut,0
+43.450743,,-80.51638,2692,545 Belmont Ave.,0
+43.35338,,-80.297877,2299,Chalmers / South,0
+43.356437,,-80.296402,2298,Elgin / Main,0
+43.421602,,-80.440085,3614,Fairway / Fairview Park,0
+43.437937,,-80.478717,3615,Courtland / Borden,0
+43.441378,,-80.47277,3616,Ottawa,0
+43.441487,,-80.4727,3617,Ottawa,0
+43.348497,,-80.289428,2293,Champlain / Bakersfield,0
+43.34672,,-80.288238,2292,Franklin / Copperfield,0
+43.34378,,-80.287082,2291,Franklin / Myers,0
+43.342993,,-80.288967,2290,Myers / Franklin,0
+43.354412,,-80.295585,2297,Elgin / Elliott,0
+43.351428,,-80.294362,2295,Elgin / Woolley,0
+43.348058,,-80.291935,2294,Champlain / Elgin,0
+43.441945,,-80.471873,2569,King / Ottawa,0
+43.442843,,-80.47391,2568,King / Borden,0
+43.44922,,-80.487815,2561,King / Benton,0
+43.44898,,-80.492063,2560,Charles St. Terminal,0
+43.449871,,-80.489391,2562,King / Queen,0
+43.446092,,-80.480918,2565,King / Cameron,0
+43.447428,,-80.483587,2564,King / Cedar,0
+43.444307,,-80.477213,2567,King / Stirling,0
+43.455598,,-80.463872,2369,Krug / Cambridge,0
+43.453692,,-80.46219,2368,Smithson / Belleview,0
+43.452555,,-80.46481,2367,Becker / Belleview,0
+43.454382,,-80.467072,2366,Krug / Becker,0
+43.453898,,-80.468453,2365,Krug / Dumfries,0
+43.453255,,-80.470418,2364,Krug / Melrose,0
+43.452652,,-80.472286,2363,Krug / East,0
+43.451868,,-80.474492,2362,Krug / Lydia,0
+43.450968,,-80.47711,2361,Krug / Samuel,0
+43.450328,,-80.478952,2360,Krug / Rose,0
+43.42873,,-80.446709,2587,Connaught / Woodhaven,0
+43.427895,,-80.444783,2586,Traynor / Connaught,0
+43.425622,,-80.445195,2585,Greenfield / Traynor,0
+43.424723,,-80.441527,2584,Greenfield / Kingsway,0
+43.424524,,-80.441429,2583,Greenfield / Kingsway,0
+43.425585,,-80.445473,2582,Greenfield / Traynor,0
+43.427825,,-80.444893,2581,Traynor / Connaught,0
+43.428527,,-80.44637,2580,Connaught / Woodhaven,0
+43.374147,,-80.31965,1612,Coronation / Grandview,0
+43.430047,,-80.45084,2589,Connaught / Franklin,0
+43.429548,,-80.449263,2588,Connaught / Eighth,0
+43.41229,,-80.452637,1861,Bleams / Otonabee,0
+43.412632,,-80.450107,1860,Bleams / Manitou,0
+43.408783,,-80.466692,1863,Bleams / Century Hill,0
+43.410487,,-80.459917,1862,Bleams / Homer Watson,0
+43.411057,,-80.476065,1865,Strasburg / Old Country,0
+43.5434,,-80.5479,3729,Sawmill / Arthur,0
+43.435477,,-80.433197,1867,Kinzie / Thaler,0
+43.434148,,-80.431113,1866,Thaler / Fairway,0
+43.3996,,-80.4842,3724,825 Trillium Dr,0
+43.4426,,-80.4159,3725,Fairway / Lackner,0
+43.4433,,-80.4151,3726,Lackner / Fairway,0
+43.5103,,-80.543,3727,King / Martin Grove,0
+43.4562,,-80.5145,3720,Park / Mt Hope,0
+43.4001,,-80.4847,3723,860 Trillium Dr,0
+43.376767,,-80.305702,2109,Elgin / Winter,0
+43.37845,,-80.306377,2108,Elgin / Avenue,0
+43.376517,,-80.316632,2103,Elmwood / Brooklyne,0
+43.374737,,-80.313247,2102,Elmwood / Jarvis,0
+43.373232,,-80.310385,2101,Elmwood / Brock,0
+43.371253,,-80.306917,2100,Moscrip / Bronson,0
+43.378350004,,-80.31090776,2104,Avenue / Gail,0
+43.451068,,-80.471668,2639,East / Cameron,0
+43.449063,,-80.470335,2638,East / Stirling,0
+43.444333,,-80.467003,2635,Ottawa / Weber,0
+43.44495,,-80.465235,2634,Ottawa / Mckenzie,0
+43.446452,,-80.469085,2637,The Aud,0
+43.445605,,-80.470695,2636,Weber / Borden,0
+43.447863,,-80.450372,2631,Franklin / Ottawa,0
+43.446487,,-80.44947,2630,Franklin / Dreger,0
+43.447692,,-80.458715,2633,Ottawa / Nottingham,0
+43.448212,,-80.45296,2632,Ottawa / Dreger,0
+43.440101,,-80.295513,1241,Melran / Alderson,0
+43.373417,,-80.286378,1536,Clyde / Dobbie,0
+43.392573,,-80.339807,3430,Mary / Bishop,0
+43.498383,,-80.552443,3432,Golden Eagle / Northlake,0
+43.499223,,-80.554127,3433,Northlake / Mayview,0
+43.475557,,-80.50052,3434,Bluevale Ci,0
+43.475617,,-80.500323,3435,Bluevale Ci,0
+43.42116,,-80.383368,3650,Saltsman / Maple Grove,0
+43.424838,,-80.459972,2741,Vanier / Shelley,0
+43.423453,,-80.458512,2740,Vanier / Vanier Park,0
+43.428358,,-80.464518,2743,Walton / Vanier,0
+43.427403,,-80.462762,2742,Vanier / Erie,0
+43.432857,,-80.471753,2745,Courtland / Carwood,0
+43.42783,,-80.466003,2744,Walton / Kipling,0
+43.437218,,-80.477357,2747,Courtland / Ottawa,0
+43.435762,,-80.475038,2746,Courtland / Sydney,0
+43.440023,,-80.482263,2749,Courtland / Palmer,0
+43.438772,,-80.480047,2748,Courtland / Kent,0
+43.505638,,-80.503407,2039,Eastbridge / Windjammer,0
+43.508662,,-80.500663,2038,Eastbridge / Path To St Luke,0
+43.365943,,-80.288943,1531,55 Savage Dr.,0
+43.364967,,-80.291768,1530,Franklin / Savage,0
+43.416537,,-80.379362,3651,Saltsman / Barnes,0
+43.427858,,-80.297755,1247,Cooper / Ellis,0
+43.462708,,-80.510397,3236,Moore / Union,0
+43.46303,,-80.511908,3237,Union / Lucan,0
+43.403548,,-80.332018,3544,777 Industrial Rd,0
+43.407048,,-80.333163,3545,Industrial / Eagle,0
+43.408218,,-80.295728,3546,Sheldon / Thompson,0
+43.404702,,-80.310327,3547,180 Sheldon Dr,0
+43.431185,,-80.310902,3540,Queen / Adam,0
+43.440022,,-80.313213,3541,Guelph / Milton,0
+43.432588,,-80.29392,3542,Kerwood / Housler,0
+43.410883,,-80.311593,3543,Pinebush / Wayne,0
+43.461723,,-80.509325,3235,Moore / Roger,0
+43.461153,,-80.5329,1964,Erb / Beverley,0
+43.46018,,-80.535143,1965,Erb / Dietz,0
+43.460439,,-80.514335,3238,Union / Herbert,0
+43.410617,,-80.513898,2965,Wilderness / Pine Martin,0
+43.41264,,-80.51693,2964,Ottawa / Wilderness,0
+43.411203,,-80.509642,2967,Activa / Bush Clover,0
+43.379688,,-80.3289,1615,Cambridge Memorial Hospital,0
+43.406932,,-80.51882,2961,David Bergey / Peach Blossom,0
+43.405712,,-80.51839,2960,David Bergey / Peach Blossom,0
+43.411662,,-80.519825,2963,Path To Watercress,0
+43.410383,,-80.521995,2962,David Bergey / Ottawa,0
+43.403457,,-80.485038,1780,Mcintyre / Trillium,0
+43.401057,,-80.485467,1781,Trillium / Washburn,0
+43.398945,,-80.482102,1782,Trillium / Natural Area,0
+43.39894,,-80.477368,1783,680 Trillium Dr,0
+43.41657,,-80.51087,2969,Fischer-Hallman / Ottawa,0
+43.413305,,-80.508628,2968,Activa / Grey Fox,0
+43.401607,,-80.466172,1786,Trillium / Shoemaker,0
+43.375533,,-80.321978,1613,Coronation / Goldie,0
+43.423242,,-80.481777,3049,Kingswood / Flint,0
+43.421997,,-80.478115,3048,Kingswood / Alpine,0
+43.463217,,-80.528128,1962,Erb / Wells,0
+43.414235,,-80.468332,3041,Country Hill / Four Seasons,0
+43.410957,,-80.466785,3040,Country Hill / Martinglen,0
+43.415473,,-80.474433,3043,Country Hill / Cedarhill,0
+43.414275,,-80.470423,3042,Country Hill / Coach Hill,0
+43.418392,,-80.473393,3045,Kingswood / Block Line,0
+43.41702,,-80.475477,3044,Country Hill / Block Line,0
+43.421325,,-80.475512,3047,Kingswood / Gracefield,0
+43.41922,,-80.47467,3046,Kingswood / Selkirk,0
+43.460542,,-80.466342,1078,Frederick / Ethel,0
+43.460068,,-80.467853,1079,Frederick / Bruce,0
+43.461923,,-80.461955,1076,Frederick / River,0
+43.373213,,-80.285338,1535,Dobbie / Clyde,0
+43.458802,,-80.45486,1074,River / Manchester,0
+43.45949,,-80.459002,1075,River / Islington,0
+43.453358,,-80.445827,1072,River / Path To Secord,0
+43.457685,,-80.45041,1073,River / Halliwell,0
+43.449525,,-80.443333,1070,River / Stanley Park Mall,0
+43.451408,,-80.444552,1071,River / Ottawa,0
+43.470897,,-80.44066,1678,Lackner / Victoria,0
+43.470813,,-80.44442,1679,Victoria / Smetana,0
+43.463098,,-80.430055,1674,Keewatin / Stanmore,0
+43.463783,,-80.432567,1675,Keewatin / Dunnigan,0
+43.465118,,-80.436453,1676,Keewatin / Lackner,0
+43.468475,,-80.438675,1677,Lackner / Georgian Place,0
+43.452812,,-80.438582,1670,Ottawa / Montcalm,0
+43.453983,,-80.435153,1671,Ottawa / Mcgee,0
+43.457883,,-80.4312,1672,Ottawa / Lackner,0
+43.461025,,-80.4278,1673,Keewatin / Ottawa,0
+43.475522,,-80.544382,1094,Columbia / Hagey,0
+43.47316,,-80.550983,1096,Columbia / Village 1,0
+43.471577,,-80.55539,1097,Columbia / Ron Eydt Village,0
+43.469288,,-80.538617,1090,University / Seagram,0
+43.476818,,-80.5408,1093,Columbia / Phillip,0
+43.470135,,-80.559598,1098,Columbia / Old Post,0
+43.469453,,-80.561515,1099,Columbia / Beechlawn,0
+43.42635,,-80.543892,3135,Bankside / Westforest,0
+43.391738,,-80.35012,1623,King / Montrose,0
+43.42789,,-80.53791,3137,Bankside / Bankside Pk,0
+43.426697,,-80.540788,3136,Path To Highland,0
+43.43436,,-80.535575,3131,Victoria / Path To Wexford,0
+43.435092,,-80.533263,3130,Victoria / Stoke,0
+43.430573,,-80.543997,3133,Westforest / Hidden Creek,0
+43.433322,,-80.539823,3132,Victoria / Westforest,0
+43.4308,,-80.5337,3139,Bankside / Eastforest,0
+43.42893,,-80.535682,3138,Bankside / Bankside Cres,0
+43.367997,,-80.283285,1533,Dobbie / Savage,0
+43.402607,,-80.346813,1418,Concession / Garden,0
+43.400042,,-80.346013,1419,Concession / Dolph,0
+43.391403,,-80.36447,1410,Rose / Argyle,0
+43.393058,,-80.363097,1411,Argyle / Vine,0
+43.394632,,-80.36156,1412,Argyle / Hamilton,0
+43.394138,,-80.36024,1413,Hamilton / Westminster,0
+43.395654,,-80.358511,1414,Westminster / King,0
+43.396587,,-80.357615,1415,Westminster / Duke,0
+43.3986,,-80.35565,1416,Westminster / Lawrence,0
+43.404625,,-80.347618,1417,Eagle / Speedsville,0
+43.394793,,-80.329235,1322,Industrial / Bishop,0
+43.396502,,-80.329762,1323,1367 Industrial Rd,0
+43.395937,,-80.320837,1320,Bishop / Collier-Macmillan,0
+43.39499,,-80.325757,1321,Bishop / Hespeler,0
+43.409082,,-80.321437,1326,Pinebush / Smartcentre,0
+43.409917,,-80.3169,1327,Pinebush / High Ridge,0
+43.40098,,-80.331207,1324,Industrial / Langs,0
+43.407613,,-80.329882,1325,Eagle / Hespeler,0
+43.410445,,-80.313908,1328,Pinebush / Struck,0
+43.412682,,-80.30126,1329,Pinebush / Balmoral,0
+43.424602,,-80.316617,1256,Winston / Edward,0
+43.42183,,-80.310213,1257,Franklin / Winston,0
+43.423247,,-80.32423,1254,Queen / Shepherd,0
+43.426565,,-80.318583,1255,Winston / Queen,0
+43.427548,,-80.318845,1252,Queen / Winston,0
+43.422573,,-80.325145,1253,Queen / Shepherd,0
+43.431183,,-80.311242,1250,Queen / Adam,0
+43.429298,,-80.31529,1251,Queen / Harvey,0
+43.357723,,-80.28973,1528,South Cambridge Shopping Ctr,0
+43.363012,,-80.291022,1529,Franklin / Moorefield,0
+43.424345,,-80.31005,1258,Franklin / Thomas,0
+43.427027,,-80.309848,1259,Franklin / Edward,0
+43.440643923,,-80.54948824,3879_merged_999103,University / Westvale,
+43.397458,,-80.361245,1626,King / Waterloo,0
+43.422638,,-80.521568,3340,Elm Ridge / Hickory Heights,0
+43.431417,,-80.4847,3056,Hoffman / Kehl,0
+43.464875,,-80.490067,2474,St Leger / Guelph,0
+43.430559,,-80.487082,3057,Hoffman / Highland,0
+43.424297,,-80.525387,3341,Elm Ridge / Hickory Heights,0
+43.426775,,-80.54091,3204,Path To Hidden Creek,0
+43.43208,,-80.482665,3055,Hoffman / Meinzinger,0
+43.459055,,-80.537748,1966,Erb / Westmount,0
+43.424981,,-80.483083,3052,Alpine / Ottawa,0
+43.462472,,-80.580773,1105,Columbia / Erbsville,0
+43.42532,,-80.483267,3053,Alpine / Ottawa,0
+43.422477,,-80.48309,3050,Kingswood / Roberts,0
+43.421268,,-80.485437,3051,Kingswood / Strasburg,0
+43.411071,,-80.456915,3607,Bleams / Fallowfield,0
+43.468624,,-80.511143,3606,Weber / Erb,0
+43.504295,,-80.544678,3605,Kumpf / Randall,0
+43.510687,,-80.522143,3604,Northfield / Bridge,0
+43.382533,,-80.33431,3609,Coronation / Highland,0
+43.411013,,-80.457794,3608,Bleams / Fallowfield,0
+43.441147,,-80.509502,2698,Belmont / Metzloff,0
+43.453387,,-80.486337,2358,Queen / Ahrens,0
+43.450443,,-80.484336,2359,Weber / Scott,0
+43.460592,,-80.476582,2352,Victoria / Indiana,0
+43.459712,,-80.479342,2353,Victoria / Locust,0
+43.463698,,-80.459627,2350,Frederick / Turner,0
+43.46009,,-80.474638,2351,Edna / Hwy 7 Ramp,0
+43.456588,,-80.483803,2356,Queen / St Leger,0
+43.454551,,-80.485262,2357,Queen / Margaret,0
+43.45914,,-80.480998,2354,Victoria / Chestnut,0
+43.45774,,-80.482782,2355,Queen / Lancaster,0
+43.455978,,-80.507828,1898,King / Central Fresh Market,0
+43.456528,,-80.509415,1899,King / Green,0
+43.3835,,-80.4834,3739,Woodbine / Sienna,0
+43.3867,,-80.4846,3738,Woodbine / Sophia,0
+43.3889,,-80.4857,3737,Parkvale / Woodbine Ave,0
+43.3896,,-80.482,3736,Parkvale / Huron Pk,0
+43.3893,,-80.4788,3735,Parkvale / Woodbine Ave,0
+43.39,,-80.4745,3734,Parkvale / Huron Natural Pk,0
+43.3893,,-80.4721,3733,Parkvale / Huron,0
+43.4718,,-80.4408,3732,Victoria / Lackner,0
+43.4348,,-80.4281,3731,Fairway / River,0
+43.4482,,-80.4855,3730,King / Scott,0
+43.350632,,-80.333678,2136,Woodside At Cedar,0
+43.35215,,-80.334337,2137,Southgate / Day,0
+43.349505,,-80.329312,2134,Woodside / Victoria,0
+43.35025,,-80.331962,2135,142 Woodside Ave.,0
+43.346495,,-80.328495,2132,Stanley / St Andrews,0
+43.348208,,-80.328343,2133,St Gregorys / Caledon,0
+43.347443,,-80.322063,2130,Stanley / Glenmorris,0
+43.468148,,-80.448738,1680,Natchez / Rothsay,0
+43.353335,,-80.333777,2138,Churchill / Dale,0
+43.354035,,-80.33225,2139,Hillcrest / Churchill,0
+43.446008,,-80.470857,2648,Borden / Weber,0
+43.446827,,-80.475898,2649,Weber / Fairview Ave.,0
+43.452503,,-80.472598,2640,East / Krug,0
+43.454412,,-80.473902,2641,East / Chapel,0
+43.456388,,-80.47556,2642,East / Frederick,0
+43.45451,,-80.474103,2643,East / Chapel,0
+43.452722,,-80.472907,2644,East / Krug,0
+43.450497,,-80.471438,2645,East / Cameron,0
+43.44844,,-80.470073,2646,East / Stirling,0
+43.446523,,-80.46911,2647,The Aud,0
+43.390948,,-80.359021,1441,Lowther / Vine,0
+43.46836,,-80.438798,2340,Path To Georgian,0
+43.3961,,-80.340542,3429,Valentine / Mary,0
+43.396695,,-80.337607,3428,Valentine / Michael,0
+43.402963,,-80.337327,3423,Trico / Newport,0
+43.401227,,-80.336738,3422,Trico / Chateau,0
+43.418363,,-80.308685,3421,Jamieson / Woodland Plaza,0
+43.417623,,-80.302723,3420,Jamieson / Commerce,0
+43.398878,,-80.340598,3427,Walter / Langs,0
+43.401835,,-80.343625,3426,Mortimer / Hyannis,0
+43.404447,,-80.3407,3425,Trico / Providence,0
+43.404617,,-80.338565,3424,Trico / New Haven,0
+43.462487,,-80.529438,2002,Erb / Avondale,0
+43.463198,,-80.527782,2003,Erb / Euclid,0
+43.460688,,-80.533593,2000,Erb / Dietz,0
+43.461487,,-80.531728,2001,Erb / Roslin,0
+43.465277,,-80.521843,2006,Erb / King,0
+43.46573,,-80.51812,2007,Erb / Willow,0
+43.464143,,-80.525622,2004,Erb / Caroline,0
+43.463347,,-80.524432,2005,Caroline /Father David Bauer,0
+43.466657,,-80.515267,2008,Erb / Moore,0
+43.467675,,-80.513498,2009,Erb / Devitt,0
+43.419188,,-80.474798,3026,Kingswood / Selkirk,0
+43.394083,,-80.466445,3558,Huron Heights Ss,0
+43.431487,,-80.479552,2910,Ottawa / Hoffman,0
+43.434327,,-80.47906,2911,Mill / Ottawa,0
+43.43522,,-80.483047,2912,Mill / Borden,0
+43.435838,,-80.485643,2913,Mill / Heiman,0
+43.437068,,-80.486985,2914,Mill / Stirling,0
+43.440988,,-80.48437,2915,Stirling / Courtland,0
+43.443348,,-80.479087,2916,Stirling / Charles,0
+43.443563,,-80.478881,2917,Stirling / Charles,0
+43.402553,,-80.462397,1793,Trillium / Adam Ferrie,0
+43.444802,,-80.480365,2919,Charles / Cameron,0
+43.399208,,-80.458852,1791,Trillium / Groff,0
+43.398735,,-80.460748,1790,End Of Groff Place,0
+43.399333,,-80.476195,1797,640 Trillium Dr,0
+43.400003,,-80.473257,1796,Trillium / Mcbrine,0
+43.401035,,-80.468637,1795,Trillium / Strasburg,0
+43.401727,,-80.466235,1794,Trillium / Shoemaker,0
+43.422147,,-80.478615,3024,Kingswood / Alpine,0
+43.354693,,-80.30764,1524,Concession / Cameron,0
+43.44719,,-80.442152,1069,River / Conway,0
+43.445873,,-80.441332,1068,River / Bradley,0
+43.448875,,-80.426877,1061,Oldfield / Springmount,0
+43.45078,,-80.429868,1060,Oldfield / Drumoak,0
+43.448948,,-80.429197,1063,Edenbridge / Charleston,0
+43.449802,,-80.424072,1062,Oldfield / Lackner,0
+43.448088,,-80.435902,1065,Edenbridge / Old Chicopee,0
+43.448697,,-80.433367,1064,Edenbridge / Darlington,0
+43.444765,,-80.440157,1067,Kenora / River,0
+43.445795,,-80.43827,1066,Kenora / Wayne,0
+43.422832,,-80.480267,3023,Kingswood / Appalachian,0
+43.450973,,-80.443898,1669,Ottawa / River,0
+43.448932,,-80.44384,1668,Stanley Park Mall Terminal,0
+43.448908,,-80.444078,1667,Stanley Park Mall Terminal,0
+43.444358,,-80.440063,1666,River / Kenora,0
+43.44311,,-80.43899,1665,River / Rennie,0
+43.439122,,-80.43306,1664,River / Old Chicopee,0
+43.436887,,-80.430715,1663,River / Kinzie,0
+43.434922,,-80.428513,1662,River / Fairway,0
+43.422813,,-80.443038,1661,Kingsway / Wilson,0
+43.429699,,-80.430819,1660,Morgan / Fairway,0
+43.451742,,-80.485697,1087,Frederick / Weber,0
+43.4524,,-80.484435,1086,Frederick / Irvin,0
+43.453507,,-80.482377,1085,Frederick / Lancaster,0
+43.45479,,-80.479888,1084,Frederick / Gordon,0
+43.45578,,-80.478025,1083,Frederick / Chestnut,0
+43.456532,,-80.476608,1082,Frederick / Filbert,0
+43.459367,,-80.470082,1081,Frederick / Ann,0
+43.458515,,-80.472747,1080,Frederick / Edna,0
+43.448535,,-80.488312,1089,Benton / Charles,0
+43.449915,,-80.487397,1088,Frederick / King,0
+43.430279,,-80.525202,3140,Highland Hills Mall Terminal,0
+43.432738,,-80.526075,3141,Fischer-Hallman / Highland,0
+43.436143,,-80.528645,3142,Fischer-Hallman / Victoria,0
+43.436848,,-80.529197,3143,Fischer-Hallman / Victoria,0
+43.439465,,-80.535423,3144,Fischer-Hallman / Stoke,0
+43.442453,,-80.541797,3145,Fischer-Hallman / Glasgow,0
+43.444408,,-80.545685,3146,Fischer-Hallman / University,0
+43.355722,,-80.301545,1526,Concession / Scrimger,0
+43.4585,,-80.556007,3148,Keats / Candlewood,0
+43.457873,,-80.55446,3149,Keats / Midwood,0
+43.48259,,-80.506755,2826,Lincoln / Bluevale,0
+43.47975,,-80.507518,2827,Lincoln / Mayfield,0
+43.493248,,-80.504447,2821,Lee / Dunvegan,0
+43.412407,,-80.549352,3386,Golden Meadow / Yellow Birch,0
+43.411312,,-80.545255,3387,Yellow Birch / Stonehenge,0
+43.41569,,-80.547488,3384,Highview / Sugar Maple,0
+43.415528,,-80.549697,3385,Highview / Old Maple,0
+43.427452,,-80.530157,3382,Westheights / Blackwell,0
+43.426723,,-80.528675,3383,Queens / Elm Ridge,0
+43.42621,,-80.540313,3380,Highland / Path To Bankside,0
+43.428992,,-80.531257,3381,Westheights / Highland,0
+43.413202,,-80.539692,3388,Yellow Birch / Driftwood,0
+43.436292,,-80.513232,3389,Highland / Westmount,0
+43.390753,,-80.363195,1409,Rose / Westminster,0
+43.389303,,-80.36037,1408,Rose / Lowther,0
+43.38958,,-80.35101,1403,Hamilton / Montrose,0
+43.388447,,-80.348428,1402,Bishop / Hamilton,0
+43.390753,,-80.346333,1401,Bishop / Railway,0
+43.389513,,-80.342392,1400,Concession / Grand Valley,0
+43.388482,,-80.357727,1407,Homuth / Frederick,0
+43.38878,,-80.355175,1406,Homuth / Bernhardt,0
+43.390108,,-80.354282,1405,Beck / Hamilton,0
+43.39061,,-80.353122,1404,Hamilton / Union,0
+43.402043,,-80.319252,1339,Conestoga / Sheldon,0
+43.403142,,-80.315672,1338,Sheldon / Corydon,0
+43.407108,,-80.302233,1335,Sheldon / Balmoral,0
+43.40772,,-80.298715,1334,Sheldon / Balmoral,0
+43.40321,,-80.312398,1337,Sheldon / Wolseley,0
+43.406197,,-80.307652,1336,Sheldon / Franklin,0
+43.413215,,-80.294425,1331,Fleming / Pinebush,0
+43.41311,,-80.298437,1330,355 Pinebush Rd,0
+43.408788,,-80.293065,1333,Fleming / Sheldon,0
+43.410615,,-80.293662,1332,Fleming / Thompson,0
+43.436318,,-80.52972,3129,Victoria / Fischer-Hallman,0
+43.44165,,-80.551483,3261,Westvale / Haldane,0
+43.43096,,-80.52795,3201,Highland / Highland Hills Mall,0
+43.44344,,-80.545728,3260,University / Fischer-Hallman,0
+43.466992,,-80.568283,1100,Columbia / Fischer-Hallman,0
+43.372567,,-80.29067,1537,Clyde / Bluerock,0
+43.420897,,-80.515425,3093,Greenbrook / Fischer-Hallman,0
+43.424997,,-80.511713,3090,Stonybrook / Greenbrook,0
+43.424019,,-80.512662,3091,Greenbrook / Birchcliff,0
+43.42608,,-80.511095,3096,Forest Hill Shopping Centre,0
+43.428213,,-80.507058,3097,Greenbrook / Westmount,0
+43.421042,,-80.515015,3094,Greenbrook / Ruskview,0
+43.424055,,-80.512514,3095,Greenbrook / Birchcliff,0
+43.431798,,-80.305808,1249,Cooper / Lewis,0
+43.4305,,-80.301247,1248,Cooper / Ontario,0
+43.428535,,-80.502678,3098,Greenbrook / Village,0
+43.428897,,-80.499108,3099,Greenbrook / Lakeside,0
+43.375732,,-80.297143,1539,Franklin / Athlone,0
+43.371447,,-80.294337,1538,Clyde / Franklin,0
+43.4417,,-80.538622,3267,Westwood / Dayman,0
+43.397282,,-80.377938,1633,Preston / Parkview,0
+43.440663,,-80.527048,3125,Victoria Hills Plaza,0
+43.355458,,-80.314012,1523,Ainslie / Walnut,0
+43.399225,,-80.37618,1634,Preston / Linden,0
+43.360054,,-80.313507,1468,Ainslie / Dickson,0
+43.472233,,-80.579393,1111,Laurelwood / Beaver Crk. Rd.,0
+43.510357,,-80.53335,2063,Bathurst / Rankin,0
+43.399963,,-80.375685,1635,Shantz Hill / Preston Pkwy,0
+43.465752,,-80.5717,1102_merged_999113,Columbia / Gatestone,
+43.40583,,-80.38609,1636,Gateway Park / King,0
+43.432635,,-80.523322,3200,Highland / Highland Cres,0
+43.465907,,-80.570812,1101,Columbia / Gatestone,0
+43.426197,,-80.54454,3638,Westforest / Bankside,0
+43.43101,,-80.527137,3639,Highland / Highland Hls Mall,0
+43.426985,,-80.527673,3637,Elm Ridge / Queens,0
+43.45897,,-80.570545,3634,Leighland / Sandbrooke,0
+43.45781,,-80.567965,3635,Leighland / Keats,0
+43.458185,,-80.575925,3632,Leighland / Erbsville,0
+43.459308,,-80.5735,3633,Leighland / Strathmere,0
+43.47897,,-80.549022,3630,R & T Park,0
+43.464127,,-80.541383,3631,University / Westmount,0
+43.390347,,-80.324058,1454,Dunbar / Hespeler,0
+43.46573,,-80.44636,2345,Natchez / Matthew,0
+43.464508,,-80.445297,2344,Natchez / Halifax,0
+43.468482,,-80.451117,2347,Victoria / Natchez,0
+43.467952,,-80.44831,2346,Natchez / Rothsay,0
+43.46463,,-80.438603,2341,Keewatin / Georgian,0
+43.431908,,-80.479993,3054,Hoffman / Ottawa,0
+43.464417,,-80.443118,2343,Heritage / Halifax,0
+43.463555,,-80.44176,2342,Keewatin / Heritage,0
+43.464725,,-80.458792,2349,Frederick / Avon,0
+43.467363,,-80.45448,2348,Victoria / Forfar,0
+43.505286,,-80.529518,2067,Frobisher / Davenport,0
+43.485,,-80.5287,3708,St David Css,0
+43.4851,,-80.5289,3709,St David Css,0
+43.44970484,,-80.48869933,1889,King / Queen,0
+43.44914,,-80.487367,1888,King / Frederick,0
+43.44735,,-80.483574,1887,King / Cedar,0
+43.446087,,-80.480633,1886,King / Cameron,0
+43.445193,,-80.478753,1885,King / Pandora,0
+43.444185,,-80.476733,1884,King / Stirling,0
+43.442782,,-80.47349,1883,King / Borden,0
+43.442125,,-80.472067,1882,King / Ottawa,0
+43.4402,,-80.5478,3704,Resurrection Css,0
+43.4403,,-80.5473,3705,Resurrection Css,0
+43.360875,,-80.300992,2121,Chalmers / Mcnaughton,0
+43.362302,,-80.301588,2120,Chalmers / Dundas,0
+43.359977,,-80.305647,2123,Mcnaughton / Oak,0
+43.36028,,-80.302915,2122,Mcnaughton / Lincoln,0
+43.358887,,-80.310477,2125,Main / Harris,0
+43.360653,,-80.307572,2124,Mcnaughton / Shade,0
+43.350933,,-80.317177,2127,Crombie / Grand,0
+43.352117,,-80.317157,2126,Grand / Victoria,0
+43.346895,,-80.319773,2129,First / Caen,0
+43.348248,,-80.318088,2128,Middleton / Francis,0
+43.429101511,,-80.30965272,1310_merged_999109,Franklin / Shamrock,
+43.455588,,-80.499322,2410,Wellington / Waterloo,0
+43.462873,,-80.493773,2659,Margaret / Guelph,0
+43.46075,,-80.492575,2658,Margaret / Wilhelm,0
+43.449288,,-80.481395,2653,Weber / Cedar,0
+43.448662,,-80.480002,2652,Weber / Madison,0
+43.447953,,-80.478425,2651,Weber / Cameron,0
+43.447265,,-80.476875,2650,Weber / Pandora,0
+43.458997,,-80.490588,2657,Margaret / Wellington,0
+43.456927,,-80.489307,2656,Margaret / Victoria,0
+43.455593,,-80.487895,2655,Margaret / Maynard,0
+43.454688,,-80.485735,2654,Margaret / Queen,0
+43.436255,,-80.302567,3416,Walker / Renwick,0
+43.4206,,-80.290388,3417,Cooper / Jamieson,0
+43.431815,,-80.300185,3414,Hammet / Black,0
+43.432765,,-80.300917,3415,Renwick / Gerrard,0
+43.427177,,-80.288072,3412,Adler / Tyndale,0
+43.42544,,-80.293095,3413,Adler / Cooper,0
+43.418855,,-80.294193,3410,Jamieson / Alona,0
+43.420672,,-80.290263,3411,Cooper / Jamieson,0
+43.418875,,-80.294803,3418,Jamieson / Alona,0
+43.444953,,-80.556683,1990,Thorndale / Rosemeadow,0
+43.475297,,-80.487593,2015,Bridgeport / Mackie,0
+43.474935,,-80.489532,2014,Bridgeport / Leander,0
+43.476208,,-80.48544,2016,Bridgeport / Lancaster,0
+43.470035,,-80.506308,2011,Erb / Ellis,0
+43.468655,,-80.510435,2010,Erb / Weber,0
+43.471672,,-80.499165,2013,Erb / Terrystone,0
+43.470758,,-80.502435,2012,Erb / Cardinal,0
+43.40785,,-80.496183,3562,Rittenhouse / Erinbrook,0
+43.40952,,-80.487095,3560,Rittenhouse / Erinbrook,0
+43.408008,,-80.491377,3561,Rittenhouse / Rosebank,0
+43.445073,,-80.506575,3566,280 Victoria St. South,0
+43.433195,,-80.521897,3567,Highland / Eagen,0
+43.443292,,-80.511228,3564,Victoria / Belmont,0
+43.446092,,-80.505015,3565,Victoria / West,0
+43.41122,,-80.471855,3034,Century Hill / Devonglen,0
+43.439812,,-80.420628,3568,Fairway / Sims Estate,0
+43.452305,,-80.424837,3569,Lackner / Bryan,0
+43.42404,,-80.49667,2903,Elmsdale / Chandler,0
+43.422185,,-80.49416,2902,Elmsdale / Ottawa,0
+43.420978,,-80.497572,2901,Ottawa / Howland,0
+43.420593,,-80.499935,2900,Ottawa / Path To Chandler,0
+43.425168,,-80.48374,2907,Ottawa / Alpine,0
+43.422932,,-80.486732,2906,Ottawa / Strasburg,0
+43.425197,,-80.490243,2905,Grt Strasburg Transit Garage,0
+43.411595,,-80.474667,3035,Old Country / Century Hill,0
+43.430512,,-80.480722,2909,479 Ottawa St.,0
+43.429297,,-80.481332,2908,Ottawa / Imperial,0
+43.42733,,-80.424747,1658,Morgan / Greendale,0
+43.428218,,-80.427607,1659,Morgan / Southill,0
+43.43117,,-80.416263,1652,Morrison / Quinte,0
+43.429848,,-80.416362,1653,Morrison / Path To Park,0
+43.432092,,-80.414592,1650,Morrison / Grand River,0
+43.4336,,-80.415405,1651,Quinte / Morrison,0
+43.42691,,-80.419143,1656,Grand River / River,0
+43.42768,,-80.420965,1657,Morgan / River,0
+43.428267,,-80.414925,1654,Morrison / Grand River,0
+43.427755,,-80.415438,1655,Grand River / Underhill,0
+43.390994,,-80.375489,1630,Preston / Fountain,0
+43.392152,,-80.377388,1631,Preston / Woods,0
+43.39467,,-80.37765,1632,Preston / Hillview,0
+43.461213,,-80.545248,3153,Keats / Mcdougall,0
+43.459637,,-80.547465,3152,Keats / Karen,0
+43.458422,,-80.549167,3151,Keats / Amos,0
+43.457262,,-80.551802,3150,Keats / Midwood,0
+43.460042,,-80.547212,3157,Keats / Karen,0
+43.46153,,-80.545118,3156,Keats / Mcdougall,0
+43.462617,,-80.542983,3155,Keats / Shakespeare,0
+43.462327,,-80.543373,3154,Keats / Shakespeare,0
+43.465895,,-80.506565,2837,Weber / Rodney,0
+43.46768,,-80.50957,2836,Weber / Allen,0
+43.457327,,-80.552013,3159,Keats / Midwood,0
+43.459122,,-80.548472,3158,Keats / Amos,0
+43.475038,,-80.517443,2833,Weber / Marshall,0
+43.479217,,-80.51686,2832,University / Marsland,0
+43.480147,,-80.5141,2831,Carter / University,0
+43.47635,,-80.513533,2830,Marshall / Carter,0
+43.439513,,-80.50776,3391,Highland / Belmont,0
+43.437953,,-80.51043,3390,Highland / Lawrence,0
+43.49953,,-80.526273,3393,Conestoga Mall,0
+43.401255,,-80.36065,1435,336 Eagle St. N,0
+43.405352,,-80.277105,3395,Coulthard / Townline,0
+43.394946,,-80.274782,3394,Saginaw / Haddaway,0
+43.399635,,-80.336082,1430,Langs / Trico,0
+43.39885,,-80.340258,1431,Langs / Walter,0
+43.398275,,-80.292903,3399,Burnett / Can-Amera,0
+43.405382,,-80.2858,3398,Baintree / Can-Amera,0
+43.407668,,-80.389818,1637,Gateway Park / Tu Lane,0
+43.39644,,-80.365488,1438,Eagle / Hamilton,0
+43.394505,,-80.367483,1439,Eagle / Sherring,0
+43.389545,,-80.285482,1348,Saginaw / Burnett,0
+43.390167,,-80.282535,1349,Saginaw / Light,0
+43.40031,,-80.318538,1340,500 Conestoga Blvd,0
+43.396665,,-80.31768,1341,Conestoga / Bishop,0
+43.391293,,-80.314528,1342,Dunbar / Conestoga,0
+43.393722,,-80.30321,1343,Can-Amera / Franklin,0
+43.391228,,-80.299799,1344,Saginaw / Green Vista,0
+43.389573,,-80.296447,1345,Saginaw / Cowan,0
+43.390142,,-80.292855,1346,Saginaw / Stonecairn,0
+43.389997,,-80.288945,1347,Saginaw / Chamberlin,0
+43.44,,-80.5482,3702,Resurrection Css,0
+43.4401,,-80.548,3703,Resurrection Css,0
+43.4742,,-80.5456,3700,Uw - B.C. Matthews Hall,0
+43.44,,-80.5483,3701,Resurrection Css,0
+43.4402,,-80.5476,3706,Resurrection Css,0
+43.485,,-80.5286,3707,St David Css,0
+43.366552,,-80.286278,1502,100 Savage Dr.,0
+43.364747,,-80.29189,1503,Franklin / Hilltop,0
+43.370223,,-80.284273,1500,Dobbie / Orion,0
+43.367803,,-80.28335,1501,Dobbie / Savage,0
+43.424362,,-80.510345,3089,Stonybrook / Village,0
+43.424565,,-80.507183,3088,Path To Forest Hill Park,0
+43.361673,,-80.290613,1504,Franklin / Mclaren,0
+43.3579,,-80.289672,1505,South Cambridge Shopping Ctr,0
+43.428732,,-80.501942,3085,Greenbrook / Forest Hill,0
+43.429017,,-80.498698,3084,Greenbrook / Lakeside,0
+43.425326,,-80.50524,3087,Stonybrook / Westmount,0
+43.427772,,-80.506547,3086,Westmount / Village,0
+43.426353,,-80.495193,3081,Stirling / Avalon,0
+43.426847,,-80.49206,3080,Southmoor / Avalon,0
+43.429408,,-80.49729,3083,Greenbrook / Stirling,0
+43.42808,,-80.495823,3082,Stirling / Southmoor,0
+43.448992,,-80.550312,1992,Fischer-Hallman / Thorndale,0
+43.48346144,,-80.52664198,3887,King / Columbia,0
+43.435489341,,-80.56075635,3881,The Boardwalk,0
+43.439232636,,-80.55402629,3880,University / Portsmouth,0
+43.43680048,,-80.55961863,3883,Ira Needles / University Ave,0
+43.47925,,-80.549587,3629,R & T Park,0
+43.489357,,-80.545395,3628,Mccormick,0
+43.475772,,-80.526363,3621,University / King,0
+43.47513,,-80.52755,3620,Laurier,0
+43.480087,,-80.531902,3623,Hazel / Columbia,0
+43.487023,,-80.518227,3622,Lexington / Dearborn,0
+43.480773,,-80.524592,3625,338 Regina St.,0
+43.478593,,-80.524121,3624,Regina / Hickory,0
+43.489252,,-80.545615,3627,Mccormick,0
+43.44116,,-80.469717,1881,King / Sydney,0
+43.464092,,-80.464303,2330,River / Victoria,0
+43.441995,,-80.492472,3070,Mill / Iron Horse Trail,0
+43.46545,,-80.459997,2332,Victoria / Frederick,0
+43.466243,,-80.457423,2333,Victoria / Frederick,0
+43.466718,,-80.45592,2334,1151 Victoria St.,0
+43.46738,,-80.453823,2335,Victoria / Forfar,0
+43.468417,,-80.450663,2336,Victoria / Natchez,0
+43.440185,,-80.49053,3071,Mill / Lansdowne,0
+43.47066,,-80.44408,2338,Victoria / Smetana,0
+43.470947,,-80.440882,2339,Lackner / Victoria,0
+43.43904,,-80.490798,3072,Spadina / Wentworth,0
+43.438943,,-80.492757,3073,Spadina / Highland,0
+43.439837,,-80.466293,1880,King / Preston,0
+43.43616,,-80.491728,3074,Stirling / Highland,0
+43.435302,,-80.494093,3075,Stirling / Lorne,0
+43.4393,,-80.4613,3715,Eastwood Ss,0
+43.4564,,-80.5098,3714,Kitchener Ci,0
+43.4851,,-80.5293,3711,St David Css,0
+43.4851,,-80.5291,3710,St David Css,0
+43.4852,,-80.5294,3712,St David Css,0
+43.432897,,-80.496142,3077,Stirling / Lakeside Park,0
+43.4638,,-80.5221,3719,Uptown Waterloo,0
+43.429232,,-80.496403,3078,Stirling / Greenbrook,0
+43.428332,,-80.494897,3079,Southmoor / Yager,0
+43.464435,,-80.490572,2488,Guelph / St Leger,0
+43.463883,,-80.492127,2489,Guelph / Crestwood,0
+43.465638,,-80.484862,2486,Guelph / Englewood,0
+43.406875,,-80.496083,2950,Erinbrook / Ridgeway,0
+43.467003,,-80.479532,2484,Maple / Guelph,0
+43.466147,,-80.481961,2485,Guelph / Clifton,0
+43.471428,,-80.482117,2482,Maple / Union,0
+43.468818,,-80.480727,2483,Maple / Arnold,0
+43.47121,,-80.485807,2480,Union / Bond,0
+43.409112,,-80.497253,2951,Tillsley / Erinbrook,0
+43.4455,,-80.527022,3252,Inwood / Westwood,0
+43.352678,,-80.323575,2248,St Andrews / Cedar,0
+43.351563,,-80.329355,2249,Cedar / Osborne,0
+43.354058,,-80.308945,2244,Centre / Concession,0
+43.366588,,-80.285746,1532,111 Savage Dr.,0
+43.35655,,-80.318213,2246,St Andrews / George,0
+43.354432,,-80.321975,2247,St Andrews / Fraser,0
+43.348713,,-80.311027,2240,Albert / Ballantyne,0
+43.34949,,-80.307065,2241,Ballantyne / Mckay,0
+43.350935,,-80.30739,2242,Mckay / South,0
+43.352802,,-80.308572,2243,Centre / Elliott,0
+43.46078,,-80.498957,2464,Weber / Blucher,0
+43.462147,,-80.500438,2465,Weber / Raitar,0
+43.464402,,-80.503705,2466,Weber / Roger,0
+43.465523,,-80.504615,2467,Union / Weber,0
+43.454273,,-80.492655,2461,Weber / Water,0
+43.456973,,-80.495038,2462,Weber / Wellington,0
+43.45925,,-80.49728,2463,Weber / Wilhelm,0
+43.466065,,-80.503015,2468,Union / Ellis,0
+43.46709,,-80.50016,2469,Union / Margaret,0
+43.397298,,-80.291405,3400,Burnett / Country Club,0
+43.417413,,-80.303167,3409,Jamieson / Commerce,0
+43.418162,,-80.308162,3408,Jamieson / Woodland Plaza,0
+43.485105,,-80.55966,1188,Toll Gate / Highpoint,0
+43.486712,,-80.563085,1189,Highpoint / Dogwood,0
+43.497602,,-80.550452,2068,Weber / Northfield,0
+43.502243,,-80.556958,2069,Northlake / Black Forest,0
+43.486157,,-80.559077,1187,Toll Gate / Dogwood,0
+43.47818,,-80.50836,2792,Lincoln / Margaret,0
+43.479192,,-80.507755,2793,Lincoln / Mayfield,0
+43.476333,,-80.513758,2790,Carter / Marshall,0
+43.476242,,-80.50951,2791,Marshall / Lincoln,0
+43.510798,,-80.530778,2064,Mcmurray / Bathurst,0
+43.509048,,-80.528827,2065,Mcmurray / Northland,0
+43.482015,,-80.505813,2794,Lincoln / Bluevale,0
+43.48333,,-80.50761,2795,Lincoln / University,0
+43.487043,,-80.555423,1185,Glen Forrest / Brookhaven,0
+43.489822,,-80.547727,1182,Cedarbrae / Sprucehill,0
+43.444122,,-80.532788,3255,Westwood / Huntington,0
+43.488012,,-80.550237,1183,Cedarbrae / Heasley Park Tr,0
+43.490035,,-80.546096,1181,Cedarbrae / Mount Anne,0
+43.445208,,-80.479098,3579,King / Pandora,0
+43.4497,,-80.480825,3578,Krug / Lancaster,0
+43.45119,,-80.486133,3575,Frederick / Weber,0
+43.45505,,-80.446965,3574,River / Gibson,0
+43.446618,,-80.481775,3577,King / Madison,0
+43.442513,,-80.535163,3256,Westwood / Gallarno,0
+43.475264,,-80.429204,3571,Centennial / Victoria,0
+43.439837,,-80.420918,3570,Fairway / Briarmeadow,0
+43.47314,,-80.43678,3573,Forwell / Victoria,0
+43.472242,,-80.432357,3572,Centennial / Forwell,0
+43.472255,,-80.514852,2666,Weber / Mackay,0
+43.474983,,-80.517103,2667,Weber / Marshall,0
+43.469188,,-80.511445,2664,Weber / Royal,0
+43.471102,,-80.5135,2665,Weber / Lincoln,0
+43.467197,,-80.508385,2662,Weber / Cornwall,0
+43.467887,,-80.509535,2663,Weber / Allen,0
+43.46546,,-80.505215,2660,Union / Weber,0
+43.466432,,-80.507112,2661,Weber / Bristol,0
+43.473488,,-80.515907,2668,Weber / Noecker,0
+43.476015,,-80.517943,2669,Weber / Lodge,0
+43.422437,,-80.487323,2938,Strasburg / Ottawa,0
+43.420895,,-80.485627,2939,Strasburg / Barwood,0
+43.427103,,-80.482227,2936,Ottawa / Homer Watson,0
+43.425102,,-80.484072,2937,Ottawa / Alpine,0
+43.431968,,-80.479525,2934,Ottawa / Hoffman,0
+43.429713,,-80.481582,2935,Ottawa / Kehl,0
+43.434608,,-80.479942,2932,409 Mill St.,0
+43.434172,,-80.479018,2933,Mill / Ottawa,0
+43.436105,,-80.486085,2930,Mill / Heiman,0
+43.435068,,-80.4829,2931,Mill / Borden,0
+43.4981,,-80.5286,3799,Conestoga Mall Terminal,0
+43.4982,,-80.5293,3798,Conestoga Mall Terminal,0
+43.426765,,-80.426583,1645,King / Heffner Crt,0
+43.425752,,-80.422578,1644,King / Hofstetter,0
+43.426027,,-80.413402,1647,Freeport Health Centre,0
+43.428268,,-80.431093,1646,King / Fairway,0
+43.420108,,-80.40927,1641,King / Riverbank,0
+43.41073,,-80.399583,1640,King / Deer Ridge,0
+43.425278,,-80.419993,1643,King / River,0
+43.424093,,-80.412268,1642,Freeport Health Centre,0
+43.42999,,-80.416372,1649,Morrison / Path To Park,0
+43.427855,,-80.414458,1648,Morrison / Grand River,0
+43.3911,,-80.3195,3797,Cambridge Centre Terminal,0
+43.3706,,-80.3372,3796,Bismark / Devil'S Creek,0
+43.497123,,-80.521133,2808,Davenport / Kingscourt,0
+43.500218,,-80.529488,2809,Kraus / Conestogo,0
+43.442508,,-80.542707,3168,Fischer-Hallman / Glasgow,0
+43.439028,,-80.535013,3169,Fischer-Hallman / Stoke,0
+43.445967,,-80.548143,3166,Fischer-Hallman / Warrington,0
+43.44353,,-80.544692,3167,Fischer-Hallman / University,0
+43.450527,,-80.55189,3164,Fischer-Hallman / Westridge,0
+43.448563,,-80.550302,3165,Fischer-Hallman / Thorndale,0
+43.457562,,-80.557465,3162,Fischer-Hallman / Keats,0
+43.454993,,-80.555672,3163,Fischer-Hallman / Winchester,0
+43.458187,,-80.554582,3160,Keats / Candlewood,0
+43.458638,,-80.555953,3161,Keats / Candlewood,0
+43.39863,,-80.341087,1421,Langs / Walter,0
+43.39814,,-80.344017,1420,Langs / Concession,0
+43.399628,,-80.335197,1423,Langs / Trico,0
+43.399108,,-80.338213,1422,Langs / Valentine,0
+43.416888,,-80.541103,3368,Driftwood / Highview,0
+43.41583,,-80.54118,3369,Driftwood / Old Forest,0
+43.397452,,-80.324872,1427,480 Hespeler Rd,0
+43.400757,,-80.325902,1426,Hespeler / Langs,0
+43.422482,,-80.545558,3364,Rolling Meadows / Newbury,0
+43.420043,,-80.548317,3365,Rolling Meadows / Newbury,0
+43.418335,,-80.545575,3366,Rolling Meadows / Trailwood,0
+43.41771,,-80.543112,3367,Rolling Meadow / Meadow Wood,0
+43.428288,,-80.530528,3360,Westheights / Blackwell,0
+43.426218,,-80.540687,3361,Highland / Path To Bankside,0
+43.424615,,-80.543928,3362,Westheights / Highland,0
+43.422693,,-80.543187,3363,Rolling Meadows / Westheights,0
+43.350916,,-80.316834,2157,Crombie / Grand,0
+43.453475,,-80.470223,2402,Krug / Melrose,0
+43.452695,,-80.472553,2403,Krug / East,0
+43.3832,,-80.3175,1359,Munch / Sekura,0
+43.391328,,-80.315023,1358,Dunbar / Conestoga,0
+43.454303,,-80.46771,2400,Krug / Becker,0
+43.394525,,-80.290555,1353,Essex Point / Green Vista,0
+43.396163,,-80.28917,1352,Essex Point / Burnett,0
+43.45385,,-80.469013,2401,Krug / Dumfries,0
+43.393912,,-80.303852,1357,Can-Amera / Franklin,0
+43.391616,,-80.300505,1356,St Benedict Css,0
+43.393112,,-80.297203,1355,Green Vista / Crawford,0
+43.394522,,-80.294533,1354,Green Vista / Whittaker,0
+43.357276,,-80.312954,1519,Ainslie Street Terminal,0
+43.357407,,-80.312815,1518,Ainslie Street Terminal,0
+43.357659,,-80.313456,1514,Ainslie Street Terminal,0
+43.357581,,-80.31275,1517,Ainslie Street Terminal,0
+43.357626,,-80.312972,1516,Ainslie Street Terminal,0
+43.357171,,-80.313522,1511,Ainslie Street Terminal,0
+43.354863,,-80.307122,1510,Concession / Cameron,0
+43.3575,,-80.31348,1513,Ainslie Street Terminal,0
+43.357334,,-80.3135,1512,Ainslie Street Terminal,0
+43.39905,,-80.482147,1798,830 Trillium Dr,0
+43.416808,,-80.501167,3184,Westmount / Laurentian,0
+43.412765,,-80.500207,3185,Westmount / Williamsburg,0
+43.411763,,-80.496137,3186,Block Line / Path Killarney,0
+43.416085,,-80.47942,3187,Block Line / Strasburg,0
+43.430268,,-80.508555,3180,Westmount / Forest Hill,0
+43.425273,,-80.504518,3181,Westmount / Stonybrook,0
+43.42064,,-80.502087,3182,Westmount / Ottawa,0
+43.419307,,-80.501738,3183,Westmount / Ottawa,0
+43.411805,,-80.496658,3188,Block Line / Path Killarney,0
+43.411372,,-80.499298,3189,Block Line / Westmount,0
+43.404142,,-80.284498,3397,Coulthard / Baintree,0
+43.405275,,-80.28059,3396,Coulthard / Arthur Fach,0
+43.336582,,-80.30108,3612,Langlaw / Schroeder,0
+43.419163,,-80.326232,1276_merged_999107,Groh / Holiday Inn,
+43.457837,,-80.482622,2323,Queen / Lancaster,0
+43.456765,,-80.483491,2322,Queen / St Leger,0
+43.454655,,-80.485306,2321,Queen / Margaret,0
+43.453217,,-80.486393,2320,Queen / Ahrens,0
+43.459362,,-80.474063,2327,Edna / Mansion,0
+43.460332,,-80.4766,2326,Victoria / Indiana,0
+43.459703,,-80.478782,2325,Victoria / Filbert,0
+43.391753,,-80.34192,1446,Fairview / Bishop,0
+43.46239,,-80.461832,2329,River / Frederick,0
+43.458682,,-80.473337,2328,Edna / Frederick,0
+43.391625,,-80.344247,1445,Bishop / Pineview,0
+43.441265,,-80.48454,3618,Courtland / Stirling,0
+43.39053,,-80.346372,1444,Bishop / Railway,0
+43.47524,,-80.5279,3619,Laurier,0
+43.468558,,-80.567125,1115,Fischer-Hallman / Columbia,0
+43.470683,,-80.568997,1114,Fischer-Hallman / Gatestone,0
+43.5099,,-80.5245,3760,Frobisher / Superior,0
+43.5123,,-80.5208,3761,Northfield / Bridge,0
+43.5142,,-80.5196,3762,Northfield / Toman,0
+43.517302,,-80.515966,3763,University / Northfield,0
+43.5186,,-80.5092,3764,University / Country Squire,0
+43.5176,,-80.5027,3765,University / Sportsplex,0
+43.5113,,-80.4978,3766,University / New Bedford,0
+43.5082,,-80.4977,3767,University / Woolwich,0
+43.498,,-80.5053,3768,Lexington / Bridge,0
+43.4905,,-80.5164,3769,Lexington / Dearborn,0
+43.46799,,-80.56497,1116,Columbia / Fischer-Hallman,0
+43.40222,,-80.459793,1792,Trillium / Steckle,0
+43.427665,,-80.429757,1562,3065 King St. E,0
+43.457212,,-80.495293,2499,Weber / Wellington,0
+43.458595,,-80.496587,2498,Weber / Wilhelm,0
+43.449303,,-80.501435,3225,Victoria / Michael,0
+43.46529,,-80.496546,2491,Margaret / Breithaupt Centre,0
+43.463272,,-80.49389,2490,Guelph / Margaret,0
+43.466333,,-80.502757,2493,Union / Ellis,0
+43.467222,,-80.5003,2492,Union / Margaret,0
+43.462547,,-80.501085,2495,Weber / Raitar,0
+43.464325,,-80.50387,2494,Weber / Roger,0
+43.460339,,-80.498636,2497,Weber / Blucher,0
+43.461469,,-80.49991,2496,Weber / Guelph,0
+43.419578,,-80.409172,1566,King / Riverbank,0
+43.340012,,-80.327078,2259,Culham / Ridgewood,0
+43.339553,,-80.329757,2258,Culham / Ridgewood,0
+43.336473,,-80.330733,2257,Grand Ridge / Oak Hill,0
+43.338893,,-80.33241,2256,Stirling Macgregor,0
+43.340738,,-80.334135,2255,Grand Ridge / St Andrews,0
+43.341558,,-80.33595,2254,Grand Ridge / Mark,0
+43.342925,,-80.337522,2253,Wedgewood / Grand Ridge,0
+43.344835,,-80.334095,2252,Southwood / Wedgewood,0
+43.346472,,-80.335105,2251,Southwood / Westwood,0
+43.349765,,-80.336212,2250,Southwood / Cedar,0
+43.469392,,-80.492827,2477,St Leger / Union,0
+43.467737,,-80.491803,2476,St Leger / Prueter,0
+43.466132,,-80.490825,2475,St Leger / Fairfield,0
+43.448228,,-80.5026,3224,Victoria / Park,0
+43.464007,,-80.491395,2473,Guelph / Floyd,0
+43.463365,,-80.494562,2472,Margaret / Guelph,0
+43.465069,,-80.49643,2471,Margaret / Fairfield,0
+43.4656,,-80.497461,2470,Margaret / Hartwood,0
+43.471213,,-80.48711,2479,Union / Oxford,0
+43.47097,,-80.489232,2478,Union / Boehmer,0
+43.475827,,-80.52545,2785,University / King,0
+43.450875,,-80.499673,3227,Victoria / Joseph,0
+43.477647,,-80.520518,2787,University / Weber,0
+43.47667,,-80.523278,2786,University / Regina,0
+43.468935,,-80.538833,2781,University / Seagram,0
+43.466133,,-80.540283,2780,University / Ring Road Exit,0
+43.474127,,-80.53031,2783,University / Hemlock,0
+43.472113,,-80.535747,2782,University / Phillip,0
+43.479748,,-80.514133,2789,Carter / Winfield,0
+43.479302,,-80.516198,2788,University / Marsland,0
+43.494597,,-80.56843,2079,Conservation / Westmount,0
+43.496635,,-80.572073,2078,Lake Louise / Osprey,0
+43.495625,,-80.566,2073,Northlake / Conservation,0
+43.497628,,-80.567238,2072,Northlake / Burning Bush,0
+43.498978,,-80.564012,2071,Northlake / Twinflower,0
+43.501218,,-80.559893,2070,Northlake / Fern,0
+43.49462,,-80.577215,2077,Lake Louise / Glacier,0
+43.49278,,-80.573982,2075,Conservation / Coldstream,0
+43.494307,,-80.569652,2074,Conservation / Westmount,0
+43.444345,,-80.508253,3221,Victoria / Patricia,0
+43.449752,,-80.43821,3508,Old Chicopee / Conway,0
+43.42238,,-80.529225,3500,Westheights / Autumn Hill,0
+43.422655,,-80.542218,3501,Westheights / Summerhill,0
+43.436775,,-80.430987,3502,Kinzie / River,0
+43.440002,,-80.43223,3503,Old Chicopee / Bancroft,0
+43.443083,,-80.431268,3504,Old Chicopee / Daimler,0
+43.445642,,-80.433643,3505,Old Chicopee / Roehampton,0
+43.449793,,-80.424368,3506,Oldfield / Wendy,0
+43.449105,,-80.426568,3507,Oldfield / Brierdale,0
+43.476848,,-80.523272,2671,University / Regina,0
+43.477828,,-80.520718,2670,University / Weber,0
+43.474283,,-80.530577,2673,University / Hemlock,0
+43.47236,,-80.535725,2675,University / Phillip,0
+43.473265,,-80.533148,2674,University / Sunview,0
+43.466187,,-80.540567,2677,University / Ring Road Exit,0
+43.468427,,-80.539408,2676,University / Seagram,0
+43.462177,,-80.539027,2679,Westmount / Westcourt,0
+43.463863,,-80.540618,2678,Westmount / University,0
+43.441975,,-80.514685,3220,Victoria / Lawrence,0
+43.438408,,-80.486897,2929,Stirling / Mill,0
+43.441528,,-80.484093,2928,Stirling / Courtland,0
+43.447493,,-80.485907,2921,Charles / Eby,0
+43.44643,,-80.48362,2920,Charles / Cedar,0
+43.447073,,-80.485435,2923,Charles / Eby,0
+43.448283,,-80.48777,2922,Charles / Benton,0
+43.44463,,-80.480503,2925,Charles / Pandora,0
+43.446288,,-80.483787,2924,Charles / Cedar,0
+43.442815,,-80.481082,2927,Stirling / Kaufman Park,0
+43.446818,,-80.504197,3223,Victoria / Walnut,0
+43.41879,,-80.325147,1275_merged_999115,Holiday Inn Terminal,
+43.438807,,-80.52431,3214,Hazelglen / Mooregate,0
+43.440347,,-80.526422,3215,Hazelglen / Chopin,0
+43.443355,,-80.523068,3216,Chopin / Westmount,0
+43.441893,,-80.522457,3217,Westmount / Karn,0
+43.434835,,-80.533157,3210,Victoria / Oprington,0
+43.436027,,-80.529793,3211,Victoria / Fischer-Hallman,0
+43.437483,,-80.52628,3212,Victoria / Monte Carlo,0
+43.438638,,-80.522905,3213,Victoria / Vicmount,0
+43.408103,,-80.392465,1638,Gateway Park / Sportsworld,0
+43.409681,,-80.397334,1639,Sportsworld Crossing / King,0
+43.42465,,-80.495198,2904,Chandler / Bonfield,0
+43.43965,,-80.520297,3218,Victoria / Westmount,0
+43.440593,,-80.517425,3219,Victoria / Paulander,0
+43.445863,,-80.56014,1988,Westvale / Edenvalley,0
+43.443738,,-80.55924,1989,Thorndale / Westvale,0
+43.444883,,-80.506537,3222,Victoria / West,0
+43.496507,,-80.515765,2815,Davenport / Path To Redfox,0
+43.497485,,-80.518472,2814,Davenport / Kidsability,0
+43.493005,,-80.512387,2817,Lexington / Davenport,0
+43.493572,,-80.513525,2816,Davenport / Foxhunt,0
+43.499148,,-80.525123,2811,Davenport / Conestoga Mall,0
+43.501775,,-80.530632,2810,Kraus / Northfield,0
+43.497052,,-80.520597,2813,Davenport / Kingscourt,0
+43.497342,,-80.523255,2812,Davenport / Kingscourt,0
+43.496583,,-80.507183,2819,Lexington / Lee,0
+43.433618,,-80.510268,3179,Westmount / Queens,0
+43.435287,,-80.512538,3178,Westmount / Overlea,0
+43.435703,,-80.528525,3171,Fischer-Hallman / Victoria,0
+43.436598,,-80.529318,3170,Fischer-Hallman / Victoria,0
+43.431867,,-80.524765,3173,Highland / Fischer-Hallman,0
+43.432317,,-80.52614,3172,Fischer-Hallman / Highland,0
+43.433933,,-80.519382,3175,Highland / Fieldgate,0
+43.433023,,-80.521888,3174,Highland / Eagen,0
+43.435703,,-80.514522,3177,Highland / Westmount,0
+43.435075,,-80.516218,3176,Highland / Highland Crescent,0
+43.424983,,-80.543948,3379,Westheights / Highland,0
+43.422388,,-80.541747,3378,Westheights / Blackwell,0
+43.420517,,-80.54039,3377,Westheights / Broken Oak,0
+43.418652,,-80.537137,3376,Westheights / Winding,0
+43.418053,,-80.53458,3375,Driftwood / Westheights,0
+43.416557,,-80.534068,3374,Driftwood / Royal Orchard,0
+43.413708,,-80.535398,3373,Driftwood / Somerfield,0
+43.41225,,-80.53763,3372,Driftwood / Driftwood Park,0
+43.412892,,-80.539253,3371,Driftwood / Yellow Birch,0
+43.414347,,-80.540648,3370,Driftwood / Driftwood Place,0
+43.395327,,-80.44554,1748,Pioneer / Doon Village,0
+43.39428,,-80.44828,1749,Pioneer / Perin,0
+43.394285,,-80.433662,1744,Pioneer / Old Carriage,0
+43.393533,,-80.436891,1745,Pioneer / Bechtel,0
+43.393663,,-80.43698,1746,Pioneer / Bechtel,0
+43.39412,,-80.441705,1747,Pioneer / Upper Canada,0
+43.395973,,-80.426068,1740,Green Valley / Mill Park,0
+43.395543,,-80.428302,1741,Green Valley / Arrowhead,0
+43.396107,,-80.429745,1742,Green Valley / Pioneer,0
+43.395648,,-80.431635,1743,Pioneer / Homer Watson,0
+43.478035,,-80.525662,1164,Hickory / King,0
+43.476328,,-80.52507,1165,King / University,0
+43.47603,,-80.525778,1166,University / King,0
+43.475522,,-80.528253,1167,Hazel / University,0
+43.483953,,-80.53549,1160,Hazel / Tamarack,0
+43.426645,,-80.52758,3308,Elm Ridge / Queens,0
+43.478955,,-80.531031,1162,Waterloo Ci,0
+43.477902,,-80.530213,1163,Hazel / Hickory,0
+43.425672,,-80.526443,3309,Elm Ridge / Hillbrook,0
+43.477882,,-80.53003,1168,Hazel / Hickory,0
+43.478332,,-80.530403,1169,Waterloo Ci,0
+43.421765,,-80.51302,3092,Greenbrook / Ruskview,0
+43.429662,,-80.52021,3304,Queens / Eagen,0
+43.386312,,-80.297957,1366,Robson / Burnett,0
+43.42922,,-80.52246,3305,Queens / Overlea,0
+43.387133,,-80.295384,1367,Cowan / Robson,0
+43.4979,,-80.4944,3786,Dansbury / Palamino,0
+43.502877,,-80.497958,2034,Lexington / Malabar,0
+43.408463,,-80.396352,1568,Sportsworld Crossing,0
+43.409411935,,-80.39307702,1569,Sportsworld Crossing,0
+43.417988,,-80.311418,1298,Holiday Inn / Franklin,0
+43.431587,,-80.309243,1299,Tannery / Queen,0
+43.402697,,-80.460638,1788,Trillium / Steckle,0
+43.421352,,-80.440673,1560,385 Fairway Rd.,0
+43.428238,,-80.432223,1561,Fairway / King,0
+43.403978,,-80.351891,1290,Eagle / Arlington,0
+43.426163,,-80.425108,1563,3227 King St. E,0
+43.425722,,-80.423122,1564,King / Hofstetter,0
+43.417191104,,-80.31594557,1297,Jacob Hespeler Ss,0
+43.417372,,-80.324295,1294,At Cambridge Markets,0
+43.416402,,-80.321398,1295,200 Holiday Inn Dr.,0
+43.38418,,-80.312432,1360,Munch / Elgin,0
+43.39157,,-80.45046,1712,Pioneer / Black Walnut,0
+43.501295,,-80.500282,2033,Lexington / Bertha,0
+43.399867,,-80.459253,1789,Trillium / Trillium Park,0
+43.4926,,-80.5816,3698,Lake Louise / Pinery,0
+43.435407,,-80.51246,3197,Westmount / Overlea,0
+43.433308,,-80.509872,3196,Westmount / Queens,0
+43.431025,,-80.508848,3195,Westmount / Forest Hill,0
+43.427475,,-80.506112,3194,Westmount / Village,0
+43.425497,,-80.504478,3193,Westmount / Stonybrook,0
+43.41952,,-80.501565,3192,Westmount / Ottawa,0
+43.417052,,-80.501,3191,Westmount / Laurentian,0
+43.413222,,-80.500135,3190,Westmount / Williamsburg,0
+43.5101,,-80.543,3728,King / Bridge,0
+43.435577,,-80.5155,3198,Highland / Westmount,0
+43.473521,,-80.541776,3699,Uw - Davis Centre,0
+43.434017,,-80.519622,3199,Highland / Fieldgate,0
+43.407643,,-80.475013,1864,Strasburg / Bleams,0

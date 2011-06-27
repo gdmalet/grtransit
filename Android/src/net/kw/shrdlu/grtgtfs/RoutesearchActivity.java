@@ -20,14 +20,15 @@ public class RoutesearchActivity extends ListActivity {
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-       	setContentView(R.layout.timeslayout);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.timeslayout);
 
     	Log.v(TAG, "OnCreate()");
     	mContext = this;
     	
         Intent intent = getIntent();
         if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
+
             String query = intent.getStringExtra(SearchManager.QUERY);
 
             mTitle = (TextView) findViewById(R.id.timestitle);

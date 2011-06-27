@@ -2,11 +2,11 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
 
-import com.google.android.maps.MapView;
-
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +27,9 @@ public class BustimesActivity extends ListActivity {
 	private String mRoute_id, mHeadsign, mStop_id;
     private TextView mTitle;
 	private ServiceCalendar mServiceCalendar = new ServiceCalendar();
-	
 	private static boolean mShowTodayOnly = true;
+
+	private static boolean mCalendarChecked = false, mCalendarOK;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,23 +60,42 @@ public class BustimesActivity extends ListActivity {
         
         mTitle = (TextView) findViewById(R.id.timestitle);
         mTitle.setText(mRoute_id + " - " + mHeadsign);
+
+        if (!mCalendarChecked || (mCalendarChecked && mCalendarOK))
+        	ProcessBusTimes();
         
-//        String q = String.format(
-//        		"select departure_time as _id, trip_id from stop_times where stop_id = \"%s\" and trip_id in (select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\") order by departure_time",
-//        		mStop_id, mRoute_id, mHeadsign);
+        if (mCalendarChecked && !mCalendarOK) {
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setIcon(R.drawable.grticon);
+			builder.setTitle(R.string.app_name);
+			builder.setMessage(R.string.calendar_expired);
+			builder.create();
+			builder.show();
+        }
+	}
+	
+	/*
+	 * Do the processing to load the ArrayAdapter for display.
+	 */
+	void ProcessBusTimes() {
+    	// Will find where to position the list of bus departure times
+    	Time t = new Time();
+    	t.setToNow();
+    	String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+    	String datenow = String.format("%04d%02d%02d", t.year, t.month+1, t.monthDay);
+
+        // Make sure we actually have some valid data, since schedules change often.
+        if (!mCalendarChecked) {
+        	mCalendarOK = CheckCalendar(datenow);
+        }
+        if (!mCalendarOK)
+        	return;
+        
         final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
         	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
         String [] selectargs = {mStop_id, mRoute_id, mHeadsign};
         Cursor csr = BusstopsOverlay.DB.rawQuery(q, selectargs);
         startManagingCursor(csr);
-
-    	// Will find where to position the list of bus departure times
-    	Time t = new Time();
-    	t.setToNow();
-    	String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
-    	
-    	// Todo -- should allow this to be selected.
-    	String datenow = String.format("%04d%02d%02d", t.year, t.month+1, t.monthDay);
 
     	// Load the array for the list
     	ArrayList<Pair<String,String>> details = new ArrayList<Pair<String,String>>(csr.getCount());
@@ -138,6 +157,34 @@ public class BustimesActivity extends ListActivity {
     	}
 		msg.setGravity(Gravity.TOP, 0, 0);
 		msg.show();
+    }
+
+
+    /*
+     * Make sure the calendar is current.
+     * Updates mCalendarChecked if we get a result of some sort.
+     */
+    private boolean CheckCalendar(String datenow) {
+    	boolean retval = true;	// report OK even if failure, so we just continue
+    	String [] selectargs = {datenow, datenow};
+    	Cursor csr = null;
+
+    	try {
+    		csr = BusstopsOverlay.DB.rawQuery("select count(*) from calendar where "
+        		+ "start_date <= ? and end_date >= ?", selectargs);
+    	} catch (SQLException e) {
+    		Log.e(TAG, "DB query failed checking calendar expiry: " + e.getMessage());
+    	}
+    	
+        if (csr != null) {
+        	if (csr.getCount() == 0 || !csr.moveToFirst() || csr.getInt(0) <= 0)
+        		retval = false;
+
+        	mCalendarChecked = true;
+        	csr.close();
+        }
+
+        return retval;
     }
 
     // This is only called once....

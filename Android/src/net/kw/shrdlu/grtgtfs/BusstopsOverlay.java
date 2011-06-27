@@ -1,6 +1,7 @@
 package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +11,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -87,7 +87,7 @@ public class BusstopsOverlay extends ItemizedOverlay {
    		}
    		csr.close();
    		
-   		mCenter = new GeoPoint(min_lat + (max_lat-min_lat), min_lon + (max_lon-min_lon));
+   		mCenter = new GeoPoint(min_lat + (max_lat-min_lat)/2, min_lon + (max_lon-min_lon)/2);
    		
 		populate();	// chomps up a lot of time....
 	}

@@ -14,9 +14,9 @@
     
         <uses-library android:name="com.google.android.maps" />
         
-        <activity class=".BusstopsActivity" android:name=".BusstopsActivity"
+        <activity android:name=".BusstopsActivity"
              android:label="@string/activity_label"
-             android:description="@string/activity_desc">
+             android:description="@string/activity_desc" android:launchMode="singleTop" class=".BusstopsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,7 +30,7 @@
         
         <activity class=".BustimesActivity" android:name=".BustimesActivity" />
         
-        <activity class=".BusstopsearchActivity" android:name=".BusstopsearchActivity">
+        <activity android:name=".BusstopsearchActivity" android:noHistory="true" class=".BusstopsearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -38,7 +38,7 @@
             <meta-data android:name="android.app.searchable" android:resource="@xml/busstopsearchable"/>
         </activity>
         
-        <activity class=".RoutesearchActivity" android:name=".RoutesearchActivity">
+        <activity android:name=".RoutesearchActivity" android:noHistory="true" class=".RoutesearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.ALTERNATIVE" />

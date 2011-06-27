@@ -112,11 +112,18 @@ public class BusroutesActivity extends MapActivity {
             	}
             	return true;
             }
-            case R.id.menu_searchstops: {
+/*          case R.id.menu_restart: {
+        		Intent restart = new Intent(mContext, BusstopsActivity.class);
+        		restart.setAction(Intent.ACTION_MAIN);
+        		restart.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        		startActivity(restart);
+        		return true;
+            }
+*/          case R.id.menu_searchstops: {
         		Intent stopsearch = new Intent(getIntent());
         		stopsearch.setClass(mContext, BusstopsearchActivity.class);
         		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		stopsearch.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        		stopsearch.setFlags(/*Intent.FLAG_ACTIVITY_CLEAR_TOP |*/ Intent.FLAG_ACTIVITY_NO_HISTORY);
         		startActivity(stopsearch);
                 return true;
             }
@@ -185,10 +192,11 @@ public class BusroutesActivity extends MapActivity {
             MapController mcp = mMapview.getController();
             GeoPoint center = overlay.getCenter();
             if (center != null) {
-            	Log.e(TAG, "no center found for map!");
             	mcp.setCenter(center);
             	mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
-            	mcp.zoomOut(); // pull back a bit to show whole route.
+            	//mcp.zoomOut(); // pull back a bit to show whole route.
+            } else {
+            	Log.e(TAG, "no center found for map!");
             }
 
             mTitle.setText("Rt " + mRoute_id + " - " + mHeadsign);
