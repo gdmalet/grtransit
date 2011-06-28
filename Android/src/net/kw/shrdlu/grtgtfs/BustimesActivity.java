@@ -92,7 +92,7 @@ public class BustimesActivity extends ListActivity {
         	return;
         
         final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
-        	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
+        	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by cast(stop_sequence as integer)";
         String [] selectargs = {mStop_id, mRoute_id, mHeadsign};
         Cursor csr = BusstopsOverlay.DB.rawQuery(q, selectargs);
         startManagingCursor(csr);
