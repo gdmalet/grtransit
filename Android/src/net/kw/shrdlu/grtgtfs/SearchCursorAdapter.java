@@ -6,7 +6,6 @@ package net.kw.shrdlu.grtgtfs;
 import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ public class SearchCursorAdapter extends CursorAdapter {
 	
 	public SearchCursorAdapter(ListActivity context, Cursor cursor) {
     	super(context, cursor, true);
-    	Log.v(TAG, "SearchCursorAdapter()");
+//    	Log.v(TAG, "SearchCursorAdapter()");
     
 		this.mInflater = LayoutInflater.from(context);
 	}

@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -22,7 +21,7 @@ public class BusstopsearchActivity extends ListActivity {
         super.onCreate(savedInstanceState);
        	setContentView(R.layout.timeslayout);
 
-    	Log.v(TAG, "OnCreate()");
+//    	Log.v(TAG, "OnCreate()");
     	mContext = this;
     	
         Intent intent = getIntent();
@@ -58,7 +57,7 @@ public class BusstopsearchActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position + ", stop number " + id);
+//		Log.v(TAG, "clicked position " + position + ", stop number " + id);
 		
         String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
 		Intent busstop = new Intent(mContext, BusstopsActivity.class);

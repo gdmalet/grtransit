@@ -147,7 +147,7 @@ public class BusroutesActivity extends MapActivity {
          */
         @Override
         protected void onPreExecute() {
-        	Log.v(TAG, "onPreExecute()");
+//        	Log.v(TAG, "onPreExecute()");
             mTitleBar.startAnimation(mSlideIn);
         }
 
@@ -156,7 +156,7 @@ public class BusroutesActivity extends MapActivity {
          */
         @Override
         protected BusstopsOverlay doInBackground(Void... foo) {
-        	Log.v(TAG, "doInBackground()");
+//        	Log.v(TAG, "doInBackground()");
 
             // TODO -- trip_headsign is wrong with route searches....
 /*            String q = String.format("stop_id in " +
@@ -183,7 +183,7 @@ public class BusroutesActivity extends MapActivity {
 	     */
 	    @Override
 	    protected void onPostExecute(BusstopsOverlay overlay) {
-        	Log.v(TAG, "onPostExecute()");
+//        	Log.v(TAG, "onPostExecute()");
 
 	    	mTitleBar.startAnimation(mSlideOut);
 	        mProgress.setVisibility(View.INVISIBLE);

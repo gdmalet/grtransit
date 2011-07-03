@@ -5,12 +5,9 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -78,8 +75,8 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
         Intent intent = getIntent();
         mStopId = intent.getStringExtra(stopstr);
-        if (mStopId != null)
-            Log.v(TAG, "New intent with stop id " + mStopId);
+        
+//		if (mStopId != null) Log.v(TAG, "New intent with stop id " + mStopId);
 
         // Get the busstop overlay set up in the background
         new PrepareOverlay().execute();
@@ -175,7 +172,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
          */
         @Override
         protected void onPreExecute() {
-        	Log.v(TAG, "onPreExecute()");
+//        	Log.v(TAG, "onPreExecute()");
             mTitleBar.startAnimation(mSlideIn);
         }
 
@@ -184,7 +181,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
          */
         @Override
         protected BusstopsOverlay doInBackground(Void... foo) {
-        	Log.v(TAG, "doInBackground()");
+//        	Log.v(TAG, "doInBackground()");
 
         	mOverlay = new BusstopsOverlay(mStopmarker, mContext);
             
@@ -196,7 +193,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 	     */
 	    @Override
 	    protected void onPostExecute(BusstopsOverlay overlay) {
-        	Log.v(TAG, "onPostExecute()");
+//        	Log.v(TAG, "onPostExecute()");
 
 	    	mTitleBar.startAnimation(mSlideOut);
 	        mProgress.setVisibility(View.INVISIBLE);

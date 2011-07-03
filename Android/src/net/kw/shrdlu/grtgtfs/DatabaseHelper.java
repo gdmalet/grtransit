@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -40,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * This is done by transferring bytestream.
 	 * */
 	private void copyDatabase() throws IOException {
-		Log.v(TAG, "Copying new database " + DB_NAME);
+//		Log.v(TAG, "Copying new database " + DB_NAME);
 /*
 		Toast.makeText(mContext,
 				"Preparing database for first use -- please be patient",
@@ -81,27 +80,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.d(TAG,"in OnCreate()");
+//		Log.d(TAG,"in OnCreate()");
 
 		// Wait for the open() to do the copy, else the db will be empty.
     	try {
     		db.rawQuery("select count(*) from stops", null);
     	} catch (SQLException e) {
-    		Log.v(TAG, "Querying stops failed, will copy db: " + e.getMessage());
+    		Log.i(TAG, "Querying stops failed, will copy db: " + e.getMessage());
     		mustCopy = true;
     	}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.d(TAG,"in OnUpgrade()");
-
+//		Log.d(TAG,"in OnUpgrade()");
 	}
 
 	// This one is optional.
 	@Override
 	public void onOpen(SQLiteDatabase db) throws SQLiteException {
-		Log.d(TAG,"in OnOpen()");
+//		Log.d(TAG,"in OnOpen()");
 
 		if (mustCopy) {
 			try {

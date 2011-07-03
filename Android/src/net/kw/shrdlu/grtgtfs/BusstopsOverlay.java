@@ -21,7 +21,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 
-public class BusstopsOverlay extends ItemizedOverlay {
+public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private static final String TAG = "GrtItemizedOverlay";
 
 	private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>();
@@ -48,11 +48,11 @@ public class BusstopsOverlay extends ItemizedOverlay {
 			DB = dbHelper.getReadableDatabase();
 		}
 
-//		final String table = "stops";
+		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
 
 		// TODO - limit under debug
-		String table = "stops";
+//		String table = "stops";
 //    	if (whereclause == null) table += " limit 200";
 
         Cursor csr;
@@ -97,7 +97,7 @@ public class BusstopsOverlay extends ItemizedOverlay {
 		  public void onClick(DialogInterface dialog, int which) {
 			  if (mCsr.moveToPosition(which)) {
 				  String route = mCsr.getString(0);
-				  Log.i(TAG, "clicked position " + which + ": route " + route);
+//				  Log.v(TAG, "clicked position " + which + ": route " + route);
 
 				  int split = route.indexOf(" - ");
 				  String route_id = route.substring(0,split);

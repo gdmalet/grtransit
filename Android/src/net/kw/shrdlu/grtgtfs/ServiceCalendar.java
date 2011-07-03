@@ -25,7 +25,7 @@ public class ServiceCalendar {
 	};
 	
 	public ServiceCalendar() {
-		Log.v(TAG, "ServiceCalendar()");
+//		Log.v(TAG, "ServiceCalendar()");
 	}
 	
 	// Return string showing days this bus runs

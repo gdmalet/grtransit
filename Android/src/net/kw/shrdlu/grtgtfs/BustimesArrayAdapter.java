@@ -6,7 +6,6 @@ package net.kw.shrdlu.grtgtfs;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class BustimesArrayAdapter extends ArrayAdapter {
+public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,String>>>*/ {
 	private static final String TAG = "BustimesArrayAdapter";
 
 	private final ArrayList<Pair<String,String>> mDetails;
@@ -22,7 +21,7 @@ public class BustimesArrayAdapter extends ArrayAdapter {
 	
 	public BustimesArrayAdapter(ListActivity context, ArrayList<Pair<String,String>> details) {
     	super(context, R.layout.rowlayout, details);
-    	Log.v(TAG, "BustimesArrayAdapter()");
+//    	Log.v(TAG, "BustimesArrayAdapter()");
     
     	mDetails = details;
     	mInflater = LayoutInflater.from(context);

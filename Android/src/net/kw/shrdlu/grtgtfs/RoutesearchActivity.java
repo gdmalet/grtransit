@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -23,7 +22,7 @@ public class RoutesearchActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.timeslayout);
 
-    	Log.v(TAG, "OnCreate()");
+//    	Log.v(TAG, "OnCreate()");
     	mContext = this;
     	
         Intent intent = getIntent();
@@ -66,7 +65,7 @@ public class RoutesearchActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position + ", route number " + id);
+//		Log.v(TAG, "clicked position " + position + ", route number " + id);
 		
         String pkgstr = mContext.getApplicationContext().getPackageName();
         String routestr = pkgstr + ".route_id";

@@ -35,7 +35,7 @@ public class BustimesActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-    	Log.v(TAG, "OnCreate()");
+//    	Log.v(TAG, "OnCreate()");
     	
         setContentView(R.layout.timeslayout);
 

@@ -3,7 +3,6 @@ package net.kw.shrdlu.grtgtfs;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -28,6 +27,7 @@ public class BusrouteOverlay extends Overlay {
 		final String [] columns = {"shape_pt_lat", "shape_pt_lon"};
 		final String whereclause = "shape_id = (select shape_id from trips where route_id = ? and trip_headsign = ?)";
 		String [] selectargs = {route, headsign};
+		final String orderby = "cast(shape_pt_sequence as integer)";
 		
 //        String q = String.format(
 //				"select shape_pt_lat, shape_pt_lon from shapes where shape_id = " +
@@ -37,7 +37,7 @@ public class BusrouteOverlay extends Overlay {
     	Cursor csr;
     	try {
 //    		csr = BusstopsOverlay.DB.rawQuery(q, null);
-    		csr = BusstopsOverlay.DB.query(table, columns, whereclause, selectargs, null,null,null);
+    		csr = BusstopsOverlay.DB.query(table, columns, whereclause, selectargs, null,null, orderby);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;
