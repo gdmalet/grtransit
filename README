@@ -1,0 +1,24 @@
+This is the source code for the Grand River Transit Android app available
+in the Android Market as
+
+	https://market.android.com/details?id=net.kw.shrdlu.grtgtfs .
+
+This is developed under the Eclipse editor, the project for which is under
+the `Android' directory in this tree. The other directories contain stuff
+useful for building the database that is shipped with the app, as well as
+a copy of the raw data.
+
+The transitfeed stuff actually comes straight from Google: see
+http://code.google.com/transit/spec/transit_feed_specification.html and
+the associated tools. This is replicated here merely for convenience while
+developing, and may be removed from here in future, or at least not kept
+up to date.
+
+If for some reason you don't want to, or can't, use the Market, a copy
+of the app is available at
+
+	http://baleka.org/gdmalet/android/grtransit/grtransit.apk .
+
+This app was made possible by the Region of Waterloo agreeing to release
+all their bus data for the Grand River Transit system (GRT) as an open
+data GTFS feed. See http://grt.ca .
