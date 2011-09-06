@@ -70,12 +70,12 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 			DB = dbHelper.getReadableDatabase();
 		}
 
-//		final String table = "stops";
+		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
 
 		// TODO - limit under debug
-		String table = "stops";
-    	if (whereclause == null) table += " limit 200";
+//		String table = "stops";
+//    	if (whereclause == null) table += " limit 200";
 
         Cursor csr;
     	try {
