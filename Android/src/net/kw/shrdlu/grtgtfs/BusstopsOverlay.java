@@ -114,21 +114,6 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		populate();	// chomps up a lot of time....
 	}
 
-	/* Constructor for listener must be called in GUI thread, else it will bomb.....
-	 * This is a nasty hack.
-	 */
-	public boolean onTouchEvent(android.view.MotionEvent event, MapView mapView) {
-		final GestureDetector mGestureDetector = new GestureDetector(mContext,
-				new GestureDetector.SimpleOnGestureListener() {
-			@Override
-	        public void onLongPress(MotionEvent e) {
-	            Log.d(TAG, "Long Press event");
-	        }
-	    });
-//	    mGestureDetector.setIsLongpressEnabled(true);	
-		return mGestureDetector.onTouchEvent(event);
-	}
-
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.
 	private DialogInterface.OnClickListener mClick = new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int which) {
