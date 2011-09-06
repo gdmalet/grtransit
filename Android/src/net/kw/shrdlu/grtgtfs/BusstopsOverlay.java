@@ -33,6 +33,9 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -67,12 +70,12 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 			DB = dbHelper.getReadableDatabase();
 		}
 
-		final String table = "stops";
+//		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
 
 		// TODO - limit under debug
-//		String table = "stops";
-//    	if (whereclause == null) table += " limit 200";
+		String table = "stops";
+    	if (whereclause == null) table += " limit 200";
 
         Cursor csr;
     	try {
@@ -109,6 +112,21 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
    		mCenter = new GeoPoint(min_lat + (max_lat-min_lat)/2, min_lon + (max_lon-min_lon)/2);
    		
 		populate();	// chomps up a lot of time....
+	}
+
+	/* Constructor for listener must be called in GUI thread, else it will bomb.....
+	 * This is a nasty hack.
+	 */
+	public boolean onTouchEvent(android.view.MotionEvent event, MapView mapView) {
+		final GestureDetector mGestureDetector = new GestureDetector(mContext,
+				new GestureDetector.SimpleOnGestureListener() {
+			@Override
+	        public void onLongPress(MotionEvent e) {
+	            Log.d(TAG, "Long Press event");
+	        }
+	    });
+//	    mGestureDetector.setIsLongpressEnabled(true);	
+		return mGestureDetector.onTouchEvent(event);
 	}
 
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.

@@ -23,6 +23,10 @@
             <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
         </activity>
 
+        <activity android:name=".FavstopsActivity">
+            <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
+        </activity>
+
         <activity class=".BusroutesActivity" android:name="BusroutesActivity">
             <meta-data android:name="android.app.default_searchable" android:value=".RoutesearchActivity" />
         </activity>
