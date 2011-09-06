@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="net.kw.shrdlu.grtgtfs"
       android:installLocation="preferExternal"
-      android:versionCode="1" android:versionName="0.9">
-    <uses-sdk android:minSdkVersion="7"/>
+      android:versionCode="3" android:versionName="0.92">
+    <uses-sdk android:minSdkVersion="3"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -20,10 +20,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
-        </activity>
-
-        <activity android:name=".FavstopsActivity">
             <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
         </activity>
 

@@ -36,6 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	//The Android's default system path of your application database.
 	private static String DB_PATH;
+	private static int DB_VERSION = 3;	/* As of 5th September 2011 */
 	private static String DB_NAME = "GRT.db";
 	private final Context mContext;
 	private boolean mustCopy = false;
@@ -46,7 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @param context
 	 */
 	public DatabaseHelper(Context context) {
-		super(context, DB_NAME, null, 1);
+		super(context, DB_NAME, null, DB_VERSION);
 		this.mContext = context;
 		
 		DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
@@ -113,6 +114,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 //		Log.d(TAG,"in OnUpgrade()");
+		try {
+			copyDatabase();
+		} catch (IOException e) {
+			Log.e(TAG, "onCreate failed when creating database");
+			e.printStackTrace();
+			throw new SQLiteException();
+		}
+		mustCopy = false;
 	}
 
 	// This one is optional.

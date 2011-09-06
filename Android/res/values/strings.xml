@@ -19,6 +19,6 @@
     <string name="search_bus_hint">Search GRT bus stops</string>
     <string name="search_route_hint">Search GRT bus routes</string>
     <string name="restart">Restart</string>
-    <string name="calendar_expired">There is no current shedule data on your system, perhaps because it expired. Please update your app!</string>
+    <string name="calendar_expired">There is no current schedule data on your system, perhaps because it expired. Please update your app!</string>
     
 </resources>
