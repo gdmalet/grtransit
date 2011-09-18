@@ -98,7 +98,8 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 //		if (mStopId != null) Log.v(TAG, "New intent with stop id " + mStopId);
 
         // Get the busstop overlay set up in the background
-        new PrepareOverlay().execute();
+    	mOverlay = new BusstopsOverlay(mStopmarker, mContext);
+        new LoadOverlay().execute();
     }
 
     @Override
@@ -182,7 +183,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
      * background query to the DB. When finished, it transitions
      * back to the GUI thread where it updates with the newly-found entries.
      */
-    private class PrepareOverlay extends AsyncTask<Void, Void, BusstopsOverlay> {
+    private class LoadOverlay extends AsyncTask<Void, Void, Void> {
     	static final String TAG = "LookupTask";
     	
         /**
@@ -199,25 +200,24 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
          * Perform the background query.
          */
         @Override
-        protected BusstopsOverlay doInBackground(Void... foo) {
+        protected Void doInBackground(Void... foo) {
 //        	Log.v(TAG, "doInBackground()");
 
-        	mOverlay = new BusstopsOverlay(mStopmarker, mContext);
-            
-            return mOverlay;
+        	mOverlay.LoadDB(null, null);
+        	return null;
         }
 
         /**
          * When finished, link in the new overlay.
 	     */
 	    @Override
-	    protected void onPostExecute(BusstopsOverlay overlay) {
+	    protected void onPostExecute(Void foo) {
 //        	Log.v(TAG, "onPostExecute()");
 
 	    	mTitleBar.startAnimation(mSlideOut);
 	        mProgress.setVisibility(View.INVISIBLE);
 
-	        mapOverlays.add(overlay);
+	        mapOverlays.add(mOverlay);
 	        
             // Center the map over given bus stop, else location, else the whole area
             MapController mcp = mMapview.getController();
@@ -230,10 +230,10 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             			if (!mcp.zoomIn())
             				break;
             	} else {
-            		center = overlay.getCenter();
+            		center = mOverlay.getCenter();
             		if (center != null) {
-            			mcp.setCenter(overlay.getCenter());
-            			mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            			mcp.setCenter(mOverlay.getCenter());
+            			mcp.zoomToSpan(mOverlay.getLatSpanE6(), mOverlay.getLonSpanE6());
             		}
             	}
             } else {

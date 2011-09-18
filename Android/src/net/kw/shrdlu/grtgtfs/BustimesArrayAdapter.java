@@ -25,6 +25,7 @@ package net.kw.shrdlu.grtgtfs;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,18 +47,33 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,S
     	mInflater = LayoutInflater.from(context);
 	}
 	
+	static class ViewHolder {
+		TextView label;
+		TextView value;
+	}
+	
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 //    	Log.v(TAG, "getview(): position " + position);
+		ViewHolder holder;
+		
+		// Reuse the converView if we already have one.... Android will create
+		// only enough to fill the screen.
+		if (view == null) {
+			view = mInflater.inflate(R.layout.rowlayout, parent, false);
+			
+			// Save the view when we look them up.
+			holder = new ViewHolder();
+			holder.label = (TextView)view.findViewById(R.id.label);
+			holder.value = (TextView)view.findViewById(R.id.value);
+			view.setTag(holder);
+		} else {
+			holder = (ViewHolder)view.getTag();
+		}
 
-    	View rowview = mInflater.inflate(R.layout.rowlayout, null, false);
+    	holder.label.setText(mDetails.get(position).first);
+    	holder.value.setText(mDetails.get(position).second);
 
-    	TextView labelview = (TextView) rowview.findViewById(R.id.label);
-		labelview.setText(mDetails.get(position).first);
-
-		TextView valueview = (TextView) rowview.findViewById(R.id.value);
-		valueview.setText(mDetails.get(position).second);
-
-		return rowview;
+		return view;
 	}
 }

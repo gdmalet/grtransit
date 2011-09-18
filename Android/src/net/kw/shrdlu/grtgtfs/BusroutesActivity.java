@@ -49,7 +49,7 @@ public class BusroutesActivity extends MapActivity {
 	private MapActivity mContext;
 	private MapView mMapview;
 	private List<Overlay> mapOverlays;
-	private Drawable drawable;	
+	private Drawable mStopmarker;	
     private View mTitleBar;
     private TextView mTitle;
     private Animation mSlideIn;
@@ -57,7 +57,8 @@ public class BusroutesActivity extends MapActivity {
     private ProgressBar mProgress;    
     private MyLocationOverlay mMylocation;
     private String mRoute_id, mHeadsign;
-    
+	private BusstopsOverlay mBusstopsOverlay = null;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class BusroutesActivity extends MapActivity {
         mMapview.setBuiltInZoomControls(true);
         
         mapOverlays = mMapview.getOverlays();
-        drawable = this.getResources().getDrawable(R.drawable.bluepin);
+        mStopmarker = this.getResources().getDrawable(R.drawable.bluepin);
 
         String pkgstr = mContext.getApplicationContext().getPackageName();
         Intent intent = getIntent();
@@ -89,7 +90,8 @@ public class BusroutesActivity extends MapActivity {
         mMylocation.enableCompass();
         mapOverlays.add(mMylocation);
         
-        // Do the rest off the main thread
+        // Get the busstop overlay set up in the background
+    	mBusstopsOverlay = new BusstopsOverlay(mStopmarker, mContext);
         new PrepareOverlays().execute();
     }
 
@@ -157,7 +159,7 @@ public class BusroutesActivity extends MapActivity {
     /**
      * Background task to handle initial load of the overlays.
      */
-    private class PrepareOverlays extends AsyncTask<Void, Void, BusstopsOverlay> {
+    private class PrepareOverlays extends AsyncTask<Void, Void, Void> {
     	static final String TAG = "LookupTask";
     	
         /**
@@ -174,7 +176,7 @@ public class BusroutesActivity extends MapActivity {
          * Perform the background query.
          */
         @Override
-        protected BusstopsOverlay doInBackground(Void... foo) {
+        protected Void doInBackground(Void... foo) {
 //        	Log.v(TAG, "doInBackground()");
 
             // TODO -- trip_headsign is wrong with route searches....
@@ -187,21 +189,21 @@ public class BusroutesActivity extends MapActivity {
             	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
             String [] selectargs = {mRoute_id, mHeadsign};
 
-            BusstopsOverlay busstopsoverlay = new BusstopsOverlay(drawable, mContext, whereclause, selectargs);
-            mapOverlays.add(busstopsoverlay);
+            mBusstopsOverlay.LoadDB(whereclause, selectargs);
+            mapOverlays.add(mBusstopsOverlay);
 
             // Now draw the route
     		BusrouteOverlay routeoverlay = new BusrouteOverlay(mContext, mRoute_id, mHeadsign);
             mapOverlays.add(routeoverlay);
 
-            return busstopsoverlay;    	
+            return null;    	
         }
 
         /**
          * When finished, link in the new overlay.
 	     */
 	    @Override
-	    protected void onPostExecute(BusstopsOverlay overlay) {
+	    protected void onPostExecute(Void foo) {
 //        	Log.v(TAG, "onPostExecute()");
 
 	    	mTitleBar.startAnimation(mSlideOut);
@@ -209,10 +211,10 @@ public class BusroutesActivity extends MapActivity {
 	        
             // Center the map over the bus stops
             MapController mcp = mMapview.getController();
-            GeoPoint center = overlay.getCenter();
+            GeoPoint center = mBusstopsOverlay.getCenter();
             if (center != null) {
             	mcp.setCenter(center);
-            	mcp.zoomToSpan(overlay.getLatSpanE6(), overlay.getLonSpanE6());
+            	mcp.zoomToSpan(mBusstopsOverlay.getLatSpanE6(), mBusstopsOverlay.getLonSpanE6());
             	//mcp.zoomOut(); // pull back a bit to show whole route.
             } else {
             	Log.e(TAG, "no center found for map!");

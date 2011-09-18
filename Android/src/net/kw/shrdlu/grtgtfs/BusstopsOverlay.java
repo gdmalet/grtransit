@@ -35,7 +35,6 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -54,19 +53,18 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private GeoPoint mCenter;
 	public static SQLiteDatabase DB = null;
 	
-	// Use if no limit on stops
-	public BusstopsOverlay(Drawable defaultMarker, Context context) {
-		this(defaultMarker, context, null, null);
-	}
-
 	// Used to limit which stops are displayed
-	public BusstopsOverlay(Drawable defaultMarker, Context context, String whereclause, String [] selectargs) {
+	public BusstopsOverlay(Drawable defaultMarker, Context context) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
+	}
+	
+	// This is time consuming, and should not be called on the GUI thread
+	public void LoadDB(String whereclause, String [] selectargs) {
 
-		// Only open the DB once. Everything else uses this copy.
+        // Only open the DB once. Everything else uses this copy.
 		if (DB == null) {
-			dbHelper = new DatabaseHelper(context);
+			dbHelper = new DatabaseHelper(mContext);
 			DB = dbHelper.getReadableDatabase();
 		}
 
@@ -135,6 +133,18 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  }
 	};
 
+	// This must be called on the GIU thread
+    private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
+    	public void onLongPress (MotionEvent e) {
+    		Log.d(TAG, "Long press detected");
+        }
+    });
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e, MapView mapView) {
+    	return mGestureDetector.onTouchEvent(e);
+    }
+	
 	@Override
 	// Default returns `first ranked item' - WTF is that?
 	public GeoPoint getCenter() {
