@@ -2,11 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="net.kw.shrdlu.grtgtfs"
       android:installLocation="preferExternal"
-<<<<<<< HEAD
-      android:versionCode="3" android:versionName="0.92">
-=======
-      android:versionCode="3" android:versionName="0.92">
->>>>>>> 817b0c9cadde6e3edec1d60db070114bae816074
+      android:versionCode="4" android:versionName="0.93">
     <uses-sdk android:minSdkVersion="3"/>
 
     <uses-permission android:name="android.permission.INTERNET" />

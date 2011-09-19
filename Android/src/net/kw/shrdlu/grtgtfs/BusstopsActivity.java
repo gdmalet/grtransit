@@ -139,13 +139,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             	onSearchRequested();
                 return true;
             }
-/*          case R.id.menu_restart: {
-        		Intent restart = new Intent(getIntent());
-        		restart.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        		startActivity(restart);
-        		return true;
-            }
-*/          case R.id.menu_searchroutes: {
+          case R.id.menu_searchroutes: {
         		Intent routesearch = new Intent(getIntent());
         		routesearch.setClass(mContext, RoutesearchActivity.class);
         		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH

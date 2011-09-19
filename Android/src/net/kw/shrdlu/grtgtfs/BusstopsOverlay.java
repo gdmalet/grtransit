@@ -25,6 +25,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,9 +33,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -51,6 +54,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private String mStopid;
 	private DatabaseHelper dbHelper;
 	private GeoPoint mCenter;
+	private boolean mLongPress = false;
 	public static SQLiteDatabase DB = null;
 	
 	// Used to limit which stops are displayed
@@ -68,12 +72,12 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 			DB = dbHelper.getReadableDatabase();
 		}
 
-		final String table = "stops";
+//		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
 
 		// TODO - limit under debug
-//		String table = "stops";
-//    	if (whereclause == null) table += " limit 200";
+		String table = "stops";
+    	if (whereclause == null) table += " limit 200";
 
         Cursor csr;
     	try {
@@ -137,6 +141,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
     private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
     	public void onLongPress (MotionEvent e) {
     		Log.d(TAG, "Long press detected");
+    		mLongPress = true;
         }
     });
 
@@ -157,18 +162,57 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	  OverlayItem item = mOverlayItems.get(index);
 	  mStopid = item.getTitle();
 	  
-	  AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-	  dialog.setTitle("Routes using stop " + mStopid + ", " + item.getSnippet()); 
+	  AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-	  // Find which routes use the given stop.
-	  final String table = "trips";
-	  final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
-	  final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
-	  final String [] selectargs = {item.getTitle()};
-	  mCsr = DB.query(table, select, where, selectargs, null,null,null);
+	  if (mLongPress == true) {
+		  mLongPress = false;
+		  builder.setTitle("Stop " + mStopid + ", " + item.getSnippet()); 
+		  builder.setMessage("Add to your list of favourites?")
+		  .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   SharedPreferences prefs = mContext.getSharedPreferences(
+	        			   mContext.getApplicationInfo().packageName, Context.MODE_PRIVATE);
+	        	   String favs = prefs.getString("favstops", "");
 
-	  dialog.setCursor(mCsr, mClick, "_id");
-	  dialog.show();
+	        	   TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
+	        	   splitter.setString(favs);
+	        	   boolean already = false;
+	        	   for (String s : splitter) {
+	        		   if (s.equals(mStopid)) {
+	        			   already = true;
+	        			   break;
+	        		   }
+	        	   }
+	        	   
+	        	   if (already) {
+		        	   Toast.makeText(mContext, "Stop " + mStopid + " is already a favourite!",
+		        			   Toast.LENGTH_LONG).show();;
+	        	   } else {
+	        		   favs += mStopid + ";";
+	        		   prefs.edit().putString("favstops", favs).commit();
+		        	   Toast.makeText(mContext, "Stop " + mStopid + " was added to your favourites",
+		        			   Toast.LENGTH_LONG).show();;
+	        	   }
+	           }
+	       })
+	       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	                dialog.cancel();
+	           }
+	       });
+		  builder.create();
+	  } else {
+		  // Find which routes use the given stop.
+		  builder.setTitle("Routes using stop " + mStopid + ", " + item.getSnippet()); 
+		  final String table = "trips";
+		  final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
+		  final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
+		  final String [] selectargs = {item.getTitle()};
+		  mCsr = DB.query(table, select, where, selectargs, null,null,null);
+		  builder.setCursor(mCsr, mClick, "_id");
+	  }
+	  
+	  builder.show();
 	  return true;
 	}
 
