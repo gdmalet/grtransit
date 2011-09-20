@@ -21,6 +21,7 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.HashMap;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.text.format.Time;
 import android.util.Log;
@@ -43,8 +44,13 @@ public class ServiceCalendar {
 		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
 	};
 	
-	public ServiceCalendar() {
+	private Context mContext;
+	private DatabaseHelper dbHelper;
+	
+	public ServiceCalendar(Context context) {
 //		Log.v(TAG, "ServiceCalendar()");
+		mContext = context;
+		dbHelper = new DatabaseHelper(mContext);
 	}
 	
 	// Return string showing days this bus runs
@@ -78,7 +84,7 @@ public class ServiceCalendar {
 		
 		// Check for exceptions
 		String [] selectargs = {service_id, date};
-		Cursor exp = BusstopsOverlay.DB.rawQuery(mDBQueryDate, selectargs);
+		Cursor exp = dbHelper.ReadableDB().rawQuery(mDBQueryDate, selectargs);
 		if (exp.moveToFirst()) {
 			int exception = exp.getInt(exp.getColumnIndex("exception_type"));
 			if (exception == 2)			// service removed for this day
@@ -128,7 +134,7 @@ public class ServiceCalendar {
 		}
 		
 		String [] selectargs = {service_id};
-		Cursor csr = BusstopsOverlay.DB.rawQuery(mDBQuery, selectargs);
+		Cursor csr = dbHelper.ReadableDB().rawQuery(mDBQuery, selectargs);
 		retstr = process_db(service_id, date, limit, csr);
 		csr.close();
 		

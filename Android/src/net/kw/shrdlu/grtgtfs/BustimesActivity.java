@@ -45,17 +45,21 @@ public class BustimesActivity extends ListActivity {
 	private ListActivity mContext;
 	private String mRoute_id, mHeadsign, mStop_id;
     private TextView mTitle;
-	private ServiceCalendar mServiceCalendar = new ServiceCalendar();
+	private ServiceCalendar mServiceCalendar;
 	private static boolean mShowTodayOnly = true;
+	private DatabaseHelper dbHelper;
 
 	private static boolean mCalendarChecked = false, mCalendarOK;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
 //    	Log.v(TAG, "OnCreate()");
-    	
+
+        mContext = this;
+        mServiceCalendar = new ServiceCalendar(mContext);
+		dbHelper = new DatabaseHelper(mContext);
+
         setContentView(R.layout.timeslayout);
 
         final Button button = (Button) findViewById(R.id.timesbutton);
@@ -113,7 +117,7 @@ public class BustimesActivity extends ListActivity {
         final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
         	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
         String [] selectargs = {mStop_id, mRoute_id, mHeadsign};
-        Cursor csr = BusstopsOverlay.DB.rawQuery(q, selectargs);
+        Cursor csr = dbHelper.ReadableDB().rawQuery(q, selectargs);
         startManagingCursor(csr);
 
     	// Load the array for the list
@@ -129,7 +133,7 @@ public class BustimesActivity extends ListActivity {
             // Get and translate the service id
     		final String svsq = "select service_id from trips where trip_id = ?";
     		String [] svsargs = {trip_id};
-            Cursor svs = BusstopsOverlay.DB.rawQuery(svsq, svsargs);
+            Cursor svs = dbHelper.ReadableDB().rawQuery(svsq, svsargs);
 
             svs.moveToFirst();
             String service_id = svs.getString(0);
@@ -178,7 +182,6 @@ public class BustimesActivity extends ListActivity {
 		msg.show();
     }
 
-
     /*
      * Make sure the calendar is current.
      * Updates mCalendarChecked if we get a result of some sort.
@@ -189,7 +192,7 @@ public class BustimesActivity extends ListActivity {
     	Cursor csr = null;
 
     	try {
-    		csr = BusstopsOverlay.DB.rawQuery("select count(*) from calendar where "
+    		csr = dbHelper.ReadableDB().rawQuery("select count(*) from calendar where "
         		+ "start_date <= ? and end_date >= ?", selectargs);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed checking calendar expiry: " + e.getMessage());

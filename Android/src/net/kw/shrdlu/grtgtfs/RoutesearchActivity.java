@@ -35,7 +35,8 @@ public class RoutesearchActivity extends ListActivity {
 	private RoutesearchActivity mContext;
     private TextView mTitle;
 	private Cursor mCsr;
-	
+	private DatabaseHelper dbHelper;
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +44,8 @@ public class RoutesearchActivity extends ListActivity {
 
 //    	Log.v(TAG, "OnCreate()");
     	mContext = this;
-    	
+		dbHelper = new DatabaseHelper(mContext);
+   	
         Intent intent = getIntent();
         if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
 
@@ -71,7 +73,7 @@ public class RoutesearchActivity extends ListActivity {
             final String whereclause = "route_id like ? || '%' or trip_headsign like '%' || ? || '%'";
             String [] selectargs = {query, query};
             final String orderby = "cast(route_id as integer)";
-            mCsr = BusstopsOverlay.DB.query(table, columns, whereclause, selectargs, null, null, orderby, null); 
+            mCsr = dbHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, orderby, null); 
             startManagingCursor(mCsr);
 
 	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);

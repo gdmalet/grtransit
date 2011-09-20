@@ -44,6 +44,9 @@
             </intent-filter>
             <meta-data android:name="android.app.searchable" android:resource="@xml/routesearchable"/>
         </activity>
+
+        <service android:name=".DatabaseHelper$DBcopier" class=".DatabaseHelper$DBcopier">
+        </service>
         
     </application>
 </manifest>

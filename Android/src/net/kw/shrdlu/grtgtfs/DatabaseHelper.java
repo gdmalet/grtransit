@@ -30,10 +30,8 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -55,7 +53,7 @@ public class DatabaseHelper {
 	 * @param context
 	 */
 	public DatabaseHelper(Context context) {
-		this.mContext = context;
+		mContext = context;
 		
 		DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
 
@@ -88,7 +86,7 @@ public class DatabaseHelper {
 					"The database will be upgraded. This may take some time.", Toast.LENGTH_LONG).show();
 
 			// Copy the database in the background.
-			new DBcopier("").startService(null);
+			mContext.startService(new Intent(mContext, DBcopier.class));
 		}
 	}	
 
@@ -98,10 +96,12 @@ public class DatabaseHelper {
 	 * This is done by transferring bytestream.
 	 **/
 	private class DBcopier extends IntentService {
+		private static final String TAG = "DBcopier";
 
-		public DBcopier(String s) {
-			super(s);
-			// TODO Auto-generated constructor stub
+		// Must have a default constructor
+		public DBcopier() {
+			super("DBcopier");
+			Log.v(TAG, "constructor");
 		}
 
 		@Override
@@ -140,6 +140,7 @@ public class DatabaseHelper {
 				myOutput.flush();
 				myOutput.close();
 		
+				Log.v(TAG, " ... database " + DB_NAME + " copy complete: re-opening db & releasing lock");
 				DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
 				mDBisOpen.release();
 
@@ -158,7 +159,9 @@ public class DatabaseHelper {
 		
 		while (DB == null) {
 			try {
+				Log.d(TAG, "about to aquire semaphore");
 				mDBisOpen.acquire();
+				Log.d(TAG, " ... got semaphore");
 			} catch (InterruptedException e1) {
 				Log.w(TAG, "interrupted exception?"); // just loop and try again?
 			}

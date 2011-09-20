@@ -60,12 +60,14 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
 	private MyLocationOverlay mMylocation;
 	private String mStopId;
 	private BusstopsOverlay mOverlay = null;
+	private DatabaseHelper dbHelper;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+		dbHelper = new DatabaseHelper(mContext);
         setContentView(R.layout.mapview);
         
         // Some global initialisation
@@ -238,7 +240,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             } else {
             	final String table = "stops", where = "stop_id = ?";
             	final String [] columns = {"stop_lat", "stop_lon"}, selectargs = {mStopId};
-                Cursor locn = BusstopsOverlay.DB.query(table, columns, where, selectargs, null,null,null);
+                Cursor locn = dbHelper.ReadableDB().query(table, columns, where, selectargs, null,null,null);
                 if (locn.moveToFirst()) {
                 	int stop_lat = (int)(locn.getFloat(0) * 1000000); // microdegrees
                 	int stop_lon = (int)(locn.getFloat(1) * 1000000);       			

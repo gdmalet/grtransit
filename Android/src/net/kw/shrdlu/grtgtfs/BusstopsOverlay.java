@@ -55,22 +55,18 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private DatabaseHelper dbHelper;
 	private GeoPoint mCenter;
 	private boolean mLongPress = false;
-	public static SQLiteDatabase DB = null;
-	
+
 	// Used to limit which stops are displayed
 	public BusstopsOverlay(Drawable defaultMarker, Context context) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
+		dbHelper = new DatabaseHelper(mContext);
 	}
 	
 	// This is time consuming, and should not be called on the GUI thread
 	public void LoadDB(String whereclause, String [] selectargs) {
 
-        // Only open the DB once. Everything else uses this copy.
-		if (DB == null) {
-			dbHelper = new DatabaseHelper(mContext);
-			DB = dbHelper.getReadableDatabase();
-		}
+		SQLiteDatabase DB = dbHelper.ReadableDB();
 
 //		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
@@ -186,7 +182,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
 		  final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
 		  final String [] selectargs = {item.getTitle()};
-		  mCsr = DB.query(table, select, where, selectargs, null,null,null);
+		  mCsr = dbHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
 		  builder.setCursor(mCsr, mClick, "_id");
 	  }
 	  
