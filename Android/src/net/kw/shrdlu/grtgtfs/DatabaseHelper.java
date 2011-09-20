@@ -19,27 +19,35 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.Semaphore;
 
+import android.app.IntentService;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
-	private static final String TAG = "DatabaseHelper";
+public class DatabaseHelper {
+	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
 
 	//The Android's default system path of your application database.
 	private static String DB_PATH;
-	private static int DB_VERSION = 3;	/* As of 5th September 2011 */
+	private static int DB_VERSION = 4;	/* As of ??? new version 5th September 2011 */
 	private static String DB_NAME = "GRT.db";
 	private final Context mContext;
-	private boolean mustCopy = false;
+	private boolean mMustCopy = false;
+	private SQLiteDatabase DB = null;
+	private final Semaphore mDBisOpen = new Semaphore(0);
 	
 	/**
 	 * Constructor
@@ -47,102 +55,115 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @param context
 	 */
 	public DatabaseHelper(Context context) {
-		super(context, DB_NAME, null, DB_VERSION);
 		this.mContext = context;
 		
 		DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+
+		try {
+			DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
+		} catch (SQLiteException e) {
+			mMustCopy = true;	// presumably no database exists
+		}
+		
+		if (DB != null) {
+			int version = 0;
+			try {
+				Cursor csr = DB.rawQuery("PRAGMA user_version", null);
+				csr.moveToPosition(0);
+				version = csr.getInt(0);
+				csr.close();
+				if (version != DB_VERSION)
+					mMustCopy = true;
+			} catch (Exception e) {
+				mMustCopy = true;	// something went haywire
+			}
+		}
+		
+		if (mMustCopy) {
+			if (DB != null) {
+				DB.close();
+				DB = null;
+			}
+			Toast.makeText(mContext,
+					"The database will be upgraded. This may take some time.", Toast.LENGTH_LONG).show();
+
+			// Copy the database in the background.
+			new DBcopier("").startService(null);
+		}
 	}	
 
 	/**
-	 * Copies your database from your local assets-folder to the just created empty database in the
+	 * Copies database from local assets-folder to the
 	 * system folder, from where it can be accessed and handled.
 	 * This is done by transferring bytestream.
-	 * */
-	private void copyDatabase() throws IOException {
-//		Log.v(TAG, "Copying new database " + DB_NAME);
-/*
-		Toast.makeText(mContext,
-				"Preparing database for first use -- please be patient",
-				Toast.LENGTH_LONG)
-				.show();
-*/	
-		// Open the empty db as the output stream
-		OutputStream myOutput = new FileOutputStream(DB_PATH + DB_NAME);
+	 **/
+	private class DBcopier extends IntentService {
 
-		//transfer bytes from the inputfile to the outputfile
-		byte[] buffer = new byte[8*1024];
-		int i;
-		for (i=0; ; i++) {
-			// Loop and pick up all pieces of the file, an concatenate into one.
-			String input = String.format("databases/" + DB_NAME + ".%02d", i);
-
-			// Open local db piece as the input stream
-			InputStream myInput;
-			try {
-				myInput = mContext.getAssets().open(input);
-			} catch (IOException e) {
-				break;	// no more files
-			}
-
-			int length;
-			while ((length = myInput.read(buffer)) > 0 ){
-				myOutput.write(buffer, 0, length);
-			}
-			
-			myInput.close();
+		public DBcopier(String s) {
+			super(s);
+			// TODO Auto-generated constructor stub
 		}
 
-		//Close the streams
-		myOutput.flush();
-		myOutput.close();
-	}
+		@Override
+		protected void onHandleIntent(Intent intent) {
+			Log.v(TAG, "Copying new database " + DB_NAME);
 
-
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-//		Log.d(TAG,"in OnCreate()");
-
-		// Wait for the open() to do the copy, else the db will be empty.
-    	try {
-    		db.rawQuery("select count(*) from stops", null);
-    	} catch (SQLException e) {
-    		Log.i(TAG, "Querying stops failed, will copy db: " + e.getMessage());
-    		mustCopy = true;
-    	}
-	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//		Log.d(TAG,"in OnUpgrade()");
-		try {
-			copyDatabase();
-		} catch (IOException e) {
-			Log.e(TAG, "onCreate failed when creating database");
-			e.printStackTrace();
-			throw new SQLiteException();
-		}
-		mustCopy = false;
-	}
-
-	// This one is optional.
-	@Override
-	public void onOpen(SQLiteDatabase db) throws SQLiteException {
-//		Log.d(TAG,"in OnOpen()");
-
-		if (mustCopy) {
+			// Open the empty db as the output stream
+			OutputStream myOutput;
 			try {
-				copyDatabase();
-			} catch (IOException e) {
-				Log.e(TAG, "onCreate failed when creating database");
+				myOutput = new FileOutputStream(DB_PATH + DB_NAME);
+
+				//transfer bytes from the inputfile to the outputfile
+				byte[] buffer = new byte[8*1024];
+				int i;
+				for (i=0; ; i++) {
+					// Loop and pick up all pieces of the file, an concatenate into one.
+					String input = String.format("databases/" + DB_NAME + ".%02d", i);
+
+					// Open local db piece as the input stream
+					InputStream myInput;
+					try {
+						myInput = mContext.getAssets().open(input);
+					} catch (IOException e) {
+						break;	// no more files
+					}
+
+					int length;
+					while ((length = myInput.read(buffer)) > 0 ){
+						myOutput.write(buffer, 0, length);
+					}
+					
+					myInput.close();
+				}
+
+				//Close the streams
+				myOutput.flush();
+				myOutput.close();
+		
+				DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
+				mDBisOpen.release();
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-				throw new SQLiteException();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			mustCopy = false;
 		}
 	}
 
-	// Add your public helper methods to access and get content from the database.
-	// You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
-	// to you to create adapters for your views.
-
+	public SQLiteDatabase ReadableDB() {
+		Log.d(TAG,"in ReadableDB()");
+		
+		while (DB == null) {
+			try {
+				mDBisOpen.acquire();
+			} catch (InterruptedException e1) {
+				Log.w(TAG, "interrupted exception?"); // just loop and try again?
+			}
+		}
+		
+		return DB;
+	}
 }

@@ -170,29 +170,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  builder.setMessage("Add to your list of favourites?")
 		  .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
-	        	   SharedPreferences prefs = mContext.getSharedPreferences(
-	        			   mContext.getApplicationInfo().packageName, Context.MODE_PRIVATE);
-	        	   String favs = prefs.getString("favstops", "");
-
-	        	   TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
-	        	   splitter.setString(favs);
-	        	   boolean already = false;
-	        	   for (String s : splitter) {
-	        		   if (s.equals(mStopid)) {
-	        			   already = true;
-	        			   break;
-	        		   }
-	        	   }
-	        	   
-	        	   if (already) {
-		        	   Toast.makeText(mContext, "Stop " + mStopid + " is already a favourite!",
-		        			   Toast.LENGTH_LONG).show();;
-	        	   } else {
-	        		   favs += mStopid + ";";
-	        		   prefs.edit().putString("favstops", favs).commit();
-		        	   Toast.makeText(mContext, "Stop " + mStopid + " was added to your favourites",
-		        			   Toast.LENGTH_LONG).show();;
-	        	   }
+	        	   Globals.mPreferences.SaveBusstopFavourite(mStopid);
 	           }
 	       })
 	       .setNegativeButton("No", new DialogInterface.OnClickListener() {

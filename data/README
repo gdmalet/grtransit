@@ -1,0 +1,18 @@
+Get the data from http://www.grt.ca/en/doingBusiness/supportingsoftwareapplications.asp
+or perhaps http://www.gtfs-data-exchange.com/agency/grand-river-transit/ .
+
+Unpack into for example GRT-transit-20110904, and then cd into the sqlite3 directory
+at the level of this README, delete GRT.db*, and run:
+
+$ ../../bin/mksql3db.sh GRT.db ../GRT-transit-20110904/*
+
+Note that it will warn you about the database version. This must be
+bumped in the code for each new db (the DB_VERSION value).
+
+That will produce GRT.db - and a bunch of split files. Remove anything in
+../../Android/assets/databases/, and then
+
+$ mv GRT.db.* ../../Android/assets/databases/
+
+The app can then rebuild its database from that, as long as the database version has been
+bumped in the manifest.

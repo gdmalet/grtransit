@@ -57,4 +57,6 @@ EOT
 
 split -d -b 1m $DB $DB.
 
+echo "$0: warning: make sure you bump the db version in the code (DB_VERSION)."
+
 exit 0

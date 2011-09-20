@@ -67,7 +67,12 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.mapview);
-
+        
+        // Some global initialisation
+        if (Globals.mPreferences == null) {
+        	Globals.mPreferences = new Preferences(mContext);
+        }
+        
     	// Load animations used to show/hide progress bar
         mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
         mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
