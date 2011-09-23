@@ -39,13 +39,13 @@ public class DatabaseHelper {
 	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
 
 	//The Android's default system path of your application database.
-	private static String DB_PATH;
+	private static String DB_PATH = null;
 	private static int DB_VERSION = 4;	/* As of ??? new version 5th September 2011 */
 	private static String DB_NAME = "GRT.db";
 	private final Context mContext;
 	private boolean mMustCopy = false;
 	private SQLiteDatabase DB = null;
-	private final Semaphore mDBisOpen = new Semaphore(0);
+	private static final Semaphore mDBisOpen = new Semaphore(1);
 	
 	/**
 	 * Constructor
@@ -55,7 +55,21 @@ public class DatabaseHelper {
 	public DatabaseHelper(Context context) {
 		mContext = context;
 		
-		DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+		while (true) {
+			try {
+				Log.d(TAG, "constructor about to aquire semaphore");
+				mDBisOpen.acquire();
+				Log.d(TAG, " ... constructor got semaphore");
+				break;
+			} catch (InterruptedException e1) {
+				Log.w(TAG, "constructor interrupted exception?"); // just loop and try again?
+			}
+		}
+
+		if (DB_PATH != null)
+			Log.w(TAG, "contructor has already been called!?");
+		else
+			DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
 
 		try {
 			DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
@@ -87,8 +101,9 @@ public class DatabaseHelper {
 
 			// Copy the database in the background.
 			mContext.startService(new Intent(mContext, DBcopier.class));
-		}
-	}	
+		}	
+		Log.v(TAG, "clean exit of constructor");
+	}
 
 	/**
 	 * Copies database from local assets-folder to the
@@ -142,14 +157,21 @@ public class DatabaseHelper {
 		
 				Log.v(TAG, " ... database " + DB_NAME + " copy complete: re-opening db & releasing lock");
 				DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
+
+				// Set the version to match, so we don't keep copying, even if the db is the wrong version to start.
+				DB.rawQuery("PRAGMA user_version = " + DB_VERSION, null);
+				
 				mDBisOpen.release();
 
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+				Log.e(TAG, "FileNotFoundException exception");
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				Log.e(TAG, "IOException exception");
 				e.printStackTrace();
+			} catch (Exception e) {
+				Log.e(TAG, "unknown xception exception");
+				e.printStackTrace();				
 			}
 		}
 	}
@@ -159,6 +181,7 @@ public class DatabaseHelper {
 		
 		while (DB == null) {
 			try {
+				Thread.sleep(10000);
 				Log.d(TAG, "about to aquire semaphore");
 				mDBisOpen.acquire();
 				Log.d(TAG, " ... got semaphore");

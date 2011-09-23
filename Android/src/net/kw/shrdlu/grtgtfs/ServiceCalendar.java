@@ -45,12 +45,10 @@ public class ServiceCalendar {
 	};
 	
 	private Context mContext;
-	private DatabaseHelper dbHelper;
 	
 	public ServiceCalendar(Context context) {
 //		Log.v(TAG, "ServiceCalendar()");
 		mContext = context;
-		dbHelper = new DatabaseHelper(mContext);
 	}
 	
 	// Return string showing days this bus runs
@@ -84,7 +82,7 @@ public class ServiceCalendar {
 		
 		// Check for exceptions
 		String [] selectargs = {service_id, date};
-		Cursor exp = dbHelper.ReadableDB().rawQuery(mDBQueryDate, selectargs);
+		Cursor exp = Globals.dbHelper.ReadableDB().rawQuery(mDBQueryDate, selectargs);
 		if (exp.moveToFirst()) {
 			int exception = exp.getInt(exp.getColumnIndex("exception_type"));
 			if (exception == 2)			// service removed for this day
@@ -134,7 +132,7 @@ public class ServiceCalendar {
 		}
 		
 		String [] selectargs = {service_id};
-		Cursor csr = dbHelper.ReadableDB().rawQuery(mDBQuery, selectargs);
+		Cursor csr = Globals.dbHelper.ReadableDB().rawQuery(mDBQuery, selectargs);
 		retstr = process_db(service_id, date, limit, csr);
 		csr.close();
 		

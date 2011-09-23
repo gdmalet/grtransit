@@ -47,7 +47,6 @@ public class BustimesActivity extends ListActivity {
     private TextView mTitle;
 	private ServiceCalendar mServiceCalendar;
 	private static boolean mShowTodayOnly = true;
-	private DatabaseHelper dbHelper;
 
 	private static boolean mCalendarChecked = false, mCalendarOK;
 
@@ -58,7 +57,6 @@ public class BustimesActivity extends ListActivity {
 
         mContext = this;
         mServiceCalendar = new ServiceCalendar(mContext);
-		dbHelper = new DatabaseHelper(mContext);
 
         setContentView(R.layout.timeslayout);
 
@@ -117,7 +115,7 @@ public class BustimesActivity extends ListActivity {
         final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
         	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
         String [] selectargs = {mStop_id, mRoute_id, mHeadsign};
-        Cursor csr = dbHelper.ReadableDB().rawQuery(q, selectargs);
+        Cursor csr = Globals.dbHelper.ReadableDB().rawQuery(q, selectargs);
         startManagingCursor(csr);
 
     	// Load the array for the list
@@ -133,7 +131,7 @@ public class BustimesActivity extends ListActivity {
             // Get and translate the service id
     		final String svsq = "select service_id from trips where trip_id = ?";
     		String [] svsargs = {trip_id};
-            Cursor svs = dbHelper.ReadableDB().rawQuery(svsq, svsargs);
+            Cursor svs = Globals.dbHelper.ReadableDB().rawQuery(svsq, svsargs);
 
             svs.moveToFirst();
             String service_id = svs.getString(0);
@@ -192,7 +190,7 @@ public class BustimesActivity extends ListActivity {
     	Cursor csr = null;
 
     	try {
-    		csr = dbHelper.ReadableDB().rawQuery("select count(*) from calendar where "
+    		csr = Globals.dbHelper.ReadableDB().rawQuery("select count(*) from calendar where "
         		+ "start_date <= ? and end_date >= ?", selectargs);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed checking calendar expiry: " + e.getMessage());

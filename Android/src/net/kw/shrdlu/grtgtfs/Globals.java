@@ -22,5 +22,6 @@ package net.kw.shrdlu.grtgtfs;
 public class Globals {
 
 		public static Preferences mPreferences = null;
-		
+		public static DatabaseHelper dbHelper = null;
+
 }

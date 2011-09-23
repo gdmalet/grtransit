@@ -52,7 +52,6 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context mContext;
 	private Cursor mCsr;
 	private String mStopid;
-	private DatabaseHelper dbHelper;
 	private GeoPoint mCenter;
 	private boolean mLongPress = false;
 
@@ -60,13 +59,10 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	public BusstopsOverlay(Drawable defaultMarker, Context context) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
-		dbHelper = new DatabaseHelper(mContext);
 	}
 	
 	// This is time consuming, and should not be called on the GUI thread
 	public void LoadDB(String whereclause, String [] selectargs) {
-
-		SQLiteDatabase DB = dbHelper.ReadableDB();
 
 //		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
@@ -77,7 +73,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 
         Cursor csr;
     	try {
-    		csr = DB.query(table, columns, whereclause, selectargs, null,null,null);
+    		csr = Globals.dbHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null,null);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;
@@ -182,7 +178,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
 		  final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
 		  final String [] selectargs = {item.getTitle()};
-		  mCsr = dbHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
+		  mCsr = Globals.dbHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
 		  builder.setCursor(mCsr, mClick, "_id");
 	  }
 	  
