@@ -58,7 +58,7 @@ public class BusstopsearchActivity extends ListActivity {
             final String [] columns = {"stop_id as _id", "stop_name as descr"};
             final String whereclause = "stop_id like ? || '%' or stop_name like '%' || ? || '%'";
             String [] selectargs = {query, query};
-            Cursor csr = Globals.dbHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, null, null);
+            Cursor csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, null, null);
             startManagingCursor(csr);
 
 	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, csr);
@@ -75,7 +75,7 @@ public class BusstopsearchActivity extends ListActivity {
 		
         String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
 		Intent busstop = new Intent(mContext, BusstopsActivity.class);
-		busstop.putExtra(stopstr, Integer.toString((int)id));
+		busstop.putExtra(stopstr, l.getItemIdAtPosition(position));
         busstop.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(busstop);
 	}

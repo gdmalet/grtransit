@@ -19,6 +19,7 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,11 +41,11 @@ public class DatabaseHelper {
 
 	//The Android's default system path of your application database.
 	private static String DB_PATH = null;
-	private static int DB_VERSION = 4;	/* As of ??? new version 5th September 2011 */
-	private static String DB_NAME = "GRT.db";
-	private final Context mContext;
+	private static final int DB_VERSION = 4;	/* As of ??? new version 5th September 2011 */
+	private static final String DB_NAME = "GRT.db";
+	private static Context mContext;
 	private boolean mMustCopy = false;
-	private SQLiteDatabase DB = null;
+	private static SQLiteDatabase DB = null;
 	private static final Semaphore mDBisOpen = new Semaphore(1);
 	
 	/**
@@ -84,8 +85,10 @@ public class DatabaseHelper {
 				csr.moveToPosition(0);
 				version = csr.getInt(0);
 				csr.close();
-				if (version != DB_VERSION)
+				if (version != DB_VERSION) {
 					mMustCopy = true;
+					Log.d(TAG, "must copy db version " + version + " to new " + DB_VERSION);
+				}
 			} catch (Exception e) {
 				mMustCopy = true;	// something went haywire
 			}
@@ -101,7 +104,9 @@ public class DatabaseHelper {
 
 			// Copy the database in the background.
 			mContext.startService(new Intent(mContext, DBcopier.class));
-		}	
+		} else {
+			mDBisOpen.release();	// otherwise the service does that
+		}
 		Log.v(TAG, "clean exit of constructor");
 	}
 
@@ -109,8 +114,10 @@ public class DatabaseHelper {
 	 * Copies database from local assets-folder to the
 	 * system folder, from where it can be accessed and handled.
 	 * This is done by transferring bytestream.
+	 * Note that this class must be public static, since it's embedded in the outer class.
+	 * If it's not static, starting the service will fail.
 	 **/
-	private class DBcopier extends IntentService {
+	public static class DBcopier extends IntentService {
 		private static final String TAG = "DBcopier";
 
 		// Must have a default constructor
@@ -126,6 +133,9 @@ public class DatabaseHelper {
 			// Open the empty db as the output stream
 			OutputStream myOutput;
 			try {
+				File subdir = new File(DB_PATH);
+				subdir.mkdirs();
+				
 				myOutput = new FileOutputStream(DB_PATH + DB_NAME);
 
 				//transfer bytes from the inputfile to the outputfile
@@ -155,12 +165,21 @@ public class DatabaseHelper {
 				myOutput.flush();
 				myOutput.close();
 		
+				// Set the version to match, so we don't keep copying, even if the db is the wrong version to start.
+				DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+				DB.execSQL("PRAGMA user_version = " + DB_VERSION);
+				DB.close();
+
 				Log.v(TAG, " ... database " + DB_NAME + " copy complete: re-opening db & releasing lock");
 				DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
-
-				// Set the version to match, so we don't keep copying, even if the db is the wrong version to start.
-				DB.rawQuery("PRAGMA user_version = " + DB_VERSION, null);
-				
+/*
+				// TODO - debug
+				Cursor csr = DB.rawQuery("PRAGMA user_version", null);
+				csr.moveToPosition(0);
+				int version = csr.getInt(0);
+				Log.d(TAG, " ... new DB version is " + version);
+				csr.close();
+*/
 				mDBisOpen.release();
 
 			} catch (FileNotFoundException e) {
@@ -176,15 +195,16 @@ public class DatabaseHelper {
 		}
 	}
 
-	public SQLiteDatabase ReadableDB() {
+	public static SQLiteDatabase ReadableDB() {
 		Log.d(TAG,"in ReadableDB()");
 		
+		// If the DB is not open yet, we need to wait for the constructor, which is perhaps
+		// copying over a new database.
 		while (DB == null) {
 			try {
-				Thread.sleep(10000);
-				Log.d(TAG, "about to aquire semaphore");
+				Log.d(TAG, "... ReadableDB about to aquire semaphore");
 				mDBisOpen.acquire();
-				Log.d(TAG, " ... got semaphore");
+				Log.d(TAG, " ... ReadableDB got semaphore");
 			} catch (InterruptedException e1) {
 				Log.w(TAG, "interrupted exception?"); // just loop and try again?
 			}

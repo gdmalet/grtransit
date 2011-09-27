@@ -82,7 +82,7 @@ public class ServiceCalendar {
 		
 		// Check for exceptions
 		String [] selectargs = {service_id, date};
-		Cursor exp = Globals.dbHelper.ReadableDB().rawQuery(mDBQueryDate, selectargs);
+		Cursor exp = DatabaseHelper.ReadableDB().rawQuery(mDBQueryDate, selectargs);
 		if (exp.moveToFirst()) {
 			int exception = exp.getInt(exp.getColumnIndex("exception_type"));
 			if (exception == 2)			// service removed for this day
@@ -132,7 +132,7 @@ public class ServiceCalendar {
 		}
 		
 		String [] selectargs = {service_id};
-		Cursor csr = Globals.dbHelper.ReadableDB().rawQuery(mDBQuery, selectargs);
+		Cursor csr = DatabaseHelper.ReadableDB().rawQuery(mDBQuery, selectargs);
 		retstr = process_db(service_id, date, limit, csr);
 		csr.close();
 		

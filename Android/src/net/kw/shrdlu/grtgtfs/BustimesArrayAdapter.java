@@ -41,7 +41,7 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,S
 	
 	public BustimesArrayAdapter(ListActivity context, ArrayList<Pair<String,String>> details) {
     	super(context, R.layout.rowlayout, details);
-//    	Log.v(TAG, "BustimesArrayAdapter()");
+    	Log.v(TAG, "BustimesArrayAdapter()");
     
     	mDetails = details;
     	mInflater = LayoutInflater.from(context);
@@ -54,10 +54,10 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,S
 	
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-//    	Log.v(TAG, "getview(): position " + position);
+    	Log.v(TAG, "getview(): position " + position);
 		ViewHolder holder;
 		
-		// Reuse the converView if we already have one.... Android will create
+		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
 			view = mInflater.inflate(R.layout.rowlayout, parent, false);

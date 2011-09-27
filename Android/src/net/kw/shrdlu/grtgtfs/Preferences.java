@@ -19,6 +19,9 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -60,4 +63,22 @@ public class Preferences {
 		}
 	}
 	
+	public String [] GetBusstopFavourites() {
+		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
+		String favs = prefs.getString(mPrefFavstops, "");
+		
+		String [] stops = {};
+
+		// favs is a semi-colon separated string of stops, with a trailing semi-colon.
+		if (!favs.equals("")) {
+			TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
+			splitter.setString(favs);
+			ArrayList<String> ary = new ArrayList<String>();
+			for (String s : splitter)
+				ary.add(s);
+			stops = ary.toArray(new String[0]);
+		}
+		
+		return stops;
+	}
 }

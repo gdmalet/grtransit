@@ -24,6 +24,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -71,7 +72,7 @@ public class RoutesearchActivity extends ListActivity {
             final String whereclause = "route_id like ? || '%' or trip_headsign like '%' || ? || '%'";
             String [] selectargs = {query, query};
             final String orderby = "cast(route_id as integer)";
-            mCsr = Globals.dbHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, orderby, null); 
+            mCsr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, orderby, null); 
             startManagingCursor(mCsr);
 
 	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
@@ -84,13 +85,14 @@ public class RoutesearchActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-//		Log.v(TAG, "clicked position " + position + ", route number " + id);
+		Log.v(TAG, "clicked position " + position + ", route number " + id);
 		
         String pkgstr = mContext.getApplicationContext().getPackageName();
         String routestr = pkgstr + ".route_id";
         String headsign = pkgstr + ".headsign";
 
 		Intent route = new Intent(mContext, BusroutesActivity.class);
+//		route.putExtra(routestr, l.getItemIdAtPosition(position).toString();
 		route.putExtra(routestr, Integer.toString((int)id));
 		mCsr.moveToPosition(position);
 		route.putExtra(headsign, mCsr.getString(1));	// TODO - this is not actually the headsign if using routes file...

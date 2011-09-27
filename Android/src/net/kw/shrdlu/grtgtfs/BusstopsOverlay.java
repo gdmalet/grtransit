@@ -64,16 +64,16 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	// This is time consuming, and should not be called on the GUI thread
 	public void LoadDB(String whereclause, String [] selectargs) {
 
-//		final String table = "stops";
+		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
 
 		// TODO - limit under debug
-		String table = "stops";
-    	if (whereclause == null) table += " limit 200";
+//		String table = "stops";
+//    	if (whereclause == null) table += " limit 200";
 
         Cursor csr;
     	try {
-    		csr = Globals.dbHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null,null);
+    		csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null,null);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;
@@ -163,6 +163,8 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
 	        	   Globals.mPreferences.SaveBusstopFavourite(mStopid);
+				   Intent favs = new Intent(mContext, FavstopsActivity.class);
+				   mContext.startActivity(favs);	        	   
 	           }
 	       })
 	       .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -178,7 +180,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
 		  final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
 		  final String [] selectargs = {item.getTitle()};
-		  mCsr = Globals.dbHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
+		  mCsr = DatabaseHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
 		  builder.setCursor(mCsr, mClick, "_id");
 	  }
 	  

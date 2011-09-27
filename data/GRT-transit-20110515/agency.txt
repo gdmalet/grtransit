@@ -1,2 +1,0 @@
-agency_phone,agency_url,agency_id,agency_name,agency_timezone,agency_lang
-519-585-7555,http://www.grt.ca/,,Grand River Transit,America/Toronto,EN

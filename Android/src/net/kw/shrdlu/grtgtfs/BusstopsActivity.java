@@ -96,7 +96,8 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         mMylocation.enableCompass();
         mapOverlays.add(mMylocation);
 
-        // See if we're entering as a result of a search
+        // See if we're entering as a result of a search. Show given stop if so,
+        // else will try show current location.
         String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
         Intent intent = getIntent();
         mStopId = intent.getStringExtra(stopstr);
@@ -138,7 +139,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             	return true;
             }
             case R.id.menu_about: {
-                showAbout();
+                Globals.showAbout(this);
                 return true;
             }
             case R.id.menu_searchstops: {
@@ -155,26 +156,6 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             }
         }
         return false;
-    }
-
-    /**
-     * Show an about dialog that cites data sources.
-     */
-    protected void showAbout() {
-        View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
-
-        // When linking text, force to always use default color. This works
-        // around a pressed color state bug.
-        TextView textView = (TextView) messageView.findViewById(R.id.about_credits);
-        int defaultColor = textView.getTextColors().getDefaultColor();
-        textView.setTextColor(defaultColor);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(R.drawable.grticon);
-        builder.setTitle(R.string.app_name);
-        builder.setView(messageView);
-        builder.create();
-        builder.show();
     }
 
     /**
@@ -239,7 +220,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             } else {
             	final String table = "stops", where = "stop_id = ?";
             	final String [] columns = {"stop_lat", "stop_lon"}, selectargs = {mStopId};
-                Cursor locn = Globals.dbHelper.ReadableDB().query(table, columns, where, selectargs, null,null,null);
+                Cursor locn = DatabaseHelper.ReadableDB().query(table, columns, where, selectargs, null,null,null);
                 if (locn.moveToFirst()) {
                 	int stop_lat = (int)(locn.getFloat(0) * 1000000); // microdegrees
                 	int stop_lon = (int)(locn.getFloat(1) * 1000000);       			

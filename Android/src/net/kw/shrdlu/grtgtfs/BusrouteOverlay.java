@@ -56,7 +56,7 @@ public class BusrouteOverlay extends Overlay {
     	Cursor csr;
     	try {
 //    		csr = BusstopsOverlay.DB.rawQuery(q, null);
-    		csr = Globals.dbHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null, orderby);
+    		csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null, orderby);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;

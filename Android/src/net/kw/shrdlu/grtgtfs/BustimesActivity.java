@@ -115,8 +115,7 @@ public class BustimesActivity extends ListActivity {
         final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
         	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
         String [] selectargs = {mStop_id, mRoute_id, mHeadsign};
-        Cursor csr = Globals.dbHelper.ReadableDB().rawQuery(q, selectargs);
-        startManagingCursor(csr);
+        Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
 
     	// Load the array for the list
     	ArrayList<Pair<String,String>> details = new ArrayList<Pair<String,String>>(csr.getCount());
@@ -131,8 +130,7 @@ public class BustimesActivity extends ListActivity {
             // Get and translate the service id
     		final String svsq = "select service_id from trips where trip_id = ?";
     		String [] svsargs = {trip_id};
-            Cursor svs = Globals.dbHelper.ReadableDB().rawQuery(svsq, svsargs);
-
+            Cursor svs = DatabaseHelper.ReadableDB().rawQuery(svsq, svsargs);
             svs.moveToFirst();
             String service_id = svs.getString(0);
             svs.close();
@@ -190,7 +188,7 @@ public class BustimesActivity extends ListActivity {
     	Cursor csr = null;
 
     	try {
-    		csr = Globals.dbHelper.ReadableDB().rawQuery("select count(*) from calendar where "
+    		csr = DatabaseHelper.ReadableDB().rawQuery("select count(*) from calendar where "
         		+ "start_date <= ? and end_date >= ?", selectargs);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed checking calendar expiry: " + e.getMessage());
