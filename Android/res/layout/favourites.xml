@@ -13,12 +13,12 @@
 	   android:dividerHeight="3dip"
 	   android:headerDividersEnabled="true"
 	   android:footerDividersEnabled="false" />
-	      
+<!--	      
     <TextView
 	    android:id="@+id/favourite"
 	    android:paddingLeft="3dip"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    style="@style/ListTitle" />
-    
+-->
 </LinearLayout>

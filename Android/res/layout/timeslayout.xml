@@ -13,8 +13,8 @@
             android:id="@+id/timestitle"
             android:paddingLeft="3dip"
             android:text="@string/times_loading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             style="@style/ListTitle" />
 
         <Button
@@ -32,7 +32,7 @@
      <LinearLayout
         android:id="@+id/detail_area"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:orientation="vertical" >
 
          <ListView

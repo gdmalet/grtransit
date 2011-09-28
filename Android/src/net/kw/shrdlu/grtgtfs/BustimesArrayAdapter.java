@@ -61,6 +61,7 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,S
 		// only enough to fill the screen.
 		if (view == null) {
 			view = mInflater.inflate(R.layout.rowlayout, parent, false);
+			Log.d(TAG, "new view " + view);
 			
 			// Save the view when we look them up.
 			holder = new ViewHolder();
@@ -68,10 +69,11 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,S
 			holder.value = (TextView)view.findViewById(R.id.value);
 			view.setTag(holder);
 		} else {
+			Log.d(TAG, "reusing view " + view);
 			holder = (ViewHolder)view.getTag();
 		}
 
-    	holder.label.setText(mDetails.get(position).first);
+		holder.label.setText(mDetails.get(position).first);
     	holder.value.setText(mDetails.get(position).second);
 
 		return view;

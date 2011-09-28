@@ -32,9 +32,11 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -48,6 +50,7 @@ public class FavstopsActivity extends ListActivity {
 	private ArrayList<Pair<String,String>> mDetails;
 	private Cursor mCsr;
 	private String mStopid;
+	private boolean mLongPress = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class FavstopsActivity extends ListActivity {
 
         if (stops != null) {
         	
-        	// Build a string quitable for a select statement
+        	// Build a string suitable for a select statement
         	String stopsqry = new String();
         	for (String s : stops) {
         		if (stopsqry.length() > 0)
@@ -139,7 +142,15 @@ public class FavstopsActivity extends ListActivity {
         }
         return false;
     }
-
+/*
+	// This must be called on the GIU thread
+    private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
+    	public void onLongPress (MotionEvent e) {
+    		Log.d(TAG, "Long press detected");
+    		mLongPress = true;
+        }
+    });
+*/
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.
 	private DialogInterface.OnClickListener mClick = new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int which) {
@@ -163,7 +174,12 @@ public class FavstopsActivity extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-//		Log.v(TAG, "clicked position " + position + ", stop number " + id);
+		Log.v(TAG, "clicked position " + position + ", stop number " + id);
+		
+		if (mLongPress == true) {
+			Log.d(TAG, " long press on list");
+			mLongPress = false;
+		}
 		
         Pair<String,String> pair = (Pair<String,String>)l.getItemAtPosition(position);
 		mStopid = pair.first;;
