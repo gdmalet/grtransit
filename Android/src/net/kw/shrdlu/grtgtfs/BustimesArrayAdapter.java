@@ -41,7 +41,7 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,S
 	
 	public BustimesArrayAdapter(ListActivity context, ArrayList<Pair<String,String>> details) {
     	super(context, R.layout.rowlayout, details);
-    	Log.v(TAG, "BustimesArrayAdapter()");
+//    	Log.v(TAG, "BustimesArrayAdapter()");
     
     	mDetails = details;
     	mInflater = LayoutInflater.from(context);
@@ -54,14 +54,14 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,S
 	
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-    	Log.v(TAG, "getview(): position " + position);
+//    	Log.v(TAG, "getview(): position " + position);
 		ViewHolder holder;
 		
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
 			view = mInflater.inflate(R.layout.rowlayout, parent, false);
-			Log.d(TAG, "new view " + view);
+//			Log.d(TAG, "new view " + view);
 			
 			// Save the view when we look them up.
 			holder = new ViewHolder();
@@ -69,12 +69,12 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<Pair<String,S
 			holder.value = (TextView)view.findViewById(R.id.value);
 			view.setTag(holder);
 		} else {
-			Log.d(TAG, "reusing view " + view);
+//			Log.d(TAG, "reusing view " + view);
 			holder = (ViewHolder)view.getTag();
 		}
 
-		holder.label.setText(mDetails.get(position).first);
-    	holder.value.setText(mDetails.get(position).second);
+		holder.label.setText((String)mDetails.get(position).first);
+    	holder.value.setText((String)mDetails.get(position).second);
 
 		return view;
 	}

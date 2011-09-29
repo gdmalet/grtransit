@@ -57,19 +57,9 @@ public class RoutesearchActivity extends ListActivity {
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
             
-//          String q = String.format(
-//          		"select distinct route_id as _id, trip_headsign as descr from trips "
-//          		+ "where route_id like \"%s%%\" or trip_headsign like \"%%%s%%\" "
-//          		+ "order by cast(route_id as integer)",
-//          		query, query);
-//			TODO Or use the routes file?            
-//    		"select route_id as _id, route_long_name as descr from routes where route_id like \"%s%%\" or route_long_name like \"%%%s%%\"",
-//    		query, query);
-//          mCsr = BusstopsOverlay.DB.rawQuery(q, null);
-
             final String table = "trips";
             final String [] columns = {"distinct route_id as _id", "trip_headsign as descr"};
-            final String whereclause = "route_id like ? || '%' or trip_headsign like '%' || ? || '%'";
+            final String whereclause = "route_id like '%' || ? || '%' or trip_headsign like '%' || ? || '%'";
             String [] selectargs = {query, query};
             final String orderby = "cast(route_id as integer)";
             mCsr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, orderby, null); 
@@ -85,17 +75,19 @@ public class RoutesearchActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position + ", route number " + id);
+		Log.v(TAG, "clicked position " + position);
 		
-        String pkgstr = mContext.getApplicationContext().getPackageName();
-        String routestr = pkgstr + ".route_id";
-        String headsign = pkgstr + ".headsign";
+		Cursor csr = (Cursor)l.getItemAtPosition(position);
+		final String route_id = csr.getString(0);
+		final String route_name = csr.getString(1);
+
+		final String pkgstr = mContext.getApplicationContext().getPackageName();
+        final String routestr = pkgstr + ".route_id";
+        final String headsign = pkgstr + ".headsign";
 
 		Intent route = new Intent(mContext, BusroutesActivity.class);
-//		route.putExtra(routestr, l.getItemIdAtPosition(position).toString();
-		route.putExtra(routestr, Integer.toString((int)id));
-		mCsr.moveToPosition(position);
-		route.putExtra(headsign, mCsr.getString(1));	// TODO - this is not actually the headsign if using routes file...
+		route.putExtra(routestr, route_id);
+		route.putExtra(headsign, route_name);	// TODO - this is not actually the headsign if using routes file...
         route.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(route);
 	}

@@ -196,7 +196,7 @@ public class DatabaseHelper {
 	}
 
 	public static SQLiteDatabase ReadableDB() {
-		Log.d(TAG,"in ReadableDB()");
+//		Log.d(TAG,"in ReadableDB()");
 		
 		// If the DB is not open yet, we need to wait for the constructor, which is perhaps
 		// copying over a new database.

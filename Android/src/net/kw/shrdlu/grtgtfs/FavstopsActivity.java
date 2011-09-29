@@ -21,9 +21,6 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -32,16 +29,14 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class FavstopsActivity extends ListActivity {
 	private static final String TAG = "FavstopsActivity";
@@ -50,21 +45,26 @@ public class FavstopsActivity extends ListActivity {
 	private ArrayList<Pair<String,String>> mDetails;
 	private Cursor mCsr;
 	private String mStopid;
-	private boolean mLongPress = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     	Log.v(TAG, "OnCreate()");
         mContext = this;
-    	
-        setContentView(R.layout.favourites);
-        
+
         // Some global initialisation
         if (Globals.mPreferences == null) {
         	Globals.mPreferences = new Preferences(mContext);
     		Globals.dbHelper = new DatabaseHelper(mContext);
         }
+        
+        setContentView(R.layout.timeslayout);
+        TextView v = (TextView) findViewById(R.id.timestitle);
+        v.setText(R.string.favourites_title);
+
+        // Hide the `Show' button used for showing routes.
+        Button btn = (Button) findViewById(R.id.timesbutton);
+        btn.setVisibility(View.GONE);
         
         String [] stops = Globals.mPreferences.GetBusstopFavourites();
 
@@ -98,6 +98,15 @@ public class FavstopsActivity extends ListActivity {
             
             BustimesArrayAdapter adapter = new BustimesArrayAdapter(this, mDetails);
         	setListAdapter(adapter);
+        
+	        // register to get long clicks on bus stop list
+	        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+	        	    Log.i(TAG, "onItemLongClickClick position " + position);
+	        	    onListItemLongClick(parent, view, position, id);
+	        		return true;	// to say we consumed the click
+				}
+	        });
         }
 	}
 	
@@ -142,16 +151,8 @@ public class FavstopsActivity extends ListActivity {
         }
         return false;
     }
-/*
-	// This must be called on the GIU thread
-    private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
-    	public void onLongPress (MotionEvent e) {
-    		Log.d(TAG, "Long press detected");
-    		mLongPress = true;
-        }
-    });
-*/
-	// This is used when a route number is clicked on in the dialog, after a stop is clicked.
+
+    // This is used when a route number is clicked on in the dialog, after a stop is clicked.
 	private DialogInterface.OnClickListener mClick = new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int which) {
 			  if (mCsr.moveToPosition(which)) {
@@ -172,14 +173,44 @@ public class FavstopsActivity extends ListActivity {
 		  }
 	};
 
+	// Called from the listener above for a long click
+	protected void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+		Log.v(TAG, "long clicked position " + position);
+		
+		final Pair<String,String> pair = (Pair<String,String>)parent.getItemAtPosition(position);
+		final String stop_id = pair.first;;
+		final String stop_name = pair.second;
+		final int aryposn = position;	// so we can access it in the listener class.
+		
+		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				switch (id) {
+				case DialogInterface.BUTTON_POSITIVE:
+					Globals.mPreferences.RemoveBusstopFavourite(stop_id);
+					mDetails.remove(aryposn);
+//					mContext.invalidate();
+// TODO redraw
+					break;
+//				case DialogInterface.BUTTON_NEGATIVE:
+//					// nothing
+//					break;
+				}
+				dialog.cancel();
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle("Stop " + mStopid + ", " + stop_name); 
+		builder.setMessage("Remove from your list of favourites?")
+		.setPositiveButton("Yes", listener)
+		.setNegativeButton("No", listener);
+		builder.create();
+		builder.show();
+	}
+		
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position + ", stop number " + id);
-		
-		if (mLongPress == true) {
-			Log.d(TAG, " long press on list");
-			mLongPress = false;
-		}
+		Log.v(TAG, "clicked position " + position);
 		
         Pair<String,String> pair = (Pair<String,String>)l.getItemAtPosition(position);
 		mStopid = pair.first;;
