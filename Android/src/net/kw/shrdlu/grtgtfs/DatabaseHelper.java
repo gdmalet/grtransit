@@ -75,6 +75,7 @@ public class DatabaseHelper {
 		try {
 			DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
 		} catch (SQLiteException e) {
+			Log.d(TAG, "open database failed - will copy");
 			mMustCopy = true;	// presumably no database exists
 		}
 		
@@ -103,6 +104,7 @@ public class DatabaseHelper {
 					"The database will be upgraded. This may take some time.", Toast.LENGTH_LONG).show();
 
 			// Copy the database in the background.
+			Log.d(TAG, "starting database upgrade service");
 			mContext.startService(new Intent(mContext, DBcopier.class));
 		} else {
 			mDBisOpen.release();	// otherwise the service does that

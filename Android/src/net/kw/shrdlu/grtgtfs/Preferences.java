@@ -25,22 +25,23 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.widget.Toast;
 
 public class Preferences {
 
 	private Context mContext;
 	private static String mPrefsFile;
-	private static final String mPrefFavstops = "favstops";
+	private static final String KEY = "favstops";
 	
 	public Preferences(Context context) {
 		mContext = context;
 		mPrefsFile = mContext.getApplicationInfo().packageName;
 	}
 	
-	public void AddBusstopFavourite(String busstop) {
+	public void AddBusstopFavourite(String busstop, String stopname) {
 		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		String favs = prefs.getString(mPrefFavstops, "");
+		String favs = prefs.getString(KEY, "");
 	
 		TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
 		splitter.setString(favs);
@@ -57,7 +58,9 @@ public class Preferences {
 					Toast.LENGTH_LONG).show();;
 		} else {
 			favs += busstop + ";";
-			prefs.edit().putString("favstops", favs).commit();
+			prefs.edit().putString(KEY, favs)
+			.putString(KEY + "-" + busstop, stopname)
+			.commit();
 			Toast.makeText(mContext, "Stop " + busstop + " was added to your favourites.",
 					Toast.LENGTH_LONG).show();;
 		}
@@ -65,7 +68,7 @@ public class Preferences {
 	
 	public void RemoveBusstopFavourite(String busstop) {
 		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		String favs = prefs.getString(mPrefFavstops, "");
+		String favs = prefs.getString(KEY, "");
 		String newfavs = "";
 		
 		TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
@@ -75,28 +78,31 @@ public class Preferences {
 			if (!s.equals(busstop))
 				newfavs += s + ";";
 		}
-		prefs.edit().putString("favstops", newfavs).commit();
-		
+		prefs.edit().putString(KEY, newfavs)
+		.remove(KEY + "-" + busstop)
+		.commit();
 		Toast.makeText(mContext, "Stop " + busstop + " was removed from your favourites.",
 				Toast.LENGTH_LONG).show();;
 	}
 
-	public String [] GetBusstopFavourites() {
+	public ArrayList<Pair<String,String>> GetBusstopFavourites() {
 		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		String favs = prefs.getString(mPrefFavstops, "");
+		String favs = prefs.getString(KEY, "");
 		
-		String [] stops = {};
+    	// Load the array for the list
+		ArrayList<Pair<String,String>> details = new ArrayList<Pair<String,String>>();
+        Pair<String,String> pair;
 
 		// favs is a semi-colon separated string of stops, with a trailing semi-colon.
+        // Then each stop has a description stored as KEY-stop.
 		if (!favs.equals("")) {
 			TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
 			splitter.setString(favs);
-			ArrayList<String> ary = new ArrayList<String>();
-			for (String s : splitter)
-				ary.add(s);
-			stops = ary.toArray(new String[0]);
+			for (String s : splitter) {
+        		pair = new Pair<String,String>(s, prefs.getString(KEY + "-" + s, ""));
+				details.add(pair);
+			}
 		}
-		
-		return stops;
+		return details;
 	}
 }

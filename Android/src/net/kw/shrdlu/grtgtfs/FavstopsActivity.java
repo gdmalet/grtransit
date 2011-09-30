@@ -55,7 +55,7 @@ public class FavstopsActivity extends ListActivity {
         // Some global initialisation
         if (Globals.mPreferences == null) {
         	Globals.mPreferences = new Preferences(mContext);
-    		Globals.dbHelper = new DatabaseHelper(mContext);
+    		Globals.dbHelper = new DatabaseHelper(mContext);	// this can trigger a time-consuming update
         }
         
         setContentView(R.layout.timeslayout);
@@ -65,37 +65,21 @@ public class FavstopsActivity extends ListActivity {
         // Hide the `Show' button used for showing routes.
         Button btn = (Button) findViewById(R.id.timesbutton);
         btn.setVisibility(View.GONE);
-        
-        String [] stops = Globals.mPreferences.GetBusstopFavourites();
 
-        if (stops != null) {
+        ProcessStops();
+	}
+	
+	/* Separate the processing of stops, so we can re-do it when we need
+	 * to refresh the screen on a new intent.
+	 */
+	protected void ProcessStops() {
+		mDetails = Globals.mPreferences.GetBusstopFavourites();
+
+		// Must do all this without doing a database read, which allows database upgrade
+		// to happen in the background on a service thread, without us blocking, until
+		// we really have to.
+        if (!mDetails.isEmpty()) {
         	
-        	// Build a string suitable for a select statement
-        	String stopsqry = new String();
-        	for (String s : stops) {
-        		if (stopsqry.length() > 0)
-        			stopsqry += ",";
-        		stopsqry += "'" + s + "'";        		
-        	}
-
-        	Cursor csr = DatabaseHelper.ReadableDB().rawQuery(
-            		"select stop_id as _id, stop_name from stops where stop_id in (" + stopsqry + ")", null);
-            
-        	// Load the array for the list
-        	mDetails = new ArrayList<Pair<String,String>>(csr.getCount());
-            Pair<String,String> pair;
-
-            boolean more = csr.moveToFirst();
-            while (more) {
-            	String stop_id = csr.getString(0);
-            	String stop_name = csr.getString(1);
-        		pair = new Pair<String,String>(stop_id, stop_name);
-        		mDetails.add(pair);
-      	        more = csr.moveToNext();
-            }
-
-            csr.close();
-            
             BustimesArrayAdapter adapter = new BustimesArrayAdapter(this, mDetails);
         	setListAdapter(adapter);
         
@@ -108,6 +92,15 @@ public class FavstopsActivity extends ListActivity {
 				}
 	        });
         }
+	}
+	
+	// This is called when we use CLEAR_TOP, to flush the stack and redraw the list,
+	// which is necessary when the list changes.
+	@Override
+	protected void onNewIntent(Intent intent) {
+		View v = findViewById(R.id.detail_area);
+		v.invalidate();
+		ProcessStops();
 	}
 	
     @Override
@@ -188,8 +181,8 @@ public class FavstopsActivity extends ListActivity {
 				case DialogInterface.BUTTON_POSITIVE:
 					Globals.mPreferences.RemoveBusstopFavourite(stop_id);
 					mDetails.remove(aryposn);
-//					mContext.invalidate();
-// TODO redraw
+					// activities in the stack may contain out of date lists, so flush and start again.
+					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
 //				case DialogInterface.BUTTON_NEGATIVE:
 //					// nothing

@@ -152,17 +152,18 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected boolean onTap(int index) {
 	  OverlayItem item = mOverlayItems.get(index);
-	  final String stop_id = item.getTitle();
+	  mStopid = item.getTitle();
+	  final String stopname = item.getSnippet();
 	  
 	  AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
 	  if (mLongPress == true) {
 		  mLongPress = false;
-		  builder.setTitle("Stop " + stop_id + ", " + item.getSnippet()); 
+		  builder.setTitle("Stop " + mStopid + ", " + stopname); 
 		  builder.setMessage("Add to your list of favourites?")
 		  .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
-	        	   Globals.mPreferences.AddBusstopFavourite(stop_id);
+	        	   Globals.mPreferences.AddBusstopFavourite(mStopid, stopname);
 				   Intent favs = new Intent(mContext, FavstopsActivity.class);
 				   mContext.startActivity(favs);	        	   
 	           }
@@ -175,11 +176,11 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  builder.create();
 	  } else {
 		  // Find which routes use the given stop.
-		  builder.setTitle("Routes using stop " + stop_id + ", " + item.getSnippet()); 
+		  builder.setTitle("Routes using stop " + mStopid + ", " + item.getSnippet()); 
 		  final String table = "trips";
 		  final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
 		  final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
-		  final String [] selectargs = {stop_id};
+		  final String [] selectargs = {mStopid};
 		  mCsr = DatabaseHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
 		  builder.setCursor(mCsr, mClick, "_id");
 	  }

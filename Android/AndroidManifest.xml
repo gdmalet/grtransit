@@ -9,25 +9,26 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <application android:icon="@drawable/grticon" android:label="@string/app_name" android:debuggable="false">
+    <application android:icon="@drawable/grticon"
+        android:label="@string/app_name"
+        android:debuggable="true">
     
         <uses-library android:name="com.google.android.maps" />
         
         <activity android:name=".BusstopsActivity"
              android:label="@string/activity_label"
-             android:description="@string/activity_desc" android:launchMode="singleTop" class=".BusstopsActivity">
-<!--             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
- -->            <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
+             android:description="@string/activity_desc"
+             android:launchMode="singleTop"
+             class=".BusstopsActivity">
+            <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
         </activity>
 
         <activity android:name=".FavstopsActivity"
              android:label="@string/activity_label"
-             android:description="@string/activity_desc" android:launchMode="singleTop" class=".BusstopsActivity">
+             android:description="@string/activity_desc"
+             class=".BusstopsActivity" android:launchMode="singleTask">
             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
@@ -37,10 +38,14 @@
             <meta-data android:name="android.app.default_searchable" android:value=".RoutesearchActivity" />
         </activity>
         
-        <activity class=".BustimesActivity" android:name=".BustimesActivity" android:label="@string/activity_label"
+        <activity android:name=".BustimesActivity"
+            android:label="@string/activity_label"
+            class=".BustimesActivity"
         />
         
-        <activity android:name=".BusstopsearchActivity" android:noHistory="true" class=".BusstopsearchActivity">
+        <activity android:name=".BusstopsearchActivity"
+            android:noHistory="true"
+            class=".BusstopsearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -48,7 +53,9 @@
             <meta-data android:name="android.app.searchable" android:resource="@xml/busstopsearchable"/>
         </activity>
         
-        <activity android:name=".RoutesearchActivity" android:noHistory="true" class=".RoutesearchActivity">
+        <activity android:name=".RoutesearchActivity"
+            android:noHistory="true"
+            class=".RoutesearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.ALTERNATIVE" />
@@ -56,6 +63,7 @@
             <meta-data android:name="android.app.searchable" android:resource="@xml/routesearchable"/>
         </activity>
 
+        <!-- This is used for copying the database -->
         <service android:name=".DatabaseHelper$DBcopier" class=".DatabaseHelper$DBcopier"/>
         
     </application>

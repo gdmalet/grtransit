@@ -111,7 +111,7 @@ public class BusstopsearchActivity extends ListActivity {
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
-					Globals.mPreferences.AddBusstopFavourite(stop_id);
+					Globals.mPreferences.AddBusstopFavourite(stop_id, stop_name);
 					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));	
 					break;
 //				case DialogInterface.BUTTON_NEGATIVE:
