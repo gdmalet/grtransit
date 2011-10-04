@@ -43,7 +43,6 @@ public class FavstopsActivity extends ListActivity {
 
 	private ListActivity mContext;
 	private ArrayList<Pair<String,String>> mDetails;
-	private Cursor mCsr;
 	private String mStopid;
 	
 	@Override
@@ -145,33 +144,12 @@ public class FavstopsActivity extends ListActivity {
         return false;
     }
 
-    // This is used when a route number is clicked on in the dialog, after a stop is clicked.
-	private DialogInterface.OnClickListener mClick = new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int which) {
-			  if (mCsr.moveToPosition(which)) {
-				  String route = mCsr.getString(0);
-//				  Log.v(TAG, "clicked position " + which + ": route " + route);
-
-				  int split = route.indexOf(" - ");
-				  String route_id = route.substring(0,split);
-				  String headsign = route.substring(split+3);
-
-				  Intent bustimes = new Intent(mContext, BustimesActivity.class);
-				  String pkgstr = mContext.getApplicationContext().getPackageName();
-				  bustimes.putExtra(pkgstr + ".route_id", route_id);
-				  bustimes.putExtra(pkgstr + ".headsign", headsign);
-				  bustimes.putExtra(pkgstr + ".stop_id", mStopid);
-				  mContext.startActivity(bustimes);
-			  }
-		  }
-	};
-
 	// Called from the listener above for a long click
 	protected void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 		Log.v(TAG, "long clicked position " + position);
 		
 		final Pair<String,String> pair = (Pair<String,String>)parent.getItemAtPosition(position);
-		final String stop_id = pair.first;;
+		mStopid = pair.first;
 		final String stop_name = pair.second;
 		final int aryposn = position;	// so we can access it in the listener class.
 		
@@ -179,7 +157,7 @@ public class FavstopsActivity extends ListActivity {
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
-					Globals.mPreferences.RemoveBusstopFavourite(stop_id);
+					Globals.mPreferences.RemoveBusstopFavourite(mStopid);
 					mDetails.remove(aryposn);
 					// activities in the stack may contain out of date lists, so flush and start again.
 					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
@@ -205,21 +183,14 @@ public class FavstopsActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Log.v(TAG, "clicked position " + position);
 		
-        Pair<String,String> pair = (Pair<String,String>)l.getItemAtPosition(position);
-		mStopid = pair.first;;
-		String stop_name = pair.second;
+		final Pair<String,String> pair = (Pair<String,String>)l.getItemAtPosition(position);
+		mStopid = pair.first;
+		final String stop_name = pair.second;
 		
-		// Find which routes use the given stop.
-		final String table = "trips";
-		final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
-		final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
-		final String [] selectargs = {mStopid};
-		mCsr = DatabaseHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
-		startManagingCursor(mCsr);
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle("Routes using stop " + mStopid + ", " + stop_name); 
-		builder.setCursor(mCsr, mClick, "_id");
-		builder.show();
+		Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+		String pkgstr = mContext.getApplicationContext().getPackageName();
+		routeselect.putExtra(pkgstr + ".stop_id", mStopid);
+		routeselect.putExtra(pkgstr + ".stop_name", stop_name);
+		mContext.startActivity(routeselect);
 	}
 }

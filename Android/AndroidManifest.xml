@@ -38,13 +38,15 @@
             <meta-data android:name="android.app.default_searchable" android:value=".RoutesearchActivity" />
         </activity>
         
+        <activity class=".RouteselectActivity" android:name="RouteselectActivity">
+        </activity>
+        
         <activity android:name=".BustimesActivity"
             android:label="@string/activity_label"
             class=".BustimesActivity"
         />
         
         <activity android:name=".BusstopsearchActivity"
-            android:noHistory="true"
             class=".BusstopsearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -54,7 +56,6 @@
         </activity>
         
         <activity android:name=".RoutesearchActivity"
-            android:noHistory="true"
             class=".RoutesearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
