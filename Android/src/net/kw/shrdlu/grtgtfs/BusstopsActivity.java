@@ -96,8 +96,6 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         Intent intent = getIntent();
         mStopId = intent.getStringExtra(stopstr);
         
-//		if (mStopId != null) Log.v(TAG, "New intent with stop id " + mStopId);
-
         // Get the busstop overlay set up in the background
     	mOverlay = new BusstopsOverlay(mStopmarker, mContext);
         new LoadOverlay().execute();

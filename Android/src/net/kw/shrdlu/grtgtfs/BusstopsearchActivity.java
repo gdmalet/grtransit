@@ -89,14 +89,17 @@ public class BusstopsearchActivity extends ListActivity {
 		
 		Cursor csr = (Cursor)l.getItemAtPosition(position);
 		final String stop_id = csr.getString(0);
-//		final String stop_name = csr.getString(1);
-		
-        final String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
-        
-		Intent busstop = new Intent(mContext, BusstopsActivity.class);
-		busstop.putExtra(stopstr, stop_id);
-        busstop.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		startActivity(busstop);
+		final String stop_name = csr.getString(1);
+        final String pkgstr = mContext.getApplicationContext().getPackageName();
+
+//		Intent busstop = new Intent(mContext, BusstopsActivity.class);
+//		busstop.putExtra(pkgstr + ".stop_id", stop_id);
+//		startActivity(busstop);
+
+		Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+		routeselect.putExtra(pkgstr + ".stop_id", stop_id);
+		routeselect.putExtra(pkgstr + ".stop_name", stop_name);
+		startActivity(routeselect);
 	}
 
 	// Called from the listener above for a long click
@@ -112,7 +115,7 @@ public class BusstopsearchActivity extends ListActivity {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
 					Globals.mPreferences.AddBusstopFavourite(stop_id, stop_name);
-					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));	
+//					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));	
 					break;
 //				case DialogInterface.BUTTON_NEGATIVE:
 //					// nothing
@@ -126,9 +129,8 @@ public class BusstopsearchActivity extends ListActivity {
 		builder.setTitle("Stop " + stop_id + ", " + stop_name); 
 		builder.setMessage("Add to your list of favourites?")
 		.setPositiveButton("Yes", listener)
-		.setNegativeButton("No", listener);
-		
-		builder.create();
-		builder.show();
+		.setNegativeButton("No", listener)
+		.create()
+		.show();
 	}
 }

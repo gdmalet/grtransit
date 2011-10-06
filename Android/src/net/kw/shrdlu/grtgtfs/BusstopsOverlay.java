@@ -159,21 +159,26 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 
 	  if (mLongPress == true) {
 		  mLongPress = false;
+		  
+		  DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				switch (id) {
+				case DialogInterface.BUTTON_POSITIVE:
+					Globals.mPreferences.AddBusstopFavourite(mStopid, stopname);
+//						mContext.startActivity(new Intent(mContext, FavstopsActivity.class));	
+					break;
+//					case DialogInterface.BUTTON_NEGATIVE:
+//						// nothing
+//						break;
+					}
+					dialog.cancel();
+				}
+			};
+
 		  builder.setTitle("Stop " + mStopid + ", " + stopname); 
 		  builder.setMessage("Add to your list of favourites?")
-		  .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-	           public void onClick(DialogInterface dialog, int id) {
-	        	   Globals.mPreferences.AddBusstopFavourite(mStopid, stopname);
-				   Intent favs = new Intent(mContext, FavstopsActivity.class);
-				   mContext.startActivity(favs);	        	   
-	           }
-	       })
-	       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-	           public void onClick(DialogInterface dialog, int id) {
-	                dialog.cancel();
-	           }
-	       });
-		  builder.create();
+		  .setPositiveButton("Yes", listener)
+	      .setNegativeButton("No", listener);
 	  } else {
 		  // Find which routes use the given stop.
 		  builder.setTitle("Routes using stop " + mStopid + ", " + item.getSnippet()); 
@@ -185,7 +190,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  builder.setCursor(mCsr, mClick, "_id");
 	  }
 	  
-	  builder.show();
+	  builder.create().show();
 	  return true;
 	}
 

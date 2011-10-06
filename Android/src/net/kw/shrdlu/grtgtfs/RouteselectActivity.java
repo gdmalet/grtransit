@@ -52,8 +52,20 @@ public class RouteselectActivity extends ListActivity {
         v.setText("Routes using stop " + mStopid + ", " + mStopname);
 
         // Hide the `Show' button used for showing routes.
-        Button btn = (Button) findViewById(R.id.timesbutton);
-        btn.setVisibility(View.GONE);
+//        Button button = (Button) findViewById(R.id.timesbutton);
+//        button.setVisibility(View.GONE);
+        
+        final Button button = (Button) findViewById(R.id.timesbutton);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                String pkgstr = mContext.getApplicationContext().getPackageName();
+        		Intent busstop = new Intent(mContext, BusstopsActivity.class);
+        		busstop.putExtra(pkgstr + ".stop_id", mStopid);
+        		startActivity(busstop);
+            }
+        });
+
 
         // Find which routes use the given stop.
 		final String table = "trips";

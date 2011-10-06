@@ -62,8 +62,14 @@ public class FavstopsActivity extends ListActivity {
         v.setText(R.string.favourites_title);
 
         // Hide the `Show' button used for showing routes.
-        Button btn = (Button) findViewById(R.id.timesbutton);
-        btn.setVisibility(View.GONE);
+        Button button = (Button) findViewById(R.id.timesbutton);
+        button.setText("Map");
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+        		startActivity(new Intent(mContext, BusstopsActivity.class));
+            }
+        });
 
         ProcessStops();
 	}
@@ -93,10 +99,23 @@ public class FavstopsActivity extends ListActivity {
         }
 	}
 	
-	// This is called when we use CLEAR_TOP, to flush the stack and redraw the list,
+	// This is called when we use DINGLE_TOP, to flush the stack and redraw the list,
 	// which is necessary when the list changes.
+//	@Override
+//	protected void onNewIntent(Intent intent) {
+//		Log.d(TAG, "onNewIntent()");
+//		super.onNewIntent(intent);
+//		View v = findViewById(R.id.detail_area);
+//		v.invalidate();
+//		ProcessStops();
+//	}
+	
+	// If we're popping back down the stack, the favourites list could have been added to
+	// since we were last here, so make sure it is reloaded before display.
 	@Override
-	protected void onNewIntent(Intent intent) {
+	protected void onResume() {
+		Log.d(TAG, "onResume()");
+		super.onRestart();
 		View v = findViewById(R.id.detail_area);
 		v.invalidate();
 		ProcessStops();
