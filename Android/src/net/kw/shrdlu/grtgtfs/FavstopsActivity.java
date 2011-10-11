@@ -77,17 +77,18 @@ public class FavstopsActivity extends ListActivity {
 	/* Separate the processing of stops, so we can re-do it when we need
 	 * to refresh the screen on a new intent.
 	 */
+	static boolean mShownalert = false;
 	protected void ProcessStops() {
+		
 		mDetails = Globals.mPreferences.GetBusstopFavourites();
+        BustimesArrayAdapter adapter = new BustimesArrayAdapter(this, mDetails);
+    	setListAdapter(adapter);
 
 		// Must do all this without doing a database read, which allows database upgrade
 		// to happen in the background on a service thread, without us blocking, until
 		// we really have to.
         if (!mDetails.isEmpty()) {
-        	
-            BustimesArrayAdapter adapter = new BustimesArrayAdapter(this, mDetails);
-        	setListAdapter(adapter);
-        
+        	        
 	        // register to get long clicks on bus stop list
 	        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -96,10 +97,27 @@ public class FavstopsActivity extends ListActivity {
 	        		return true;	// to say we consumed the click
 				}
 	        });
-        }
+        } else if (!mShownalert) {
+        	mShownalert = true;
+        	
+	        TextView textView;
+	        final View messageView = mContext.getLayoutInflater().inflate(R.layout.about, null, false);
+	        
+	        textView = (TextView) messageView.findViewById(R.id.about_header);
+	        textView.setVisibility(TextView.GONE);
+	        textView = (TextView) messageView.findViewById(R.id.about_credits);
+	        textView.setText(R.string.no_favourites);
+
+	        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//	        builder.setIcon(R.drawable.grticon);
+	        builder.setTitle(R.string.favourites_title)
+	        .setView(messageView)
+	        .create()
+	        .show();
+	    }
 	}
 	
-	// This is called when we use DINGLE_TOP, to flush the stack and redraw the list,
+	// This is called when we use SINGLE_TOP, to flush the stack and redraw the list,
 	// which is necessary when the list changes.
 //	@Override
 //	protected void onNewIntent(Intent intent) {
@@ -116,8 +134,7 @@ public class FavstopsActivity extends ListActivity {
 	protected void onResume() {
 		Log.d(TAG, "onResume()");
 		super.onRestart();
-		View v = findViewById(R.id.detail_area);
-		v.invalidate();
+		findViewById(R.id.detail_area).invalidate();
 		ProcessStops();
 	}
 	

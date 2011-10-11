@@ -203,6 +203,7 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
             			if (!mcp.zoomIn())
             				break;
             	} else {
+            		Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
             		center = mOverlay.getCenter();
             		if (center != null) {
             			mcp.setCenter(mOverlay.getCenter());
