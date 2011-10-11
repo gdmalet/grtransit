@@ -48,7 +48,7 @@ public class FavstopsActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    	Log.v(TAG, "OnCreate()");
+//    	Log.v(TAG, "OnCreate()");
         mContext = this;
 
         // Some global initialisation
@@ -92,7 +92,7 @@ public class FavstopsActivity extends ListActivity {
 	        // register to get long clicks on bus stop list
 	        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-	        	    Log.i(TAG, "onItemLongClickClick position " + position);
+//	        	    Log.i(TAG, "onItemLongClickClick position " + position);
 	        	    onListItemLongClick(parent, view, position, id);
 	        		return true;	// to say we consumed the click
 				}
@@ -132,7 +132,7 @@ public class FavstopsActivity extends ListActivity {
 	// since we were last here, so make sure it is reloaded before display.
 	@Override
 	protected void onResume() {
-		Log.d(TAG, "onResume()");
+//		Log.d(TAG, "onResume()");
 		super.onRestart();
 		findViewById(R.id.detail_area).invalidate();
 		ProcessStops();
@@ -182,7 +182,7 @@ public class FavstopsActivity extends ListActivity {
 
 	// Called from the listener above for a long click
 	protected void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-		Log.v(TAG, "long clicked position " + position);
+//		Log.v(TAG, "long clicked position " + position);
 		
 		final Pair<String,String> pair = (Pair<String,String>)parent.getItemAtPosition(position);
 		mStopid = pair.first;
@@ -217,7 +217,7 @@ public class FavstopsActivity extends ListActivity {
 		
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position);
+//		Log.v(TAG, "clicked position " + position);
 		
 		final Pair<String,String> pair = (Pair<String,String>)l.getItemAtPosition(position);
 		mStopid = pair.first;

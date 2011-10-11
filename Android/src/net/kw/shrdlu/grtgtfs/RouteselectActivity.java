@@ -39,7 +39,7 @@ public class RouteselectActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    	Log.v(TAG, "OnCreate()");
+//    	Log.v(TAG, "OnCreate()");
         mContext = this;
 
         String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -81,7 +81,7 @@ public class RouteselectActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position);
+//		Log.v(TAG, "clicked position " + position);
 		
 		  String route_id = mCsr.getString(0);
 		  String headsign = mCsr.getString(1);

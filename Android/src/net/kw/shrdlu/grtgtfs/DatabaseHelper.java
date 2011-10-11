@@ -58,12 +58,12 @@ public class DatabaseHelper {
 		
 		while (true) {
 			try {
-				Log.d(TAG, "constructor about to aquire semaphore");
+//				Log.d(TAG, "constructor about to acquire semaphore");
 				mDBisOpen.acquire();
-				Log.d(TAG, " ... constructor got semaphore");
+//				Log.d(TAG, " ... constructor got semaphore");
 				break;
 			} catch (InterruptedException e1) {
-				Log.w(TAG, "constructor interrupted exception?"); // just loop and try again?
+//				Log.w(TAG, "constructor interrupted exception?"); // just loop and try again?
 			}
 		}
 
@@ -75,7 +75,7 @@ public class DatabaseHelper {
 		try {
 			DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
 		} catch (SQLiteException e) {
-			Log.d(TAG, "open database failed - will copy");
+//			Log.d(TAG, "open database failed - will copy");
 			mMustCopy = true;	// presumably no database exists
 		}
 		
@@ -88,7 +88,7 @@ public class DatabaseHelper {
 				csr.close();
 				if (version != DB_VERSION) {
 					mMustCopy = true;
-					Log.d(TAG, "must copy db version " + version + " to new " + DB_VERSION);
+//					Log.d(TAG, "must copy db version " + version + " to new " + DB_VERSION);
 				}
 			} catch (Exception e) {
 				mMustCopy = true;	// something went haywire
@@ -104,12 +104,12 @@ public class DatabaseHelper {
 					"The database will be upgraded. This may take some time.", Toast.LENGTH_LONG).show();
 
 			// Copy the database in the background.
-			Log.d(TAG, "starting database upgrade service");
+//			Log.d(TAG, "starting database upgrade service");
 			mContext.startService(new Intent(mContext, DBcopier.class));
 		} else {
 			mDBisOpen.release();	// otherwise the service does that
 		}
-		Log.v(TAG, "clean exit of constructor");
+//		Log.v(TAG, "clean exit of constructor");
 	}
 
 	/**
@@ -125,12 +125,12 @@ public class DatabaseHelper {
 		// Must have a default constructor
 		public DBcopier() {
 			super("DBcopier");
-			Log.v(TAG, "constructor");
+//			Log.v(TAG, "constructor");
 		}
 
 		@Override
 		protected void onHandleIntent(Intent intent) {
-			Log.v(TAG, "Copying new database " + DB_NAME);
+//			Log.v(TAG, "Copying new database " + DB_NAME);
 
 			// Open the empty db as the output stream
 			OutputStream myOutput;
@@ -172,14 +172,14 @@ public class DatabaseHelper {
 				DB.execSQL("PRAGMA user_version = " + DB_VERSION);
 				DB.close();
 
-				Log.v(TAG, " ... database " + DB_NAME + " copy complete: re-opening db & releasing lock");
+//				Log.v(TAG, " ... database " + DB_NAME + " copy complete: re-opening db & releasing lock");
 				DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
 /*
 				// TODO - debug
 				Cursor csr = DB.rawQuery("PRAGMA user_version", null);
 				csr.moveToPosition(0);
 				int version = csr.getInt(0);
-				Log.d(TAG, " ... new DB version is " + version);
+//				Log.d(TAG, " ... new DB version is " + version);
 				csr.close();
 */
 				mDBisOpen.release();
@@ -204,11 +204,11 @@ public class DatabaseHelper {
 		// copying over a new database.
 		while (DB == null) {
 			try {
-				Log.d(TAG, "... ReadableDB about to aquire semaphore");
+//				Log.d(TAG, "... ReadableDB about to aquire semaphore");
 				mDBisOpen.acquire();
-				Log.d(TAG, " ... ReadableDB got semaphore");
+//				Log.d(TAG, " ... ReadableDB got semaphore");
 			} catch (InterruptedException e1) {
-				Log.w(TAG, "interrupted exception?"); // just loop and try again?
+//				Log.w(TAG, "interrupted exception?"); // just loop and try again?
 			}
 		}
 		

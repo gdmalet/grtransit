@@ -75,7 +75,7 @@ public class RoutesearchActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position);
+//		Log.v(TAG, "clicked position " + position);
 		
 		Cursor csr = (Cursor)l.getItemAtPosition(position);
 		final String route_id = csr.getString(0);

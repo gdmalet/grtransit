@@ -132,7 +132,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	// This must be called on the GIU thread
     private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
     	public void onLongPress (MotionEvent e) {
-    		Log.d(TAG, "Long press detected");
+//    		Log.d(TAG, "Long press detected");
     		mLongPress = true;
         }
     });

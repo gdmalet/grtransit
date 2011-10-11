@@ -104,7 +104,7 @@ public class BusstopsearchActivity extends ListActivity {
 
 	// Called from the listener above for a long click
 	public void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-		Log.v(TAG, "long clicked position " + position);
+//		Log.v(TAG, "long clicked position " + position);
 		
 		Cursor csr = (Cursor)parent.getItemAtPosition(position);
 		final String stop_id = csr.getString(0);
