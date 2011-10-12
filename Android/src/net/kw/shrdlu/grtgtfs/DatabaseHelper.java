@@ -41,7 +41,7 @@ public class DatabaseHelper {
 
 	//The Android's default system path of your application database.
 	private static String DB_PATH = null;
-	private static final int DB_VERSION = 4;	/* As of ??? new version 5th September 2011 */
+	private static final int DB_VERSION = 4;	/* As of 10th October 2011 */
 	private static final String DB_NAME = "GRT.db";
 	private static Context mContext;
 	private boolean mMustCopy = false;
