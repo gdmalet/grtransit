@@ -46,7 +46,6 @@ public class BustimesActivity extends ListActivity {
 	private String mRoute_id, mHeadsign, mStop_id;
     private TextView mTitle;
 	private ServiceCalendar mServiceCalendar;
-	private static boolean mShowTodayOnly = true;
 
 	private static boolean mCalendarChecked = false, mCalendarOK;
 
@@ -134,7 +133,7 @@ public class BustimesActivity extends ListActivity {
             svs.moveToFirst();
             String service_id = svs.getString(0);
             svs.close();
-        	String daysstr = mServiceCalendar.getDays(service_id, datenow, mShowTodayOnly);
+        	String daysstr = mServiceCalendar.getDays(service_id, datenow, !Globals.mPreferences.getShowAllBusses());
 
         	// Only add if the bus runs on this day.
         	// TODO - short circuit if we found the last bus?
@@ -205,6 +204,8 @@ public class BustimesActivity extends ListActivity {
         return retval;
     }
 
+    // TODO Code below here is identical to that in RouteSelectActivity.java
+
     // This is only called once....
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -215,10 +216,11 @@ public class BustimesActivity extends ListActivity {
 	// This is called when redisplaying the menu
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+    	boolean showingall = Globals.mPreferences.getShowAllBusses();
         MenuItem item = menu.findItem(R.id.menu_showallbusses);
-        item.setEnabled(mShowTodayOnly);
+        item.setEnabled(!showingall);
         item = menu.findItem(R.id.menu_showtodaysbusses);
-        item.setEnabled(!mShowTodayOnly);
+        item.setEnabled(showingall);
         return true;
     }
     
@@ -226,7 +228,7 @@ public class BustimesActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_showallbusses: {
-            	mShowTodayOnly = false;
+            	Globals.mPreferences.setShowAllBusses(true);
             	// Just start again
                 Intent intent = getIntent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -234,7 +236,7 @@ public class BustimesActivity extends ListActivity {
                 return true;
             }
             case R.id.menu_showtodaysbusses: {
-            	mShowTodayOnly = true;
+            	Globals.mPreferences.setShowAllBusses(false);
                 Intent intent = getIntent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);

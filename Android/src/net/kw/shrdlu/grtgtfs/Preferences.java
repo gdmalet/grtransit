@@ -32,16 +32,29 @@ public class Preferences {
 
 	private Context mContext;
 	private static String mPrefsFile;
-	private static final String KEY = "favstops";
+	private static final String FAVSTOPS_KEY = "favstops";
+	private static final String SHOWALLBUSSES_KEY = "showallbusses";
 	
 	public Preferences(Context context) {
 		mContext = context;
 		mPrefsFile = mContext.getApplicationInfo().packageName;
 	}
 	
+	public boolean getShowAllBusses() {
+		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
+		return prefs.getBoolean(SHOWALLBUSSES_KEY, false);
+	}
+	
+	public void setShowAllBusses(boolean b) {
+		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
+		prefs.edit()
+		.putBoolean(SHOWALLBUSSES_KEY, b)
+		.commit();
+	}
+	
 	public void AddBusstopFavourite(String busstop, String stopname) {
 		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		String favs = prefs.getString(KEY, "");
+		String favs = prefs.getString(FAVSTOPS_KEY, "");
 	
 		TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
 		splitter.setString(favs);
@@ -58,8 +71,8 @@ public class Preferences {
 					Toast.LENGTH_LONG).show();;
 		} else {
 			favs += busstop + ";";
-			prefs.edit().putString(KEY, favs)
-			.putString(KEY + "-" + busstop, stopname)
+			prefs.edit().putString(FAVSTOPS_KEY, favs)
+			.putString(FAVSTOPS_KEY + "-" + busstop, stopname)
 			.commit();
 			Toast.makeText(mContext, "Stop " + busstop + " was added to your favourites.",
 					Toast.LENGTH_LONG).show();;
@@ -68,7 +81,7 @@ public class Preferences {
 	
 	public void RemoveBusstopFavourite(String busstop) {
 		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		String favs = prefs.getString(KEY, "");
+		String favs = prefs.getString(FAVSTOPS_KEY, "");
 		String newfavs = "";
 		
 		TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
@@ -78,8 +91,8 @@ public class Preferences {
 			if (!s.equals(busstop))
 				newfavs += s + ";";
 		}
-		prefs.edit().putString(KEY, newfavs)
-		.remove(KEY + "-" + busstop)
+		prefs.edit().putString(FAVSTOPS_KEY, newfavs)
+		.remove(FAVSTOPS_KEY + "-" + busstop)
 		.commit();
 		Toast.makeText(mContext, "Stop " + busstop + " was removed from your favourites.",
 				Toast.LENGTH_LONG).show();;
@@ -87,7 +100,7 @@ public class Preferences {
 
 	public ArrayList<Pair<String,String>> GetBusstopFavourites() {
 		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		String favs = prefs.getString(KEY, "");
+		String favs = prefs.getString(FAVSTOPS_KEY, "");
 		
     	// Load the array for the list
 		ArrayList<Pair<String,String>> details = new ArrayList<Pair<String,String>>();
@@ -99,7 +112,7 @@ public class Preferences {
 			TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
 			splitter.setString(favs);
 			for (String s : splitter) {
-        		pair = new Pair<String,String>(s, prefs.getString(KEY + "-" + s, ""));
+        		pair = new Pair<String,String>(s, prefs.getString(FAVSTOPS_KEY + "-" + s, ""));
 				details.add(pair);
 			}
 		}

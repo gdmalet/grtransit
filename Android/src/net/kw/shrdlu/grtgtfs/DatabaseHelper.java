@@ -39,12 +39,11 @@ import android.widget.Toast;
 public class DatabaseHelper {
 	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
 
-	//The Android's default system path of your application database.
 	private static String DB_PATH = null;
 	private static final int DB_VERSION = 4;	/* As of 10th October 2011 */
 	private static final String DB_NAME = "GRT.db";
 	private static Context mContext;
-	private boolean mMustCopy = false;
+	private static boolean mMustCopy = false;
 	private static SQLiteDatabase DB = null;
 	private static final Semaphore mDBisOpen = new Semaphore(1);
 	
@@ -70,10 +69,34 @@ public class DatabaseHelper {
 		if (DB_PATH != null)
 			Log.w(TAG, "contructor has already been called!?");
 		else
-			DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+			DB_PATH = mContext.getExternalFilesDir(null).getPath() + "/" + DB_NAME;
 
+		// Delete the old database if it exists, and recreate on the sdcard.
 		try {
-			DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
+			final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
+			File olddb = new File(DB_OLD_PATH+DB_NAME);
+			if (olddb.exists() && !olddb.delete())
+				Log.e(TAG,"failed to delete old db...!?");
+		} catch (Exception e) {
+			// oh well.
+		}
+/*
+		// The database is on the sdcard.
+		// TODO - there is serious b0rkenness here... And Android seems to deal with this itself.
+		String sdstate = Environment.getExternalStorageState();
+		if  (!sdstate.equals(Environment.MEDIA_MOUNTED)) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			
+			builder.setTitle("The external database is unavailable.")
+			.setMessage("The sdcard is in state `" + sdstate + "'.\nPlease retry when it is available.")
+			.create()
+			.show();
+			
+			return;
+		}
+*/		
+		try {
+			DB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
 		} catch (SQLiteException e) {
 //			Log.d(TAG, "open database failed - will copy");
 			mMustCopy = true;	// presumably no database exists
@@ -101,14 +124,14 @@ public class DatabaseHelper {
 				DB = null;
 			}
 			Toast.makeText(mContext,
-					"The database will be upgraded. This may take some time.", Toast.LENGTH_LONG).show();
+					"The database will be (re)created. This may take some time.", Toast.LENGTH_LONG).show();
 
 			// Copy the database in the background.
 //			Log.d(TAG, "starting database upgrade service");
 			mContext.startService(new Intent(mContext, DBcopier.class));
 		} else {
 			mDBisOpen.release();	// otherwise the service does that
-		}
+		}		
 //		Log.v(TAG, "clean exit of constructor");
 	}
 
@@ -135,10 +158,7 @@ public class DatabaseHelper {
 			// Open the empty db as the output stream
 			OutputStream myOutput;
 			try {
-				File subdir = new File(DB_PATH);
-				subdir.mkdirs();
-				
-				myOutput = new FileOutputStream(DB_PATH + DB_NAME);
+				myOutput = new FileOutputStream(DB_PATH);
 
 				//transfer bytes from the inputfile to the outputfile
 				byte[] buffer = new byte[8*1024];
@@ -168,20 +188,12 @@ public class DatabaseHelper {
 				myOutput.close();
 		
 				// Set the version to match, so we don't keep copying, even if the db is the wrong version to start.
-				DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+				DB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
 				DB.execSQL("PRAGMA user_version = " + DB_VERSION);
 				DB.close();
 
 //				Log.v(TAG, " ... database " + DB_NAME + " copy complete: re-opening db & releasing lock");
-				DB = SQLiteDatabase.openDatabase(DB_PATH+DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
-/*
-				// TODO - debug
-				Cursor csr = DB.rawQuery("PRAGMA user_version", null);
-				csr.moveToPosition(0);
-				int version = csr.getInt(0);
-//				Log.d(TAG, " ... new DB version is " + version);
-				csr.close();
-*/
+				DB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
 				mDBisOpen.release();
 
 			} catch (FileNotFoundException e) {
@@ -191,7 +203,7 @@ public class DatabaseHelper {
 				Log.e(TAG, "IOException exception");
 				e.printStackTrace();
 			} catch (Exception e) {
-				Log.e(TAG, "unknown xception exception");
+				Log.e(TAG, "unknown exception exception");
 				e.printStackTrace();				
 			}
 		}
@@ -204,7 +216,7 @@ public class DatabaseHelper {
 		// copying over a new database.
 		while (DB == null) {
 			try {
-//				Log.d(TAG, "... ReadableDB about to aquire semaphore");
+//				Log.d(TAG, "... ReadableDB about to acquire semaphore");
 				mDBisOpen.acquire();
 //				Log.d(TAG, " ... ReadableDB got semaphore");
 			} catch (InterruptedException e1) {

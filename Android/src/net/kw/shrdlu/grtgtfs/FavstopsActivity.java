@@ -48,6 +48,7 @@ public class FavstopsActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.timeslayout);
 //    	Log.v(TAG, "OnCreate()");
         mContext = this;
 
@@ -57,21 +58,19 @@ public class FavstopsActivity extends ListActivity {
     		Globals.dbHelper = new DatabaseHelper(mContext);	// this can trigger a time-consuming update
         }
         
-        setContentView(R.layout.timeslayout);
         TextView v = (TextView) findViewById(R.id.timestitle);
         v.setText(R.string.favourites_title);
 
-        // Hide the `Show' button used for showing routes.
+        // Relabel the `Show' button used for showing routes.
         Button button = (Button) findViewById(R.id.timesbutton);
         button.setText("Map");
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
         		startActivity(new Intent(mContext, BusstopsActivity.class));
             }
         });
 
-        ProcessStops();
+        // ProcessStops();	// will be done in onResume()
 	}
 	
 	/* Separate the processing of stops, so we can re-do it when we need
@@ -79,7 +78,7 @@ public class FavstopsActivity extends ListActivity {
 	 */
 	static boolean mShownalert = false;
 	protected void ProcessStops() {
-		
+
 		mDetails = Globals.mPreferences.GetBusstopFavourites();
         BustimesArrayAdapter adapter = new BustimesArrayAdapter(this, mDetails);
     	setListAdapter(adapter);
@@ -133,7 +132,7 @@ public class FavstopsActivity extends ListActivity {
 	@Override
 	protected void onResume() {
 //		Log.d(TAG, "onResume()");
-		super.onRestart();
+		super.onResume();
 		findViewById(R.id.detail_area).invalidate();
 		ProcessStops();
 	}
@@ -152,7 +151,6 @@ public class FavstopsActivity extends ListActivity {
         		Intent stops = new Intent(getIntent());
         		stops.setClass(mContext, BusstopsActivity.class);
         		stops.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		stops.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         		startActivity(stops);
         		return true;
             }
@@ -164,7 +162,6 @@ public class FavstopsActivity extends ListActivity {
         		Intent stopsearch = new Intent(getIntent());
         		stopsearch.setClass(mContext, BusstopsearchActivity.class);
         		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		stopsearch.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         		startActivity(stopsearch);
         		return true;
             }
@@ -172,7 +169,6 @@ public class FavstopsActivity extends ListActivity {
         		Intent routesearch = new Intent(getIntent());
         		routesearch.setClass(mContext, RoutesearchActivity.class);
         		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		routesearch.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         		startActivity(routesearch);
         		return true;
             }

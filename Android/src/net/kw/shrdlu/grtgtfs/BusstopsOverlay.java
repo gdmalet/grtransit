@@ -155,42 +155,38 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	  mStopid = item.getTitle();
 	  final String stopname = item.getSnippet();
 	  
-	  AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
 	  if (mLongPress == true) {
 		  mLongPress = false;
 		  
 		  DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				switch (id) {
-				case DialogInterface.BUTTON_POSITIVE:
-					Globals.mPreferences.AddBusstopFavourite(mStopid, stopname);
-//						mContext.startActivity(new Intent(mContext, FavstopsActivity.class));	
-					break;
-//					case DialogInterface.BUTTON_NEGATIVE:
-//						// nothing
-//						break;
-					}
-					dialog.cancel();
-				}
-			};
+			  public void onClick(DialogInterface dialog, int id) {
+				  switch (id) {
+				  case DialogInterface.BUTTON_POSITIVE:
+					  Globals.mPreferences.AddBusstopFavourite(mStopid, stopname);
+					  break;
+//				  case DialogInterface.BUTTON_NEGATIVE:
+//					  // nothing
+//					  break;
+				  }
+				  dialog.cancel();
+			  }
+		  };
 
-		  builder.setTitle("Stop " + mStopid + ", " + stopname); 
-		  builder.setMessage("Add to your list of favourites?")
+		  AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		  builder.setTitle("Stop " + mStopid + ", " + stopname)
+		  .setMessage("Add to your list of favourites?")
 		  .setPositiveButton("Yes", listener)
-	      .setNegativeButton("No", listener);
+		  .setNegativeButton("No", listener)
+		  .create()
+		  .show();
 	  } else {
-		  // Find which routes use the given stop.
-		  builder.setTitle("Routes using stop " + mStopid + ", " + item.getSnippet()); 
-		  final String table = "trips";
-		  final String [] select = {"distinct route_id || \" - \" || trip_headsign as _id"};
-		  final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
-		  final String [] selectargs = {mStopid};
-		  mCsr = DatabaseHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
-		  builder.setCursor(mCsr, mClick, "_id");
+		  // Show route select activity
+		  Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+		  String pkgstr = mContext.getApplicationContext().getPackageName();
+		  routeselect.putExtra(pkgstr + ".stop_id", mStopid);
+		  routeselect.putExtra(pkgstr + ".stop_name", stopname);
+		  mContext.startActivity(routeselect);
 	  }
-	  
-	  builder.create().show();
 	  return true;
 	}
 
