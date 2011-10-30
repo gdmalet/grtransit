@@ -25,7 +25,9 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
+import android.util.TimingLogger;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +48,8 @@ public class RouteselectActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//    	Log.v(TAG, "OnCreate()");
+    	Log.v(TAG, "OnCreate()");
+		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
         mContext = this;
 
         String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -75,23 +78,27 @@ public class RouteselectActivity extends ListActivity {
 
         // Find which routes use the given stop.
 		final String table = "trips";
-		final String [] select = {"distinct route_id as _id, trip_headsign as descr"};
-		final String where = "trip_id in (select trip_id from stop_times where stop_id = ?)";
-		final String [] selectargs = {mStopid};
-		mCsr = DatabaseHelper.ReadableDB().query(table, select, where, selectargs, null,null,null);
 
-		if (Globals.mPreferences.getShowAllBusses()) {
-			startManagingCursor(mCsr);
-	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
-	    	setListAdapter(adapter);
-        } else {
-        	// Must trim the list of busses to show
-// TODO        	
-			startManagingCursor(mCsr);
-	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
-	    	setListAdapter(adapter);
-        }
-        
+		TimingLogger timings = new TimingLogger(TAG, "onCreate");
+
+   		// Only show bus routes where the schedule is valid for the current date
+    	final Time t = new Time();	// TODO - this duplicates BusTimes?
+    	t.setToNow();
+    	final String datenow = String.format("%04d%02d%02d", t.year, t.month+1, t.monthDay);
+    	final String qry = "select distinct route_id as _id, trip_headsign as descr from trips" +
+    	" join calendar on trips.service_id = calendar.service_id where " + 
+    	" trip_id in (select trip_id from stop_times where stop_id = ?) and " +
+    	" start_date <= ? and end_date >= ?;";
+   		final String [] selectargs = {mStopid, datenow, datenow};
+    	mCsr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
+        	
+    	timings.addSplit("end of db read");
+   		timings.dumpToLog();
+
+		startManagingCursor(mCsr);
+        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
+    	setListAdapter(adapter);
+
     	ListView lv = getListView();
         lv.setOnTouchListener(mGestureListener);
 	}
@@ -116,8 +123,9 @@ public class RouteselectActivity extends ListActivity {
 			return mGestureDetector.onTouchEvent(event); 
 		}
 	};
-        
-	// This must be called on the GIU thread
+
+	// Catch flings, to show all busses coming to this stop.
+	// This must be called on the GIU thread.
     private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
     	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
     		Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
@@ -129,46 +137,4 @@ public class RouteselectActivity extends ListActivity {
     		return false;
     	}
     });
-
-    // TODO Code below here is identical to that in BustimesActivity.java
-    
-    // This is only called once....
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.timesmenu, menu);
-        return true;
-    }
-	// This is called when redisplaying the menu
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-    	boolean showingall = Globals.mPreferences.getShowAllBusses();
-        MenuItem item = menu.findItem(R.id.menu_showallbusses);
-        item.setEnabled(!showingall);
-        item = menu.findItem(R.id.menu_showtodaysbusses);
-        item.setEnabled(showingall);
-        return true;
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_showallbusses: {
-            	Globals.mPreferences.setShowAllBusses(true);
-            	// Just start again
-                Intent intent = getIntent();
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-            }
-            case R.id.menu_showtodaysbusses: {
-            	Globals.mPreferences.setShowAllBusses(false);
-                Intent intent = getIntent();
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-            }
-        }
-        return false;
-    }
 }
