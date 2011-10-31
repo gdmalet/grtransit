@@ -42,7 +42,7 @@ public class FavstopsActivity extends ListActivity {
 	private static final String TAG = "FavstopsActivity";
 
 	private ListActivity mContext;
-	private ArrayList<Pair<String,String>> mDetails;
+	private ArrayList<String[]> mDetails;
 	private String mStopid;
 	
 	@Override
@@ -144,6 +144,9 @@ public class FavstopsActivity extends ListActivity {
         return true;
     }
 
+    // TODO See http://developer.android.com/guide/topics/ui/menus.html
+    // Should have a super class that defines and handles these menus, and
+    // then derive this and other activities that use the same menus from that.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -159,6 +162,7 @@ public class FavstopsActivity extends ListActivity {
                 return true;
             }
             case R.id.menu_searchstops: {
+//            	onSearchRequested();
         		Intent stopsearch = new Intent(getIntent());
         		stopsearch.setClass(mContext, BusstopsearchActivity.class);
         		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
@@ -173,16 +177,16 @@ public class FavstopsActivity extends ListActivity {
         		return true;
             }
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
 	// Called from the listener above for a long click
 	protected void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 //		Log.v(TAG, "long clicked position " + position);
 		
-		final Pair<String,String> pair = (Pair<String,String>)parent.getItemAtPosition(position);
-		mStopid = pair.first;
-		final String stop_name = pair.second;
+		final String [] strs = (String[])parent.getItemAtPosition(position);
+		mStopid = strs[0];
+		final String stop_name = strs[1];
 		final int aryposn = position;	// so we can access it in the listener class.
 		
 		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -215,9 +219,9 @@ public class FavstopsActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 //		Log.v(TAG, "clicked position " + position);
 		
-		final Pair<String,String> pair = (Pair<String,String>)l.getItemAtPosition(position);
-		mStopid = pair.first;
-		final String stop_name = pair.second;
+		final String [] strs = (String[])l.getItemAtPosition(position);
+		mStopid = strs[0];
+		final String stop_name = strs[1];
 		
 		Intent routeselect = new Intent(mContext, RouteselectActivity.class);
 		String pkgstr = mContext.getApplicationContext().getPackageName();

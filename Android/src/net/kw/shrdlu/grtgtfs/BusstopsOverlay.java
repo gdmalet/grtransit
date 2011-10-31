@@ -35,6 +35,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TimingLogger;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ import com.google.android.maps.Projection;
 public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private static final String TAG = "GrtItemizedOverlay";
 
-	private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>();
+	private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>(3000);
 	private Context mContext;
 	private Cursor mCsr;
 	private String mStopid;
@@ -63,14 +64,18 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	// This is time consuming, and should not be called on the GUI thread
 	public void LoadDB(String whereclause, String [] selectargs) {
-
+		Log.d(TAG, "starting LoadDB");
+		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
+		
 		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
 
 		// TODO - limit under debug
 //		String table = "stops";
-//    	if (whereclause == null) table += " limit 200";
+//    	if (whereclause == null) table += " limit 1000";
 
+		TimingLogger timings = new TimingLogger(TAG, "LoadDB");
+		
         Cursor csr;
     	try {
     		csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null,null);
@@ -79,6 +84,8 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
     		return;
     	}
 
+    	timings.addSplit("end of db read");
+    	
     	// Going to calculate our center
     	int min_lat = 360000000, min_lon = 360000000, max_lat = -360000000, max_lon = -360000000;
     	
@@ -104,8 +111,13 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
    		csr.close();
    		
    		mCenter = new GeoPoint(min_lat + (max_lat-min_lat)/2, min_lon + (max_lon-min_lon)/2);
+
+   		timings.addSplit("found center");
    		
 		populate();	// chomps up a lot of time....
+
+   		timings.addSplit("populated");
+   		timings.dumpToLog();
 	}
 
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.

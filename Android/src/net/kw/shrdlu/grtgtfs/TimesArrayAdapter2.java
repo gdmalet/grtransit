@@ -33,15 +33,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<String[]>>*/ {
-	private static final String TAG = "BustimesArrayAdapter";
+public class TimesArrayAdapter2 extends ArrayAdapter/*<ArrayList<String[]>>*/ {
+	private static final String TAG = "TimesArrayAdapter2";
 
 	private final ArrayList<String []> mDetails;
 	private final LayoutInflater mInflater;
 	
-	public BustimesArrayAdapter(ListActivity context, ArrayList<String []> details) {
-    	super(context, R.layout.rowlayout, details);
-//    	Log.v(TAG, "BustimesArrayAdapter()");
+	public TimesArrayAdapter2(ListActivity context, ArrayList<String[]> details) {
+    	super(context, R.layout.row2layout, details);
+//    	Log.v(TAG, "TimesArrayAdapter()");
     
     	mDetails = details;
     	mInflater = LayoutInflater.from(context);
@@ -50,6 +50,8 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<String[]>>*/ 
 	static class ViewHolder {
 		TextView label;
 		TextView value;
+		TextView label2;
+		TextView value2;
 	}
 	
 	@Override
@@ -60,13 +62,15 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<String[]>>*/ 
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
-			view = mInflater.inflate(R.layout.rowlayout, parent, false);
+			view = mInflater.inflate(R.layout.row2layout, parent, false);
 //			Log.d(TAG, "new view " + view);
 			
 			// Save the view when we look them up.
 			holder = new ViewHolder();
 			holder.label = (TextView)view.findViewById(R.id.label);
 			holder.value = (TextView)view.findViewById(R.id.value);
+			holder.label2 = (TextView)view.findViewById(R.id.label2);
+			holder.value2 = (TextView)view.findViewById(R.id.value2);
 			view.setTag(holder);
 		} else {
 //			Log.d(TAG, "reusing view " + view);
@@ -75,6 +79,8 @@ public class BustimesArrayAdapter extends ArrayAdapter/*<ArrayList<String[]>>*/ 
 
 		holder.label.setText(mDetails.get(position)[0]);
     	holder.value.setText(mDetails.get(position)[1]);
+		holder.label2.setText(mDetails.get(position)[2]);
+    	holder.value2.setText(mDetails.get(position)[3]);
 
 		return view;
 	}

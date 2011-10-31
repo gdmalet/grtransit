@@ -98,13 +98,12 @@ public class Preferences {
 				Toast.LENGTH_LONG).show();;
 	}
 
-	public ArrayList<Pair<String,String>> GetBusstopFavourites() {
+	public ArrayList<String[]> GetBusstopFavourites() {
 		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
 		String favs = prefs.getString(FAVSTOPS_KEY, "");
 		
     	// Load the array for the list
-		ArrayList<Pair<String,String>> details = new ArrayList<Pair<String,String>>();
-        Pair<String,String> pair;
+		ArrayList<String[]> details = new ArrayList<String[]>();
 
 		// favs is a semi-colon separated string of stops, with a trailing semi-colon.
         // Then each stop has a description stored as KEY-stop.
@@ -112,8 +111,8 @@ public class Preferences {
 			TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
 			splitter.setString(favs);
 			for (String s : splitter) {
-        		pair = new Pair<String,String>(s, prefs.getString(FAVSTOPS_KEY + "-" + s, ""));
-				details.add(pair);
+				String [] strs = {s, prefs.getString(FAVSTOPS_KEY + "-" + s, "")};
+				details.add(strs);
 			}
 		}
 		return details;

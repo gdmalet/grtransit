@@ -77,10 +77,6 @@ public class RouteselectActivity extends ListActivity {
         });
 
         // Find which routes use the given stop.
-		final String table = "trips";
-
-		TimingLogger timings = new TimingLogger(TAG, "onCreate");
-
    		// Only show bus routes where the schedule is valid for the current date
     	final Time t = new Time();	// TODO - this duplicates BusTimes?
     	t.setToNow();
@@ -92,9 +88,6 @@ public class RouteselectActivity extends ListActivity {
    		final String [] selectargs = {mStopid, datenow, datenow};
     	mCsr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
         	
-    	timings.addSplit("end of db read");
-   		timings.dumpToLog();
-
 		startManagingCursor(mCsr);
         SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
     	setListAdapter(adapter);
@@ -132,6 +125,10 @@ public class RouteselectActivity extends ListActivity {
     		// Catch a fling sort of from right to left
     		if (velocityX < -100 && Math.abs(velocityX) > Math.abs(velocityY)) {
     			Log.d(TAG, "fling detected");
+				Intent bustimes = new Intent(mContext, BustimesActivity.class);
+				String pkgstr = mContext.getApplicationContext().getPackageName();
+				bustimes.putExtra(pkgstr + ".stop_id", mStopid);
+				mContext.startActivity(bustimes);
     			return true;
     		}
     		return false;

@@ -43,7 +43,7 @@ public class BustimesActivity extends ListActivity {
 	private static final String TAG = "BustimesActivity";
 
 	private ListActivity mContext;
-	private String mRoute_id, mHeadsign, mStop_id;
+	private String mRoute_id = null, mHeadsign, mStop_id;
     private TextView mTitle;
 	private ServiceCalendar mServiceCalendar;
 
@@ -59,6 +59,8 @@ public class BustimesActivity extends ListActivity {
 
         setContentView(R.layout.timeslayout);
 
+        // TODO -- hode button if showing many routes? Or show stop?
+        
         final Button button = (Button) findViewById(R.id.timesbutton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -79,8 +81,15 @@ public class BustimesActivity extends ListActivity {
         mStop_id  = intent.getStringExtra(pkgstr + ".stop_id");
         
         mTitle = (TextView) findViewById(R.id.timestitle);
-        mTitle.setText(mRoute_id + " - " + mHeadsign);
-
+        if (mRoute_id == null) {	// showing all routes
+        	mTitle.setText("Stop " + mStop_id + " - all routes");
+        } else {
+        	mTitle.setText(mRoute_id + " - " + mHeadsign);
+        }
+        
+        // TODO add footer explaining swipe.
+//        ListView lv = (TextView) findViewById(R.id.list);
+        
         if (!mCalendarChecked || (mCalendarChecked && mCalendarOK))
         	ProcessBusTimes();
         
@@ -99,10 +108,10 @@ public class BustimesActivity extends ListActivity {
 	 */
 	void ProcessBusTimes() {
     	// Will find where to position the list of bus departure times
-    	Time t = new Time();
+    	final Time t = new Time();
     	t.setToNow();
-    	String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
-    	String datenow = String.format("%04d%02d%02d", t.year, t.month+1, t.monthDay);
+    	final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+    	final String datenow = String.format("%04d%02d%02d", t.year, t.month+1, t.monthDay);
 
         // Make sure we actually have some valid data, since schedules change often.
         if (!mCalendarChecked) {
@@ -111,14 +120,22 @@ public class BustimesActivity extends ListActivity {
         if (!mCalendarOK)
         	return;
         
-        final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
-        	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
-        String [] selectargs = {mStop_id, mRoute_id, mHeadsign};
+    	String [] selectargs;
+    	String q;
+        if (mRoute_id == null) {	// showing all routes
+        	selectargs = new String[] {mStop_id};
+	        q = "select departure_time as _id, trips.trip_id, route_id, trip_headsign from stop_times "
+	        	+ "join trips on stop_times.trip_id = trips.trip_id where "
+	        	+ "stop_id = ? order by departure_time";
+        } else {
+        	selectargs = new String[] {mStop_id, mRoute_id, mHeadsign};
+        	q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
+        		+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
+		}
         Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
 
     	// Load the array for the list
-    	ArrayList<Pair<String,String>> details = new ArrayList<Pair<String,String>>(csr.getCount());
-        Pair<String,String> pair;
+    	ArrayList<String []> details = new ArrayList<String []>(csr.getCount());
         int pos = -1, count = 0;
         String nextdeparture = null;
         boolean more = csr.moveToFirst();
@@ -138,22 +155,34 @@ public class BustimesActivity extends ListActivity {
         	// Only add if the bus runs on this day.
         	// TODO - short circuit if we found the last bus?
         	if (daysstr != null) {
-        		pair = new Pair<String,String>(departure_time, daysstr);
-        		details.add(pair);
-        	
+
         		// is this where we position the list?
         		if (pos == -1 && departure_time.compareTo(timenow) >= 0) {
         			pos = count;
         			nextdeparture = departure_time;
         		}
+        		
+      	        if (mRoute_id != null) {	// showing one route
+      	        	String strs [] = {csr.getString(0), daysstr};
+      	        	details.add(strs);
+      	        } else {
+      	        	String strs [] = {csr.getString(0), daysstr, csr.getString(2), csr.getString(3)};
+      	        	details.add(strs);
+      	        }                
+
       	        count++;
         	}
   	        more = csr.moveToNext();
         }
         csr.close();
 
-        BustimesArrayAdapter adapter = new BustimesArrayAdapter(this, details);
-    	setListAdapter(adapter);
+        if (mRoute_id != null) {	// showing one route
+        	BustimesArrayAdapter adapter = new BustimesArrayAdapter(this, details);
+        	setListAdapter(adapter);
+        } else {
+        	TimesArrayAdapter2 adapter = new TimesArrayAdapter2(this, details);
+        	setListAdapter(adapter);
+        }
 
     	// Calculate the time difference
     	Toast msg;
@@ -203,8 +232,6 @@ public class BustimesActivity extends ListActivity {
 
         return retval;
     }
-
-    // TODO Code below here is identical to that in RouteSelectActivity.java
 
     // This is only called once....
 	@Override
