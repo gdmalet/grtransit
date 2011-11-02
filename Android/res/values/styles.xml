@@ -49,6 +49,12 @@
         <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
+    <style name="List.Rightlabel">
+        <item name="android:gravity">right</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
     <style name="List.Content">
         <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>

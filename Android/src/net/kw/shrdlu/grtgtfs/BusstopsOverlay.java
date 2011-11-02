@@ -78,7 +78,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 		
         Cursor csr;
     	try {
-    		csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null,null);
+    		csr = DatabaseHelper.ReadableDB().query(true, table, columns, whereclause, selectargs, null,null,null,null);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;

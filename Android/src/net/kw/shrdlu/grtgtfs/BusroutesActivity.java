@@ -22,9 +22,11 @@ package net.kw.shrdlu.grtgtfs;
 import java.util.List;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,7 +58,7 @@ public class BusroutesActivity extends MapActivity {
     private Animation mSlideOut;
     private ProgressBar mProgress;    
     private MyLocationOverlay mMylocation;
-    private String mRoute_id, mHeadsign;
+    private String mRoute_id, mHeadsign, mStop_id;
 	private BusstopsOverlay mBusstopsOverlay = null;
 
     /** Called when the activity is first created. */
@@ -76,7 +78,7 @@ public class BusroutesActivity extends MapActivity {
         Intent intent = getIntent();
         mRoute_id = intent.getStringExtra(pkgstr + ".route_id");
         mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
-//        String stop_id = intent.getStringExtra(pkgstr + ".stop_id");	// TODO show position?
+        mStop_id = intent.getStringExtra(pkgstr + ".stop_id");	// TODO show position?
     
     	// Load animations used to show/hide progress bar
         mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
@@ -133,14 +135,7 @@ public class BusroutesActivity extends MapActivity {
             	}
             	return true;
             }
-/*          case R.id.menu_restart: {
-        		Intent restart = new Intent(mContext, BusstopsActivity.class);
-        		restart.setAction(Intent.ACTION_MAIN);
-        		restart.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        		startActivity(restart);
-        		return true;
-            }
-*/          case R.id.menu_searchstops: {
+            case R.id.menu_searchstops: {
         		Intent stopsearch = new Intent(getIntent());
         		stopsearch.setClass(mContext, BusstopsearchActivity.class);
         		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
@@ -180,22 +175,49 @@ public class BusroutesActivity extends MapActivity {
 //        	Log.v(TAG, "doInBackground()");
 
             // TODO -- trip_headsign is wrong with route searches....
-/*            String q = String.format("stop_id in " +
-            		"(select stop_id from stop_times where trip_id = " +
-            		"(select trip_id from trips where route_id = \"%s\" and trip_headsign = \"%s\"))",
-            		mRoute_id, mHeadsign);
-*/           final String whereclause = "stop_id in "
-            	+ "(select stop_id from stop_times where trip_id = "
-            	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
-            String [] selectargs = {mRoute_id, mHeadsign};
 
-            mBusstopsOverlay.LoadDB(whereclause, selectargs);
-            mapOverlays.add(mBusstopsOverlay);
+        	if (mRoute_id != null) {	// doing one route
+	        	final String whereclause = "stop_id in "
+	            	+ "(select stop_id from stop_times where trip_id = "
+	            	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
+	            final String [] selectargs = {mRoute_id, mHeadsign};
+	
+	            mBusstopsOverlay.LoadDB(whereclause, selectargs);
+	            mapOverlays.add(mBusstopsOverlay);
+	
+	            // Now draw the route
+	    		BusrouteOverlay routeoverlay = new BusrouteOverlay(mContext, mRoute_id, mHeadsign);
+	            mapOverlays.add(routeoverlay);
 
-            // Now draw the route
-    		BusrouteOverlay routeoverlay = new BusrouteOverlay(mContext, mRoute_id, mHeadsign);
-            mapOverlays.add(routeoverlay);
-
+        	} else {
+        		// doing many routes
+        		final String whereclause = "stop_id in "
+        			+ "(select distinct stop_id from stop_times where trip_id in "
+        			+ "(select trip_id from stop_times where stop_id = ?))";
+        		String [] selectargs = {mStop_id};
+	            mBusstopsOverlay.LoadDB(whereclause, selectargs);
+	            mapOverlays.add(mBusstopsOverlay);
+	
+	            // Now draw the routes - taken from RouteselectActivity
+	        	final Time t = new Time();	// TODO - this duplicates BusTimes?
+	        	t.setToNow();
+	        	final String datenow = String.format("%04d%02d%02d", t.year, t.month+1, t.monthDay);
+	        	final String qry = "select distinct route_id, trip_headsign from trips" +
+	        	" join calendar on trips.service_id = calendar.service_id where " + 
+	        	" trip_id in (select trip_id from stop_times where stop_id = ?) and " +
+	        	" start_date <= ? and end_date >= ?;";
+	       		selectargs = new String[] {mStop_id, datenow, datenow};
+	        	Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
+	            
+	    		boolean more = csr.moveToPosition(0);
+	       		while (more) {
+	       			BusrouteOverlay routeoverlay = new BusrouteOverlay(mContext, csr.getString(0), csr.getString(1));
+	       			mapOverlays.add(routeoverlay);
+	       			more = csr.moveToNext();
+	       		}
+	       		csr.close();
+        	}
+        	
             return null;    	
         }
 
@@ -220,7 +242,11 @@ public class BusroutesActivity extends MapActivity {
             	Log.e(TAG, "no center found for map!");
             }
 
-            mTitle.setText("Rt " + mRoute_id + " - " + mHeadsign);
+        	if (mRoute_id != null) {	// doing one route
+        		mTitle.setText("Rt " + mRoute_id + " - " + mHeadsign);
+        	} else {
+        		mTitle.setText("Routes using stop " + mStop_id);
+        	}
 	    }
 	}
 }

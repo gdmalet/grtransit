@@ -22,7 +22,7 @@
  
   <TextView
    android:id="@+id/label2"
-   style="@style/List.Content" />
+   style="@style/List.Rightlabel" />
 
   <TextView
    android:id="@+id/value2"

@@ -58,8 +58,6 @@ public class BustimesActivity extends ListActivity {
         mServiceCalendar = new ServiceCalendar(mContext);
 
         setContentView(R.layout.timeslayout);
-
-        // TODO -- hode button if showing many routes? Or show stop?
         
         final Button button = (Button) findViewById(R.id.timesbutton);
         button.setOnClickListener(new View.OnClickListener() {
