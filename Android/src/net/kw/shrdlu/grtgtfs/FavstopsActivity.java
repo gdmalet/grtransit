@@ -151,8 +151,7 @@ public class FavstopsActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_location: {
-        		Intent stops = new Intent(getIntent());
-        		stops.setClass(mContext, BusstopsActivity.class);
+        	  	Intent stops = new Intent(mContext, BusstopsActivity.class);
         		stops.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
         		startActivity(stops);
         		return true;
@@ -163,15 +162,13 @@ public class FavstopsActivity extends ListActivity {
             }
             case R.id.menu_searchstops: {
 //            	onSearchRequested();
-        		Intent stopsearch = new Intent(getIntent());
-        		stopsearch.setClass(mContext, BusstopsearchActivity.class);
+        	  	Intent stopsearch = new Intent(mContext, BusstopsearchActivity.class);
         		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
         		startActivity(stopsearch);
         		return true;
             }
           case R.id.menu_searchroutes: {
-        		Intent routesearch = new Intent(getIntent());
-        		routesearch.setClass(mContext, RoutesearchActivity.class);
+        	  	Intent routesearch = new Intent(mContext, RoutesearchActivity.class);
         		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
         		startActivity(routesearch);
         		return true;

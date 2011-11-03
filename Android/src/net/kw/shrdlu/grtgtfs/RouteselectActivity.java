@@ -84,7 +84,7 @@ public class RouteselectActivity extends ListActivity {
     	final String qry = "select distinct route_id as _id, trip_headsign as descr from trips" +
     	" join calendar on trips.service_id = calendar.service_id where " + 
     	" trip_id in (select trip_id from stop_times where stop_id = ?) and " +
-    	" start_date <= ? and end_date >= ?;";
+    	" start_date <= ? and end_date >= ?";
    		final String [] selectargs = {mStopid, datenow, datenow};
     	mCsr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
         	

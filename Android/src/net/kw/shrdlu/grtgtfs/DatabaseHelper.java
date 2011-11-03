@@ -54,6 +54,7 @@ public class DatabaseHelper {
 	 */
 	public DatabaseHelper(Context context) {
 		mContext = context;
+		final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
 		
 		while (true) {
 			try {
@@ -67,19 +68,34 @@ public class DatabaseHelper {
 		}
 
 		if (DB_PATH != null)
-			Log.w(TAG, "contructor has already been called!?");
-		else
-			DB_PATH = mContext.getExternalFilesDir(null).getPath() + "/" + DB_NAME;
+			Log.e(TAG, "constructor has already been called!?");
+		
+		// Bah - API v8. DB_PATH = mContext.getExternalFilesDir(null).getPath() + "/" + DB_NAME;
+        DB_PATH = "/sdcard/data/Android/" + mContext.getApplicationContext().getPackageName();
 
+        File f = new File(DB_PATH);
+        if (!f.exists() && !f.mkdirs()) {
+    		Log.e(TAG, "can't create sdcard dirs, using phone storage :-(");
+    		DB_PATH= DB_OLD_PATH;
+        }
+        if(f.exists() && !f.canWrite()) {
+    		Log.e(TAG, "can't write to sdcard dirs, using phone storage :-(");
+    		DB_PATH= DB_OLD_PATH;
+        }
+		
 		// Delete the old database if it exists, and recreate on the sdcard.
-		try {
-			final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
-			File olddb = new File(DB_OLD_PATH+DB_NAME);
-			if (olddb.exists() && !olddb.delete())
-				Log.e(TAG,"failed to delete old db...!?");
-		} catch (Exception e) {
-			// oh well.
+		if (!DB_PATH.equals(DB_OLD_PATH)) {
+			try {
+				File olddb = new File(DB_OLD_PATH+DB_NAME);
+				if (olddb.exists() && !olddb.delete())
+					Log.e(TAG,"failed to delete old db...!?");
+			} catch (Exception e) {
+				// oh well.
+			}
 		}
+		
+		// Do this once, as we don't need them separate anymore.
+		DB_PATH += "/" + DB_NAME;
 /*
 		// The database is on the sdcard.
 		// TODO - there is serious b0rkenness here... And Android seems to deal with this itself.

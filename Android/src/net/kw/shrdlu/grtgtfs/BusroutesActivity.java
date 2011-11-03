@@ -136,10 +136,8 @@ public class BusroutesActivity extends MapActivity {
             	return true;
             }
             case R.id.menu_searchstops: {
-        		Intent stopsearch = new Intent(getIntent());
-        		stopsearch.setClass(mContext, BusstopsearchActivity.class);
+        		Intent stopsearch = new Intent(mContext, BusstopsearchActivity.class);
         		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		stopsearch.setFlags(/*Intent.FLAG_ACTIVITY_CLEAR_TOP |*/ Intent.FLAG_ACTIVITY_NO_HISTORY);
         		startActivity(stopsearch);
                 return true;
             }
@@ -205,7 +203,7 @@ public class BusroutesActivity extends MapActivity {
 	        	final String qry = "select distinct route_id, trip_headsign from trips" +
 	        	" join calendar on trips.service_id = calendar.service_id where " + 
 	        	" trip_id in (select trip_id from stop_times where stop_id = ?) and " +
-	        	" start_date <= ? and end_date >= ?;";
+	        	" start_date <= ? and end_date >= ?";
 	       		selectargs = new String[] {mStop_id, datenow, datenow};
 	        	Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
 	            
