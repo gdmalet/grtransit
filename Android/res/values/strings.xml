@@ -22,5 +22,6 @@
     <string name="calendar_expired">There is no current schedule data on your system, perhaps because it expired. Please update your app!</string>
     <string name="favourites_title">Favourite Stops</string>
     <string name="no_favourites">Use the search facility from the menu to find stops, and long-press to add them to your favourites list. Long press from the map also works. Then a couple of clicks is all that\'s needed to find the time of the next bus.\n\nTo remove a favourite, long-press on the favourites list.</string>
+    <string name="route_fling">Swipe left to show all routes, or tap to show one.</string>
     
 </resources>

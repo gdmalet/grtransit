@@ -89,11 +89,16 @@ public class RouteselectActivity extends ListActivity {
     	mCsr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
         	
 		startManagingCursor(mCsr);
-        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
-    	setListAdapter(adapter);
 
     	ListView lv = getListView();
         lv.setOnTouchListener(mGestureListener);
+
+        TextView tv = new TextView(mContext);
+        tv.setText(R.string.route_fling);
+        lv.addFooterView(tv);
+
+        SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
+    	setListAdapter(adapter);
 	}
 	
 	@Override

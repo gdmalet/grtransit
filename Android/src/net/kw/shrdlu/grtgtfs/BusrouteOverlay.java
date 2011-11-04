@@ -48,14 +48,8 @@ public class BusrouteOverlay extends Overlay {
 		String [] selectargs = {route, headsign};
 		final String orderby = "cast(shape_pt_sequence as integer)";
 		
-//        String q = String.format(
-//				"select shape_pt_lat, shape_pt_lon from shapes where shape_id = " +
-//				"(select shape_id from trips where route_id = \"%s\" and trip_headsign = \"%s\")",
-//        		route, headsign);
-
     	Cursor csr;
     	try {
-//    		csr = BusstopsOverlay.DB.rawQuery(q, null);
     		csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null, orderby);
     	} catch (SQLException e) {
     		Log.e(TAG, "DB query failed: " + e.getMessage());
