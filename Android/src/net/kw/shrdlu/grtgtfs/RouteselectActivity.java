@@ -19,19 +19,13 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import com.google.android.maps.MapView;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
-import android.util.TimingLogger;
 import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -48,8 +42,7 @@ public class RouteselectActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    	Log.v(TAG, "OnCreate()");
-		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
+//    	Log.v(TAG, "OnCreate()");
         mContext = this;
 
         String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -103,7 +96,7 @@ public class RouteselectActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.v(TAG, "clicked position " + position);
+//		Log.v(TAG, "clicked position " + position);
 		
 		  String route_id = mCsr.getString(0);
 		  String headsign = mCsr.getString(1);
@@ -126,10 +119,10 @@ public class RouteselectActivity extends ListActivity {
 	// This must be called on the GIU thread.
     private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
     	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-    		Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
+//    		Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
     		// Catch a fling sort of from right to left
     		if (velocityX < -100 && Math.abs(velocityX) > Math.abs(velocityY)) {
-    			Log.d(TAG, "fling detected");
+//    			Log.d(TAG, "fling detected");
 				Intent bustimes = new Intent(mContext, BustimesActivity.class);
 				String pkgstr = mContext.getApplicationContext().getPackageName();
 				bustimes.putExtra(pkgstr + ".stop_id", mStopid);

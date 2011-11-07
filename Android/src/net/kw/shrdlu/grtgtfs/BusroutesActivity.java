@@ -88,13 +88,27 @@ public class BusroutesActivity extends MapActivity {
         mTitle = (TextView) findViewById(R.id.title);
         
     	mMylocation = new MyLocationOverlay(this, mMapview);
-        mMylocation.enableMyLocation();
-        mMylocation.enableCompass();
         mapOverlays.add(mMylocation);
         
         // Get the busstop overlay set up in the background
     	mBusstopsOverlay = new BusstopsOverlay(mStopmarker, mContext);
         new PrepareOverlays().execute();
+    }
+
+    @Override
+    public void onResume() {
+    	super.onResume();
+//    	Log.d(TAG, "onResume()");
+        mMylocation.enableMyLocation();
+        mMylocation.enableCompass();    	
+    }
+    
+    @Override
+    public void onPause() {
+    	super.onPause();
+//    	Log.d(TAG, "onPause()");
+    	mMylocation.disableMyLocation();
+        mMylocation.disableCompass();    	
     }
 
     @Override

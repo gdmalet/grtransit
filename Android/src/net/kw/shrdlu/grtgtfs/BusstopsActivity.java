@@ -27,6 +27,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -86,8 +87,6 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         mStopmarker = this.getResources().getDrawable(R.drawable.bluepin);
 
         mMylocation = new MyLocationOverlay(this, mMapview);
-        mMylocation.enableMyLocation();
-        mMylocation.enableCompass();
         mapOverlays.add(mMylocation);
 
         // See if we're entering as a result of a search. Show given stop if so,
@@ -99,6 +98,22 @@ public class BusstopsActivity extends MapActivity implements AnimationListener {
         // Get the busstop overlay set up in the background
     	mOverlay = new BusstopsOverlay(mStopmarker, mContext);
         new LoadOverlay().execute();
+    }
+
+    @Override
+    public void onResume() {
+    	super.onResume();
+//    	Log.d(TAG, "onResume()");
+        mMylocation.enableMyLocation();
+        mMylocation.enableCompass();    	
+    }
+    
+    @Override
+    public void onPause() {
+    	super.onPause();
+//    	Log.d(TAG, "onPause()");
+    	mMylocation.disableMyLocation();
+        mMylocation.disableCompass();    	
     }
 
     @Override

@@ -64,8 +64,8 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	// This is time consuming, and should not be called on the GUI thread
 	public void LoadDB(String whereclause, String [] selectargs) {
-		Log.d(TAG, "starting LoadDB");
-		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
+//		Log.d(TAG, "starting LoadDB");
+//		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
 		
 		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
@@ -74,7 +74,7 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
 //		String table = "stops";
 //    	if (whereclause == null) table += " limit 1000";
 
-		TimingLogger timings = new TimingLogger(TAG, "LoadDB");
+//		TimingLogger timings = new TimingLogger(TAG, "LoadDB");
 		
         Cursor csr;
     	try {
@@ -84,9 +84,9 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
     		return;
     	}
 
-    	timings.addSplit("end of db read");
+//    	timings.addSplit("end of db read");
     	
-    	// Going to calculate our center
+    	// Going to calculate our centre
     	int min_lat = 360000000, min_lon = 360000000, max_lat = -360000000, max_lon = -360000000;
     	
 		boolean more = csr.moveToPosition(0);
@@ -112,12 +112,12 @@ public class BusstopsOverlay extends ItemizedOverlay<OverlayItem> {
    		
    		mCenter = new GeoPoint(min_lat + (max_lat-min_lat)/2, min_lon + (max_lon-min_lon)/2);
 
-   		timings.addSplit("found center");
+//		timings.addSplit("found center");
    		
 		populate();	// chomps up a lot of time....
 
-   		timings.addSplit("populated");
-   		timings.dumpToLog();
+// 		timings.addSplit("populated");
+// 		timings.dumpToLog();
 	}
 
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.

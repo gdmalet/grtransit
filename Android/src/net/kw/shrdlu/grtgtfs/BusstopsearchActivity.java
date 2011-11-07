@@ -45,7 +45,7 @@ public class BusstopsearchActivity extends ListActivity {
         super.onCreate(savedInstanceState);
        	setContentView(R.layout.timeslayout);
 
-    	Log.v(TAG, "OnCreate()");
+//    	Log.v(TAG, "OnCreate()");
     	mContext = this;
 	
         Intent intent = getIntent();
