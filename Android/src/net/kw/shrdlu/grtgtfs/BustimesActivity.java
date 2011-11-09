@@ -36,6 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,9 +85,6 @@ public class BustimesActivity extends ListActivity {
         } else {
         	mTitle.setText(mRoute_id + " - " + mHeadsign);
         }
-        
-        // TODO add footer explaining swipe.
-//        ListView lv = (TextView) findViewById(R.id.list);
         
         if (!mCalendarChecked || (mCalendarChecked && mCalendarOK))
         	ProcessBusTimes();
@@ -229,6 +227,25 @@ public class BustimesActivity extends ListActivity {
         }
 
         return retval;
+    }
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+//    	Log.v(TAG, "clicked position " + position);
+
+    	// Allow narrowing to one route, if we're showing many.
+    	if (mRoute_id == null) {	// showing all routes
+    		String [] items = (String[])l.getAdapter().getItem(position);
+    		String route_id = items[2];
+    		String headsign = items[3];
+
+    		Intent bustimes = new Intent(mContext, BustimesActivity.class);
+    		String pkgstr = mContext.getApplicationContext().getPackageName();
+    		bustimes.putExtra(pkgstr + ".route_id", route_id);
+    		bustimes.putExtra(pkgstr + ".headsign", headsign);
+    		bustimes.putExtra(pkgstr + ".stop_id", mStop_id);
+    		mContext.startActivity(bustimes);
+    	}
     }
 
     // This is only called once....

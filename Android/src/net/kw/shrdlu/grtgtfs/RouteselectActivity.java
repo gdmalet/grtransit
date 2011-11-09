@@ -48,20 +48,15 @@ public class RouteselectActivity extends ListActivity {
         String pkgstr = mContext.getApplicationContext().getPackageName();
         Intent intent = getIntent();
         mStopid = intent.getStringExtra(pkgstr + ".stop_id");
-        mStopname  = intent.getStringExtra(pkgstr + ".stop_name");
+        mStopname = intent.getStringExtra(pkgstr + ".stop_name");
 
         setContentView(R.layout.timeslayout);
         TextView v = (TextView) findViewById(R.id.timestitle);
         v.setText("Routes using stop " + mStopid + ", " + mStopname);
 
-        // Hide the `Show' button used for showing routes.
-//        Button button = (Button) findViewById(R.id.timesbutton);
-//        button.setVisibility(View.GONE);
-        
         final Button button = (Button) findViewById(R.id.timesbutton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
                 String pkgstr = mContext.getApplicationContext().getPackageName();
         		Intent busstop = new Intent(mContext, BusstopsActivity.class);
         		busstop.putExtra(pkgstr + ".stop_id", mStopid);
@@ -86,10 +81,17 @@ public class RouteselectActivity extends ListActivity {
     	ListView lv = getListView();
         lv.setOnTouchListener(mGestureListener);
 
-        TextView tv = new TextView(mContext);
-        tv.setText(R.string.route_fling);
-        lv.addFooterView(tv);
-
+        if (mCsr.getCount()>1) {
+        	// Show msg describing a fling to see times for all routes.
+	        TextView tv = new TextView(mContext);
+	        tv.setText(R.string.route_fling);
+	        lv.addFooterView(tv);
+        } else if (mCsr.getCount() == 0) {
+	        TextView tv = new TextView(mContext);
+	        tv.setText(R.string.stop_unused);
+	        lv.addFooterView(tv);        	
+        }
+        
         SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
     	setListAdapter(adapter);
 	}

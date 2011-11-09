@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +46,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
-public class BusroutesActivity extends MapActivity {
+public class BusroutesActivity extends MapActivity implements AnimationListener {
 	private static final String TAG = "BusroutesActivity";
 	
 	private MapActivity mContext;
@@ -87,6 +88,10 @@ public class BusroutesActivity extends MapActivity {
         mTitleBar = findViewById(R.id.title_bar);
         mTitle = (TextView) findViewById(R.id.title);
         
+        // Listen for the "in" animation so we make the progress bar visible
+        // only after the sliding has finished.
+        mSlideIn.setAnimationListener(this);
+
     	mMylocation = new MyLocationOverlay(this, mMapview);
         mapOverlays.add(mMylocation);
         
@@ -261,4 +266,18 @@ public class BusroutesActivity extends MapActivity {
         	}
 	    }
 	}
+    
+    /**
+     * Make the {@link ProgressBar} visible when our in-animation finishes.
+     */
+    public void onAnimationEnd(Animation animation) {
+        mProgress.setVisibility(View.VISIBLE);
+    }
+    public void onAnimationRepeat(Animation animation) {
+        // Not interested if the animation repeats
+    }
+    public void onAnimationStart(Animation animation) {
+        // Not interested when the animation starts
+    }
+
 }
