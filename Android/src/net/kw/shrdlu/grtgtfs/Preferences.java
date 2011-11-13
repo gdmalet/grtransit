@@ -21,6 +21,7 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -34,10 +35,23 @@ public class Preferences {
 	private static String mPrefsFile;
 	private static final String FAVSTOPS_KEY = "favstops";
 	private static final String SHOWALLBUSSES_KEY = "showallbusses";
-	
+	private static final String UUID_KEY = "uuid";
+
 	public Preferences(Context context) {
 		mContext = context;
 		mPrefsFile = mContext.getApplicationInfo().packageName;
+	}
+	
+	// If we don't already have a uuid, generate and save one.
+	public String getUUID() {
+		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
+		String uuid = prefs.getString(UUID_KEY, "");
+		if (uuid.isEmpty()) {
+			uuid = UUID.randomUUID().toString();
+			prefs.edit().putString(UUID_KEY, uuid)
+			.commit();
+		}
+		return uuid;
 	}
 	
 	public boolean getShowAllBusses() {

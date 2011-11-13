@@ -58,7 +58,7 @@ public class RouteselectActivity extends ListActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String pkgstr = mContext.getApplicationContext().getPackageName();
-        		Intent busstop = new Intent(mContext, BusstopsActivity.class);
+        		Intent busstop = new Intent(mContext, StopsActivity.class);
         		busstop.putExtra(pkgstr + ".stop_id", mStopid);
         		startActivity(busstop);
             }
@@ -103,7 +103,7 @@ public class RouteselectActivity extends ListActivity {
 		  String route_id = mCsr.getString(0);
 		  String headsign = mCsr.getString(1);
 
-		  Intent bustimes = new Intent(mContext, BustimesActivity.class);
+		  Intent bustimes = new Intent(mContext, TimesActivity.class);
 		  String pkgstr = mContext.getApplicationContext().getPackageName();
 		  bustimes.putExtra(pkgstr + ".route_id", route_id);
 		  bustimes.putExtra(pkgstr + ".headsign", headsign);
@@ -125,7 +125,7 @@ public class RouteselectActivity extends ListActivity {
     		// Catch a fling sort of from right to left
     		if (velocityX < -100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 //    			Log.d(TAG, "fling detected");
-				Intent bustimes = new Intent(mContext, BustimesActivity.class);
+				Intent bustimes = new Intent(mContext, TimesActivity.class);
 				String pkgstr = mContext.getApplicationContext().getPackageName();
 				bustimes.putExtra(pkgstr + ".stop_id", mStopid);
 				mContext.startActivity(bustimes);

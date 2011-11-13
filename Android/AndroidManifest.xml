@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="net.kw.shrdlu.grtgtfs"
       android:versionCode="8" android:versionName="0.97.1">
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8"/>
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="10"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -15,48 +15,42 @@
     
         <uses-library android:name="com.google.android.maps" />
         
-        <activity android:name=".BusstopsActivity"
+        <activity android:name=".StopsActivity"
              android:label="@string/activity_label"
              android:description="@string/activity_desc"
              android:launchMode="singleTop"
              class=".BusstopsActivity">
-            <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
+            <meta-data android:name="android.app.default_searchable" android:value=".SearchStopsActivity" />
         </activity>
 
         <activity android:name=".FavstopsActivity"
              android:label="@string/activity_label"
              android:description="@string/activity_desc"
-             class=".BusstopsActivity" android:launchMode="singleTop">
+             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.default_searchable" android:value=".BusstopsearchActivity" />
+            <meta-data android:name="android.app.default_searchable" android:value=".SearchStopsActivity" />
         </activity>
 
-        <activity class=".BusroutesActivity" android:name="BusroutesActivity">
-            <meta-data android:name="android.app.default_searchable" android:value=".RoutesearchActivity" />
+        <activity android:name="RoutesActivity">
+            <meta-data android:name="android.app.default_searchable" android:value=".SearchRoutesActivity" />
         </activity>
         
-        <activity class=".RouteselectActivity" android:name="RouteselectActivity">
-        </activity>
+        <activity android:name="RouteselectActivity" />
         
-        <activity android:name=".BustimesActivity"
-            android:label="@string/activity_label"
-            class=".BustimesActivity"
-        />
+        <activity android:name=".TimesActivity" android:label="@string/activity_label" />
         
-        <activity android:name=".BusstopsearchActivity"
-            class=".BusstopsearchActivity">
+        <activity android:name=".SearchStopsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/busstopsearchable"/>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/stopsearchable"/>
         </activity>
         
-        <activity android:name=".RoutesearchActivity"
-            class=".RoutesearchActivity">
+        <activity android:name=".RoutesearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.ALTERNATIVE" />

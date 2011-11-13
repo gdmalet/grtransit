@@ -23,12 +23,12 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,23 +41,33 @@ import android.widget.TextView;
 public class FavstopsActivity extends ListActivity {
 	private static final String TAG = "FavstopsActivity";
 
+	// Need one instance of this
+	private static Globals mGlobals = null;
+	
 	private ListActivity mContext;
 	private ArrayList<String[]> mDetails;
 	private String mStopid;
-	
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
+		// Do this before instantiating Globals, as that may do something we'd like
+		// to see by having StrictMode on already.
+		if (Globals.CheckDebugBuild(this) && android.os.Build.VERSION.SDK_INT >= 9) {
+			APIReflectionWrapper.setStrictMode();
+		} else {
+			Log.v(TAG,"Not setting up strict mode.");
+		}
+    
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.timeslayout);
 //    	Log.v(TAG, "OnCreate()");
-        mContext = this;
 
-        // Some global initialisation
-        if (Globals.mPreferences == null) {
-        	Globals.mPreferences = new Preferences(mContext);
-    		Globals.dbHelper = new DatabaseHelper(mContext);	// this can trigger a time-consuming update
-        }
-        
+		mContext = this;
+		if (mGlobals == null)
+			mGlobals = new Globals(mContext);
+		Log.d(TAG, "UUID: " + Globals.mPreferences.getUUID());
+
+        setContentView(R.layout.timeslayout);
+
         TextView v = (TextView) findViewById(R.id.timestitle);
         v.setText(R.string.favourites_title);
 
@@ -66,11 +76,33 @@ public class FavstopsActivity extends ListActivity {
         button.setText("Map");
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-        		startActivity(new Intent(mContext, BusstopsActivity.class));
+        		startActivity(new Intent(mContext, StopsActivity.class));
             }
         });
 
         // ProcessStops();	// will be done in onResume()
+	}
+
+	/* Wrap calls to functions that may not be in the version of the OS
+	 * that we're running. This class is only instantiated if we refer to
+	 * it, at which point Dalvik would discover the error. So don't refer
+	 * to it if we know it will fail....
+	 */
+	private static class APIReflectionWrapper {
+		public static void setStrictMode() {
+			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+			.detectDiskReads()
+			.detectDiskWrites()
+			.detectNetwork()
+			//				.penaltyFlashScreen()
+			.build());
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+			.detectLeakedSqlLiteObjects()
+			//				.detectLeakedClosableObjects()
+			.penaltyLog()
+			.penaltyDeath()
+			.build());
+		}		
 	}
 	
 	/* Separate the processing of stops, so we can re-do it when we need
@@ -80,7 +112,7 @@ public class FavstopsActivity extends ListActivity {
 	protected void ProcessStops() {
 
 		mDetails = Globals.mPreferences.GetBusstopFavourites();
-        BustimesArrayAdapter adapter = new BustimesArrayAdapter(this, mDetails);
+        TimesArrayAdapter adapter = new TimesArrayAdapter(this, mDetails);
     	setListAdapter(adapter);
 
 		// Must do all this without doing a database read, which allows database upgrade
@@ -151,7 +183,7 @@ public class FavstopsActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_location: {
-        	  	Intent stops = new Intent(mContext, BusstopsActivity.class);
+        	  	Intent stops = new Intent(mContext, StopsActivity.class);
         		stops.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
         		startActivity(stops);
         		return true;
@@ -162,13 +194,13 @@ public class FavstopsActivity extends ListActivity {
             }
             case R.id.menu_searchstops: {
 //            	onSearchRequested();
-        	  	Intent stopsearch = new Intent(mContext, BusstopsearchActivity.class);
+        	  	Intent stopsearch = new Intent(mContext, SearchStopsActivity.class);
         		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
         		startActivity(stopsearch);
         		return true;
             }
           case R.id.menu_searchroutes: {
-        	  	Intent routesearch = new Intent(mContext, RoutesearchActivity.class);
+        	  	Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
         		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
         		startActivity(routesearch);
         		return true;
