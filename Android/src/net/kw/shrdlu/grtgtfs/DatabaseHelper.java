@@ -33,6 +33,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -70,9 +72,13 @@ public class DatabaseHelper {
 		if (DB_PATH != null)
 			Log.e(TAG, "constructor has already been called!?");
 		
-		// Bah - API v8. DB_PATH = mContext.getExternalFilesDir(null).getPath() + "/" + DB_NAME;
-        DB_PATH = "/sdcard/data/Android/" + mContext.getApplicationContext().getPackageName();
-
+		if (android.os.Build.VERSION.SDK_INT >= 8) {
+			DB_PATH = API8ReflectionWrapper.getDBPath();
+		} else { // bah
+			DB_PATH = Environment.getExternalStorageDirectory().getPath()
+					+ "/data/Android/" + mContext.getApplicationContext().getPackageName();
+		}
+		
         File f = new File(DB_PATH);
         if (!f.exists() && !f.mkdirs()) {
     		Log.e(TAG, "can't create sdcard dirs, using phone storage :-(");
@@ -151,6 +157,17 @@ public class DatabaseHelper {
 //		Log.v(TAG, "clean exit of constructor");
 	}
 
+	/* Wrap calls to functions that may not be in the version of the OS
+	 * that we're running. This class is only instantiated if we refer to
+	 * it, at which point Dalvik would discover the error. So don't refer
+	 * to it if we know it will fail....
+	 */
+	private static class API8ReflectionWrapper {
+		public static String getDBPath() {
+			return mContext.getExternalFilesDir(null).getPath() + "/" + DB_NAME;
+		}		
+	}
+	
 	/**
 	 * Copies database from local assets-folder to the
 	 * system folder, from where it can be accessed and handled.

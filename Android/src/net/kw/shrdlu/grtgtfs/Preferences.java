@@ -46,7 +46,7 @@ public class Preferences {
 	public String getUUID() {
 		SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
 		String uuid = prefs.getString(UUID_KEY, "");
-		if (uuid.isEmpty()) {
+		if (uuid.equals("")) {
 			uuid = UUID.randomUUID().toString();
 			prefs.edit().putString(UUID_KEY, uuid)
 			.commit();

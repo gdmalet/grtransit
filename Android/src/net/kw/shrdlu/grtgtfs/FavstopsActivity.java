@@ -53,7 +53,7 @@ public class FavstopsActivity extends ListActivity {
 		// Do this before instantiating Globals, as that may do something we'd like
 		// to see by having StrictMode on already.
 		if (Globals.CheckDebugBuild(this) && android.os.Build.VERSION.SDK_INT >= 9) {
-			APIReflectionWrapper.setStrictMode();
+			API9ReflectionWrapper.setStrictMode();
 		} else {
 			Log.v(TAG,"Not setting up strict mode.");
 		}
@@ -88,7 +88,7 @@ public class FavstopsActivity extends ListActivity {
 	 * it, at which point Dalvik would discover the error. So don't refer
 	 * to it if we know it will fail....
 	 */
-	private static class APIReflectionWrapper {
+	private static class API9ReflectionWrapper {
 		public static void setStrictMode() {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 			.detectDiskReads()
