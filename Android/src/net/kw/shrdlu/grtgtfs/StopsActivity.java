@@ -62,7 +62,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	private String mStopId;
 	private StopsOverlay mOverlay = null;
 	
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +102,9 @@ public class StopsActivity extends MapActivity implements AnimationListener {
     @Override
     public void onResume() {
     	super.onResume();
-//    	Log.d(TAG, "onResume()");
+		// We want to track a pageView every time this Activity gets the focus.
+        Globals.tracker.trackPageView("/" + this.getLocalClassName());
+
         mMylocation.enableMyLocation();
         mMylocation.enableCompass();    	
     }

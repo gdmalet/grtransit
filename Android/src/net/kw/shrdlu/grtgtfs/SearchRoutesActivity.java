@@ -52,7 +52,9 @@ public class SearchRoutesActivity extends ListActivity {
 
             mTitle = (TextView) findViewById(R.id.timestitle);
             mTitle.setText("Routes matching `" + query + "'");
-        
+
+            Globals.tracker.trackEvent("Search","Route",query,1);
+
             // Hide the `Show' button used for showing routes.
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
@@ -73,6 +75,13 @@ public class SearchRoutesActivity extends ListActivity {
         }
     }
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// We want to track a pageView every time this Activity gets the focus.
+        Globals.tracker.trackPageView("/" + this.getLocalClassName());
+	}
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 //		Log.v(TAG, "clicked position " + position);

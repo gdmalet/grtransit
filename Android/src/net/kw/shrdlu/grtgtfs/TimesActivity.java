@@ -63,6 +63,7 @@ public class TimesActivity extends ListActivity {
         final Button button = (Button) findViewById(R.id.timesbutton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	Globals.tracker.trackEvent("Button","Show route",mRoute_id + " - " + mHeadsign,1);
                 // Perform action on click
                 String pkgstr = mContext.getApplicationContext().getPackageName();
         		Intent busroutes = new Intent(mContext, RouteActivity.class);
@@ -98,7 +99,14 @@ public class TimesActivity extends ListActivity {
 			builder.show();
         }
 	}
-	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// We want to track a pageView every time this Activity gets the focus.
+        Globals.tracker.trackPageView("/" + this.getLocalClassName());
+	}
+
 	/*
 	 * Do the processing to load the ArrayAdapter for display.
 	 */

@@ -21,6 +21,8 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -62,9 +64,7 @@ public class FavstopsActivity extends ListActivity {
 //    	Log.v(TAG, "OnCreate()");
 
 		mContext = this;
-		if (mGlobals == null)
-			mGlobals = new Globals(mContext);
-		Log.d(TAG, "UUID: " + Globals.mPreferences.getUUID());
+		if (mGlobals == null) mGlobals = new Globals(mContext);
 
         setContentView(R.layout.timeslayout);
 
@@ -76,6 +76,7 @@ public class FavstopsActivity extends ListActivity {
         button.setText("Map");
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	Globals.tracker.trackEvent("Button","Show map","",1);
         		startActivity(new Intent(mContext, StopsActivity.class));
             }
         });
@@ -91,14 +92,14 @@ public class FavstopsActivity extends ListActivity {
 	private static class API9ReflectionWrapper {
 		public static void setStrictMode() {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-			.detectDiskReads()
-			.detectDiskWrites()
+			//.detectDiskReads()
+			//.detectDiskWrites()
 			.detectNetwork()
-			//				.penaltyFlashScreen()
+			//.penaltyFlashScreen()
 			.build());
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 			.detectLeakedSqlLiteObjects()
-			//				.detectLeakedClosableObjects()
+			//.detectLeakedClosableObjects()
 			.penaltyLog()
 			.penaltyDeath()
 			.build());
@@ -163,10 +164,19 @@ public class FavstopsActivity extends ListActivity {
 	// since we were last here, so make sure it is reloaded before display.
 	@Override
 	protected void onResume() {
-//		Log.d(TAG, "onResume()");
 		super.onResume();
+		
+        // We want to track a pageView every time this Activity gets the focus.
+        Globals.tracker.trackPageView("/" + this.getLocalClassName());
+
 		findViewById(R.id.detail_area).invalidate();
 		ProcessStops();
+	}
+	
+    @Override
+	protected void onDestroy() {
+    	super.onDestroy();
+    	Globals.tracker.stopSession();
 	}
 	
     @Override
@@ -251,6 +261,8 @@ public class FavstopsActivity extends ListActivity {
 		final String [] strs = (String[])l.getItemAtPosition(position);
 		mStopid = strs[0];
 		final String stop_name = strs[1];
+
+		Globals.tracker.trackEvent("Favourites","Select stop",mStopid,1);
 		
 		Intent routeselect = new Intent(mContext, RouteselectActivity.class);
 		String pkgstr = mContext.getApplicationContext().getPackageName();

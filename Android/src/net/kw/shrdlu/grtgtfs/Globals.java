@@ -19,19 +19,22 @@
  
 package net.kw.shrdlu.grtgtfs;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 public class Globals {
 	public static final String TAG = "Globals";
-
+	public static GoogleAnalyticsTracker tracker;
 	public static Preferences mPreferences = null;
 	public static DatabaseHelper dbHelper = null;
 	public static boolean isDebugBuild = false;
@@ -39,10 +42,49 @@ public class Globals {
 	// Define the debug signature hash (Android default debug cert). Code from sigs[i].hashCode()
 	protected final static int DEBUG_SIGNATURE_HASH = -1270195494;
 
+	// Used by tracker.
+	private static final int TRACKER_VISITOR_SCOPE = 1;
+    private static final int TRACKER_SESSION_SCOPE = 2;
+    private static final int TRACKER_PAGE_SCOPE = 3;
+    private static final int TRACKER_UUID = 1;
+    private static final int TRACKER_CV_SCREEN_ORIENTATION_SLOT = 2;
+
 	public Globals(Context context) {
 		isDebugBuild = CheckDebugBuild(context);
     	mPreferences = new Preferences(context);
 		dbHelper = new DatabaseHelper(context);
+		
+        tracker = GoogleAnalyticsTracker.getInstance();
+        if (isDebugBuild) {
+	        tracker.setDebug(true);
+	        tracker.setDryRun(true);
+	        tracker.startNewSession(context.getString(R.string.ga_api_key), 1, context);
+        } else {
+	        tracker.setDebug(true);
+	        tracker.setDryRun(true);
+	        tracker.startNewSession(context.getString(R.string.ga_api_key), 77, context);        	
+        }
+        
+        tracker.setCustomVar(TRACKER_UUID,  	// Slot
+                "UUID", 			        	// Name
+                Globals.mPreferences.getUUID(), // Value
+                TRACKER_VISITOR_SCOPE);     	// Scope
+
+        // TODO - this is meaningless...
+        // Determine the screen orientation and set it in a custom variable.
+        String orientation = "unknown";
+        switch (context.getResources().getConfiguration().orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                orientation = "landscape";
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                orientation = "portrait";
+                break;
+        }
+        tracker.setCustomVar(TRACKER_CV_SCREEN_ORIENTATION_SLOT,  	// Slot
+                             "Screen Orientation", 			        // Name
+                             orientation,                 			// Value
+                             TRACKER_SESSION_SCOPE);              	// Scope
 	}
 
 	/**

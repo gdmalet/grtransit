@@ -131,6 +131,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 				  String route_id = route.substring(0,split);
 				  String headsign = route.substring(split+3);
 
+				  Globals.tracker.trackEvent("Stops","Select route",route_id + " - " + headsign,1);
+
 				  Intent bustimes = new Intent(mContext, TimesActivity.class);
 				  String pkgstr = mContext.getApplicationContext().getPackageName();
 				  bustimes.putExtra(pkgstr + ".route_id", route_id);
@@ -170,7 +172,9 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	  if (mLongPress == true) {
 		  mLongPress = false;
 		  
-		  DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+          Globals.tracker.trackEvent("Map longclick","Stop",mStopid,1);
+
+          DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
 			  public void onClick(DialogInterface dialog, int id) {
 				  switch (id) {
 				  case DialogInterface.BUTTON_POSITIVE:
@@ -192,6 +196,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		  .create()
 		  .show();
 	  } else {
+          Globals.tracker.trackEvent("Map click","Stop",mStopid,1);
 		  // Show route select activity
 		  Intent routeselect = new Intent(mContext, RouteselectActivity.class);
 		  String pkgstr = mContext.getApplicationContext().getPackageName();

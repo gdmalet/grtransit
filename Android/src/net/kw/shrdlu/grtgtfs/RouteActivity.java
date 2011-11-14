@@ -103,7 +103,10 @@ public class RouteActivity extends MapActivity implements AnimationListener {
     @Override
     public void onResume() {
     	super.onResume();
-//    	Log.d(TAG, "onResume()");
+
+    	// We want to track a pageView every time this Activity gets the focus.
+        Globals.tracker.trackPageView("/" + this.getLocalClassName());
+
         mMylocation.enableMyLocation();
         mMylocation.enableCompass();    	
     }

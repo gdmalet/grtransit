@@ -57,7 +57,8 @@ public class DatabaseHelper {
 	public DatabaseHelper(Context context) {
 		mContext = context;
 		final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
-		
+		final String BAD_DB_PATH = "/sdcard/data/Android/" + mContext.getApplicationContext().getPackageName();
+
 		while (true) {
 			try {
 //				Log.d(TAG, "constructor about to acquire semaphore");
@@ -72,11 +73,12 @@ public class DatabaseHelper {
 		if (DB_PATH != null)
 			Log.e(TAG, "constructor has already been called!?");
 		
-		if (android.os.Build.VERSION.SDK_INT >= 8) {
+		if (android.os.Build.VERSION.SDK_INT >= 42 /*8*/) {
+			// Returns something like /mnt/sdcard/Android/data/net.kw.shrdlu.grtgtfs/files/
 			DB_PATH = API8ReflectionWrapper.getDBPath();
-		} else { // bah
+		} else { // bah, make similar path
 			DB_PATH = Environment.getExternalStorageDirectory().getPath()
-					+ "/data/Android/" + mContext.getApplicationContext().getPackageName();
+					+ "/Android/data/" + mContext.getApplicationContext().getPackageName();
 		}
 		
         File f = new File(DB_PATH);
@@ -91,15 +93,14 @@ public class DatabaseHelper {
 		
 		// Delete the old database if it exists, and recreate on the sdcard.
 		if (!DB_PATH.equals(DB_OLD_PATH)) {
-			try {
-				File olddb = new File(DB_OLD_PATH+DB_NAME);
-				if (olddb.exists() && !olddb.delete())
-					Log.e(TAG,"failed to delete old db...!?");
-			} catch (Exception e) {
-				// oh well.
-			}
+			File olddb = new File(DB_OLD_PATH+DB_NAME);
+			if (olddb.exists() && !olddb.delete())
+				Log.e(TAG,"failed to delete old db...!?");
 		}
-		
+		// And another one, due to a mistake in setting DB_PATH in v0.96.
+		new File(BAD_DB_PATH + "/" + DB_NAME).delete();
+		new File(BAD_DB_PATH).delete();
+
 		// Do this once, as we don't need them separate anymore.
 		DB_PATH += "/" + DB_NAME;
 /*
@@ -164,7 +165,7 @@ public class DatabaseHelper {
 	 */
 	private static class API8ReflectionWrapper {
 		public static String getDBPath() {
-			return mContext.getExternalFilesDir(null).getPath() + "/" + DB_NAME;
+			return mContext.getExternalFilesDir(null).getPath();
 		}		
 	}
 	

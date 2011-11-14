@@ -57,6 +57,7 @@ public class RouteselectActivity extends ListActivity {
         final Button button = (Button) findViewById(R.id.timesbutton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	Globals.tracker.trackEvent("Button","Show stop",mStopid,1);
                 String pkgstr = mContext.getApplicationContext().getPackageName();
         		Intent busstop = new Intent(mContext, StopsActivity.class);
         		busstop.putExtra(pkgstr + ".stop_id", mStopid);
@@ -95,13 +96,22 @@ public class RouteselectActivity extends ListActivity {
         SearchCursorAdapter adapter = new SearchCursorAdapter(this, mCsr);
     	setListAdapter(adapter);
 	}
-	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// We want to track a pageView every time this Activity gets the focus.
+        Globals.tracker.trackPageView("/" + this.getLocalClassName());
+	}
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 //		Log.v(TAG, "clicked position " + position);
 		
 		  String route_id = mCsr.getString(0);
 		  String headsign = mCsr.getString(1);
+		  
+		  Globals.tracker.trackEvent("Routes","Select route",route_id + " - " + headsign,1);
 
 		  Intent bustimes = new Intent(mContext, TimesActivity.class);
 		  String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -125,6 +135,7 @@ public class RouteselectActivity extends ListActivity {
     		// Catch a fling sort of from right to left
     		if (velocityX < -100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 //    			Log.d(TAG, "fling detected");
+    			Globals.tracker.trackEvent("Routes","Select all",mStopid,1);
 				Intent bustimes = new Intent(mContext, TimesActivity.class);
 				String pkgstr = mContext.getApplicationContext().getPackageName();
 				bustimes.putExtra(pkgstr + ".stop_id", mStopid);
