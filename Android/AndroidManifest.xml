@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="net.kw.shrdlu.grtgtfs"
-      android:versionCode="8" android:versionName="0.97.1">
+      android:installLocation="preferExternal"
+      android:versionCode="8" android:versionName="0.97.2">
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="10"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -51,7 +52,7 @@
             <meta-data android:name="android.app.searchable" android:resource="@xml/stopsearchable"/>
         </activity>
         
-        <activity android:name=".RoutesearchActivity">
+        <activity android:name=".SearchRoutesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.ALTERNATIVE" />

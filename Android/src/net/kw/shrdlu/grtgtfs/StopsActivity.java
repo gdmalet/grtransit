@@ -60,7 +60,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	private Drawable mStopmarker;
 	private MyLocationOverlay mMylocation;
 	private String mStopId;
-	private StopsOverlay mOverlay = null;
+	private StopsOverlay mOverlay = null, mCachedOverlay = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +95,11 @@ public class StopsActivity extends MapActivity implements AnimationListener {
         mStopId = intent.getStringExtra(stopstr);
         
         // Get the busstop overlay set up in the background
-    	mOverlay = new StopsOverlay(mStopmarker, mContext);
+        if (mCachedOverlay != null) {
+        	mOverlay = mCachedOverlay;
+        } else {
+        	mOverlay = new StopsOverlay(mStopmarker, mContext);
+        }
         new LoadOverlay().execute();
     }
 
@@ -190,7 +194,10 @@ public class StopsActivity extends MapActivity implements AnimationListener {
         protected Void doInBackground(Void... foo) {
 //        	Log.v(TAG, "doInBackground()");
 
-        	mOverlay.LoadDB(null, null);
+        	if (mOverlay != mCachedOverlay) {
+        		mOverlay.LoadDB(null, null);
+        		mCachedOverlay = mOverlay;
+        	}
         	return null;
         }
 

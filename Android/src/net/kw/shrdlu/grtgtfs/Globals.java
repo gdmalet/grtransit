@@ -47,7 +47,8 @@ public class Globals {
     private static final int TRACKER_SESSION_SCOPE = 2;
     private static final int TRACKER_PAGE_SCOPE = 3;
     private static final int TRACKER_UUID = 1;
-    private static final int TRACKER_CV_SCREEN_ORIENTATION_SLOT = 2;
+    private static final int TRACKER_VERSION = 2;
+    private static final int TRACKER_CV_SCREEN_ORIENTATION_SLOT = 3;
 
 	public Globals(Context context) {
 		isDebugBuild = CheckDebugBuild(context);
@@ -60,8 +61,8 @@ public class Globals {
 	        tracker.setDryRun(true);
 	        tracker.startNewSession(context.getString(R.string.ga_api_key), 1, context);
         } else {
-	        tracker.setDebug(true);
-	        tracker.setDryRun(true);
+	        tracker.setDebug(false);
+	        tracker.setDryRun(false);
 	        tracker.startNewSession(context.getString(R.string.ga_api_key), 77, context);        	
         }
         
@@ -70,6 +71,18 @@ public class Globals {
                 Globals.mPreferences.getUUID(), // Value
                 TRACKER_VISITOR_SCOPE);     	// Scope
 
+        try {
+        	String v = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        	if (isDebugBuild) v += " debug";
+			tracker.setCustomVar(TRACKER_VERSION,
+					"Version",
+					v, //context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName,
+					TRACKER_VISITOR_SCOPE);
+		} catch (NameNotFoundException e) {
+			Log.e(TAG, "Exception when getting versionName");
+			e.printStackTrace();
+		}
+        
         // TODO - this is meaningless...
         // Determine the screen orientation and set it in a custom variable.
         String orientation = "unknown";

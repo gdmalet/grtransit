@@ -176,6 +176,7 @@ public class FavstopsActivity extends ListActivity {
     @Override
 	protected void onDestroy() {
     	super.onDestroy();
+    	Globals.tracker.dispatch();	// perhaps unnecessary?
     	Globals.tracker.stopSession();
 	}
 	
