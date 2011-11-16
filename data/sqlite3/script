@@ -1,0 +1,29 @@
+select * from shapes where shape_id = "1201" order by shape_pt_sequence;
+select min(shape_pt_lat), max(shape_pt_lat), min(shape_pt_lon), max(shape_pt_lon) from shapes where shape_id = "1201" order by shape_pt_sequence;
+select * from shapes where shape_id = "1201" order by cast (shape_pt_sequence as integer) ;
+select stop_id as _id, stop_name from stops where stop_id like "12%" or stop_name like "%columbi%";
+select * from agency;
+PRAGMA user_version = 2;
+PRAGMA user_version;
+explain select * from stops where stop_id like "3004%";
+select stop_id as _id, stop_name from stops where stop_id in ('1234','1235',);
+select departure_time as _id, trip_id from stop_times where stop_id = "2267" and trip_id in (select trip_id from trips where route_id = "55" and trip_headsign = "St. Andrews") order by departure_time;
+create index routes_route_id on routes ( route_id );
+select distinct route_id as _id, trip_headsign as descr from trips where trip_id in (select distinct trip_id as _id from stop_times where stop_id = "2781");
+select distinct trip_id as _id from stop_times where stop_id = "2781";
+select service_id from trips where trip_id = "447361";
+select * from calendar where service_id = "s_merged_998801";
+select distinct route_id as _id, trip_headsign as descr from trips where trip_id in
+(select distinct trip_id as _id from stop_times where stop_id = "2781");
+select trip_id, trips.service_id, trip_headsign from trips join calendar on trips.service_id = calendar.service_id where trip_id = "441267"  and start_date <= "20111030" and end_date >= "20111030";
+select trip_id, trips.service_id, trip_headsign from trips join calendar on trips.service_id = calendar.service_id where trip_id = "441267";
+select distinct route_id as _id, trip_headsign as descr from trips
+        	join calendar on trips.service_id = calendar.service_id where
+        	trip_id in (select trip_id from stop_times where stop_id = "2781") and
+        	start_date <= "20111030" and end_date >= "20111030";
+select distinct stop_id from stop_times where trip_id in (select trip_id from stop_times where stop_id = "2781");
+select distinct stop_id, route_id, trip_headsign from stop_times
+	join trips on stop_times.trip_id = trips.trip_id order by stop_id;/*all routes at each stop*/
+select count(stop_id) as numroutes, stop_id from (select distinct stop_id, route_id, trip_headsign from stop_times
+	join trips on stop_times.trip_id = trips.trip_id) group by stop_id order by numroutes desc; /*most routes at one stop*/
+select stop_id, count(stop_id) from stop_times group by stop_id order by count(stop_id) desc; /*most trips at one stop*/

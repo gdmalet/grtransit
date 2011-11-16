@@ -58,7 +58,7 @@ public class Globals {
         tracker = GoogleAnalyticsTracker.getInstance();
         if (isDebugBuild) {
 	        tracker.setDebug(true);
-	        tracker.setDryRun(true);
+	        tracker.setDryRun(false); /* TODO fix */
 	        tracker.startNewSession(context.getString(R.string.ga_api_key), 1, context);
         } else {
 	        tracker.setDebug(false);

@@ -63,7 +63,8 @@ public class TimesActivity extends ListActivity {
         final Button button = (Button) findViewById(R.id.timesbutton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	Globals.tracker.trackEvent("Button","Show route",mRoute_id + " - " + mHeadsign,1);
+            	Globals.tracker.trackEvent("Button","Show route",
+            			mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign,1);
                 // Perform action on click
                 String pkgstr = mContext.getApplicationContext().getPackageName();
         		Intent busroutes = new Intent(mContext, RouteActivity.class);
@@ -157,7 +158,6 @@ public class TimesActivity extends ListActivity {
         	String daysstr = mServiceCalendar.getDays(service_id, datenow, !Globals.mPreferences.getShowAllBusses());
 
         	// Only add if the bus runs on this day.
-        	// TODO - short circuit if we found the last bus?
         	if (daysstr != null) {
 
         		// is this where we position the list?
@@ -179,7 +179,8 @@ public class TimesActivity extends ListActivity {
   	        more = csr.moveToNext();
         }
         csr.close();
-
+//        Log.d(TAG, "processed " + count + " times");
+        
         if (mRoute_id != null) {	// showing one route
         	TimesArrayAdapter adapter = new TimesArrayAdapter(this, details);
         	setListAdapter(adapter);
