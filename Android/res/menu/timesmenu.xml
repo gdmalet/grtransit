@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:checkable="true" android:title="@string/showallbusses" android:checked="false" android:id="@+id/menu_showallbusses"></item>
+    <item android:id="@+id/menu_showonmap" android:title="@string/showonmap"></item><item android:checkable="true" android:title="@string/showallbusses" android:checked="false" android:id="@+id/menu_showallbusses"></item>
     <item android:checkable="true" android:title="@string/showtodaysbusses" android:checked="true" android:id="@+id/menu_showtodaysbusses"></item>
+    
 </menu>

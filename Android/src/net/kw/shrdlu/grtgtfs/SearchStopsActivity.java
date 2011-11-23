@@ -56,10 +56,12 @@ public class SearchStopsActivity extends ListActivity {
             mTitle.setText("Stops matching `" + query + "'");
 
             Globals.tracker.trackEvent("Search","Stop",query,1);
-
+/*
+ * TODO
             // Hide the `Show' button used for showing routes.
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
+ */
         
             final String table = "stops";
             final String [] columns = {"stop_id as _id", "stop_name as descr"};

@@ -54,10 +54,12 @@ public class SearchRoutesActivity extends ListActivity {
             mTitle.setText("Routes matching `" + query + "'");
 
             Globals.tracker.trackEvent("Search","Route",query,1);
-
+/*
+ * TODO
             // Hide the `Show' button used for showing routes.
             Button btn = (Button) findViewById(R.id.timesbutton);
             btn.setVisibility(View.GONE);
+ */
             
             final String table = "trips";
             final String [] columns = {"distinct route_id as _id", "trip_headsign as descr"};

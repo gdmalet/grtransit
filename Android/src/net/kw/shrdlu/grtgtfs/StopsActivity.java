@@ -46,13 +46,12 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
-public class StopsActivity extends MapActivity implements AnimationListener {
+public class StopsActivity extends MapActivity {
 	private static final String TAG = "BusstopsActivity";
 
 	private MapActivity mContext;
-    private View mTitleBar;
+    private View mDetailArea;
     private TextView mTitle;
-    private Animation mSlideIn;
     private Animation mSlideOut;
     private ProgressBar mProgress;
     private MapView mMapview;
@@ -69,15 +68,10 @@ public class StopsActivity extends MapActivity implements AnimationListener {
         setContentView(R.layout.mapview);
         
     	// Load animations used to show/hide progress bar
-        mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
         mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
         mProgress = (ProgressBar) findViewById(R.id.progress);
-        mTitleBar = findViewById(R.id.title_bar);
+        mDetailArea = findViewById(R.id.mapview);
         mTitle = (TextView) findViewById(R.id.title);
-
-        // Listen for the "in" animation so we make the progress bar visible
-        // only after the sliding has finished.
-        mSlideIn.setAnimationListener(this);
 
         mMapview = (MapView) findViewById(R.id.mapview);
         mMapview.setBuiltInZoomControls(true);
@@ -175,7 +169,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
      * back to the GUI thread where it updates with the newly-found entries.
      */
     private class LoadOverlay extends AsyncTask<Void, Void, Void> {
-    	static final String TAG = "LookupTask";
+    	static final String TAG = "LoadOverlay";
     	
         /**
          * Before jumping into background thread, start sliding in the
@@ -184,7 +178,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
         @Override
         protected void onPreExecute() {
 //        	Log.v(TAG, "onPreExecute()");
-            mTitleBar.startAnimation(mSlideIn);
         }
 
         /**
@@ -207,9 +200,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	    @Override
 	    protected void onPostExecute(Void foo) {
 //        	Log.v(TAG, "onPostExecute()");
-
-	    	mTitleBar.startAnimation(mSlideOut);
-	        mProgress.setVisibility(View.INVISIBLE);
 
 	        mapOverlays.add(mOverlay);
 	        
@@ -245,20 +235,9 @@ public class StopsActivity extends MapActivity implements AnimationListener {
             	locn.close();
             }
 
+	        mProgress.setVisibility(View.INVISIBLE);
+	    	mDetailArea.startAnimation(mSlideOut);
             mTitle.setText(R.string.activity_desc);
 	    }
 	}
-
-    /**
-     * Make the {@link ProgressBar} visible when our in-animation finishes.
-     */
-    public void onAnimationEnd(Animation animation) {
-        mProgress.setVisibility(View.VISIBLE);
-    }
-    public void onAnimationRepeat(Animation animation) {
-        // Not interested if the animation repeats
-    }
-    public void onAnimationStart(Animation animation) {
-        // Not interested when the animation starts
-    }
 }

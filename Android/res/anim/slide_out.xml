@@ -14,9 +14,10 @@
      limitations under the License.
 -->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android" android:fillAfter="true">
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true">
     <translate
-        android:fromXDelta="0"
-        android:toXDelta="-26"
+        android:fromYDelta="0"
+        android:toYDelta="-26"
         android:duration="400" />
 </set>

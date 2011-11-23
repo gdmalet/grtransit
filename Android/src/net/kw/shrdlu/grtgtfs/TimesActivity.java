@@ -26,17 +26,19 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,9 +46,13 @@ public class TimesActivity extends ListActivity {
 	private static final String TAG = "BustimesActivity";
 
 	private ListActivity mContext;
+    private View mListDetail;
+    private Animation mSlideOut;
+    private ProgressBar mProgress;
 	private String mRoute_id = null, mHeadsign, mStop_id;
     private TextView mTitle;
 	private ServiceCalendar mServiceCalendar;
+	private ArrayList<String []> mListDetails = null;
 
 	private static boolean mCalendarChecked = false, mCalendarOK;
 
@@ -60,37 +66,22 @@ public class TimesActivity extends ListActivity {
 
         setContentView(R.layout.timeslayout);
         
-        final Button button = (Button) findViewById(R.id.timesbutton);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	Globals.tracker.trackEvent("Button","Show route",
-            			mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign,1);
-                // Perform action on click
-                String pkgstr = mContext.getApplicationContext().getPackageName();
-        		Intent busroutes = new Intent(mContext, RouteActivity.class);
-        		busroutes.putExtra(pkgstr + ".route_id", mRoute_id);
-        		busroutes.putExtra(pkgstr + ".headsign", mHeadsign);
-        		busroutes.putExtra(pkgstr + ".stop_id", mStop_id);
-        		startActivity(busroutes);
-            }
-        });
-        
+    	// Load animations used to show/hide progress bar
+        mProgress = (ProgressBar) findViewById(R.id.progress);
+        mListDetail = findViewById(R.id.detail_area);
+        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+        mTitle = (TextView) findViewById(R.id.timestitle);
+
         String pkgstr = mContext.getApplicationContext().getPackageName();
         Intent intent = getIntent();
         mRoute_id = intent.getStringExtra(pkgstr + ".route_id");
         mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
         mStop_id  = intent.getStringExtra(pkgstr + ".stop_id");
         
-        mTitle = (TextView) findViewById(R.id.timestitle);
-        if (mRoute_id == null) {	// showing all routes
-        	mTitle.setText("Stop " + mStop_id + " - all routes");
-        } else {
-        	mTitle.setText(mRoute_id + " - " + mHeadsign);
-        }
-        
         if (!mCalendarChecked || (mCalendarChecked && mCalendarOK))
-        	ProcessBusTimes();
+        	new ProcessBusTimes().execute();
         
+        // TODO this is probably wrong, since the above now goes in the background
         if (mCalendarChecked && !mCalendarOK) {
     		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setIcon(R.drawable.grticon);
@@ -111,105 +102,149 @@ public class TimesActivity extends ListActivity {
 	/*
 	 * Do the processing to load the ArrayAdapter for display.
 	 */
-	void ProcessBusTimes() {
-    	// Will find where to position the list of bus departure times
-    	final Time t = new Time();
-    	t.setToNow();
-    	final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
-    	final String datenow = String.format("%04d%02d%02d", t.year, t.month+1, t.monthDay);
+	private class ProcessBusTimes extends AsyncTask<Void, Integer, String> {
+		static final String TAG = "ProcessBusTimes";
 
-        // Make sure we actually have some valid data, since schedules change often.
-        if (!mCalendarChecked) {
-        	mCalendarOK = CheckCalendar(datenow);
-        }
-        if (!mCalendarOK)
-        	return;
-        
-    	String [] selectargs;
-    	String q;
-        if (mRoute_id == null) {	// showing all routes
-        	selectargs = new String[] {mStop_id};
-	        q = "select departure_time as _id, trips.trip_id, route_id, trip_headsign from stop_times "
-	        	+ "join trips on stop_times.trip_id = trips.trip_id where "
-	        	+ "stop_id = ? order by departure_time";
-        } else {
-        	selectargs = new String[] {mStop_id, mRoute_id, mHeadsign};
-        	q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
-        		+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
+		private Integer maxcount, progresscount = 0;
+		private int savedpos = -1, currentcount = 0;
+		
+		@Override
+		protected void onPreExecute() {
+			// Log.v(TAG, "onPreExecute()");
+//			mListDetail.startAnimation(mSlideIn);
 		}
-        Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
 
-    	// Load the array for the list
-    	ArrayList<String []> details = new ArrayList<String []>(csr.getCount());
-        int pos = -1, count = 0;
-        String nextdeparture = null;
-        boolean more = csr.moveToFirst();
-        while (more) {
-        	String departure_time = csr.getString(0);
-        	String trip_id = csr.getString(1);
-        	
-            // Get and translate the service id
-    		final String svsq = "select service_id from trips where trip_id = ?";
-    		String [] svsargs = {trip_id};
-            Cursor svs = DatabaseHelper.ReadableDB().rawQuery(svsq, svsargs);
-            svs.moveToFirst();
-            String service_id = svs.getString(0);
-            svs.close();
-        	String daysstr = mServiceCalendar.getDays(service_id, datenow, !Globals.mPreferences.getShowAllBusses());
+		// Update the progress bar.
+		@Override
+		protected void onProgressUpdate(Integer... parms) {
+			mProgress.setProgress(parms[0]);
+		}
+		
+		@Override
+		protected String doInBackground(Void... foo) {
+			// Log.v(TAG, "doInBackground()");
 
-        	// Only add if the bus runs on this day.
-        	if (daysstr != null) {
+			// Will find where to position the list of bus departure times
+			final Time t = new Time(); t.setToNow();
+			final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+			final String datenow = String.format("%04d%02d%02d", t.year, t.month+1, t.monthDay);
 
-        		// is this where we position the list?
-        		if (pos == -1 && departure_time.compareTo(timenow) >= 0) {
-        			pos = count;
-        			nextdeparture = departure_time;
-        		}
-        		
-      	        if (mRoute_id != null) {	// showing one route
-      	        	String strs [] = {csr.getString(0), daysstr};
-      	        	details.add(strs);
-      	        } else {
-      	        	String strs [] = {csr.getString(0), daysstr, csr.getString(2), csr.getString(3)};
-      	        	details.add(strs);
-      	        }                
+			// Make sure we actually have some valid data, since schedules change often.
+			if (!mCalendarChecked) {
+				mCalendarOK = CheckCalendar(datenow);
+			}
+			if (!mCalendarOK)
+				return null;
 
-      	        count++;
-        	}
-  	        more = csr.moveToNext();
-        }
-        csr.close();
-//        Log.d(TAG, "processed " + count + " times");
-        
-        if (mRoute_id != null) {	// showing one route
-        	TimesArrayAdapter adapter = new TimesArrayAdapter(this, details);
-        	setListAdapter(adapter);
-        } else {
-        	TimesArrayAdapter2 adapter = new TimesArrayAdapter2(this, details);
-        	setListAdapter(adapter);
-        }
+			String [] selectargs;
+			String q;
+			if (mRoute_id == null) {	// showing all routes
+				selectargs = new String[] {mStop_id};
+				q = "select departure_time as _id, trips.trip_id, route_id, trip_headsign from stop_times "
+						+ "join trips on stop_times.trip_id = trips.trip_id where "
+						+ "stop_id = ? order by departure_time";
+			} else {
+				selectargs = new String[] {mStop_id, mRoute_id, mHeadsign};
+				q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
+						+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
+			}
+			Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
 
-    	// Calculate the time difference
-    	Toast msg;
-    	if (pos >= 0) {
-    		int hourdiff = Integer.parseInt(nextdeparture.substring(0, 2));
-    		hourdiff -= t.hour;
-    		hourdiff *= 60;
-    		int mindiff = Integer.parseInt(nextdeparture.substring(3, 5));
-    		mindiff -= t.minute;
-    		hourdiff += mindiff;
-    		if (hourdiff >= 60)
-    			msg = Toast.makeText(mContext, "Next bus leaves at " + nextdeparture, Toast.LENGTH_LONG);
-    		else
-    			msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minutes", Toast.LENGTH_LONG);
-    		getListView().setSelectionFromTop(pos, 50);	// position next bus just below top
-    	} else {
-        	setSelection(count); // position the list at the last bus
-    		msg = Toast.makeText(mContext, "No more busses today", Toast.LENGTH_LONG);
-    	}
-		msg.setGravity(Gravity.TOP, 0, 0);
-		msg.show();
-    }
+			// Load the array for the list
+			maxcount = csr.getCount();
+			mListDetails = new ArrayList<String []>(maxcount);
+			String nextdeparture = "";
+			boolean more = csr.moveToFirst();
+			while (more) {
+				
+				String departure_time = csr.getString(0);
+				String trip_id = csr.getString(1);
+
+				// Get and translate the service id
+				final String svsq = "select service_id from trips where trip_id = ?";
+				String [] svsargs = {trip_id};
+				Cursor svs = DatabaseHelper.ReadableDB().rawQuery(svsq, svsargs);
+				svs.moveToFirst();
+				String service_id = svs.getString(0);
+				svs.close();
+				String daysstr = mServiceCalendar.getDays(service_id, datenow, !Globals.mPreferences.getShowAllBusses());
+
+				// Only add if the bus runs on this day.
+				if (daysstr != null) {
+
+					// is this where we position the list?
+					if (savedpos == -1 && departure_time.compareTo(timenow) >= 0) {
+						savedpos = currentcount;
+						nextdeparture = departure_time;
+					}
+
+					if (mRoute_id != null) {	// showing one route
+						String strs [] = {csr.getString(0), daysstr};
+						mListDetails.add(strs);
+					} else {
+						String strs [] = {csr.getString(0), daysstr, csr.getString(2), csr.getString(3)};
+						mListDetails.add(strs);
+					}                
+
+					currentcount++;
+				}
+				progresscount++;
+//				Log.d(TAG, "progress count: " + progresscount + " of max " + maxcount);
+				publishProgress((int) ((progresscount / (float) maxcount) * 100));
+				
+				more = csr.moveToNext();
+			}
+			csr.close();
+			// Log.d(TAG, "processed " + count + " times");
+
+			return nextdeparture;
+		}
+		
+		@Override
+		protected void onPostExecute(String nextdeparture) {
+			//    	Log.v(TAG, "onPostExecute()");
+
+			if (mRoute_id != null) {	// showing one route
+				TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, mListDetails);
+				mContext.setListAdapter(adapter);
+			} else {
+				TimesArrayAdapter2 adapter = new TimesArrayAdapter2(mContext, mListDetails);
+				mContext.setListAdapter(adapter);
+			}
+			
+			// Calculate the time difference
+			Toast msg;
+			if (savedpos >= 0) {
+				final Time t = new Time(); t.setToNow();
+				int hourdiff = Integer.parseInt(nextdeparture.substring(0, 2));
+				hourdiff -= t.hour;
+				hourdiff *= 60;
+				int mindiff = Integer.parseInt(nextdeparture.substring(3, 5));
+				mindiff -= t.minute;
+				hourdiff += mindiff;
+				if (hourdiff >= 60)
+					msg = Toast.makeText(mContext, "Next bus leaves at " + nextdeparture, Toast.LENGTH_LONG);
+				else
+					msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minutes", Toast.LENGTH_LONG);
+				getListView().setSelectionFromTop(savedpos, 50);	// position next bus just below top
+			} else {
+				setSelection(currentcount); // position the list at the last bus
+				msg = Toast.makeText(mContext, "No more busses today", Toast.LENGTH_LONG);
+			}
+			
+			msg.setGravity(Gravity.TOP, 0, 0);
+			msg.show();
+			
+			mProgress.setVisibility(View.INVISIBLE);
+			mListDetail.startAnimation(mSlideOut);
+	        
+	        if (mRoute_id == null) {	// showing all routes
+	        	mTitle.setText("Stop " + mStop_id + " - all routes");
+	        } else {
+	        	mTitle.setText(mRoute_id + " - " + mHeadsign);
+	        }
+		}
+	}    
 
     /*
      * Make sure the calendar is current.
@@ -293,7 +328,18 @@ public class TimesActivity extends ListActivity {
                 startActivity(intent);
                 return true;
             }
+            case R.id.menu_showonmap: {
+            	Globals.tracker.trackEvent("Menu","Show route",
+            			mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign,1);
+            	// Perform action on click
+            	String pkgstr = mContext.getApplicationContext().getPackageName();
+            	Intent busroutes = new Intent(mContext, RouteActivity.class);
+            	busroutes.putExtra(pkgstr + ".route_id", mRoute_id);
+            	busroutes.putExtra(pkgstr + ".headsign", mHeadsign);
+            	busroutes.putExtra(pkgstr + ".stop_id", mStop_id);
+            	startActivity(busroutes);
+            }            
         }
         return false;
-    }
+    }    
 }

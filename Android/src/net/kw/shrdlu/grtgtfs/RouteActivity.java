@@ -46,16 +46,15 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
-public class RouteActivity extends MapActivity implements AnimationListener {
+public class RouteActivity extends MapActivity {
 	private static final String TAG = "BusroutesActivity";
 	
 	private MapActivity mContext;
 	private MapView mMapview;
 	private List<Overlay> mapOverlays;
 	private Drawable mStopmarker;	
-    private View mTitleBar;
+    private View mDetailArea;
     private TextView mTitle;
-    private Animation mSlideIn;
     private Animation mSlideOut;
     private ProgressBar mProgress;    
     private MyLocationOverlay mMylocation;
@@ -81,17 +80,12 @@ public class RouteActivity extends MapActivity implements AnimationListener {
         mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
         mStop_id = intent.getStringExtra(pkgstr + ".stop_id");	// TODO show position?
     
-    	// Load animations used to show/hide progress bar
-        mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
+    	// Load animation used to hide progress bar
         mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
         mProgress = (ProgressBar) findViewById(R.id.progress);
-        mTitleBar = findViewById(R.id.title_bar);
+        mDetailArea = findViewById(R.id.mapview);
         mTitle = (TextView) findViewById(R.id.title);
         
-        // Listen for the "in" animation so we make the progress bar visible
-        // only after the sliding has finished.
-        mSlideIn.setAnimationListener(this);
-
     	mMylocation = new MyLocationOverlay(this, mMapview);
         mapOverlays.add(mMylocation);
         
@@ -184,7 +178,6 @@ public class RouteActivity extends MapActivity implements AnimationListener {
         @Override
         protected void onPreExecute() {
 //        	Log.v(TAG, "onPreExecute()");
-            mTitleBar.startAnimation(mSlideIn);
         }
 
         /**
@@ -248,10 +241,7 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	    protected void onPostExecute(Void foo) {
 //        	Log.v(TAG, "onPostExecute()");
 
-	    	mTitleBar.startAnimation(mSlideOut);
-	        mProgress.setVisibility(View.INVISIBLE);
-	        
-            // Center the map over the bus stops
+            // Centre the map over the bus stops
             MapController mcp = mMapview.getController();
             GeoPoint center = mBusstopsOverlay.getCenter();
             if (center != null) {
@@ -267,20 +257,8 @@ public class RouteActivity extends MapActivity implements AnimationListener {
         	} else {
         		mTitle.setText("Routes using stop " + mStop_id);
         	}
+	        mProgress.setVisibility(View.INVISIBLE);
+	    	mDetailArea.startAnimation(mSlideOut);
 	    }
-	}
-    
-    /**
-     * Make the {@link ProgressBar} visible when our in-animation finishes.
-     */
-    public void onAnimationEnd(Animation animation) {
-        mProgress.setVisibility(View.VISIBLE);
-    }
-    public void onAnimationRepeat(Animation animation) {
-        // Not interested if the animation repeats
-    }
-    public void onAnimationStart(Animation animation) {
-        // Not interested when the animation starts
-    }
-
+	}    
 }

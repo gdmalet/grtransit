@@ -54,6 +54,8 @@ public class RouteselectActivity extends ListActivity {
         TextView v = (TextView) findViewById(R.id.timestitle);
         v.setText("Routes using stop " + mStopid + ", " + mStopname);
 
+/*
+ * TODO        
         final Button button = (Button) findViewById(R.id.timesbutton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -64,6 +66,7 @@ public class RouteselectActivity extends ListActivity {
         		startActivity(busstop);
             }
         });
+ */
 
         // Find which routes use the given stop.
    		// Only show bus routes where the schedule is valid for the current date

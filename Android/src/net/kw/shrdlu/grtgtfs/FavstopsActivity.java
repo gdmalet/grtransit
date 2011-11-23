@@ -70,7 +70,8 @@ public class FavstopsActivity extends ListActivity {
 
         TextView v = (TextView) findViewById(R.id.timestitle);
         v.setText(R.string.favourites_title);
-
+/*
+ * TODO
         // Relabel the `Show' button used for showing routes.
         Button button = (Button) findViewById(R.id.timesbutton);
         button.setText("Map");
@@ -80,7 +81,7 @@ public class FavstopsActivity extends ListActivity {
         		startActivity(new Intent(mContext, StopsActivity.class));
             }
         });
-
+*/
         // ProcessStops();	// will be done in onResume()
 	}
 
