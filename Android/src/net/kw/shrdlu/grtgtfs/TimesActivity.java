@@ -36,18 +36,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TimesActivity extends ListActivity {
+public class TimesActivity extends ListActivity implements AnimationListener {
 	private static final String TAG = "BustimesActivity";
 
 	private ListActivity mContext;
     private View mListDetail;
-    private Animation mSlideOut;
+    private Animation mSlideIn, mSlideOut;
     private ProgressBar mProgress;
 	private String mRoute_id = null, mHeadsign, mStop_id;
     private TextView mTitle;
@@ -69,7 +70,9 @@ public class TimesActivity extends ListActivity {
     	// Load animations used to show/hide progress bar
         mProgress = (ProgressBar) findViewById(R.id.progress);
         mListDetail = findViewById(R.id.detail_area);
+        mSlideIn  = AnimationUtils.loadAnimation(this, R.anim.slide_in);
         mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+        mSlideIn.setAnimationListener(this);
         mTitle = (TextView) findViewById(R.id.timestitle);
 
         String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -111,7 +114,7 @@ public class TimesActivity extends ListActivity {
 		@Override
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
-//			mListDetail.startAnimation(mSlideIn);
+			mListDetail.startAnimation(mSlideIn);
 		}
 
 		// Update the progress bar.
@@ -189,7 +192,6 @@ public class TimesActivity extends ListActivity {
 					currentcount++;
 				}
 				progresscount++;
-//				Log.d(TAG, "progress count: " + progresscount + " of max " + maxcount);
 				publishProgress((int) ((progresscount / (float) maxcount) * 100));
 				
 				more = csr.moveToNext();
@@ -340,6 +342,19 @@ public class TimesActivity extends ListActivity {
             	startActivity(busroutes);
             }            
         }
-        return false;
-    }    
+    	return super.onOptionsItemSelected(item);
+    }
+    
+    /**
+     * Make the {@link ProgressBar} visible when our in-animation finishes.
+     */
+    public void onAnimationEnd(Animation animation) {
+    	mProgress.setVisibility(View.VISIBLE);
+    }
+    public void onAnimationRepeat(Animation animation) {
+    	// Not interested if the animation repeats
+    }
+    public void onAnimationStart(Animation animation) {
+    	// Not interested when the animation starts
+    }
 }

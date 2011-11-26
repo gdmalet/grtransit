@@ -32,7 +32,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TimingLogger;
@@ -55,17 +57,31 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private String mStopid;
 	private GeoPoint mCenter;
 	private boolean mLongPress = false;
+	private NotificationCallback mTask;
+	Integer mMaxcount, mProgresscount = 0;
+	Drawable mDefaultMarker;
 
+	private class stopDetail {
+		public final GeoPoint pt;
+		public final String num, name;
+		public stopDetail(GeoPoint g, String n, String a) {
+			pt = g; num = n; name = a;
+		}
+	}
+	private ArrayList<stopDetail> mStops = new ArrayList<stopDetail>(3000);
+	
 	// Used to limit which stops are displayed
 	public StopsOverlay(Drawable defaultMarker, Context context) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
+		mDefaultMarker = defaultMarker;
 	}
 	
 	// This is time consuming, and should not be called on the GUI thread
-	public void LoadDB(String whereclause, String [] selectargs) {
-//		Log.d(TAG, "starting LoadDB");
-//		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
+	public void LoadDB(String whereclause, String [] selectargs, NotificationCallback task) {
+		Log.d(TAG, "starting LoadDB");
+		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
+		mTask = task;
 		
 		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
@@ -74,7 +90,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 //		String table = "stops";
 //    	if (whereclause == null) table += " limit 1000";
 
-//		TimingLogger timings = new TimingLogger(TAG, "LoadDB");
+		TimingLogger timings = new TimingLogger(TAG, "LoadDB");
 		
         Cursor csr;
     	try {
@@ -83,8 +99,9 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
     		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;
     	}
-
-//    	timings.addSplit("end of db read");
+    	mMaxcount = csr.getCount() * 2; // will count again as we populate()
+    	
+    	timings.addSplit("end of db read");
     	
     	// Going to calculate our centre
     	int min_lat = 360000000, min_lon = 360000000, max_lat = -360000000, max_lon = -360000000;
@@ -104,20 +121,29 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
    				max_lon = stop_lon;
    			
    			GeoPoint point = new GeoPoint(stop_lat, stop_lon);
-   			OverlayItem overlayitem = new OverlayItem(point, csr.getString(2), csr.getString(3));
-   		    mOverlayItems.add(overlayitem);
+   			mStops.add(new stopDetail(point, csr.getString(2), csr.getString(3)));
+//   			OverlayItem overlayitem = new OverlayItem(point, csr.getString(2), csr.getString(3));
+ //  		    mOverlayItems.add(overlayitem);
    	        more = csr.moveToNext();
+   	        
+//			Log.d(TAG, " notification " + (int) ((mProgresscount / (float) mMaxcount) * 100));
+   	        if (++mProgresscount % 25 == 0)
+   	        	task.notificationCallback((int) ((mProgresscount / (float) mMaxcount) * 100));
+
    		}
    		csr.close();
    		
+		    mOverlayItems.add(new OverlayItem(new GeoPoint(43,-80),"",""));
+
    		mCenter = new GeoPoint(min_lat + (max_lat-min_lat)/2, min_lon + (max_lon-min_lon)/2);
 
-//		timings.addSplit("found center");
+		timings.addSplit("found center");
    		
 		populate();	// chomps up a lot of time....
 
-// 		timings.addSplit("populated");
-// 		timings.dumpToLog();
+ 		timings.addSplit("populated");
+ 		timings.dumpToLog();
+		Log.d(TAG, "exiting LoadDB");
 	}
 
 	// This is used when a route number is clicked on in the dialog, after a stop is clicked.
@@ -209,7 +235,10 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected OverlayItem createItem(int i) {
-	  return mOverlayItems.get(i);
+//		Log.d(TAG, " notification " + (int) ((mProgresscount / (float) mMaxcount) * 100));
+		if (++mProgresscount % 25 == 0)
+			mTask.notificationCallback((int) ((mProgresscount / (float) mMaxcount) * 100));
+		return mOverlayItems.get(i);
 	}
 	
 	@Override
@@ -223,12 +252,16 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	 */
 	@Override
 	public void draw(Canvas canvas, MapView view, boolean shadow) {
+		Log.d(TAG, "starting draw");
 		super.draw(canvas, view, shadow);
-		
-		if (shadow || view.getZoomLevel() <= 15)
+/*		
+		if (shadow || view.getZoomLevel() <= 15) {
+			Log.d(TAG, "quitting draw");
 			return;
-		
+		}
+*/
 //		Log.v(TAG, "draw " + shadow + ", zoom is " + view.getZoomLevel());
+		Log.d(TAG, "top: " + view.getLeft() + "," + view.getTop() + ", bottom: " + view.getRight() + "," + view.getBottom());
 		
         //Paint
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -241,15 +274,43 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		Point pt_scr = new Point();
 		GeoPoint pt_geo;
 		
+		Log.d(TAG, "drawing " + mOverlayItems.size() + " items");
 		for (int i=0; i<mOverlayItems.size(); i++) {
 			OverlayItem item = mOverlayItems.get(i);
 			pt_geo = item.getPoint();
 			proj.toPixels(pt_geo, pt_scr);
+//			Log.d(TAG,"pt_geo: " + pt_geo.getLatitudeE6() + ":" + pt_geo.getLongitudeE6() + ", scr: " + pt_scr.x + ":" + pt_scr.y);
+			
+			if (pt_scr.x < view.getLeft() || pt_scr.y < view.getTop() || pt_scr.x > view.getRight() || pt_scr.y > view.getBottom()) {
+//				Log.d(TAG, " skipping draw for point");
+				continue;
+			}
 			
             //show text to the right of the icon
             canvas.drawText(item.getTitle(), pt_scr.x, pt_scr.y+12, paint);
             if (view.getZoomLevel() >= 18)
             	canvas.drawText(item.getSnippet(), pt_scr.x, pt_scr.y-15, paint);
 		}
+
+		Log.d(TAG, "drawing " + mStops.size() + " items");
+		for (int i=0; i<mStops.size(); i++) {
+			proj.toPixels(mStops.get(i).pt, pt_scr);
+			
+			if (pt_scr.x < view.getLeft() || pt_scr.y < view.getTop() 
+					|| pt_scr.x > view.getRight() || pt_scr.y > view.getBottom())
+				continue;
+
+			mDefaultMarker.setBounds(new Rect(pt_scr.x-4, pt_scr.y-15, pt_scr.x+4, pt_scr.y));
+			mDefaultMarker.draw(canvas);
+			
+            //show text to the right of the icon
+			if (view.getZoomLevel() > 16) {
+				canvas.drawText(mStops.get(i).num, pt_scr.x, pt_scr.y+12, paint);
+				if (view.getZoomLevel() >= 18)
+					canvas.drawText(mStops.get(i).name, pt_scr.x, pt_scr.y-15, paint);
+			}
+		}
+
+		Log.d(TAG, "ending draw");
 	}
 }

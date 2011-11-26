@@ -46,13 +46,13 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
-public class StopsActivity extends MapActivity {
+public class StopsActivity extends MapActivity implements AnimationListener {
 	private static final String TAG = "BusstopsActivity";
 
 	private MapActivity mContext;
     private View mDetailArea;
     private TextView mTitle;
-    private Animation mSlideOut;
+    private Animation mSlideIn, mSlideOut;
     private ProgressBar mProgress;
     private MapView mMapview;
 	private List<Overlay> mapOverlays;
@@ -68,9 +68,11 @@ public class StopsActivity extends MapActivity {
         setContentView(R.layout.mapview);
         
     	// Load animations used to show/hide progress bar
-        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-        mProgress = (ProgressBar) findViewById(R.id.progress);
+        mProgress = (ProgressBar) findViewById(R.id.map_progress);
         mDetailArea = findViewById(R.id.mapview);
+        mSlideIn  = AnimationUtils.loadAnimation(this, R.anim.slide_in);
+        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+        mSlideIn.setAnimationListener(this);
         mTitle = (TextView) findViewById(R.id.title);
 
         mMapview = (MapView) findViewById(R.id.mapview);
@@ -87,7 +89,7 @@ public class StopsActivity extends MapActivity {
         String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
         Intent intent = getIntent();
         mStopId = intent.getStringExtra(stopstr);
-        
+
         // Get the busstop overlay set up in the background
         if (mCachedOverlay != null) {
         	mOverlay = mCachedOverlay;
@@ -124,6 +126,11 @@ public class StopsActivity extends MapActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.busstopsmenu, menu);
+// TODO
+        // Hide the `Show on map' menu option
+        View v = (View) findViewById(R.id.menu_showonmap);
+        v.setVisibility(View.GONE);
+
         return true;
     }
 
@@ -152,14 +159,14 @@ public class StopsActivity extends MapActivity {
             	onSearchRequested();
                 return true;
             }
-          case R.id.menu_searchroutes: {
+            case R.id.menu_searchroutes: {
         		Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
         		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
         		startActivity(routesearch);
         		return true;
             }
         }
-        return false;
+    	return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -168,8 +175,13 @@ public class StopsActivity extends MapActivity {
      * background query to the DB. When finished, it transitions
      * back to the GUI thread where it updates with the newly-found entries.
      */
-    private class LoadOverlay extends AsyncTask<Void, Void, Void> {
+    private class LoadOverlay extends AsyncTask<Void, Integer, Void> implements NotificationCallback {
     	static final String TAG = "LoadOverlay";
+    	
+    	// A callback from LoadDB, for updating our progress bar
+    	public void notificationCallback(Integer progress) {
+			publishProgress(progress);
+    	}
     	
         /**
          * Before jumping into background thread, start sliding in the
@@ -178,7 +190,14 @@ public class StopsActivity extends MapActivity {
         @Override
         protected void onPreExecute() {
 //        	Log.v(TAG, "onPreExecute()");
+			mDetailArea.startAnimation(mSlideIn);
         }
+        
+		// Update the progress bar.
+		@Override
+		protected void onProgressUpdate(Integer... parms) {
+			mProgress.setProgress(parms[0]);
+		}
 
         /**
          * Perform the background query.
@@ -188,7 +207,7 @@ public class StopsActivity extends MapActivity {
 //        	Log.v(TAG, "doInBackground()");
 
         	if (mOverlay != mCachedOverlay) {
-        		mOverlay.LoadDB(null, null);
+        		mOverlay.LoadDB(null, null, this);
         		mCachedOverlay = mOverlay;
         	}
         	return null;
@@ -240,4 +259,17 @@ public class StopsActivity extends MapActivity {
             mTitle.setText(R.string.activity_desc);
 	    }
 	}
+
+    /**
+     * Make the {@link ProgressBar} visible when our in-animation finishes.
+     */
+    public void onAnimationEnd(Animation animation) {
+    	mProgress.setVisibility(View.VISIBLE);
+    }
+    public void onAnimationRepeat(Animation animation) {
+    	// Not interested if the animation repeats
+    }
+    public void onAnimationStart(Animation animation) {
+    	// Not interested when the animation starts
+    }
 }

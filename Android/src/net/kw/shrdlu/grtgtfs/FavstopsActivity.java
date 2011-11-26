@@ -35,9 +35,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class FavstopsActivity extends ListActivity {
@@ -49,6 +53,9 @@ public class FavstopsActivity extends ListActivity {
 	private ListActivity mContext;
 	private ArrayList<String[]> mDetails;
 	private String mStopid;
+    private View mListDetail;
+    private Animation mSlideOut;
+    private ProgressBar mProgress;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,21 +75,20 @@ public class FavstopsActivity extends ListActivity {
 
         setContentView(R.layout.timeslayout);
 
+        // Load animations used to show/hide progress bar
+        mProgress = (ProgressBar) findViewById(R.id.progress);
+        mListDetail = findViewById(R.id.detail_area);
+        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+
         TextView v = (TextView) findViewById(R.id.timestitle);
         v.setText(R.string.favourites_title);
-/*
- * TODO
-        // Relabel the `Show' button used for showing routes.
-        Button button = (Button) findViewById(R.id.timesbutton);
-        button.setText("Map");
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	Globals.tracker.trackEvent("Button","Show map","",1);
-        		startActivity(new Intent(mContext, StopsActivity.class));
-            }
-        });
-*/
+
         // ProcessStops();	// will be done in onResume()
+        
+		mProgress.setVisibility(View.INVISIBLE);
+//TODO		mProgress.setVisibility(View.VISIBLE);
+//		mProgress.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 55));
+		mListDetail.startAnimation(mSlideOut);
 	}
 
 	/* Wrap calls to functions that may not be in the version of the OS
@@ -193,32 +199,40 @@ public class FavstopsActivity extends ListActivity {
     // then derive this and other activities that use the same menus from that.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_location: {
-        	  	Intent stops = new Intent(mContext, StopsActivity.class);
-        		stops.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		startActivity(stops);
-        		return true;
-            }
-            case R.id.menu_about: {
-                Globals.showAbout(this);
-                return true;
-            }
-            case R.id.menu_searchstops: {
-//            	onSearchRequested();
-        	  	Intent stopsearch = new Intent(mContext, SearchStopsActivity.class);
-        		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		startActivity(stopsearch);
-        		return true;
-            }
-          case R.id.menu_searchroutes: {
-        	  	Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
-        		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-        		startActivity(routesearch);
-        		return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
+    	switch (item.getItemId()) {
+	    	case R.id.menu_showonmap: {
+	    		Globals.tracker.trackEvent("Menu","Show map","",1);
+	    		startActivity(new Intent(mContext, StopsActivity.class));
+	    		return true;
+	    	}
+	    	case R.id.menu_location: {
+	    		Globals.tracker.trackEvent("Menu","Show location","",1);
+	    		Intent stops = new Intent(mContext, StopsActivity.class);
+	    		stops.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+	    		startActivity(stops);
+	    		return true;
+	    	}
+	    	case R.id.menu_about: {
+	    		Globals.tracker.trackEvent("Menu","Show about","",1);
+	    		Globals.showAbout(this);
+	    		return true;
+	    	}
+	    	case R.id.menu_searchstops: {
+	    		Globals.tracker.trackEvent("Menu","Search stops","",1);
+	    		Intent stopsearch = new Intent(mContext, SearchStopsActivity.class);
+	    		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+	    		startActivity(stopsearch);
+	    		return true;
+	    	}
+	    	case R.id.menu_searchroutes: {
+	    		Globals.tracker.trackEvent("Menu","Search routes","",1);
+	    		Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
+	    		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+	    		startActivity(routesearch);
+	    		return true;
+	    	}
+    	}
+    	return super.onOptionsItemSelected(item);
     }
 
 	// Called from the listener above for a long click

@@ -46,7 +46,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
-public class RouteActivity extends MapActivity {
+public class RouteActivity extends MapActivity implements AnimationListener {
 	private static final String TAG = "BusroutesActivity";
 	
 	private MapActivity mContext;
@@ -55,7 +55,7 @@ public class RouteActivity extends MapActivity {
 	private Drawable mStopmarker;	
     private View mDetailArea;
     private TextView mTitle;
-    private Animation mSlideOut;
+    private Animation mSlideIn, mSlideOut;
     private ProgressBar mProgress;    
     private MyLocationOverlay mMylocation;
     private String mRoute_id, mHeadsign, mStop_id;
@@ -81,9 +81,11 @@ public class RouteActivity extends MapActivity {
         mStop_id = intent.getStringExtra(pkgstr + ".stop_id");	// TODO show position?
     
     	// Load animation used to hide progress bar
-        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-        mProgress = (ProgressBar) findViewById(R.id.progress);
+        mProgress = (ProgressBar) findViewById(R.id.map_progress);
         mDetailArea = findViewById(R.id.mapview);
+        mSlideIn  = AnimationUtils.loadAnimation(this, R.anim.slide_in);
+        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+        mSlideIn.setAnimationListener(this);
         mTitle = (TextView) findViewById(R.id.title);
         
     	mMylocation = new MyLocationOverlay(this, mMapview);
@@ -162,14 +164,19 @@ public class RouteActivity extends MapActivity {
                 return true;
             }
         }
-        return false;
+    	return super.onOptionsItemSelected(item);
     }
 
     /**
      * Background task to handle initial load of the overlays.
      */
-    private class PrepareOverlays extends AsyncTask<Void, Void, Void> {
+    private class PrepareOverlays extends AsyncTask<Void, Integer, Void>  implements NotificationCallback {
     	static final String TAG = "LookupTask";
+    	
+    	// A callback from LoadDB, for updating our progress bar
+    	public void notificationCallback(Integer progress) {
+			publishProgress(progress);
+    	}
     	
         /**
          * Before jumping into background thread, start sliding in the
@@ -178,9 +185,16 @@ public class RouteActivity extends MapActivity {
         @Override
         protected void onPreExecute() {
 //        	Log.v(TAG, "onPreExecute()");
+			mDetailArea.startAnimation(mSlideIn);
         }
 
-        /**
+		// Update the progress bar.
+		@Override
+		protected void onProgressUpdate(Integer... parms) {
+			mProgress.setProgress(parms[0]);
+		}
+
+		/**
          * Perform the background query.
          */
         @Override
@@ -195,7 +209,7 @@ public class RouteActivity extends MapActivity {
 	            	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
 	            final String [] selectargs = {mRoute_id, mHeadsign};
 	
-	            mBusstopsOverlay.LoadDB(whereclause, selectargs);
+	            mBusstopsOverlay.LoadDB(whereclause, selectargs, this);
 	            mapOverlays.add(mBusstopsOverlay);
 	
 	            // Now draw the route
@@ -208,7 +222,7 @@ public class RouteActivity extends MapActivity {
         			+ "(select distinct stop_id from stop_times where trip_id in "
         			+ "(select trip_id from stop_times where stop_id = ?))";
         		String [] selectargs = {mStop_id};
-	            mBusstopsOverlay.LoadDB(whereclause, selectargs);
+	            mBusstopsOverlay.LoadDB(whereclause, selectargs, this);
 	            mapOverlays.add(mBusstopsOverlay);
 	
 	            // Now draw the routes - taken from RouteselectActivity
@@ -252,13 +266,27 @@ public class RouteActivity extends MapActivity {
             	Log.e(TAG, "no center found for map!");
             }
 
-        	if (mRoute_id != null) {	// doing one route
+	        mProgress.setVisibility(View.INVISIBLE);
+	    	mDetailArea.startAnimation(mSlideOut);
+
+	    	if (mRoute_id != null) {	// doing one route
         		mTitle.setText("Rt " + mRoute_id + " - " + mHeadsign);
         	} else {
         		mTitle.setText("Routes using stop " + mStop_id);
         	}
-	        mProgress.setVisibility(View.INVISIBLE);
-	    	mDetailArea.startAnimation(mSlideOut);
 	    }
-	}    
+	}
+    
+    /**
+     * Make the {@link ProgressBar} visible when our in-animation finishes.
+     */
+    public void onAnimationEnd(Animation animation) {
+    	mProgress.setVisibility(View.VISIBLE);
+    }
+    public void onAnimationRepeat(Animation animation) {
+    	// Not interested if the animation repeats
+    }
+    public void onAnimationStart(Animation animation) {
+    	// Not interested when the animation starts
+    }
 }
