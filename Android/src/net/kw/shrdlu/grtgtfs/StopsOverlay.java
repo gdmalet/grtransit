@@ -51,13 +51,11 @@ import com.google.android.maps.Projection;
 public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private static final String TAG = "GrtItemizedOverlay";
 
-	private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>(3000);
+	private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>();
 	private Context mContext;
-	private Cursor mCsr;
 	private String mStopid;
 	private GeoPoint mCenter;
-	private boolean mLongPress = false;
-	private NotificationCallback mTask;
+	private int mLonSpan, mLatSpan;
 	Integer mMaxcount, mProgresscount = 0;
 	Drawable mDefaultMarker;
 
@@ -81,7 +79,6 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	public void LoadDB(String whereclause, String [] selectargs, NotificationCallback task) {
 		Log.d(TAG, "starting LoadDB");
 		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
-		mTask = task;
 		
 		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
@@ -99,7 +96,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
     		Log.e(TAG, "DB query failed: " + e.getMessage());
     		return;
     	}
-    	mMaxcount = csr.getCount() * 2; // will count again as we populate()
+    	mMaxcount = csr.getCount();
     	
     	timings.addSplit("end of db read");
     	
@@ -122,8 +119,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
    			
    			GeoPoint point = new GeoPoint(stop_lat, stop_lon);
    			mStops.add(new stopDetail(point, csr.getString(2), csr.getString(3)));
-//   			OverlayItem overlayitem = new OverlayItem(point, csr.getString(2), csr.getString(3));
- //  		    mOverlayItems.add(overlayitem);
+//OverlayItem overlayitem = new OverlayItem(point, csr.getString(2), csr.getString(3));
+//mOverlayItems.add(overlayitem);
    	        more = csr.moveToNext();
    	        
 //			Log.d(TAG, " notification " + (int) ((mProgresscount / (float) mMaxcount) * 100));
@@ -133,9 +130,13 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
    		}
    		csr.close();
    		
-		    mOverlayItems.add(new OverlayItem(new GeoPoint(43,-80),"",""));
+   		// Stash some values needed for later calls
+   		mLonSpan = max_lat - min_lat;
+   		mLatSpan = max_lon - min_lon;
+   		mCenter = new GeoPoint(min_lat + mLatSpan/2, min_lon + mLonSpan/2);
 
-   		mCenter = new GeoPoint(min_lat + (max_lat-min_lat)/2, min_lon + (max_lon-min_lon)/2);
+   		// Put in just one point, to make sure draw() is called. TODO
+	    mOverlayItems.add(new OverlayItem(mCenter,"Dead","Centre"));
 
 		timings.addSplit("found center");
    		
@@ -146,39 +147,62 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		Log.d(TAG, "exiting LoadDB");
 	}
 
-	// This is used when a route number is clicked on in the dialog, after a stop is clicked.
-	private DialogInterface.OnClickListener mClick = new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int which) {
-			  if (mCsr.moveToPosition(which)) {
-				  String route = mCsr.getString(0);
-//				  Log.v(TAG, "clicked position " + which + ": route " + route);
+	private MapView mView;	// TODO
+	private int findClosestStop(int screenX, int screenY) {
+		TimingLogger timings = new TimingLogger(TAG, "closeststop");
 
-				  int split = route.indexOf(" - ");
-				  String route_id = route.substring(0,split);
-				  String headsign = route.substring(split+3);
+		final int DIST_THRESHOLD = 512;
+		int closestpt = -1;
+		double closestdist = 1000000.0;
+		Projection proj = mView.getProjection();
+		GeoPoint scr = proj.fromPixels(screenX, screenY);
+		
+		for (int i=0 ; i<mStops.size(); i++) {
+			stopDetail stop = mStops.get(i);
+			int xdiff = scr.getLongitudeE6() - stop.pt.getLongitudeE6();
+			int ydiff = scr.getLatitudeE6() - stop.pt.getLatitudeE6();
+			double dist = Math.sqrt(xdiff*xdiff + ydiff*ydiff);
+			if (dist < DIST_THRESHOLD && dist < closestdist) {
+				closestpt = i;
+				closestdist = dist;
+			}
+		}
 
-				  Globals.tracker.trackEvent("Stops","Select route",route_id + " - " + headsign,1);
-
-				  Intent bustimes = new Intent(mContext, TimesActivity.class);
-				  String pkgstr = mContext.getApplicationContext().getPackageName();
-				  bustimes.putExtra(pkgstr + ".route_id", route_id);
-				  bustimes.putExtra(pkgstr + ".headsign", headsign);
-				  bustimes.putExtra(pkgstr + ".stop_id", mStopid);
-				  mContext.startActivity(bustimes);
-			  }
-		  }
-	};
-
+		// TODO remove debug code
+ 		timings.addSplit("search ended");
+ 		timings.dumpToLog();
+		if (closestpt >= 0) {
+			Point pt_scr = new Point();
+			proj.toPixels(mStops.get(closestpt).pt, pt_scr);
+			Log.d(TAG, "closest stop is " + mStops.get(closestpt).num + " at " + closestdist + " units, " + mStops.get(closestpt).pt.getLatitudeE6() + "," + mStops.get(closestpt).pt.getLongitudeE6() + ", scr: " + pt_scr.x + ", " + pt_scr.y);
+		}
+		return closestpt;
+	}
+	
 	// This must be called on the GIU thread
     private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
+    	public boolean onSingleTapConfirmed (MotionEvent e) {
+    		Log.d(TAG, "Single tap detected at " + e.getX() + "," + e.getY());
+    		
+    		int closestpt = findClosestStop((int)e.getX(), (int)e.getY());
+    		if (closestpt >= 0) {
+    			onScreenTap(closestpt, false);
+    			return true;	// consumed it
+    		}
+    		return false;
+        }
     	public void onLongPress (MotionEvent e) {
-//    		Log.d(TAG, "Long press detected");
-    		mLongPress = true;
+    		Log.d(TAG, "Long press detected at " + e.getX() + "," + e.getY());
+
+    		int closestpt = findClosestStop((int)e.getX(), (int)e.getY());
+    		if (closestpt >= 0)
+    			onScreenTap(closestpt, true);
         }
     });
 
     @Override
     public boolean onTouchEvent(MotionEvent e, MapView mapView) {
+    	mView = mapView;	// TODO
     	return mGestureDetector.onTouchEvent(e);
     }
 	
@@ -188,56 +212,63 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		return mCenter;
 	}
 	
-	// This is called when a bus stop is clicked on in the map.
+	// Seeing we don't store all points in the overlay, we need to provide our own
+	// span values, since the overlay has no clue of what we're doing.
 	@Override
-	protected boolean onTap(int index) {
-	  OverlayItem item = mOverlayItems.get(index);
-	  mStopid = item.getTitle();
-	  final String stopname = item.getSnippet();
-	  
-	  if (mLongPress == true) {
-		  mLongPress = false;
-		  
-          Globals.tracker.trackEvent("Map longclick","Stop",mStopid,1);
+	public int getLonSpanE6() {
+		return mLonSpan;
+	}
+	@Override
+	public int getLatSpanE6() {
+		return mLatSpan;
+	}
+	
+	// This is called when a bus stop is clicked on in the map.
+	protected boolean onScreenTap(int index, boolean longpress) {
+		Log.d(TAG, "OnTap(" + index + ")");
+		stopDetail stop = mStops.get(index);
+		mStopid = stop.num;
+		final String stopname = stop.name;
 
-          DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int id) {
-				  switch (id) {
-				  case DialogInterface.BUTTON_POSITIVE:
-					  Globals.mPreferences.AddBusstopFavourite(mStopid, stopname);
-					  break;
-//				  case DialogInterface.BUTTON_NEGATIVE:
-//					  // nothing
-//					  break;
-				  }
-				  dialog.cancel();
-			  }
-		  };
+		if (longpress == true) {
 
-		  AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		  builder.setTitle("Stop " + mStopid + ", " + stopname)
-		  .setMessage("Add to your list of favourites?")
-		  .setPositiveButton("Yes", listener)
-		  .setNegativeButton("No", listener)
-		  .create()
-		  .show();
-	  } else {
-          Globals.tracker.trackEvent("Map click","Stop",mStopid,1);
-		  // Show route select activity
-		  Intent routeselect = new Intent(mContext, RouteselectActivity.class);
-		  String pkgstr = mContext.getApplicationContext().getPackageName();
-		  routeselect.putExtra(pkgstr + ".stop_id", mStopid);
-		  routeselect.putExtra(pkgstr + ".stop_name", stopname);
-		  mContext.startActivity(routeselect);
-	  }
-	  return true;
+			Globals.tracker.trackEvent("Map longclick","Stop",mStopid,1);
+
+			DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					switch (id) {
+					case DialogInterface.BUTTON_POSITIVE:
+						Globals.mPreferences.AddBusstopFavourite(mStopid, stopname);
+						break;
+						//				  case DialogInterface.BUTTON_NEGATIVE:
+						//					  // nothing
+						//					  break;
+					}
+					dialog.cancel();
+				}
+			};
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setTitle("Stop " + mStopid + ", " + stopname)
+			.setMessage("Add to your list of favourites?")
+			.setPositiveButton("Yes", listener)
+			.setNegativeButton("No", listener)
+			.create()
+			.show();
+		} else {
+			Globals.tracker.trackEvent("Map click","Stop",mStopid,1);
+			// Show route select activity
+			Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+			String pkgstr = mContext.getApplicationContext().getPackageName();
+			routeselect.putExtra(pkgstr + ".stop_id", mStopid);
+			routeselect.putExtra(pkgstr + ".stop_name", stopname);
+			mContext.startActivity(routeselect);
+		}
+		return true;
 	}
 
 	@Override
 	protected OverlayItem createItem(int i) {
-//		Log.d(TAG, " notification " + (int) ((mProgresscount / (float) mMaxcount) * 100));
-		if (++mProgresscount % 25 == 0)
-			mTask.notificationCallback((int) ((mProgresscount / (float) mMaxcount) * 100));
 		return mOverlayItems.get(i);
 	}
 	
@@ -252,7 +283,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	 */
 	@Override
 	public void draw(Canvas canvas, MapView view, boolean shadow) {
-		Log.d(TAG, "starting draw");
+//		Log.d(TAG, "starting draw");
 		super.draw(canvas, view, shadow);
 /*		
 		if (shadow || view.getZoomLevel() <= 15) {
@@ -261,7 +292,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 */
 //		Log.v(TAG, "draw " + shadow + ", zoom is " + view.getZoomLevel());
-		Log.d(TAG, "top: " + view.getLeft() + "," + view.getTop() + ", bottom: " + view.getRight() + "," + view.getBottom());
+//		Log.d(TAG, "top: " + view.getLeft() + "," + view.getTop() + ", bottom: " + view.getRight() + "," + view.getBottom());
 		
         //Paint
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -272,45 +303,50 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		// Convert geo points to points on the canvas
 		Projection proj = view.getProjection();
 		Point pt_scr = new Point();
+/*
 		GeoPoint pt_geo;
-		
-		Log.d(TAG, "drawing " + mOverlayItems.size() + " items");
+//		Log.d(TAG, "drawing " + mOverlayItems.size() + " items");
 		for (int i=0; i<mOverlayItems.size(); i++) {
 			OverlayItem item = mOverlayItems.get(i);
 			pt_geo = item.getPoint();
 			proj.toPixels(pt_geo, pt_scr);
 //			Log.d(TAG,"pt_geo: " + pt_geo.getLatitudeE6() + ":" + pt_geo.getLongitudeE6() + ", scr: " + pt_scr.x + ":" + pt_scr.y);
 			
-			if (pt_scr.x < view.getLeft() || pt_scr.y < view.getTop() || pt_scr.x > view.getRight() || pt_scr.y > view.getBottom()) {
+			// TODO view edges don't match where we're drawing?
+			if (pt_scr.x < 0 || pt_scr.y < 0 || pt_scr.x > view.getRight() || pt_scr.y > view.getBottom()) {
 //				Log.d(TAG, " skipping draw for point");
 				continue;
 			}
-			
+
             //show text to the right of the icon
             canvas.drawText(item.getTitle(), pt_scr.x, pt_scr.y+12, paint);
             if (view.getZoomLevel() >= 18)
             	canvas.drawText(item.getSnippet(), pt_scr.x, pt_scr.y-15, paint);
 		}
-
-		Log.d(TAG, "drawing " + mStops.size() + " items");
-		for (int i=0; i<mStops.size(); i++) {
-			proj.toPixels(mStops.get(i).pt, pt_scr);
+*/
+//		Log.d(TAG, "drawing " + mStops.size() + " items");
+		for (stopDetail stop : mStops) {
+			proj.toPixels(stop.pt, pt_scr);
 			
 			if (pt_scr.x < view.getLeft() || pt_scr.y < view.getTop() 
 					|| pt_scr.x > view.getRight() || pt_scr.y > view.getBottom())
 				continue;
-
-			mDefaultMarker.setBounds(new Rect(pt_scr.x-4, pt_scr.y-15, pt_scr.x+4, pt_scr.y));
+/*
+			if (stop.num.equals("1123")) {
+				Log.d(TAG, "stop 1123: " + stop.pt.getLatitudeE6() + "," + stop.pt.getLongitudeE6() + ", scr: " + pt_scr.x + ", " + pt_scr.y);
+			}
+*/
+			mDefaultMarker.setBounds(new Rect(pt_scr.x-4, pt_scr.y-7, pt_scr.x+4, pt_scr.y+7));
 			mDefaultMarker.draw(canvas);
 			
             //show text to the right of the icon
 			if (view.getZoomLevel() > 16) {
-				canvas.drawText(mStops.get(i).num, pt_scr.x, pt_scr.y+12, paint);
+				canvas.drawText(stop.num, pt_scr.x, pt_scr.y+12, paint);
 				if (view.getZoomLevel() >= 18)
-					canvas.drawText(mStops.get(i).name, pt_scr.x, pt_scr.y-15, paint);
+					canvas.drawText(stop.name, pt_scr.x, pt_scr.y-15, paint);
 			}
 		}
 
-		Log.d(TAG, "ending draw");
+//		Log.d(TAG, "ending draw");
 	}
 }

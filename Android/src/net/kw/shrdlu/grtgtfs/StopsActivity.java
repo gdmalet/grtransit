@@ -189,7 +189,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
          */
         @Override
         protected void onPreExecute() {
-//        	Log.v(TAG, "onPreExecute()");
 			mDetailArea.startAnimation(mSlideIn);
         }
         
@@ -204,8 +203,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
          */
         @Override
         protected Void doInBackground(Void... foo) {
-//        	Log.v(TAG, "doInBackground()");
-
         	if (mOverlay != mCachedOverlay) {
         		mOverlay.LoadDB(null, null, this);
         		mCachedOverlay = mOverlay;
@@ -237,6 +234,8 @@ public class StopsActivity extends MapActivity implements AnimationListener {
             		center = mOverlay.getCenter();
             		if (center != null) {
             			mcp.setCenter(mOverlay.getCenter());
+//            			Log.d(TAG, "span lat " + mOverlay.getLatSpanE6() + ", lon " + mOverlay.getLonSpanE6()); // span lat 264232, lon 320768
+//            			mcp.zoomToSpan(264232, 320768);
             			mcp.zoomToSpan(mOverlay.getLatSpanE6(), mOverlay.getLonSpanE6());
             		}
             	}
