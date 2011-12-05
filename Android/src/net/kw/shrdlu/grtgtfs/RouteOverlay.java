@@ -39,8 +39,12 @@ public class RouteOverlay extends Overlay {
 	private int mCount;
 	private int [] mPoints = null;
 
+	private int mLonSpan, mLatSpan;
+	private GeoPoint mCenter;
+
 	public RouteOverlay(Context context, String route, String headsign) {
 		super();
+//		Log.v(TAG, "starting RouteOverlay");
 		
 		final String table = "shapes";
 		final String [] columns = {"shape_pt_lat", "shape_pt_lon"};
@@ -62,24 +66,54 @@ public class RouteOverlay extends Overlay {
         mCount = csr.getCount();
    		mPoints = new int[mCount*2];
    		
-   		for (int i=0; i<mCount; i++) {
-   			int pt_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
-   			int pt_lon = (int)(csr.getFloat(1) * 1000000);
+		// Going to calculate our centre
+		int min_lat = 360000000, min_lon = 360000000, max_lat = -360000000, max_lon = -360000000;
 
-   			mPoints[i*2] = pt_lat;
-   			mPoints[(i*2)+1] = pt_lon;
+   		for (int i=0; i<mCount; i++) {
+   			int stop_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
+   			int stop_lon = (int)(csr.getFloat(1) * 1000000);
+
+   			mPoints[i*2] = stop_lat;
+   			mPoints[(i*2)+1] = stop_lon;
    			
-   			csr.moveToNext();
+			if (stop_lat < min_lat)
+				min_lat = stop_lat;
+			if (stop_lat > max_lat)
+				max_lat = stop_lat;
+			if (stop_lon < min_lon)
+				min_lon = stop_lon;
+			if (stop_lon > max_lon)
+				max_lon = stop_lon;
+
+ 			csr.moveToNext();
    		}
    		csr.close();
+   		
+		// Stash some values needed for later calls
+		mLatSpan = max_lat - min_lat;
+		mLonSpan = max_lon - min_lon;
+		mCenter = new GeoPoint(min_lat + mLatSpan/2, min_lon + mLonSpan/2);
+
+//		Log.v(TAG, "ending RouteOverlay");
 	}
 		
+	// Seeing we don't store all points in the overlay, we need to provide our own
+	// span values, since the overlay has no clue of what we're doing.
+	public int getLonSpanE6() {
+		return mLonSpan;
+	}
+	public int getLatSpanE6() {
+		return mLatSpan;
+	}
+	public GeoPoint getCenter() {
+		return mCenter;
+	}
+	
 	@Override
 	public void draw(Canvas canvas, MapView view, boolean shadow) {
 		super.draw(canvas, view, shadow);
-		
 //		Log.v(TAG, "draw " + shadow);
-			
+		
 		if (shadow || mPoints == null || mCount <= 0)
 			return;
 		
@@ -97,9 +131,11 @@ public class RouteOverlay extends Overlay {
 		}
 
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint.setARGB(128, 224, 64, 32);
+		paint.setARGB(192, 224, 64, 32);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(5);
 		canvas.drawPath(path, paint);
+
+//		Log.v(TAG, "draw exit");
 	}
 }

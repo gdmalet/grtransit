@@ -59,7 +59,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	private Drawable mStopmarker;
 	private MyLocationOverlay mMylocation;
 	private String mStopId;
-	private StopsOverlay mOverlay = null, mCachedOverlay = null;
+	private StopsOverlay mOverlay = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
         mMapview.setBuiltInZoomControls(true);
         
         mapOverlays = mMapview.getOverlays();
-        mStopmarker = this.getResources().getDrawable(R.drawable.bluepin);
 
         mMylocation = new MyLocationOverlay(this, mMapview);
         mapOverlays.add(mMylocation);
@@ -91,11 +90,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
         mStopId = intent.getStringExtra(stopstr);
 
         // Get the busstop overlay set up in the background
-        if (mCachedOverlay != null) {
-        	mOverlay = mCachedOverlay;
-        } else {
-        	mOverlay = new StopsOverlay(mStopmarker, mContext);
-        }
+        mOverlay = new StopsOverlay(mContext);
         new LoadOverlay().execute();
     }
 
@@ -128,8 +123,8 @@ public class StopsActivity extends MapActivity implements AnimationListener {
         inflater.inflate(R.menu.busstopsmenu, menu);
 // TODO
         // Hide the `Show on map' menu option
-        View v = (View) findViewById(R.id.menu_showonmap);
-        v.setVisibility(View.GONE);
+//        View v = (View) findViewById(R.id.menu_showonmap);
+//        v.setVisibility(View.GONE);
 
         return true;
     }
@@ -203,10 +198,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
          */
         @Override
         protected Void doInBackground(Void... foo) {
-        	if (mOverlay != mCachedOverlay) {
-        		mOverlay.LoadDB(null, null, this);
-        		mCachedOverlay = mOverlay;
-        	}
+        	mOverlay.LoadDB(null, null, this);
         	return null;
         }
 
@@ -219,7 +211,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 
 	        mapOverlays.add(mOverlay);
 	        
-            // Center the map over given bus stop, else location, else the whole area
+            // Centre the map over given bus stop, else location, else the whole area
             MapController mcp = mMapview.getController();
             GeoPoint center;
             if (mStopId == null) {
