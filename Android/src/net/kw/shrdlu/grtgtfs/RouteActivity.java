@@ -24,6 +24,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -87,7 +88,7 @@ public class RouteActivity extends MapActivity implements AnimationListener {
         mSlideIn.setAnimationListener(this);
         mTitle = (TextView) findViewById(R.id.title);
         
-    	mMylocation = new MyLocationOverlay(this, mMapview);
+        mMylocation = new MyLocationOverlay(this, mMapview);
         mapOverlays.add(mMylocation);
         
         // Get the busstop overlay set up in the background
@@ -123,13 +124,17 @@ public class RouteActivity extends MapActivity implements AnimationListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.busstopsmenu, menu);
+
+        // Hide the `Show on map' menu option
+        menu.removeItem(R.id.menu_showonmap);
+
         return true;
     }
 
     // This is called when redisplaying the menu
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.menu_about);
+        MenuItem item = menu.findItem(R.id.menu_about);  // TODO ? do a removeitem above?
         item.setEnabled(false); // only put the about button on the home screen.
         item.setVisible(false);
         return true;
@@ -208,10 +213,10 @@ public class RouteActivity extends MapActivity implements AnimationListener {
     		
         	if (mRoute_id != null) {	// doing one route
         		timings.addSplit("stops for one route");
-	        	final String whereclause = "stop_id in "
-	            	+ "(select stop_id from stop_times where trip_id = "
-	            	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
-	            final String [] selectargs = {mRoute_id, mHeadsign};
+//	        	final String whereclause = "stop_id in "
+//	            	+ "(select stop_id from stop_times where trip_id = "
+//	            	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
+//	            final String [] selectargs = {mRoute_id, mHeadsign};
 
 	            // It's too slow to fish out these stops, so for now show them all
 	            //mBusstopsOverlay.LoadDB(whereclause, selectargs, this);
@@ -226,10 +231,10 @@ public class RouteActivity extends MapActivity implements AnimationListener {
         	} else {
         		// doing many routes
         		timings.addSplit("stops for many routes");
-        		final String whereclause = "stop_id in "
-        			+ "(select distinct stop_id from stop_times where trip_id in "
-        			+ "(select trip_id from stop_times where stop_id = ?))";
-        		String [] selectargs = {mStop_id};
+//        		final String whereclause = "stop_id in "
+//        			+ "(select distinct stop_id from stop_times where trip_id in "
+//        			+ "(select trip_id from stop_times where stop_id = ?))";
+//        		String [] selectargs = {mStop_id};
         		
 	            // It's too slow to fish out these stops, so for now show them all
 	            //mBusstopsOverlay.LoadDB(whereclause, selectargs, this);
@@ -244,7 +249,7 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	        	" join calendar on trips.service_id = calendar.service_id where " + 
 	        	" trip_id in (select trip_id from stop_times where stop_id = ?) and " +
 	        	" start_date <= ? and end_date >= ?";
-	       		selectargs = new String[] {mStop_id, datenow, datenow};
+	       		final String [] selectargs = new String[] {mStop_id, datenow, datenow};
 	        	Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
         		timings.addSplit(" end db read for routes");
 	            
@@ -275,31 +280,21 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	    	// Overlays must be added on the GIU thread
 	    	mapOverlays.add(mBusstopsOverlay);
 	    	
+	    	Rect boundingbox = null;
+	    	
 	    	// Need to calculate span and centre of overlays
-	    	int ctr_x = 0, ctr_y = 0, span_lat = 0, span_lon = 0;
 	    	for (RouteOverlay overlay : overlays) {
-	    		if (overlay.getLatSpanE6() > span_lat)
-	    			span_lat = overlay.getLatSpanE6();
-	    		if (overlay.getLonSpanE6() > span_lon)
-	    			span_lon = overlay.getLonSpanE6();
-	    		
-	    		if (ctr_x == 0 && ctr_y == 0) {
-	    			ctr_x = overlay.getCenter().getLatitudeE6();
-	    			ctr_y = overlay.getCenter().getLongitudeE6();
-	    		} else {
-	    			int ovlat = overlay.getCenter().getLatitudeE6();
-	    			int ovlon = overlay.getCenter().getLongitudeE6();
-	    			ctr_x += ovlat;
-	    			ctr_y += ovlon;
-	    		}
-	    		
 	    		mapOverlays.add(overlay);
+	    		if (boundingbox == null)
+	   				boundingbox = overlay.getBoundingBoxE6();
+	   			else
+	   				boundingbox.union(overlay.getBoundingBoxE6());
 	    	}
 
 	    	// Centre the map over the bus stops
             MapController mcp = mMapview.getController();
-            mcp.setCenter(new GeoPoint(ctr_x / overlays.size(), ctr_y / overlays.size()));
-            mcp.zoomToSpan(span_lat, span_lon);
+            mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
+            mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
 
 	        mProgress.setVisibility(View.INVISIBLE);
 	    	mDetailArea.startAnimation(mSlideOut);

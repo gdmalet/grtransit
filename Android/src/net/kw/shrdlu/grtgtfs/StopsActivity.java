@@ -24,6 +24,7 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -121,10 +122,9 @@ public class StopsActivity extends MapActivity implements AnimationListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.busstopsmenu, menu);
-// TODO
+
         // Hide the `Show on map' menu option
-//        View v = (View) findViewById(R.id.menu_showonmap);
-//        v.setVisibility(View.GONE);
+        menu.removeItem(R.id.menu_showonmap);
 
         return true;
     }
@@ -223,13 +223,9 @@ public class StopsActivity extends MapActivity implements AnimationListener {
             				break;
             	} else {
             		Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
-            		center = mOverlay.getCenter();
-            		if (center != null) {
-            			mcp.setCenter(mOverlay.getCenter());
-//            			Log.d(TAG, "span lat " + mOverlay.getLatSpanE6() + ", lon " + mOverlay.getLonSpanE6()); // span lat 264232, lon 320768
-//            			mcp.zoomToSpan(264232, 320768);
-            			mcp.zoomToSpan(mOverlay.getLatSpanE6(), mOverlay.getLonSpanE6());
-            		}
+            		Rect boundingbox = mOverlay.getBoundingBoxE6();
+            		mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
+            		mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
             	}
             } else {
             	final String table = "stops", where = "stop_id = ?";

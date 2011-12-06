@@ -9,7 +9,7 @@
     <string name="location">My Location</string>
     <string name="showallbusses">Show all busses</string>
     <string name="showtodaysbusses">Show today\'s busses"</string>
-    <string name="showonmap">Show on map</string><string name="stops_loading">Loading the bus stops....</string><string name="times_loading">Loading the bus times....</string>
+    <string name="showonmap">Show on map</string><string name="loading_stops">Loading the bus stops....</string><string name="loading_times">Loading the bus times....</string>
     
     <string name="app_descrip">Grand River Transit details for the Region of Waterloo, Ontario, Canada.\n\nAll data for this application is freely available in Google GTFS format from http://www.grt.ca</string>
     <string name="app_credits">Author: Giles Malet\ngdmalet+GRTransit@gmail.com</string>
@@ -25,5 +25,7 @@
     <string name="route_fling">Swipe left to show all routes, or tap to show one.</string>
     <string name="stop_unused">No routes use this stop in the current schedule.</string>
     <string name="ga_api_key">UA-27006918-1</string>
+    <string name="loading_routes">Loading the bus routes...</string>
+    <string name="showmap">Show map</string>
     
 </resources>

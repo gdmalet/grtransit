@@ -191,6 +191,11 @@ public class FavstopsActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.busstopsmenu, menu);
+
+        // Change `Show on map' menu option to `Show map'.
+        MenuItem item = menu.findItem(R.id.menu_showonmap);
+        item.setTitle(R.string.showmap);
+
         return true;
     }
 

@@ -47,11 +47,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private static final String TAG = "GrtItemizedOverlay";
 
 	private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>(1);
-	private int mLonSpan, mLatSpan;
-	private static int mCachedLonSpan, mCachedLatSpan;
-	private GeoPoint mCenter;
-	private static GeoPoint mCachedCenter;
-
+	private Rect mBoundingBox;
+	private static Rect mCachedBoundingBox;
 	private Context mContext;
 	private String mStopid;
 
@@ -68,27 +65,20 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	// Used to limit which stops are displayed
 	public StopsOverlay(Context context) {
 		super(boundCenter(context.getResources().getDrawable(R.drawable.blank)));
-//		super(boundCenter(context.getResources().getDrawable(R.drawable.bluepin)));
-//		super(boundCenter(context.getResources().getDrawable(android.R.drawable.star_big_on)));
 		mContext = context;
 	}
 	
 	// This is time consuming, and should not be called on the GUI thread
 	public void LoadDB(String whereclause, String [] selectargs, NotificationCallback task) {
 		Log.d(TAG, "starting LoadDB");
-		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
 		
 		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
 
-		TimingLogger timings = new TimingLogger(TAG, "LoadDB");
-
 		if (whereclause == null && mCachedStops != null) {
 			Log.d(TAG, "using cached values");
-	   		mLatSpan = mCachedLatSpan;
-	   		mLonSpan = mCachedLonSpan;
-	   		mCenter  = mCachedCenter;
 			mStops   = mCachedStops;
+			mBoundingBox = mCachedBoundingBox;
 
 		} else {
 
@@ -103,67 +93,48 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			}
 			int maxcount = csr.getCount(), progresscount = 0;
 
-			timings.addSplit("end of db read");
-
-			// Going to calculate our centre
-			int min_lat = 360000000, min_lon = 360000000, max_lat = -360000000, max_lon = -360000000;
+			// Going to track the edges
+			Rect boundingbox = null;
 
 			boolean more = csr.moveToPosition(0);
 			while (more) {
 				int stop_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
 				int stop_lon = (int)(csr.getFloat(1) * 1000000);
 
-				if (stop_lat < min_lat)
-					min_lat = stop_lat;
-				if (stop_lat > max_lat)
-					max_lat = stop_lat;
-				if (stop_lon < min_lon)
-					min_lon = stop_lon;
-				if (stop_lon > max_lon)
-					max_lon = stop_lon;
-
 				GeoPoint point = new GeoPoint(stop_lat, stop_lon);
 				mStops.add(new stopDetail(point, csr.getString(2), csr.getString(3)));
-				//OverlayItem overlayitem = new OverlayItem(point, csr.getString(2), csr.getString(3));
-				//mOverlayItems.add(overlayitem);
 				more = csr.moveToNext();
 
-				//Log.d(TAG, " notification " + (int) ((mProgresscount / (float) mMaxcount) * 100));
-				if (++progresscount % 25 == 0)
-					task.notificationCallback((int) ((progresscount / (float) maxcount) * 100));
+	   			if (boundingbox == null)
+	   				boundingbox = new Rect(stop_lat,stop_lon, stop_lat,stop_lon);
+	   			else
+	   				boundingbox.union(stop_lat, stop_lon);
 
+	   			if (++progresscount % 25 == 0)
+					task.notificationCallback((int) ((progresscount / (float) maxcount) * 100));
 			}
 			csr.close();
 
-			// Stash some values needed for later calls
-			mLatSpan = max_lat - min_lat;
-			mLonSpan = max_lon - min_lon;
-			mCenter = new GeoPoint(min_lat + mLatSpan/2, min_lon + mLonSpan/2);
+			// Stash values needed for later calls
+			mBoundingBox = boundingbox;
 		}
 		
 		if (whereclause == null && mCachedStops == null) {
 			Log.d(TAG, "priming cache");
-	   		mCachedLatSpan = mLatSpan;
-	   		mCachedLonSpan = mLonSpan;
-	   		mCachedCenter = mCenter;
 			mCachedStops = mStops;
+			mCachedBoundingBox = mBoundingBox;
 		}
 
-		// Put in just one point, to make sure draw() is called. TODO
-	    mOverlayItems.add(new OverlayItem(mCenter,"Dead","Centre"));
+		// Put in just one point, to make sure draw() is called.
+	    mOverlayItems.add(new OverlayItem(new GeoPoint(mBoundingBox.centerX(), mBoundingBox.centerY()),"",""));
 
-		timings.addSplit("found center");
-   		
-		populate();	// chomps up a lot of time....
+		populate();	// chomps up a lot of time if many points....
 
- 		timings.addSplit("populated");
- 		timings.dumpToLog();
-		Log.d(TAG, "exiting LoadDB");
+//		Log.d(TAG, "exiting LoadDB");
 	}
 
 	private MapView mView;	// TODO
 	private int findClosestStop(int screenX, int screenY) {
-		TimingLogger timings = new TimingLogger(TAG, "closeststop");
 
 		final int DIST_THRESHOLD = 512;
 		int closestpt = -1;
@@ -181,15 +152,14 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 				closestdist = dist;
 			}
 		}
-
+/*
 		// TODO remove debug code
- 		timings.addSplit("search ended");
- 		timings.dumpToLog();
 		if (closestpt >= 0) {
 			Point pt_scr = new Point();
 			proj.toPixels(mStops.get(closestpt).pt, pt_scr);
 			Log.d(TAG, "closest stop is " + mStops.get(closestpt).num + " at " + closestdist + " units, " + mStops.get(closestpt).pt.getLatitudeE6() + "," + mStops.get(closestpt).pt.getLongitudeE6() + ", scr: " + pt_scr.x + ", " + pt_scr.y);
 		}
+*/
 		return closestpt;
 	}
 	
@@ -222,19 +192,10 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	// Seeing we don't store all points in the overlay, we need to provide our own
 	// span values, since the overlay has no clue of what we're doing.
-	@Override
-	public int getLonSpanE6() {
-		return mLonSpan;
+	public Rect getBoundingBoxE6() {
+		return mBoundingBox;
 	}
-	@Override
-	public int getLatSpanE6() {
-		return mLatSpan;
-	}
-	@Override
-	public GeoPoint getCenter() {
-		return mCenter;
-	}
-		
+	
 	// This is called when a bus stop is clicked on in the map.
 	protected boolean onScreenTap(int index, boolean longpress) {
 		Log.d(TAG, "OnTap(" + index + ")");
@@ -298,7 +259,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 //		Log.d(TAG, "starting draw");
 		super.draw(canvas, view, shadow);
 		Log.v(TAG, "draw " + shadow + ", zoom is " + view.getZoomLevel());
-//		Log.d(TAG, "top: " + view.getLeft() + "," + view.getTop() + ", bottom: " + view.getRight() + "," + view.getBottom());
+		Log.d(TAG, "view top: " + view.getLeft() + "," + view.getTop() + ", bottom: " + view.getRight() + "," + view.getBottom());
 
 		if (shadow)
 			return;
@@ -312,39 +273,35 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		Projection proj = view.getProjection();
 		Point pt_scr = new Point();
 
-		Drawable stopmarker;
-		Rect stopbounds;
-		if (view.getZoomLevel() >= 14) {
-			stopmarker = mContext.getResources().getDrawable(R.drawable.bluepin);
-			stopbounds = new Rect(-4,-7,4,7);
-		} else {
-			stopmarker = mContext.getResources().getDrawable(R.drawable.bluepin);
-//			stopmarker = mContext.getResources().getDrawable(R.drawable.smallpin);
-			stopbounds = new Rect(-2,-3,2,3);
-		}
-		
-        //Log.d(TAG, "drawing " + mStops.size() + " items");
+		int zoom = view.getZoomLevel();
+		int dx = zoom/3, dy = zoom/2;
+		Rect stopbounds = new Rect(0,0,dx,dy);
+		Drawable stopmarker = mContext.getResources().getDrawable(R.drawable.bluepin);
+
+		//Log.d(TAG, "drawing " + mStops.size() + " items");
 		for (stopDetail stop : mStops) {
 			proj.toPixels(stop.pt, pt_scr);
 			
-			// TODO view edges don't match where we're drawing?
-			if (pt_scr.x < view.getLeft() || pt_scr.y < view.getTop() 
-					|| pt_scr.x > view.getRight() || pt_scr.y > view.getBottom())
+			if (pt_scr.x < 0 || pt_scr.y < 0 
+					|| pt_scr.x > view.getRight() || pt_scr.y > view.getBottom() - view.getTop())
 				continue;
-/*
-			if (stop.num.equals("1123")) {
-				Log.d(TAG, "stop 1123: " + stop.pt.getLatitudeE6() + "," + stop.pt.getLongitudeE6() + ", scr: " + pt_scr.x + ", " + pt_scr.y);
-			}
-*/
-			stopbounds.offsetTo(pt_scr.x, pt_scr.y);
+
+			stopbounds.offsetTo(pt_scr.x-dx/2, pt_scr.y-dy/2);
 			stopmarker.setBounds(stopbounds);
 			stopmarker.draw(canvas);
-			
+
+			// TODO remove debug code
+			if (stop.num.equals("1123") /*|| stop.num.equals("1124")*/) {
+				Log.d(TAG, "bbox: " + stopbounds.left + ", " + stopbounds.top + ", " + stopbounds.right + ", " + stopbounds.bottom);
+				Log.d(TAG, "stop 1123: " + stop.pt.getLatitudeE6() + "," + stop.pt.getLongitudeE6() + ", scr: " + pt_scr.x + ", " + pt_scr.y);
+			}
+
             // show name above, number below the icon
-			if (view.getZoomLevel() > 16) {
-				canvas.drawText(stop.num, pt_scr.x, pt_scr.y+14, paint);
-				if (view.getZoomLevel() > 18)
-					canvas.drawText(stop.name, pt_scr.x, pt_scr.y-14, paint);
+			// TODO should use pretty popup labels
+			if (zoom > 16) {
+				canvas.drawText(stop.num, pt_scr.x, pt_scr.y+zoom+10, paint);
+				if (zoom > 18)
+					canvas.drawText(stop.name, pt_scr.x, pt_scr.y-20, paint);
 			}
 		}
 

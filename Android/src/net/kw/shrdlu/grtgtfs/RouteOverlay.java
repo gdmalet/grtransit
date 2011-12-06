@@ -26,6 +26,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
@@ -39,8 +40,7 @@ public class RouteOverlay extends Overlay {
 	private int mCount;
 	private int [] mPoints = null;
 
-	private int mLonSpan, mLatSpan;
-	private GeoPoint mCenter;
+	private Rect mBoundingBox;
 
 	public RouteOverlay(Context context, String route, String headsign) {
 		super();
@@ -60,14 +60,12 @@ public class RouteOverlay extends Overlay {
     		return;
     	}
 
-    	// TODO -- caching points in an array -- perhaps better to just cache the
-    	// cursor, and repeat the query on draw()?
         csr.moveToPosition(0);
         mCount = csr.getCount();
    		mPoints = new int[mCount*2];
    		
-		// Going to calculate our centre
-		int min_lat = 360000000, min_lon = 360000000, max_lat = -360000000, max_lon = -360000000;
+		// Going to track the edges
+		Rect boundingbox = null;
 
    		for (int i=0; i<mCount; i++) {
    			int stop_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
@@ -76,37 +74,25 @@ public class RouteOverlay extends Overlay {
    			mPoints[i*2] = stop_lat;
    			mPoints[(i*2)+1] = stop_lon;
    			
-			if (stop_lat < min_lat)
-				min_lat = stop_lat;
-			if (stop_lat > max_lat)
-				max_lat = stop_lat;
-			if (stop_lon < min_lon)
-				min_lon = stop_lon;
-			if (stop_lon > max_lon)
-				max_lon = stop_lon;
+   			if (boundingbox == null)
+   				boundingbox = new Rect(stop_lat,stop_lon, stop_lat,stop_lon);
+   			else
+   				boundingbox.union(stop_lat, stop_lon);
 
- 			csr.moveToNext();
+   			csr.moveToNext();
    		}
    		csr.close();
    		
-		// Stash some values needed for later calls
-		mLatSpan = max_lat - min_lat;
-		mLonSpan = max_lon - min_lon;
-		mCenter = new GeoPoint(min_lat + mLatSpan/2, min_lon + mLonSpan/2);
-
+		// Stash values needed for later calls
+   		mBoundingBox = boundingbox;
+   		
 //		Log.v(TAG, "ending RouteOverlay");
 	}
 		
 	// Seeing we don't store all points in the overlay, we need to provide our own
 	// span values, since the overlay has no clue of what we're doing.
-	public int getLonSpanE6() {
-		return mLonSpan;
-	}
-	public int getLatSpanE6() {
-		return mLatSpan;
-	}
-	public GeoPoint getCenter() {
-		return mCenter;
+	public Rect getBoundingBoxE6() {
+		return mBoundingBox;
 	}
 	
 	@Override
@@ -131,7 +117,7 @@ public class RouteOverlay extends Overlay {
 		}
 
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint.setARGB(192, 224, 64, 32);
+		paint.setARGB(128, 224, 64, 32);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(5);
 		canvas.drawPath(path, paint);

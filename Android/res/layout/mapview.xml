@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="3dip"
-        android:text="@string/stops_loading" />
+        android:text="@string/loading_stops" />
 
     <ProgressBar
         android:id="@+id/map_progress"

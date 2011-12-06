@@ -226,8 +226,10 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 				hourdiff += mindiff;
 				if (hourdiff >= 60)
 					msg = Toast.makeText(mContext, "Next bus leaves at " + nextdeparture, Toast.LENGTH_LONG);
-				else
-					msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minutes", Toast.LENGTH_LONG);
+				else {
+					String plural = hourdiff > 1 ? "s" : "";
+					msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
+				}
 				getListView().setSelectionFromTop(savedpos, 50);	// position next bus just below top
 			} else {
 				setSelection(currentcount); // position the list at the last bus
