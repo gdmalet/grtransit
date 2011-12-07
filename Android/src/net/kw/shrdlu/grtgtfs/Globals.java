@@ -75,15 +75,13 @@ public class Globals {
         	String v = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         	if (isDebugBuild) v += " debug";
 			tracker.setCustomVar(TRACKER_VERSION,
-					"Version",
-					v, //context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName,
+					"Version", v,
 					TRACKER_VISITOR_SCOPE);
 		} catch (NameNotFoundException e) {
 			Log.e(TAG, "Exception when getting versionName");
 			e.printStackTrace();
 		}
-        
-        // TODO - this is meaningless...
+/*
         // Determine the screen orientation and set it in a custom variable.
         String orientation = "unknown";
         switch (context.getResources().getConfiguration().orientation) {
@@ -98,6 +96,7 @@ public class Globals {
                              "Screen Orientation", 			        // Name
                              orientation,                 			// Value
                              TRACKER_SESSION_SCOPE);              	// Scope
+*/
 	}
 
 	/**

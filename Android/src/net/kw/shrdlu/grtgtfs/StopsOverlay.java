@@ -70,19 +70,19 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	// This is time consuming, and should not be called on the GUI thread
 	public void LoadDB(String whereclause, String [] selectargs, NotificationCallback task) {
-		Log.d(TAG, "starting LoadDB");
+//		Log.d(TAG, "starting LoadDB");
 		
 		final String table = "stops";
 		final String [] columns = {"stop_lat", "stop_lon", "stop_id", "stop_name"};
 
 		if (whereclause == null && mCachedStops != null) {
-			Log.d(TAG, "using cached values");
+//			Log.d(TAG, "using cached values");
 			mStops   = mCachedStops;
 			mBoundingBox = mCachedBoundingBox;
 
 		} else {
-
-			Log.d(TAG, "no cached values");
+			
+//			Log.d(TAG, "no cached values");
 
 			Cursor csr;
 			try {
@@ -120,7 +120,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 		
 		if (whereclause == null && mCachedStops == null) {
-			Log.d(TAG, "priming cache");
+//			Log.d(TAG, "priming cache");
 			mCachedStops = mStops;
 			mCachedBoundingBox = mBoundingBox;
 		}
@@ -152,21 +152,14 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 				closestdist = dist;
 			}
 		}
-/*
-		// TODO remove debug code
-		if (closestpt >= 0) {
-			Point pt_scr = new Point();
-			proj.toPixels(mStops.get(closestpt).pt, pt_scr);
-			Log.d(TAG, "closest stop is " + mStops.get(closestpt).num + " at " + closestdist + " units, " + mStops.get(closestpt).pt.getLatitudeE6() + "," + mStops.get(closestpt).pt.getLongitudeE6() + ", scr: " + pt_scr.x + ", " + pt_scr.y);
-		}
-*/
+
 		return closestpt;
 	}
 	
 	// This must be called on the GIU thread
     private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
     	public boolean onSingleTapConfirmed (MotionEvent e) {
-    		Log.d(TAG, "Single tap detected at " + e.getX() + "," + e.getY());
+//    		Log.d(TAG, "Single tap detected at " + e.getX() + "," + e.getY());
     		
     		int closestpt = findClosestStop((int)e.getX(), (int)e.getY());
     		if (closestpt >= 0) {
@@ -176,7 +169,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
     		return false;
         }
     	public void onLongPress (MotionEvent e) {
-    		Log.d(TAG, "Long press detected at " + e.getX() + "," + e.getY());
+//    		Log.d(TAG, "Long press detected at " + e.getX() + "," + e.getY());
 
     		int closestpt = findClosestStop((int)e.getX(), (int)e.getY());
     		if (closestpt >= 0)
@@ -198,7 +191,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	// This is called when a bus stop is clicked on in the map.
 	protected boolean onScreenTap(int index, boolean longpress) {
-		Log.d(TAG, "OnTap(" + index + ")");
+//		Log.d(TAG, "OnTap(" + index + ")");
 		stopDetail stop = mStops.get(index);
 		mStopid = stop.num;
 		final String stopname = stop.name;
@@ -258,8 +251,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	public void draw(Canvas canvas, MapView view, boolean shadow) {
 //		Log.d(TAG, "starting draw");
 		super.draw(canvas, view, shadow);
-		Log.v(TAG, "draw " + shadow + ", zoom is " + view.getZoomLevel());
-		Log.d(TAG, "view top: " + view.getLeft() + "," + view.getTop() + ", bottom: " + view.getRight() + "," + view.getBottom());
+//		Log.v(TAG, "draw " + shadow + ", zoom is " + view.getZoomLevel());
+//		Log.d(TAG, "view top: " + view.getLeft() + "," + view.getTop() + ", bottom: " + view.getRight() + "," + view.getBottom());
 
 		if (shadow)
 			return;
@@ -273,6 +266,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		Projection proj = view.getProjection();
 		Point pt_scr = new Point();
 
+		// size the stop marker
 		int zoom = view.getZoomLevel();
 		int dx = zoom/3, dy = zoom/2;
 		Rect stopbounds = new Rect(0,0,dx,dy);
@@ -289,12 +283,6 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			stopbounds.offsetTo(pt_scr.x-dx/2, pt_scr.y-dy/2);
 			stopmarker.setBounds(stopbounds);
 			stopmarker.draw(canvas);
-
-			// TODO remove debug code
-			if (stop.num.equals("1123") /*|| stop.num.equals("1124")*/) {
-				Log.d(TAG, "bbox: " + stopbounds.left + ", " + stopbounds.top + ", " + stopbounds.right + ", " + stopbounds.bottom);
-				Log.d(TAG, "stop 1123: " + stop.pt.getLatitudeE6() + "," + stop.pt.getLongitudeE6() + ", scr: " + pt_scr.x + ", " + pt_scr.y);
-			}
 
             // show name above, number below the icon
 			// TODO should use pretty popup labels

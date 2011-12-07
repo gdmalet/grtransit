@@ -125,21 +125,19 @@ public class RouteActivity extends MapActivity implements AnimationListener {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.busstopsmenu, menu);
 
-        // Hide the `Show on map' menu option
+        // Hide some menu options
         menu.removeItem(R.id.menu_showonmap);
+        menu.removeItem(R.id.menu_about);
 
         return true;
     }
 
-    // This is called when redisplaying the menu
+/*	// This is called when redisplaying the menu
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.menu_about);  // TODO ? do a removeitem above?
-        item.setEnabled(false); // only put the about button on the home screen.
-        item.setVisible(false);
         return true;
     }
-
+*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -203,16 +201,11 @@ public class RouteActivity extends MapActivity implements AnimationListener {
          */
         @Override
         protected ArrayList<RouteOverlay> doInBackground(Void... foo) {
-        	Log.v(TAG, "doInBackground()");
-    		Log.d(TAG, "Log.isLoggable says " + Log.isLoggable(TAG, Log.VERBOSE));
-
-            // TODO -- trip_headsign is wrong with route searches....
-    		TimingLogger timings = new TimingLogger(TAG, "Routes");
+//        	Log.v(TAG, "doInBackground()");
 
     		ArrayList<RouteOverlay> overlays = new ArrayList<RouteOverlay>(16);
     		
         	if (mRoute_id != null) {	// doing one route
-        		timings.addSplit("stops for one route");
 //	        	final String whereclause = "stop_id in "
 //	            	+ "(select stop_id from stop_times where trip_id = "
 //	            	+ "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
@@ -221,16 +214,13 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	            // It's too slow to fish out these stops, so for now show them all
 	            //mBusstopsOverlay.LoadDB(whereclause, selectargs, this);
 	            mBusstopsOverlay.LoadDB(null, null, this);
-        		timings.addSplit(" end LoadDB");
 	
 	            // Now draw the route
-        		timings.addSplit("drawing route");
 	    		RouteOverlay routeoverlay = new RouteOverlay(mContext, mRoute_id, mHeadsign);
 	            overlays.add(routeoverlay);
 
         	} else {
         		// doing many routes
-        		timings.addSplit("stops for many routes");
 //        		final String whereclause = "stop_id in "
 //        			+ "(select distinct stop_id from stop_times where trip_id in "
 //        			+ "(select trip_id from stop_times where stop_id = ?))";
@@ -239,7 +229,6 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	            // It's too slow to fish out these stops, so for now show them all
 	            //mBusstopsOverlay.LoadDB(whereclause, selectargs, this);
 	            mBusstopsOverlay.LoadDB(null, null, this);
-        		timings.addSplit(" end LoadDB");
 	
 	            // Now draw the routes - taken from RouteselectActivity
 	        	final Time t = new Time();	// TODO - this duplicates BusTimes?
@@ -251,12 +240,10 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	        	" start_date <= ? and end_date >= ?";
 	       		final String [] selectargs = new String[] {mStop_id, datenow, datenow};
 	        	Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
-        		timings.addSplit(" end db read for routes");
 	            
     			int maxcount = csr.getCount(), progresscount = 0;
 	    		boolean more = csr.moveToPosition(0);
 	       		while (more) {
-	        		timings.addSplit(" next route");
 	       			RouteOverlay routeoverlay = new RouteOverlay(mContext, csr.getString(0), csr.getString(1));
 		            overlays.add(routeoverlay);
 	       			more = csr.moveToNext();
@@ -264,8 +251,6 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	       		}
 	       		csr.close();
         	}
-    		timings.addSplit("done routes");
-        	timings.dumpToLog();
         	
             return overlays;    	
         }

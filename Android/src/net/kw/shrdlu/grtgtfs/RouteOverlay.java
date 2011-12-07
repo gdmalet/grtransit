@@ -19,6 +19,8 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import java.util.zip.Adler32;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -39,13 +41,18 @@ public class RouteOverlay extends Overlay {
 	
 	private int mCount;
 	private int [] mPoints = null;
-
+	private int mColourDiff;
 	private Rect mBoundingBox;
 
 	public RouteOverlay(Context context, String route, String headsign) {
 		super();
 //		Log.v(TAG, "starting RouteOverlay");
 		
+		// Try get different colours for different routes
+		Adler32 chksum = new Adler32();
+		chksum.update(new String(route+headsign).getBytes());
+		mColourDiff = chksum.hashCode() % 128;
+
 		final String table = "shapes";
 		final String [] columns = {"shape_pt_lat", "shape_pt_lon"};
 		final String whereclause = "shape_id = (select shape_id from trips where route_id = ? and trip_headsign = ?)";
@@ -117,7 +124,8 @@ public class RouteOverlay extends Overlay {
 		}
 
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint.setARGB(128, 224, 64, 32);
+//		paint.setARGB(128, 224, 64, 32);
+		paint.setARGB(192, 96+mColourDiff, 128-mColourDiff/4, 128+mColourDiff/2);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(5);
 		canvas.drawPath(path, paint);

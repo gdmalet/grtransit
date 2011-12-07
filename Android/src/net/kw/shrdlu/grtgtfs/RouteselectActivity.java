@@ -114,12 +114,17 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 //    		Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
     		// Catch a fling sort of from right to left
     		if (velocityX < -100 && Math.abs(velocityX) > Math.abs(velocityY)) {
-//    			Log.d(TAG, "fling detected");
-    			Globals.tracker.trackEvent("Routes","Select all",mStopid,1);
+//    			Log.d(TAG, "left fling detected");
+    			Globals.tracker.trackEvent("RoutesSelect","fling left",mStopid,1);
 				Intent bustimes = new Intent(mContext, TimesActivity.class);
 				String pkgstr = mContext.getApplicationContext().getPackageName();
 				bustimes.putExtra(pkgstr + ".stop_id", mStopid);
 				mContext.startActivity(bustimes);
+    			return true;
+    		} else if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
+//    			Log.d(TAG, "right fling detected");
+    			Globals.tracker.trackEvent("RouteSelect","fling right","",1);
+    			finish();
     			return true;
     		}
     		return false;
@@ -154,9 +159,6 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 	private class ProcessRoutes extends AsyncTask<Void, Integer, Void> {
 		static final String TAG = "ProcessBusTimes";
 
-		private Integer maxcount, progresscount = 0;
-		private int savedpos = -1, currentcount = 0;
-		
 		@Override
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
@@ -172,6 +174,9 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 		@Override
 		protected Void doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
+
+	    	ListView lv = getListView();
+	        lv.setOnTouchListener(mGestureListener);
 
 			publishProgress(25);	// fake it
 
@@ -190,9 +195,6 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 			publishProgress(50);	// fake it
 			startManagingCursor(mCsr);
 
-	    	ListView lv = getListView();
-	        lv.setOnTouchListener(mGestureListener);
-
 			publishProgress(75);	// fake it
 	        if (mCsr.getCount()>1) {
 	        	// Show msg describing a fling to see times for all routes.
@@ -209,7 +211,7 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 		
 		@Override
 		protected void onPostExecute(Void foo) {
-			//    	Log.v(TAG, "onPostExecute()");
+			//Log.v(TAG, "onPostExecute()");
 			
 			setListAdapter(new SearchCursorAdapter(mContext, mCsr));
 			

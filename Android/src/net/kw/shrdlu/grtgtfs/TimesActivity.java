@@ -30,10 +30,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -81,18 +83,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
         mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
         mStop_id  = intent.getStringExtra(pkgstr + ".stop_id");
         
-        if (!mCalendarChecked || (mCalendarChecked && mCalendarOK))
-        	new ProcessBusTimes().execute();
-        
-        // TODO this is probably wrong, since the above now goes in the background
-        if (mCalendarChecked && !mCalendarOK) {
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setIcon(R.drawable.grticon);
-			builder.setTitle(R.string.app_name);
-			builder.setMessage(R.string.calendar_expired);
-			builder.create();
-			builder.show();
-        }
+        new ProcessBusTimes().execute();
 	}
 
 	@Override
@@ -126,6 +117,9 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		@Override
 		protected String doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
+
+	    	ListView lv = getListView();
+	        lv.setOnTouchListener(mGestureListener);
 
 			// Will find where to position the list of bus departure times
 			final Time t = new Time(); t.setToNow();
@@ -205,8 +199,27 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		@Override
 		protected void onPostExecute(String nextdeparture) {
 			//    	Log.v(TAG, "onPostExecute()");
+			
+			mProgress.setVisibility(View.INVISIBLE);
+			mListDetail.startAnimation(mSlideOut);
+	        
+	        if (mRoute_id == null) {	// showing all routes
+	        	mTitle.setText("Stop " + mStop_id + " - all routes");
+	        } else {
+	        	mTitle.setText(mRoute_id + " - " + mHeadsign);
+	        }
 
-			if (mRoute_id != null) {	// showing one route
+	        if (!mCalendarOK) {
+	    		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+				builder.setIcon(R.drawable.grticon);
+				builder.setTitle(R.string.app_name);
+				builder.setMessage(R.string.calendar_expired);
+				builder.create();
+				builder.show();
+				return;
+	        }
+
+	        if (mRoute_id != null) {	// showing one route
 				TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, mListDetails);
 				mContext.setListAdapter(adapter);
 			} else {
@@ -238,15 +251,6 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			
 			msg.setGravity(Gravity.TOP, 0, 0);
 			msg.show();
-			
-			mProgress.setVisibility(View.INVISIBLE);
-			mListDetail.startAnimation(mSlideOut);
-	        
-	        if (mRoute_id == null) {	// showing all routes
-	        	mTitle.setText("Stop " + mStop_id + " - all routes");
-	        } else {
-	        	mTitle.setText(mRoute_id + " - " + mHeadsign);
-	        }
 		}
 	}    
 
@@ -303,6 +307,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
         inflater.inflate(R.menu.timesmenu, menu);
         return true;
     }
+	
 	// This is called when redisplaying the menu
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -347,6 +352,28 @@ public class TimesActivity extends ListActivity implements AnimationListener {
     	return super.onOptionsItemSelected(item);
     }
     
+	private View.OnTouchListener mGestureListener = new View.OnTouchListener() {
+		public boolean onTouch(View v, MotionEvent event) {
+			return mGestureDetector.onTouchEvent(event); 
+		}
+	};
+
+	// Catch flings, to show all busses coming to this stop.
+	// This must be called on the GIU thread.
+    private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
+    	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//    		Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
+    		// Catch a fling sort of from left to right
+    		if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
+//    			Log.d(TAG, "fling detected");
+    			Globals.tracker.trackEvent("Times","fling left","",1);
+    			finish();
+    			return true;
+    		}
+    		return false;
+    	}
+    });
+
     /**
      * Make the {@link ProgressBar} visible when our in-animation finishes.
      */

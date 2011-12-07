@@ -64,7 +64,7 @@ public class FavstopsActivity extends ListActivity {
 		if (Globals.CheckDebugBuild(this) && android.os.Build.VERSION.SDK_INT >= 9) {
 			API9ReflectionWrapper.setStrictMode();
 		} else {
-			Log.v(TAG,"Not setting up strict mode.");
+//			Log.d(TAG,"Not setting up strict mode.");
 		}
     
         super.onCreate(savedInstanceState);
