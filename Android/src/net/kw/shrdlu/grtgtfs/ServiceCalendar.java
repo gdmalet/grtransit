@@ -21,7 +21,6 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.HashMap;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.text.format.Time;
 import android.util.Log;
@@ -44,11 +43,8 @@ public class ServiceCalendar {
 		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
 	};
 	
-	private Context mContext;
-	
-	public ServiceCalendar(Context context) {
+	public ServiceCalendar() {
 //		Log.v(TAG, "ServiceCalendar()");
-		mContext = context;
 	}
 	
 	// Return string showing days this bus runs

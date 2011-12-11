@@ -19,14 +19,12 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.widget.Toast;
 
 public class Preferences {

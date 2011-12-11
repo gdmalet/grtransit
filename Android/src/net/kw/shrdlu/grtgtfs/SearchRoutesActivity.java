@@ -26,7 +26,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -54,12 +53,6 @@ public class SearchRoutesActivity extends ListActivity {
             mTitle.setText("Routes matching `" + query + "'");
 
             Globals.tracker.trackEvent("Search","Route",query,1);
-/*
- * TODO
-            // Hide the `Show' button used for showing routes.
-            Button btn = (Button) findViewById(R.id.timesbutton);
-            btn.setVisibility(View.GONE);
- */
             
             final String table = "trips";
             final String [] columns = {"distinct route_id as _id", "trip_headsign as descr"};

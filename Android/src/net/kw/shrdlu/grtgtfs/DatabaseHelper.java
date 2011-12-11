@@ -34,7 +34,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -105,7 +104,7 @@ public class DatabaseHelper {
 		DB_PATH += "/" + DB_NAME;
 /*
 		// The database is on the sdcard.
-		// TODO - there is serious b0rkenness here... And Android seems to deal with this itself.
+		// 
 		String sdstate = Environment.getExternalStorageState();
 		if  (!sdstate.equals(Environment.MEDIA_MOUNTED)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

@@ -25,19 +25,16 @@ import java.util.List;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.util.Log;
-import android.util.TimingLogger;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -173,7 +170,7 @@ public class RouteActivity extends MapActivity implements AnimationListener {
      * Background task to handle initial load of the overlays.
      */
     private class PrepareOverlays extends AsyncTask<Void, Integer, ArrayList<RouteOverlay>>  implements NotificationCallback {
-    	static final String TAG = "LookupTask";
+    	//static final String TAG = "LookupTask";
     	
     	// A callback from LoadDB, for updating our progress bar
     	public void notificationCallback(Integer progress) {

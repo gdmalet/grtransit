@@ -19,18 +19,17 @@
  
 package net.kw.shrdlu.grtgtfs;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
-import android.content.res.Configuration;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class Globals {
 	public static final String TAG = "Globals";
@@ -58,7 +57,7 @@ public class Globals {
         tracker = GoogleAnalyticsTracker.getInstance();
         if (isDebugBuild) {
 	        tracker.setDebug(true);
-	        tracker.setDryRun(false); /* TODO fix */
+	        tracker.setDryRun(true);
 	        tracker.startNewSession(context.getString(R.string.ga_api_key), 1, context);
         } else {
 	        tracker.setDebug(false);

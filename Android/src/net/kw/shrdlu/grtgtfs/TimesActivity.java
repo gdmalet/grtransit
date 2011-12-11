@@ -65,7 +65,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 //    	Log.v(TAG, "OnCreate()");
 
         mContext = this;
-        mServiceCalendar = new ServiceCalendar(mContext);
+        mServiceCalendar = new ServiceCalendar();
 
         setContentView(R.layout.timeslayout);
         

@@ -21,7 +21,6 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
@@ -57,7 +56,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
     private ProgressBar mProgress;
     private MapView mMapview;
 	private List<Overlay> mapOverlays;
-	private Drawable mStopmarker;
 	private MyLocationOverlay mMylocation;
 	private String mStopId;
 	private StopsOverlay mOverlay = null;

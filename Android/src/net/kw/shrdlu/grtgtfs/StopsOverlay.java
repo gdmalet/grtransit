@@ -33,7 +33,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.util.TimingLogger;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -133,13 +132,11 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 //		Log.d(TAG, "exiting LoadDB");
 	}
 
-	private MapView mView;	// TODO
-	private int findClosestStop(int screenX, int screenY) {
-
+	private int findClosestStop(MapView view, int screenX, int screenY) {
 		final int DIST_THRESHOLD = 512;
 		int closestpt = -1;
 		double closestdist = 1000000.0;
-		Projection proj = mView.getProjection();
+		Projection proj = view.getProjection();
 		GeoPoint scr = proj.fromPixels(screenX, screenY);
 		
 		for (int i=0 ; i<mStops.size(); i++) {
@@ -157,11 +154,12 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 	
 	// This must be called on the GIU thread
+	private MapView mView;	// TODO this is messy
     private GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
     	public boolean onSingleTapConfirmed (MotionEvent e) {
 //    		Log.d(TAG, "Single tap detected at " + e.getX() + "," + e.getY());
     		
-    		int closestpt = findClosestStop((int)e.getX(), (int)e.getY());
+    		int closestpt = findClosestStop(mView, (int)e.getX(), (int)e.getY());
     		if (closestpt >= 0) {
     			onScreenTap(closestpt, false);
     			return true;	// consumed it
@@ -171,7 +169,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
     	public void onLongPress (MotionEvent e) {
 //    		Log.d(TAG, "Long press detected at " + e.getX() + "," + e.getY());
 
-    		int closestpt = findClosestStop((int)e.getX(), (int)e.getY());
+    		int closestpt = findClosestStop(mView, (int)e.getX(), (int)e.getY());
     		if (closestpt >= 0)
     			onScreenTap(closestpt, true);
         }
@@ -179,7 +177,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 
     @Override
     public boolean onTouchEvent(MotionEvent e, MapView mapView) {
-    	mView = mapView;	// TODO
+    	mView = mapView;	// TODO this is messy
     	return mGestureDetector.onTouchEvent(e);
     }
 	

@@ -25,8 +25,6 @@ package net.kw.shrdlu.grtgtfs;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

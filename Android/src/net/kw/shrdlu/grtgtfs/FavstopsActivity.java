@@ -21,25 +21,19 @@ package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -84,10 +78,9 @@ public class FavstopsActivity extends ListActivity {
         v.setText(R.string.favourites_title);
 
         // ProcessStops();	// will be done in onResume()
-        
+
+        // Don't want the progress bar, so get rid of it.
 		mProgress.setVisibility(View.INVISIBLE);
-//TODO		mProgress.setVisibility(View.VISIBLE);
-//		mProgress.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 55));
 		mListDetail.startAnimation(mSlideOut);
 	}
 
@@ -199,7 +192,6 @@ public class FavstopsActivity extends ListActivity {
         return true;
     }
 
-    // TODO See http://developer.android.com/guide/topics/ui/menus.html
     // Should have a super class that defines and handles these menus, and
     // then derive this and other activities that use the same menus from that.
     @Override
