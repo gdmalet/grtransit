@@ -38,98 +38,97 @@ import com.google.android.maps.Projection;
 
 public class RouteOverlay extends Overlay {
 	private static final String TAG = "BusrouteOverlay";
-	
+
 	private int mCount;
-	private int [] mPoints = null;
+	private int[] mPoints = null;
 	private int mColourDiff;
 	private Rect mBoundingBox;
 
 	public RouteOverlay(Context context, String route, String headsign) {
 		super();
-//		Log.v(TAG, "starting RouteOverlay");
-		
+		// Log.v(TAG, "starting RouteOverlay");
+
 		// Try get different colours for different routes
-		Adler32 chksum = new Adler32();
-		chksum.update(new String(route+headsign).getBytes());
+		final Adler32 chksum = new Adler32();
+		chksum.update(new String(route + headsign).getBytes());
 		mColourDiff = chksum.hashCode() % 128;
 
 		final String table = "shapes";
-		final String [] columns = {"shape_pt_lat", "shape_pt_lon"};
+		final String[] columns = { "shape_pt_lat", "shape_pt_lon" };
 		final String whereclause = "shape_id = (select shape_id from trips where route_id = ? and trip_headsign = ?)";
-		String [] selectargs = {route, headsign};
+		final String[] selectargs = { route, headsign };
 		final String orderby = "cast(shape_pt_sequence as integer)";
-		
-    	Cursor csr;
-    	try {
-    		csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null,null, orderby);
-    	} catch (SQLException e) {
-    		Log.e(TAG, "DB query failed: " + e.getMessage());
-    		return;
-    	}
 
-        csr.moveToPosition(0);
-        mCount = csr.getCount();
-   		mPoints = new int[mCount*2];
-   		
+		Cursor csr;
+		try {
+			csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, orderby);
+		} catch (final SQLException e) {
+			Log.e(TAG, "DB query failed: " + e.getMessage());
+			return;
+		}
+
+		csr.moveToPosition(0);
+		mCount = csr.getCount();
+		mPoints = new int[mCount * 2];
+
 		// Going to track the edges
 		Rect boundingbox = null;
 
-   		for (int i=0; i<mCount; i++) {
-   			int stop_lat = (int)(csr.getFloat(0) * 1000000); // microdegrees
-   			int stop_lon = (int)(csr.getFloat(1) * 1000000);
+		for (int i = 0; i < mCount; i++) {
+			final int stop_lat = (int) (csr.getFloat(0) * 1000000); // microdegrees
+			final int stop_lon = (int) (csr.getFloat(1) * 1000000);
 
-   			mPoints[i*2] = stop_lat;
-   			mPoints[(i*2)+1] = stop_lon;
-   			
-   			if (boundingbox == null)
-   				boundingbox = new Rect(stop_lat,stop_lon, stop_lat,stop_lon);
-   			else
-   				boundingbox.union(stop_lat, stop_lon);
+			mPoints[i * 2] = stop_lat;
+			mPoints[(i * 2) + 1] = stop_lon;
 
-   			csr.moveToNext();
-   		}
-   		csr.close();
-   		
+			if (boundingbox == null)
+				boundingbox = new Rect(stop_lat, stop_lon, stop_lat, stop_lon);
+			else
+				boundingbox.union(stop_lat, stop_lon);
+
+			csr.moveToNext();
+		}
+		csr.close();
+
 		// Stash values needed for later calls
-   		mBoundingBox = boundingbox;
-   		
-//		Log.v(TAG, "ending RouteOverlay");
+		mBoundingBox = boundingbox;
+
+		// Log.v(TAG, "ending RouteOverlay");
 	}
-		
+
 	// Seeing we don't store all points in the overlay, we need to provide our own
 	// span values, since the overlay has no clue of what we're doing.
 	public Rect getBoundingBoxE6() {
 		return mBoundingBox;
 	}
-	
+
 	@Override
 	public void draw(Canvas canvas, MapView view, boolean shadow) {
 		super.draw(canvas, view, shadow);
-//		Log.v(TAG, "draw " + shadow);
-		
-		if (shadow || mPoints == null || mCount <= 0)
-			return;
-		
+		// Log.v(TAG, "draw " + shadow);
+
+		if (shadow || mPoints == null || mCount <= 0) return;
+
 		// Convert geo points to points on the canvas
-		Projection proj = view.getProjection();
-		Point pt_scr = new Point();
-		Path path = new Path();
+		final Projection proj = view.getProjection();
+		final Point pt_scr = new Point();
+		final Path path = new Path();
 
 		proj.toPixels(new GeoPoint(mPoints[0], mPoints[1]), pt_scr);
 		path.moveTo(pt_scr.x, pt_scr.y);
 
-		for (int i=1; i<mCount; i++) {
-			proj.toPixels(new GeoPoint(mPoints[i*2], mPoints[(i*2)+1]), pt_scr);
-	  		path.lineTo(pt_scr.x, pt_scr.y);
+		for (int i = 1; i < mCount; i++) {
+			proj.toPixels(new GeoPoint(mPoints[i * 2], mPoints[(i * 2) + 1]), pt_scr);
+			path.lineTo(pt_scr.x, pt_scr.y);
 		}
 
-		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//		paint.setARGB(128, 224, 64, 32);
-		paint.setARGB(192, 96+mColourDiff, 128-mColourDiff/4, 128+mColourDiff/2);
+		final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		// paint.setARGB(128, 224, 64, 32);
+		paint.setARGB(255, 96 + mColourDiff, 128 - mColourDiff / 4, 128 + mColourDiff / 2);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(5);
 		canvas.drawPath(path, paint);
 
-//		Log.v(TAG, "draw exit");
+		// Log.v(TAG, "draw exit");
 	}
 }
