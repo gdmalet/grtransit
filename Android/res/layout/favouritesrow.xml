@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:stretchColumns="1"
+  style="@style/List">
+  
+ <TableRow>
+ 
+     <TextView
+   android:id="@+id/label2"
+   style="@style/List.Rightlabel" />
+
+     <TextView
+   android:id="@+id/value"
+   style="@style/List.Content" />
+   
+ </TableRow>
+ 
+ <TableRow>
+ 
+  <TextView
+   android:id="@+id/label"
+   style="@style/List.Label" />
+
+  <TextView
+   android:id="@+id/value2"
+   style="@style/List.Content" />
+   
+ </TableRow>
+
+</TableLayout>

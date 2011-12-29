@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 package net.kw.shrdlu.grtgtfs;
 
 import android.app.Activity;
@@ -43,59 +43,42 @@ public class Globals {
 
 	// Used by tracker.
 	private static final int TRACKER_VISITOR_SCOPE = 1;
-    private static final int TRACKER_SESSION_SCOPE = 2;
-    private static final int TRACKER_PAGE_SCOPE = 3;
-    private static final int TRACKER_UUID = 1;
-    private static final int TRACKER_VERSION = 2;
-    private static final int TRACKER_CV_SCREEN_ORIENTATION_SLOT = 3;
+	// private static final int TRACKER_SESSION_SCOPE = 2;
+	// private static final int TRACKER_PAGE_SCOPE = 3;
+	private static final int TRACKER_UUID = 1;
+	private static final int TRACKER_VERSION = 2;
+
+	// private static final int TRACKER_CV_SCREEN_ORIENTATION_SLOT = 3;
 
 	public Globals(Context context) {
 		isDebugBuild = CheckDebugBuild(context);
-    	mPreferences = new Preferences(context);
+		mPreferences = new Preferences(context);
 		dbHelper = new DatabaseHelper(context);
-		
-        tracker = GoogleAnalyticsTracker.getInstance();
-        if (isDebugBuild) {
-	        tracker.setDebug(true);
-	        tracker.setDryRun(true);
-	        tracker.startNewSession(context.getString(R.string.ga_api_key), 1, context);
-        } else {
-	        tracker.setDebug(false);
-	        tracker.setDryRun(false);
-	        tracker.startNewSession(context.getString(R.string.ga_api_key), 77, context);        	
-        }
-        
-        tracker.setCustomVar(TRACKER_UUID,  	// Slot
-                "UUID", 			        	// Name
-                Globals.mPreferences.getUUID(), // Value
-                TRACKER_VISITOR_SCOPE);     	// Scope
 
-        try {
-        	String v = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        	if (isDebugBuild) v += " debug";
-			tracker.setCustomVar(TRACKER_VERSION,
-					"Version", v,
-					TRACKER_VISITOR_SCOPE);
-		} catch (NameNotFoundException e) {
+		tracker = GoogleAnalyticsTracker.getInstance();
+		if (isDebugBuild) {
+			tracker.setDebug(true);
+			tracker.setDryRun(true);
+			tracker.startNewSession(context.getString(R.string.ga_api_key), 1, context);
+		} else {
+			tracker.setDebug(false);
+			tracker.setDryRun(false);
+			tracker.startNewSession(context.getString(R.string.ga_api_key), 77, context);
+		}
+
+		tracker.setCustomVar(TRACKER_UUID, // Slot
+				"UUID", // Name
+				Globals.mPreferences.getUUID(), // Value
+				TRACKER_VISITOR_SCOPE); // Scope
+
+		try {
+			String v = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+			if (isDebugBuild) v += " debug";
+			tracker.setCustomVar(TRACKER_VERSION, "Version", v, TRACKER_VISITOR_SCOPE);
+		} catch (final NameNotFoundException e) {
 			Log.e(TAG, "Exception when getting versionName");
 			e.printStackTrace();
 		}
-/*
-        // Determine the screen orientation and set it in a custom variable.
-        String orientation = "unknown";
-        switch (context.getResources().getConfiguration().orientation) {
-            case Configuration.ORIENTATION_LANDSCAPE:
-                orientation = "landscape";
-                break;
-            case Configuration.ORIENTATION_PORTRAIT:
-                orientation = "portrait";
-                break;
-        }
-        tracker.setCustomVar(TRACKER_CV_SCREEN_ORIENTATION_SLOT,  	// Slot
-                             "Screen Orientation", 			        // Name
-                             orientation,                 			// Value
-                             TRACKER_SESSION_SCOPE);              	// Scope
-*/
 	}
 
 	/**
@@ -103,15 +86,15 @@ public class Globals {
 	 */
 	public static void showAbout(Activity context) {
 
-		View messageView = context.getLayoutInflater().inflate(R.layout.about, null, false);
+		final View messageView = context.getLayoutInflater().inflate(R.layout.about, null, false);
 
 		// When linking text, force to always use default color. This works
 		// around a pressed color state bug.
-		TextView textView = (TextView) messageView.findViewById(R.id.about_credits);
-		int defaultColor = textView.getTextColors().getDefaultColor();
+		final TextView textView = (TextView) messageView.findViewById(R.id.about_credits);
+		final int defaultColor = textView.getTextColors().getDefaultColor();
 		textView.setTextColor(defaultColor);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setIcon(R.drawable.grticon);
 		builder.setTitle(R.string.app_name);
 		builder.setView(messageView);
@@ -119,22 +102,23 @@ public class Globals {
 		builder.show();
 	}
 
-
 	// Checks if this apk was built using the debug certificate
 	// See http://stackoverflow.com/questions/3029819/android-automatically-choose-debug-release-maps-api-key/3828864#3828864
 	private static boolean checkedBuild = false;
+
 	public static boolean CheckDebugBuild(Context context) {
 		if (!checkedBuild) {
 			try {
-				Signature [] sigs = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES).signatures;
-				for (int i = 0; i < sigs.length; i++) {
-					if (sigs[i].hashCode() == DEBUG_SIGNATURE_HASH) {
+				final Signature[] sigs = context.getPackageManager().getPackageInfo(context.getPackageName(),
+						PackageManager.GET_SIGNATURES).signatures;
+				for (final Signature sig : sigs) {
+					if (sig.hashCode() == DEBUG_SIGNATURE_HASH) {
 						Log.d(TAG, "This is a debug build!");
 						isDebugBuild = true;
 						break;
 					}
 				}
-			} catch (NameNotFoundException e) {
+			} catch (final NameNotFoundException e) {
 				e.printStackTrace();
 			}
 			checkedBuild = true;

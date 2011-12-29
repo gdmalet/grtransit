@@ -25,8 +25,11 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,205 +46,209 @@ public class FavstopsActivity extends ListActivity {
 
 	// Need one instance of this
 	private static Globals mGlobals = null;
-	
+
 	private ListActivity mContext;
 	private ArrayList<String[]> mDetails;
 	private String mStopid;
-    private View mListDetail;
-    private Animation mSlideOut;
-    private ProgressBar mProgress;
+	private View mListDetail;
+	private Animation mSlideOut;
+	private ProgressBar mProgress;
+	private TwoRowAdapter mAdapter;
 
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		// Do this before instantiating Globals, as that may do something we'd like
 		// to see by having StrictMode on already.
 		if (Globals.CheckDebugBuild(this) && android.os.Build.VERSION.SDK_INT >= 9) {
 			API9ReflectionWrapper.setStrictMode();
 		} else {
-//			Log.d(TAG,"Not setting up strict mode.");
+			// Log.d(TAG,"Not setting up strict mode.");
 		}
-    
-        super.onCreate(savedInstanceState);
-//    	Log.v(TAG, "OnCreate()");
+
+		super.onCreate(savedInstanceState);
+		// Log.v(TAG, "OnCreate()");
 
 		mContext = this;
 		if (mGlobals == null) mGlobals = new Globals(mContext);
 
-        setContentView(R.layout.timeslayout);
+		setContentView(R.layout.timeslayout);
 
-        // Load animations used to show/hide progress bar
-        mProgress = (ProgressBar) findViewById(R.id.progress);
-        mListDetail = findViewById(R.id.detail_area);
-        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+		// Load animations used to show/hide progress bar
+		mProgress = (ProgressBar) findViewById(R.id.progress);
+		mListDetail = findViewById(R.id.detail_area);
+		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
 
-        TextView v = (TextView) findViewById(R.id.timestitle);
-        v.setText(R.string.favourites_title);
+		final TextView v = (TextView) findViewById(R.id.timestitle);
+		v.setText(R.string.favourites_title);
 
-        // ProcessStops();	// will be done in onResume()
+		// ProcessStops(); // will be done in onResume()
 
-        // Don't want the progress bar, so get rid of it.
+		// Don't want the progress bar, so get rid of it.
 		mProgress.setVisibility(View.INVISIBLE);
 		mListDetail.startAnimation(mSlideOut);
 	}
 
-	/* Wrap calls to functions that may not be in the version of the OS
-	 * that we're running. This class is only instantiated if we refer to
-	 * it, at which point Dalvik would discover the error. So don't refer
-	 * to it if we know it will fail....
+	/*
+	 * Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if we refer to it, at which point
+	 * Dalvik would discover the error. So don't refer to it if we know it will fail....
 	 */
 	private static class API9ReflectionWrapper {
 		public static void setStrictMode() {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-			//.detectDiskReads()
-			//.detectDiskWrites()
-			.detectNetwork()
-			//.penaltyFlashScreen()
-			.build());
-			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-			.detectLeakedSqlLiteObjects()
-			//.detectLeakedClosableObjects()
-			.penaltyLog()
-			.penaltyDeath()
-			.build());
-		}		
+			// .detectDiskReads()
+			// .detectDiskWrites()
+					.detectNetwork()
+					// .penaltyFlashScreen()
+					.build());
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+			// .detectLeakedClosableObjects()
+					.penaltyLog().penaltyDeath().build());
+		}
 	}
-	
-	/* Separate the processing of stops, so we can re-do it when we need
-	 * to refresh the screen on a new intent.
+
+	/*
+	 * Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent.
 	 */
 	static boolean mShownalert = false;
+
 	protected void ProcessStops() {
 
-		mDetails = Globals.mPreferences.GetBusstopFavourites();
-        TimesArrayAdapter adapter = new TimesArrayAdapter(this, mDetails);
-    	setListAdapter(adapter);
+		mDetails = new ArrayList<String[]>();
+		final ArrayList<String[]> favstops = Globals.mPreferences.GetBusstopFavourites();
+		// Convert from stop/description to required 4-entry layout.
+		for (final String[] stop : favstops)
+			mDetails.add(new String[] { stop[0], stop[1], "", "" }); // will do the rest later.
+
+		mAdapter = new TwoRowAdapter(this, R.layout.favouritesrow, mDetails);
+		setListAdapter(mAdapter);
 
 		// Must do all this without doing a database read, which allows database upgrade
 		// to happen in the background on a service thread, without us blocking, until
 		// we really have to.
-        if (!mDetails.isEmpty()) {
-        	        
-	        // register to get long clicks on bus stop list
-	        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//	        	    Log.i(TAG, "onItemLongClickClick position " + position);
-	        	    onListItemLongClick(parent, view, position, id);
-	        		return true;	// to say we consumed the click
-				}
-	        });
-        } else if (!mShownalert) {
-        	mShownalert = true;
-        	
-	        TextView textView;
-	        final View messageView = mContext.getLayoutInflater().inflate(R.layout.about, null, false);
-	        
-	        textView = (TextView) messageView.findViewById(R.id.about_header);
-	        textView.setVisibility(TextView.GONE);
-	        textView = (TextView) messageView.findViewById(R.id.about_credits);
-	        textView.setText(R.string.no_favourites);
+		if (!mDetails.isEmpty()) {
 
-	        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//	        builder.setIcon(R.drawable.grticon);
-	        builder.setTitle(R.string.favourites_title)
-	        .setView(messageView)
-	        .create()
-	        .show();
-	    }
+			// register to get long clicks on bus stop list
+			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+					// Log.i(TAG, "onItemLongClickClick position " + position);
+					onListItemLongClick(parent, view, position, id);
+					return true; // to say we consumed the click
+				}
+			});
+
+			// Load times of next bus for each stop.
+			new LoadTimes().execute();
+
+		} else if (!mShownalert) {
+			mShownalert = true;
+
+			TextView textView;
+			final View messageView = mContext.getLayoutInflater().inflate(R.layout.about, null, false);
+
+			textView = (TextView) messageView.findViewById(R.id.about_header);
+			textView.setVisibility(TextView.GONE);
+			textView = (TextView) messageView.findViewById(R.id.about_credits);
+			textView.setText(R.string.no_favourites);
+
+			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			// builder.setIcon(R.drawable.grticon);
+			builder.setTitle(R.string.favourites_title).setView(messageView).create().show();
+		}
 	}
-	
+
 	// This is called when we use SINGLE_TOP, to flush the stack and redraw the list,
 	// which is necessary when the list changes.
-//	@Override
-//	protected void onNewIntent(Intent intent) {
-//		Log.d(TAG, "onNewIntent()");
-//		super.onNewIntent(intent);
-//		View v = findViewById(R.id.detail_area);
-//		v.invalidate();
-//		ProcessStops();
-//	}
-	
+	// @Override
+	// protected void onNewIntent(Intent intent) {
+	// Log.d(TAG, "onNewIntent()");
+	// super.onNewIntent(intent);
+	// View v = findViewById(R.id.detail_area);
+	// v.invalidate();
+	// ProcessStops();
+	// }
+
 	// If we're popping back down the stack, the favourites list could have been added to
 	// since we were last here, so make sure it is reloaded before display.
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-        // We want to track a pageView every time this Activity gets the focus.
-        Globals.tracker.trackPageView("/" + this.getLocalClassName());
+
+		// We want to track a pageView every time this Activity gets the focus.
+		Globals.tracker.trackPageView("/" + this.getLocalClassName());
 
 		findViewById(R.id.detail_area).invalidate();
 		ProcessStops();
 	}
-	
-    @Override
+
+	@Override
 	protected void onDestroy() {
-    	super.onDestroy();
-    	Globals.tracker.dispatch();	// perhaps unnecessary?
-    	Globals.tracker.stopSession();
+		super.onDestroy();
+		Globals.tracker.dispatch(); // perhaps unnecessary?
+		Globals.tracker.stopSession();
 	}
-	
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.busstopsmenu, menu);
 
-        // Change `Show on map' menu option to `Show map'.
-        MenuItem item = menu.findItem(R.id.menu_showonmap);
-        item.setTitle(R.string.showmap);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		final MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.busstopsmenu, menu);
 
-        return true;
-    }
+		// Change `Show on map' menu option to `Show map'.
+		final MenuItem item = menu.findItem(R.id.menu_showonmap);
+		item.setTitle(R.string.showmap);
 
-    // Should have a super class that defines and handles these menus, and
-    // then derive this and other activities that use the same menus from that.
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch (item.getItemId()) {
-	    	case R.id.menu_showonmap: {
-	    		Globals.tracker.trackEvent("Menu","Show map","",1);
-	    		startActivity(new Intent(mContext, StopsActivity.class));
-	    		return true;
-	    	}
-	    	case R.id.menu_location: {
-	    		Globals.tracker.trackEvent("Menu","Show location","",1);
-	    		Intent stops = new Intent(mContext, StopsActivity.class);
-	    		stops.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-	    		startActivity(stops);
-	    		return true;
-	    	}
-	    	case R.id.menu_about: {
-	    		Globals.tracker.trackEvent("Menu","Show about","",1);
-	    		Globals.showAbout(this);
-	    		return true;
-	    	}
-	    	case R.id.menu_searchstops: {
-	    		Globals.tracker.trackEvent("Menu","Search stops","",1);
-	    		Intent stopsearch = new Intent(mContext, SearchStopsActivity.class);
-	    		stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-	    		startActivity(stopsearch);
-	    		return true;
-	    	}
-	    	case R.id.menu_searchroutes: {
-	    		Globals.tracker.trackEvent("Menu","Search routes","",1);
-	    		Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
-	    		routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-	    		startActivity(routesearch);
-	    		return true;
-	    	}
-    	}
-    	return super.onOptionsItemSelected(item);
-    }
+		return true;
+	}
+
+	// Should have a super class that defines and handles these menus, and
+	// then derive this and other activities that use the same menus from that.
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_showonmap: {
+			Globals.tracker.trackEvent("Menu", "Show map", "", 1);
+			startActivity(new Intent(mContext, StopsActivity.class));
+			return true;
+		}
+		case R.id.menu_location: {
+			Globals.tracker.trackEvent("Menu", "Show location", "", 1);
+			final Intent stops = new Intent(mContext, StopsActivity.class);
+			stops.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+			startActivity(stops);
+			return true;
+		}
+		case R.id.menu_about: {
+			Globals.tracker.trackEvent("Menu", "Show about", "", 1);
+			Globals.showAbout(this);
+			return true;
+		}
+		case R.id.menu_searchstops: {
+			Globals.tracker.trackEvent("Menu", "Search stops", "", 1);
+			final Intent stopsearch = new Intent(mContext, SearchStopsActivity.class);
+			stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+			startActivity(stopsearch);
+			return true;
+		}
+		case R.id.menu_searchroutes: {
+			Globals.tracker.trackEvent("Menu", "Search routes", "", 1);
+			final Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
+			routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+			startActivity(routesearch);
+			return true;
+		}
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 	// Called from the listener above for a long click
 	protected void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-//		Log.v(TAG, "long clicked position " + position);
-		
-		final String [] strs = (String[])parent.getItemAtPosition(position);
+		// Log.v(TAG, "long clicked position " + position);
+
+		final String[] strs = (String[]) parent.getItemAtPosition(position);
 		mStopid = strs[0];
 		final String stop_name = strs[1];
-		final int aryposn = position;	// so we can access it in the listener class.
-		
-		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+		final int aryposn = position; // so we can access it in the listener class.
+
+		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
@@ -250,37 +257,76 @@ public class FavstopsActivity extends ListActivity {
 					// activities in the stack may contain out of date lists, so flush and start again.
 					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
-//				case DialogInterface.BUTTON_NEGATIVE:
-//					// nothing
-//					break;
+				// case DialogInterface.BUTTON_NEGATIVE:
+				// // nothing
+				// break;
 				}
 				dialog.cancel();
 			}
 		};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle("Stop " + mStopid + ", " + stop_name); 
-		builder.setMessage("Remove from your list of favourites?")
-		.setPositiveButton("Yes", listener)
-		.setNegativeButton("No", listener);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle("Stop " + mStopid + ", " + stop_name);
+		builder.setMessage("Remove from your list of favourites?").setPositiveButton("Yes", listener)
+				.setNegativeButton("No", listener);
 		builder.create();
 		builder.show();
 	}
-		
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-//		Log.v(TAG, "clicked position " + position);
-		
-		final String [] strs = (String[])l.getItemAtPosition(position);
+		// Log.v(TAG, "clicked position " + position);
+
+		final String[] strs = (String[]) l.getItemAtPosition(position);
 		mStopid = strs[0];
 		final String stop_name = strs[1];
 
-		Globals.tracker.trackEvent("Favourites","Select stop",mStopid,1);
-		
-		Intent routeselect = new Intent(mContext, RouteselectActivity.class);
-		String pkgstr = mContext.getApplicationContext().getPackageName();
+		Globals.tracker.trackEvent("Favourites", "Select stop", mStopid, 1);
+
+		final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		routeselect.putExtra(pkgstr + ".stop_id", mStopid);
 		routeselect.putExtra(pkgstr + ".stop_name", stop_name);
 		mContext.startActivity(routeselect);
 	}
+
+	/*
+	 * Do the processing to load the ArrayAdapter for display.
+	 */
+	private class LoadTimes extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... foo) {
+
+			// Find time of next bus for each stop.
+			final Time t = new Time(); // TODO - this duplicates BusTimes?
+			t.setToNow();
+			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
+
+			for (final String[] pref : mDetails) {
+				final String stopid = pref[0];
+				final String headsign = pref[1];
+
+				Log.d(TAG, "Searching for busses for stop " + stopid + " " + headsign);
+				final String[] nextbus = ServiceCalendar.getNextDepartureTime(stopid, datenow);
+				if (nextbus != null) {
+					Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " + nextbus[2]);
+					pref[2] = nextbus[0]; // time
+					pref[3] = nextbus[1] + " - " + nextbus[2]; // route details
+				} else {
+					Log.d(TAG, "Next bus for stop " + stopid + ": --none--");
+					pref[2] = " -- none -- "; // time
+					pref[3] = "No more busses today"; // route details
+				}
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void foo) {
+			// Log.v(TAG, "onPostExecute()");
+			mAdapter.notifyDataSetChanged();
+		}
+	}
+
 }

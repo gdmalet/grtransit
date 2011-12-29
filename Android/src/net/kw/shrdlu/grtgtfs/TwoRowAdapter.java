@@ -31,54 +31,54 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class TimesArrayAdapter2 extends ArrayAdapter/*<ArrayList<String[]>>*/ {
+public class TwoRowAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 	private static final String TAG = "TimesArrayAdapter2";
 
-	private final ArrayList<String []> mDetails;
+	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
-	
-	public TimesArrayAdapter2(ListActivity context, ArrayList<String[]> details) {
-    	super(context, R.layout.row2layout, details);
-//    	Log.v(TAG, "TimesArrayAdapter()");
-    
-    	mDetails = details;
-    	mInflater = LayoutInflater.from(context);
+
+	public TwoRowAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+		super(context, layout, details);
+		// Log.v(TAG, "TimesArrayAdapter()");
+
+		mDetails = details;
+		mInflater = LayoutInflater.from(context);
 	}
-	
+
 	static class ViewHolder {
 		TextView label;
 		TextView value;
 		TextView label2;
 		TextView value2;
 	}
-	
+
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-//    	Log.v(TAG, "getview(): position " + position);
+		// Log.v(TAG, "getview(): position " + position);
 		ViewHolder holder;
-		
+
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
 			view = mInflater.inflate(R.layout.row2layout, parent, false);
-//			Log.d(TAG, "new view " + view);
-			
+			// Log.d(TAG, "new view " + view);
+
 			// Save the view when we look them up.
 			holder = new ViewHolder();
-			holder.label = (TextView)view.findViewById(R.id.label);
-			holder.value = (TextView)view.findViewById(R.id.value);
-			holder.label2 = (TextView)view.findViewById(R.id.label2);
-			holder.value2 = (TextView)view.findViewById(R.id.value2);
+			holder.label = (TextView) view.findViewById(R.id.label);
+			holder.value = (TextView) view.findViewById(R.id.value);
+			holder.label2 = (TextView) view.findViewById(R.id.label2);
+			holder.value2 = (TextView) view.findViewById(R.id.value2);
 			view.setTag(holder);
 		} else {
-//			Log.d(TAG, "reusing view " + view);
-			holder = (ViewHolder)view.getTag();
+			// Log.d(TAG, "reusing view " + view);
+			holder = (ViewHolder) view.getTag();
 		}
 
 		holder.label.setText(mDetails.get(position)[0]);
-    	holder.value.setText(mDetails.get(position)[1]);
+		holder.value.setText(mDetails.get(position)[1]);
 		holder.label2.setText(mDetails.get(position)[2]);
-    	holder.value2.setText(mDetails.get(position)[3]);
+		holder.value2.setText(mDetails.get(position)[3]);
 
 		return view;
 	}

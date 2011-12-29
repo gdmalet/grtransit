@@ -19,125 +19,275 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.database.Cursor;
 import android.text.format.Time;
 import android.util.Log;
 import android.util.TimeFormatException;
+import android.util.TimingLogger;
 
 public class ServiceCalendar {
 	private static final String TAG = "ServiceCalendar";
 	private static final String mDBQuery = "select * from calendar where service_id = ?";
-	private static final String mDBQueryDate  = "select * from calendar_dates where service_id = ? and date = ?";
+	private static final String mDBQueryDate = "select * from calendar_dates where service_id = ? and date = ?";
 
 	// Cache some results, to save db lookups
-	private static final HashMap<String,String> truemap = new HashMap<String, String>(32);
-	private static final HashMap<String,String> falsemap = new HashMap<String, String>(32);
-	
+	private static final HashMap<String, String> truemap = new HashMap<String, String>(32);
+	private static final HashMap<String, String> falsemap = new HashMap<String, String>(32);
+	private static final HashMap<String, String> trip2servicemap = new HashMap<String, String>(64);
+
 	// Match day number to a string and an abbreviation
-	private static final String[] mWeekDays = {
-		"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"
-	};
-	private static final String[] mWeekDaysAbbrev = {
-		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-	};
-	
+	private static final String[] mWeekDays = { "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" };
+	private static final String[] mWeekDaysAbbrev = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
 	public ServiceCalendar() {
-//		Log.v(TAG, "ServiceCalendar()");
+		// Log.v(TAG, "ServiceCalendar()");
 	}
-	
-	// Return string showing days this bus runs
-	private String getDays(Cursor csr) {
+
+	// Return string showing days this bus runs.
+	// Cursor points to a row in the calendar table for this service_id.
+	private static String getDays(Cursor csr) {
 		String days = new String();
-		
-		for (int i=0; i<7; i++)
-			if (csr.getInt(csr.getColumnIndex(mWeekDays[i])) == 1)
-				days += mWeekDaysAbbrev[i] + " ";
-		
+
+		for (int i = 0; i < 7; i++)
+			if (csr.getInt(csr.getColumnIndex(mWeekDays[i])) == 1) days += mWeekDaysAbbrev[i] + " ";
+
 		return days;
 	}
 
 	// Do the actual work of the getDays() call, but it makes
 	// sure we close the cursor on exit.
-	private String process_db(String service_id, String date, boolean limit, Cursor csr) {
+	private static String process_db(String service_id, String date, boolean limit, Cursor csr) {
 
-		if (!csr.moveToFirst())
-			return null;
-		
+		if (!csr.moveToFirst()) return null;
+
 		// Make sure it's in a current schedule period
-		String start = csr.getString(csr.getColumnIndex("start_date"));
-		String end = csr.getString(csr.getColumnIndex("end_date"));
+		final String start = csr.getString(csr.getColumnIndex("start_date"));
+		final String end = csr.getString(csr.getColumnIndex("end_date"));
 		if (date.compareTo(start) < 0 || date.compareTo(end) > 0)
-			// return "Schedule data has expired!";
+		// return "Schedule data has expired!";
 			return null;
 
 		// If we're not limiting the display, return what we have
-		if (!limit)
-			return getDays(csr);
-		
+		if (!limit) return getDays(csr);
+
 		// Check for exceptions
-		String [] selectargs = {service_id, date};
-		Cursor exp = DatabaseHelper.ReadableDB().rawQuery(mDBQueryDate, selectargs);
+		final String[] selectargs = { service_id, date };
+		final Cursor exp = DatabaseHelper.ReadableDB().rawQuery(mDBQueryDate, selectargs);
 		if (exp.moveToFirst()) {
-			int exception = exp.getInt(exp.getColumnIndex("exception_type"));
-			if (exception == 2)			// service removed for this day
+			final int exception = exp.getInt(exp.getColumnIndex("exception_type"));
+			if (exception == 2) // service removed for this day
 				return null;
-			if (exception == 1)
-				return getDays(csr);	// service added for this day
+			if (exception == 1) return getDays(csr); // service added for this day
 			Log.e(TAG, "bogus exception type " + exception + " for service " + service_id + "!");
 			return null;
 		}
 		exp.close();
-		
+
 		// Check if the bus runs on the given day of the week.
-		Time t = new Time();
+		final Time t = new Time();
 		try {
 			t.parse(date);
 			t.normalize(false);
-		} catch (TimeFormatException e) {
+		} catch (final TimeFormatException e) {
 			Log.e(TAG, "got bogus date \"" + date + "\"");
 			return null;
 		}
-		int weekday = t.weekDay;	// 0--6
-		if (csr.getInt(csr.getColumnIndex(mWeekDays[weekday])) == 1)
-			return getDays(csr);
-		
-		return null;	// doesn't run on given date.
+		final int weekday = t.weekDay; // 0--6
+		if (csr.getInt(csr.getColumnIndex(mWeekDays[weekday])) == 1) return getDays(csr);
+
+		return null; // doesn't run on given date.
 	}
-	
+
 	// Return a string showing the days a bus runs, or null if it doesn't
 	// run on the given date. Limit to correct days of week, or not.
-	public String getDays(String service_id, String date, boolean limit) {
-		
-		String retstr;
-		
+	public static String getTripDaysofWeek(String trip_id, String date, boolean limit) {
+
+		String retstr = null;
+
+		// Get and translate the service id
+		String service_id = null;
+		if (trip2servicemap.containsKey(trip_id)) {
+			service_id = trip2servicemap.get(trip_id);
+		} else {
+			final String svsq = "select service_id from trips where trip_id = ?";
+			final String[] svsargs = { trip_id };
+			final Cursor svs = DatabaseHelper.ReadableDB().rawQuery(svsq, svsargs);
+			svs.moveToFirst();
+			service_id = svs.getString(0);
+			svs.close();
+			if (service_id != null && !service_id.equals("")) trip2servicemap.put(trip_id, service_id);
+		}
+		if (service_id == null) return null;
+
 		// First check the cache
 		if (limit) {
-			if (truemap.containsKey(service_id+date)) {
-				retstr = truemap.get(service_id+date);
-//				Log.v(TAG, "Retrieved " + service_id+":"+date + " -> " + retstr + " from truecache");
+			if (truemap.containsKey(service_id + date)) {
+				retstr = truemap.get(service_id + date);
+				// Log.v(TAG, "Retrieved " + service_id+":"+date + " -> " + retstr + " from truecache");
 				return retstr;
 			}
 		} else {
-			if (falsemap.containsKey(service_id+date)) {
-				retstr = falsemap.get(service_id+date);
-//				Log.v(TAG, "Retrieved " + service_id+":"+date + " -> " + retstr + " from falsecache");
+			if (falsemap.containsKey(service_id + date)) {
+				retstr = falsemap.get(service_id + date);
+				// Log.v(TAG, "Retrieved " + service_id+":"+date + " -> " + retstr + " from falsecache");
 				return retstr;
 			}
 		}
-		
-		String [] selectargs = {service_id};
-		Cursor csr = DatabaseHelper.ReadableDB().rawQuery(mDBQuery, selectargs);
+
+		final String[] selectargs = { service_id };
+		final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(mDBQuery, selectargs);
 		retstr = process_db(service_id, date, limit, csr);
 		csr.close();
-		
+
 		// Save in cache
 		if (limit)
-			truemap.put(service_id+date, retstr);
+			truemap.put(service_id + date, retstr);
 		else
-			falsemap.put(service_id+date, retstr);
-		
+			falsemap.put(service_id + date, retstr);
+
 		return retstr;
+	}
+
+	/*
+	 * Return a list of times that all busses for all routes depart a given stop, sorted by time. List is departure_time, route_id, trip_headsign.
+	 */
+	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String date, boolean limittotoday,
+			NotificationCallback task) {
+
+		if (!Log.isLoggable(TAG, Log.VERBOSE)) Log.d(TAG, "warning - logging not enabled for timinglogger.");
+		// final TimingLogger timings = new TimingLogger(TAG, "top - all routes");
+
+		final String q = "select departure_time as _id, trips.trip_id, route_id, trip_headsign from stop_times "
+				+ "join trips on stop_times.trip_id = trips.trip_id where " + "stop_id = ? order by departure_time";
+		final String[] selectargs = new String[] { stopid };
+		final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
+
+		// Load the array for the list
+		final int maxcount = csr.getCount();
+		int progresscount = 0;
+		final ArrayList<String[]> listdetails = new ArrayList<String[]>(maxcount);
+
+		// timings.addSplit("middle");
+
+		boolean more = csr.moveToFirst();
+		while (more) {
+
+			// timings.addSplit("loop top");
+			final String trip_id = csr.getString(1);
+			final String daysstr = ServiceCalendar.getTripDaysofWeek(trip_id, date, limittotoday);
+			// timings.addSplit("loop middle");
+
+			// Only add if the bus runs on this day.
+			if (daysstr != null) listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(2), csr.getString(3) });
+
+			if (task != null) task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
+
+			// timings.addSplit("loop bottom");
+
+			more = csr.moveToNext();
+		}
+		csr.close();
+
+		// timings.addSplit("end");
+		// timings.dumpToLog();
+		return listdetails;
+	}
+
+	/*
+	 * Return a list of times that all busses for a given route depart a given stop, sorted by time. List is departure_times, and days of week the bus runs.
+	 */
+	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String routeid, String headsign, String date,
+			boolean limittotoday, NotificationCallback task) {
+
+		if (!Log.isLoggable(TAG, Log.VERBOSE)) Log.d(TAG, "warning - logging not enabled for timinglogger.");
+		final TimingLogger timings = new TimingLogger(TAG, "top - one route");
+
+		final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
+				+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
+		final String[] selectargs = new String[] { stopid, routeid, headsign };
+		final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
+
+		// Load the array for the list
+		final int maxcount = csr.getCount();
+		int progresscount = 0;
+		final ArrayList<String[]> listdetails = new ArrayList<String[]>(maxcount);
+
+		timings.addSplit("middle");
+
+		boolean more = csr.moveToFirst();
+		while (more) {
+
+			timings.addSplit("loop top");
+			final String trip_id = csr.getString(1);
+			final String daysstr = ServiceCalendar.getTripDaysofWeek(trip_id, date, limittotoday);
+			timings.addSplit("loop middle");
+
+			// Only add if the bus runs on this day.
+			if (daysstr != null) listdetails.add(new String[] { csr.getString(0), daysstr });
+
+			if (task != null) task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
+
+			timings.addSplit("loop bottom");
+
+			more = csr.moveToNext();
+		}
+		csr.close();
+
+		timings.addSplit("end");
+		timings.dumpToLog();
+		return listdetails;
+	}
+
+	/*
+	 * Return the time and route details of the next bus for any route, or null if there isn't one today.
+	 */
+	public static String[] getNextDepartureTime(String stopid, String date) {
+
+		final ArrayList<String[]> listdetails = getRouteDepartureTimes(stopid, date, true, null);
+
+		if (listdetails == null) return null;
+
+		final Time t = new Time();
+		t.setToNow();
+		final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+
+		// Find when the next bus leaves
+		for (int i = 0; i < listdetails.size(); i++) {
+			final String departure_time = listdetails.get(i)[0];
+			if (departure_time.compareTo(timenow) >= 0) {
+				return new String[] { departure_time, listdetails.get(i)[2], listdetails.get(i)[3] };
+			}
+		}
+
+		// No more busses today.
+		return null;
+	}
+
+	/*
+	 * Return the time of the next bus for a given route, or null if there isn't one today.
+	 */
+	public static String getNextDepartureTime(String stopid, String routeid, String headsign, String date) {
+
+		final ArrayList<String[]> listdetails = getRouteDepartureTimes(stopid, routeid, headsign, date, true, null);
+
+		if (listdetails == null) return null;
+
+		final Time t = new Time();
+		t.setToNow();
+		final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+
+		// Find when the next bus leaves
+		for (int i = 0; i < listdetails.size(); i++) {
+			final String departure_time = listdetails.get(i)[0];
+			if (departure_time.compareTo(timenow) >= 0) {
+				return departure_time;
+			}
+		}
+
+		// No more busses today.
+		return null;
 	}
 }
