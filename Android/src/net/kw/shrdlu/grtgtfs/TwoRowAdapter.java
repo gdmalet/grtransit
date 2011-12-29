@@ -31,11 +31,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class TwoRowAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
-	private static final String TAG = "TimesArrayAdapter2";
+public class TwoRowAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
+	private static final String TAG = "TwoRowAdapter";
 
 	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
+	private final int mLayout;
 
 	public TwoRowAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
@@ -43,6 +44,7 @@ public class TwoRowAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 
 		mDetails = details;
 		mInflater = LayoutInflater.from(context);
+		mLayout = layout;
 	}
 
 	static class ViewHolder {
@@ -60,7 +62,7 @@ public class TwoRowAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
-			view = mInflater.inflate(R.layout.row2layout, parent, false);
+			view = mInflater.inflate(mLayout, parent, false);
 			// Log.d(TAG, "new view " + view);
 
 			// Save the view when we look them up.

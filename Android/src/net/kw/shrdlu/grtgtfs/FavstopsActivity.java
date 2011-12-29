@@ -117,7 +117,7 @@ public class FavstopsActivity extends ListActivity {
 		final ArrayList<String[]> favstops = Globals.mPreferences.GetBusstopFavourites();
 		// Convert from stop/description to required 4-entry layout.
 		for (final String[] stop : favstops)
-			mDetails.add(new String[] { stop[0], stop[1], "", "" }); // will do the rest later.
+			mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times) }); // will do the rest later.
 
 		mAdapter = new TwoRowAdapter(this, R.layout.favouritesrow, mDetails);
 		setListAdapter(mAdapter);
@@ -296,6 +296,11 @@ public class FavstopsActivity extends ListActivity {
 	private class LoadTimes extends AsyncTask<Void, Void, Void> {
 
 		@Override
+		protected void onProgressUpdate(Void... foo) {
+			mAdapter.notifyDataSetChanged();
+		}
+
+		@Override
 		protected Void doInBackground(Void... foo) {
 
 			// Find time of next bus for each stop.
@@ -312,21 +317,15 @@ public class FavstopsActivity extends ListActivity {
 				if (nextbus != null) {
 					Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " + nextbus[2]);
 					pref[2] = nextbus[0]; // time
-					pref[3] = nextbus[1] + " - " + nextbus[2]; // route details
+					pref[3] = nextbus[1] + " " + nextbus[2]; // route details
 				} else {
 					Log.d(TAG, "Next bus for stop " + stopid + ": --none--");
-					pref[2] = " -- none -- "; // time
-					pref[3] = "No more busses today"; // route details
+					pref[2] = " --:--:--"; // time
+					pref[3] = getString(R.string.no_more_busses); // route details
 				}
+				publishProgress();
 			}
 			return null;
 		}
-
-		@Override
-		protected void onPostExecute(Void foo) {
-			// Log.v(TAG, "onPostExecute()");
-			mAdapter.notifyDataSetChanged();
-		}
 	}
-
 }

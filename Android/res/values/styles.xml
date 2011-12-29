@@ -16,41 +16,51 @@
 
 <resources>
 
-    <style name="Text" />
+    <style name="Text" parent="@android:style/TextAppearance"/>
 
     <style name="Text.Loading">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="ListTitle">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
-<!--        <item name="android:textColor">#AA000FFF</item>  --> 
-    </style>
-    
-    <style name="List">
+    <style name="List" parent="Text">
+		<item name="android:textColor">@android:color/primary_text_light</item>
         <item name="android:background">#A000A0A0</item>
-<!--    <item name="android:background">@android:color/background_light</item> -->
         <item name="android:textSize">18sp</item>
         <item name="android:paddingLeft">3dip</item>
         <item name="android:paddingRight">3dip</item>
-    </style>
+        </style>
+    
+    <style name="List.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        </style>
     
     <style name="List.Label">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">18sp</item>
         <item name="android:paddingBottom">3dip</item>
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
+        </style>
 
+    <style name="List.Content">
+    </style>
+    
     <style name="List.Rightlabel">
         <item name="android:gravity">right</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
+        </style>
 
-    <style name="List.Content">
-        <item name="android:textColor">@android:color/secondary_text_light</item>
+    <style name="List.Stoplabel">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#E40040E0</item>
+        <item name="android:background">@drawable/maptext</item>
+        </style>
+
+    <style name="List.Stoptime">
+        <item name="android:textColor">#00FF00</item>
+        <item name="android:ems">4</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingBottom">3dip</item>
     </style>
+    
 </resources>

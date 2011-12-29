@@ -278,7 +278,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setTextAlign(Paint.Align.LEFT);
 		paint.setTextSize(textSize);
-		paint.setARGB(228, 0, 64, 224);
+		paint.setARGB(228, 0, 64, 224); // TODO should match List.Stoplabel style.
 
 		// Convert geo points to points on the canvas
 		final Projection proj = view.getProjection();

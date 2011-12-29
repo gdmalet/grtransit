@@ -210,7 +210,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 				getListView().setSelectionFromTop(savedpos, 50); // position next bus just below top
 			} else {
 				setSelection(mListDetails.size()); // position the list at the last bus
-				msg = Toast.makeText(mContext, "No more busses today", Toast.LENGTH_LONG);
+				msg = Toast.makeText(mContext, R.string.no_more_busses, Toast.LENGTH_LONG);
 			}
 
 			msg.setGravity(Gravity.TOP, 0, 0);

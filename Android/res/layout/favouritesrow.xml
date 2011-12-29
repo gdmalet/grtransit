@@ -1,33 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:stretchColumns="1"
-  style="@style/List">
-  
- <TableRow>
- 
-     <TextView
-   android:id="@+id/label2"
-   style="@style/List.Rightlabel" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-     <TextView
-   android:id="@+id/value"
-   style="@style/List.Content" />
-   
- </TableRow>
- 
- <TableRow>
- 
-  <TextView
-   android:id="@+id/label"
-   style="@style/List.Label" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
 
-  <TextView
-   android:id="@+id/value2"
-   style="@style/List.Content" />
-   
- </TableRow>
+        <TextView
+            android:id="@+id/label"
+            style="@style/List.Stoplabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-</TableLayout>
+        <TextView
+            android:id="@+id/value"
+            style="@style/List.Content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/label2"
+            style="@style/List.Stoptime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/value2"
+            style="@style/List.Content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>
