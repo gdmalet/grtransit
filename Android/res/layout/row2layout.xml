@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:stretchColumns="1">
-  
- <TableRow>
- 
-  <TextView
-   android:id="@+id/label"
-   style="@style/List.Label" />
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:stretchColumns="1"
+    android:background="@color/list_dark_background"
+    style="@style/List" >
 
-  <TextView
-   android:id="@+id/value"
-   style="@style/List.Content" />
-   
- </TableRow>
- 
- <TableRow>
- 
-  <TextView
-   android:id="@+id/label2"
-   style="@style/List.Rightlabel" />
+    <TableRow>
 
-  <TextView
-   android:id="@+id/value2"
-   style="@style/List.Content" />
-   
- </TableRow>
+        <TextView
+            android:id="@+id/label"
+            style="@style/List.Stoptime" />
+
+        <TextView
+            android:id="@+id/value"
+            style="@style/List.Content" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/label2"
+            style="@style/List.Routelabel" />
+
+        <TextView
+            android:id="@+id/value2"
+            style="@style/List.Content" />
+    </TableRow>
 
 </TableLayout>
