@@ -54,7 +54,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 	private View mListDetail;
 	private Animation mSlideIn, mSlideOut;
 	private ProgressBar mProgress;
-	private TwoRowAdapter mAdapter;
+	private TwoRowArrayAdapter mAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,10 +115,11 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		mDetails = new ArrayList<String[]>();
 		final ArrayList<String[]> favstops = Globals.mPreferences.GetBusstopFavourites();
 		// Convert from stop/description to required 4-entry layout.
-		for (final String[] stop : favstops)
-			mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times) }); // will do the rest later.
-
-		mAdapter = new TwoRowAdapter(this, R.layout.favouritesrow, mDetails);
+		synchronized (mDetails) {
+			for (final String[] stop : favstops)
+				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?" }); // will do the rest later.
+		}
+		mAdapter = new TwoRowArrayAdapter(this, R.layout.favouritesrow, mDetails);
 		setListAdapter(mAdapter);
 
 		// Must do all this without doing a database read, which allows database upgrade
@@ -252,7 +253,9 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
 					Globals.mPreferences.RemoveBusstopFavourite(mStopid);
-					mDetails.remove(aryposn);
+					synchronized (mDetails) {
+						mDetails.remove(aryposn);
+					}
 					// activities in the stack may contain out of date lists, so flush and start again.
 					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
@@ -315,22 +318,26 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
 
 			Integer progresscount = 0;
-			for (final String[] pref : mDetails) {
-				final String stopid = pref[0];
-				final String headsign = pref[1];
+			synchronized (mDetails) {
+				for (final String[] pref : mDetails) {
+					final String stopid = pref[0];
+					final String headsign = pref[1];
 
-				Log.d(TAG, "Searching for busses for stop " + stopid + " " + headsign);
-				final String[] nextbus = ServiceCalendar.getNextDepartureTime(stopid, datenow);
-				if (nextbus != null) {
-					Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " + nextbus[2]);
-					pref[2] = nextbus[0]; // time
-					pref[3] = nextbus[1] + " " + nextbus[2]; // route details
-				} else {
-					Log.d(TAG, "Next bus for stop " + stopid + ": --none--");
-					pref[2] = " --:--:--"; // time
-					pref[3] = getString(R.string.no_more_busses); // route details
+					Log.d(TAG, "Searching for busses for stop " + stopid + " " + headsign);
+					final String[] nextbus = ServiceCalendar.getNextDepartureTime(stopid, datenow);
+					if (nextbus != null) {
+						Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " + nextbus[2]);
+						pref[2] = nextbus[0]; // time
+						pref[3] = nextbus[2]; // route headsign
+						pref[4] = nextbus[1]; // route number
+					} else {
+						Log.d(TAG, "Next bus for stop " + stopid + ": --none--");
+						pref[2] = " -- -- --"; // time
+						pref[3] = getString(R.string.no_more_busses); // route details
+						pref[4] = "-";
+					}
+					publishProgress(++progresscount * 100 / mDetails.size());
 				}
-				publishProgress(++progresscount * 100 / mDetails.size());
 			}
 			return null;
 		}

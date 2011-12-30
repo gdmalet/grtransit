@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:stretchColumns="1"
+    android:orientation="vertical"
     android:background="@color/list_dark_background"
     style="@style/List" >
 
-    <TableRow>
+   <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/label"
@@ -15,9 +19,13 @@
         <TextView
             android:id="@+id/value"
             style="@style/List.Content" />
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/label2"
@@ -26,6 +34,6 @@
         <TextView
             android:id="@+id/value2"
             style="@style/List.Content" />
-    </TableRow>
+    </LinearLayout>
 
-</TableLayout>
+</LinearLayout>

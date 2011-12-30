@@ -295,8 +295,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		ArrayList<cachedStop> cachedStops = null;
 		ArrayList<Rect> cachedRects = null;
 		if (zoom > textZoomLimit) {
-			final Bitmap bmTextBox = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.maptext);
-			npTextBox = new NinePatch(bmTextBox, bmTextBox.getNinePatchChunk(), "maptext");
+			final Bitmap bmTextBox = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.stopnumber);
+			npTextBox = new NinePatch(bmTextBox, bmTextBox.getNinePatchChunk(), "stopnumber");
 			textbounds = new Rect();
 			cachedStops = new ArrayList<cachedStop>(32);
 			cachedRects = new ArrayList<Rect>(64);

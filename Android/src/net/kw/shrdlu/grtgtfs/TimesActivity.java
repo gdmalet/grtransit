@@ -180,10 +180,10 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			}
 
 			if (mRoute_id != null) { // showing one route
-				final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, mListDetails);
+				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
 				mContext.setListAdapter(adapter);
 			} else {
-				final TwoRowAdapter adapter = new TwoRowAdapter(mContext, R.layout.row2layout, mListDetails);
+				final TwoRowArrayAdapter adapter = new TwoRowArrayAdapter(mContext, R.layout.row2layout, mListDetails);
 				mContext.setListAdapter(adapter);
 			}
 

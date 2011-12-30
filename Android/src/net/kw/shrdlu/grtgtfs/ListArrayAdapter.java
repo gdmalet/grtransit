@@ -31,48 +31,59 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class TimesArrayAdapter extends ArrayAdapter/*<ArrayList<String[]>>*/ {
-	private static final String TAG = "BustimesArrayAdapter";
+public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
+	// private static final String TAG = "ListArrayAdapter";
 
-	private final ArrayList<String []> mDetails;
+	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
-	
-	public TimesArrayAdapter(ListActivity context, ArrayList<String []> details) {
-    	super(context, R.layout.rowlayout, details);
-//    	Log.v(TAG, "TimesArrayAdapter()");
-    
-    	mDetails = details;
-    	mInflater = LayoutInflater.from(context);
+	private final int mLayout;
+
+	public ListArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+		super(context, layout, details);
+		// Log.v(TAG, "TimesArrayAdapter()");
+
+		mDetails = details;
+		mInflater = LayoutInflater.from(context);
+		mLayout = layout;
 	}
-	
+
 	static class ViewHolder {
 		TextView label;
 		TextView value;
 	}
-	
+
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-//    	Log.v(TAG, "getview(): position " + position);
+		// Log.v(TAG, "getview(): position " + position);
 		ViewHolder holder;
-		
+
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
-			view = mInflater.inflate(R.layout.rowlayout, parent, false);
-//			Log.d(TAG, "new view " + view);
-			
+			view = mInflater.inflate(mLayout, parent, false);
+			// Log.d(TAG, "new view " + view);
+
 			// Save the view when we look them up.
 			holder = new ViewHolder();
-			holder.label = (TextView)view.findViewById(R.id.label);
-			holder.value = (TextView)view.findViewById(R.id.value);
+			holder.label = (TextView) view.findViewById(R.id.label);
+			holder.value = (TextView) view.findViewById(R.id.value);
 			view.setTag(holder);
 		} else {
-//			Log.d(TAG, "reusing view " + view);
-			holder = (ViewHolder)view.getTag();
+			// Log.d(TAG, "reusing view " + view);
+			holder = (ViewHolder) view.getTag();
 		}
 
-		holder.label.setText(mDetails.get(position)[0]);
-    	holder.value.setText(mDetails.get(position)[1]);
+		// Look for things like route 7A, where the A is part of the description
+		// TODO - char test should use a type test or something. This assumes US ASCII...
+		if (mLayout == R.layout.route_numanddesc && mDetails.get(position)[1].length() > 2
+				&& mDetails.get(position)[1].charAt(1) == ' ' && mDetails.get(position)[1].charAt(0) >= 'A'
+				&& mDetails.get(position)[1].charAt(0) <= 'Z') {
+			holder.label.setText(mDetails.get(position)[0] + mDetails.get(position)[1].charAt(2));
+			holder.value.setText(mDetails.get(position)[1].substring(2));
+		} else {
+			holder.label.setText(mDetails.get(position)[0]);
+			holder.value.setText(mDetails.get(position)[1]);
+		}
 
 		return view;
 	}

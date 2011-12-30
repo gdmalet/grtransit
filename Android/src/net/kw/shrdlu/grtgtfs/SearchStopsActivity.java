@@ -35,70 +35,70 @@ public class SearchStopsActivity extends ListActivity {
 	private static final String TAG = "BusstopsearchActivity";
 
 	private SearchStopsActivity mContext;
-    private TextView mTitle;
-	
+	private TextView mTitle;
+
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-       	setContentView(R.layout.timeslayout);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.timeslayout);
 
-//    	Log.v(TAG, "OnCreate()");
-    	mContext = this;
-	
-        Intent intent = getIntent();
-        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
+		// Log.v(TAG, "OnCreate()");
+		mContext = this;
 
-            mTitle = (TextView) findViewById(R.id.timestitle);
-            mTitle.setText("Stops matching `" + query + "'");
+		final Intent intent = getIntent();
+		if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
+			final String query = intent.getStringExtra(SearchManager.QUERY);
 
-            Globals.tracker.trackEvent("Search","Stop",query,1);
-        
-            final String table = "stops";
-            final String [] columns = {"stop_id as _id", "stop_name as descr"};
-            final String whereclause = "stop_id like '%' || ? || '%' or stop_name like '%' || ? || '%'";
-            String [] selectargs = {query, query};
-            Cursor csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, null, null);
-            startManagingCursor(csr);
+			mTitle = (TextView) findViewById(R.id.timestitle);
+			mTitle.setText("Stops matching `" + query + "'");
 
-	        SearchCursorAdapter adapter = new SearchCursorAdapter(this, csr);
-	    	setListAdapter(adapter);
-	    	
-	        // register to get long clicks on bus stop list
-	        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			Globals.tracker.trackEvent("Search", "Stop", query, 1);
+
+			final String table = "stops";
+			final String[] columns = { "stop_id as _id", "stop_name as descr" };
+			final String whereclause = "stop_id like '%' || ? || '%' or stop_name like '%' || ? || '%'";
+			final String[] selectargs = { query, query };
+			final Cursor csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, null, null);
+			startManagingCursor(csr);
+
+			final ListCursorAdapter adapter = new ListCursorAdapter(this, R.layout.stop_numanddesc, csr);
+			setListAdapter(adapter);
+
+			// register to get long clicks on bus stop list
+			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-	        	    onListItemLongClick(parent, view, position, id);
-	        	    return true;	// we consumed the click
+					onListItemLongClick(parent, view, position, id);
+					return true; // we consumed the click
 				}
-	        });
+			});
 
-        } else {
-        	// Called from another activity, so put up search box
-        	onSearchRequested();
-        }	
-    }
-	
+		} else {
+			// Called from another activity, so put up search box
+			onSearchRequested();
+		}
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		// We want to track a pageView every time this Activity gets the focus.
-        Globals.tracker.trackPageView("/" + this.getLocalClassName());
+		Globals.tracker.trackPageView("/" + this.getLocalClassName());
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-//		Log.v(TAG, "clicked position " + position);
-		
-		Cursor csr = (Cursor)l.getItemAtPosition(position);
+		// Log.v(TAG, "clicked position " + position);
+
+		final Cursor csr = (Cursor) l.getItemAtPosition(position);
 		final String stop_id = csr.getString(0);
 		final String stop_name = csr.getString(1);
-        final String pkgstr = mContext.getApplicationContext().getPackageName();
+		final String pkgstr = mContext.getApplicationContext().getPackageName();
 
-//		Intent busstop = new Intent(mContext, BusstopsActivity.class);
-//		busstop.putExtra(pkgstr + ".stop_id", stop_id);
-//		startActivity(busstop);
+		// Intent busstop = new Intent(mContext, BusstopsActivity.class);
+		// busstop.putExtra(pkgstr + ".stop_id", stop_id);
+		// startActivity(busstop);
 
-		Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+		final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
 		routeselect.putExtra(pkgstr + ".stop_id", stop_id);
 		routeselect.putExtra(pkgstr + ".stop_name", stop_name);
 		startActivity(routeselect);
@@ -106,33 +106,30 @@ public class SearchStopsActivity extends ListActivity {
 
 	// Called from the listener above for a long click
 	public void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-//		Log.v(TAG, "long clicked position " + position);
-		
-		Cursor csr = (Cursor)parent.getItemAtPosition(position);
+		// Log.v(TAG, "long clicked position " + position);
+
+		final Cursor csr = (Cursor) parent.getItemAtPosition(position);
 		final String stop_id = csr.getString(0);
 		final String stop_name = csr.getString(1);
-		
-		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+
+		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
 					Globals.mPreferences.AddBusstopFavourite(stop_id, stop_name);
-//					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));	
+					// mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
-//				case DialogInterface.BUTTON_NEGATIVE:
-//					// nothing
-//					break;
+				// case DialogInterface.BUTTON_NEGATIVE:
+				// // nothing
+				// break;
 				}
 				dialog.cancel();
 			}
 		};
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle("Stop " + stop_id + ", " + stop_name); 
-		builder.setMessage("Add to your list of favourites?")
-		.setPositiveButton("Yes", listener)
-		.setNegativeButton("No", listener)
-		.create()
-		.show();
+
+		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle("Stop " + stop_id + ", " + stop_name);
+		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener).setNegativeButton("No", listener)
+				.create().show();
 	}
 }

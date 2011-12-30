@@ -3,7 +3,7 @@
     android:installLocation="preferExternal"
     package="net.kw.shrdlu.grtgtfs"
     android:versionCode="10"
-    android:versionName="0.97.9.1" >
+    android:versionName="0.97.9.2" >
 
     <uses-sdk
         android:minSdkVersion="4"

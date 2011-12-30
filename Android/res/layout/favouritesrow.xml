@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    style="@style/List">
+    android:background="@color/list_dark_background"
+    style="@style/List" >
     
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,15 +14,11 @@
 
         <TextView
             android:id="@+id/label"
-            style="@style/List.Stoplabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            style="@style/List.Stoplabel" />
 
         <TextView
             android:id="@+id/value"
-            style="@style/List.Content"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            style="@style/List.Content" />
     </LinearLayout>
 
     <LinearLayout
@@ -32,15 +29,15 @@
 
         <TextView
             android:id="@+id/label2"
-            style="@style/List.Stoptime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            style="@style/List.Stoptime" />
+
+        <TextView
+            android:id="@+id/routelabel"
+            style="@style/List.Routelabel" />
 
         <TextView
             android:id="@+id/value2"
-            style="@style/List.Stopbusname"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            style="@style/List.Stopbusname" />
     </LinearLayout>
 
 </LinearLayout>
