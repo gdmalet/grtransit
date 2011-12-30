@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
+    android:orientation="vertical"
+    style="@style/List">
+    
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <TextView
@@ -37,7 +38,7 @@
 
         <TextView
             android:id="@+id/value2"
-            style="@style/List.Content"
+            style="@style/List.Stopbusname"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

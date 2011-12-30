@@ -14,10 +14,7 @@
 
     <ProgressBar
         android:id="@+id/map_progress"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="fill_parent"
-        android:paddingTop="8px"
-        android:layout_height="15px" />
+        style="@style/progressbar"/>
     
     <com.google.android.maps.MapView
         android:id="@+id/mapview"

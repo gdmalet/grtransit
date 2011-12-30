@@ -35,13 +35,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class FavstopsActivity extends ListActivity {
+public class FavstopsActivity extends ListActivity implements AnimationListener {
 	private static final String TAG = "FavstopsActivity";
 
 	// Need one instance of this
@@ -51,7 +52,7 @@ public class FavstopsActivity extends ListActivity {
 	private ArrayList<String[]> mDetails;
 	private String mStopid;
 	private View mListDetail;
-	private Animation mSlideOut;
+	private Animation mSlideIn, mSlideOut;
 	private ProgressBar mProgress;
 	private TwoRowAdapter mAdapter;
 
@@ -76,16 +77,14 @@ public class FavstopsActivity extends ListActivity {
 		// Load animations used to show/hide progress bar
 		mProgress = (ProgressBar) findViewById(R.id.progress);
 		mListDetail = findViewById(R.id.detail_area);
+		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+		mSlideIn.setAnimationListener(this);
 
 		final TextView v = (TextView) findViewById(R.id.timestitle);
 		v.setText(R.string.favourites_title);
 
 		// ProcessStops(); // will be done in onResume()
-
-		// Don't want the progress bar, so get rid of it.
-		mProgress.setVisibility(View.INVISIBLE);
-		mListDetail.startAnimation(mSlideOut);
 	}
 
 	/*
@@ -293,10 +292,17 @@ public class FavstopsActivity extends ListActivity {
 	/*
 	 * Do the processing to load the ArrayAdapter for display.
 	 */
-	private class LoadTimes extends AsyncTask<Void, Void, Void> {
+	private class LoadTimes extends AsyncTask<Void, Integer, Void> {
 
 		@Override
-		protected void onProgressUpdate(Void... foo) {
+		protected void onPreExecute() {
+			mProgress.setProgress(0);
+			mListDetail.startAnimation(mSlideIn);
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... parms) {
+			mProgress.setProgress(parms[0]);
 			mAdapter.notifyDataSetChanged();
 		}
 
@@ -308,6 +314,7 @@ public class FavstopsActivity extends ListActivity {
 			t.setToNow();
 			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
 
+			Integer progresscount = 0;
 			for (final String[] pref : mDetails) {
 				final String stopid = pref[0];
 				final String headsign = pref[1];
@@ -323,9 +330,31 @@ public class FavstopsActivity extends ListActivity {
 					pref[2] = " --:--:--"; // time
 					pref[3] = getString(R.string.no_more_busses); // route details
 				}
-				publishProgress();
+				publishProgress(++progresscount * 100 / mDetails.size());
 			}
 			return null;
 		}
+
+		@Override
+		protected void onPostExecute(Void foo) {
+			mProgress.setVisibility(View.INVISIBLE);
+			mListDetail.startAnimation(mSlideOut);
+		}
+
+	}
+
+	/**
+	 * Make the {@link ProgressBar} visible when our in-animation finishes.
+	 */
+	public void onAnimationEnd(Animation animation) {
+		mProgress.setVisibility(View.VISIBLE);
+	}
+
+	public void onAnimationRepeat(Animation animation) {
+		// Not interested if the animation repeats
+	}
+
+	public void onAnimationStart(Animation animation) {
+		// Not interested when the animation starts
 	}
 }

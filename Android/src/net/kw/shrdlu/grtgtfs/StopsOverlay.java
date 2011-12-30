@@ -278,7 +278,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setTextAlign(Paint.Align.LEFT);
 		paint.setTextSize(textSize);
-		paint.setARGB(228, 0, 64, 224); // TODO should match List.Stoplabel style.
+		paint.setColor(mContext.getResources().getColor(R.color.grt_blue));
 
 		// Convert geo points to points on the canvas
 		final Projection proj = view.getProjection();
@@ -330,11 +330,11 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 				// The origin for the box and text is the top left corner.
 				final Point[] offsets = { new Point(-textbounds.right / 2 - dx / 2, dy + padding), // centred bottom
 						new Point(-textbounds.right / 2 - dx / 2, -dy - dy - textSize - padding), // centred top
-						new Point(dx / 2 + padding, +padding), // lower right
 						new Point(dx / 2 + padding, -textSize / 2 - dy / 2), // right
+						new Point(-dx * 2 - textbounds.right - padding, -textSize / 2 - dy / 2), // left
+						new Point(dx / 2 + padding, +padding), // lower right
 						new Point(dx / 2 + padding, -textSize - padding - dy), // upper right
 						new Point(-dx * 2 - textbounds.right - padding, -textSize - padding - dy), // upper left
-						new Point(-dx * 2 - textbounds.right - padding, -textSize / 2 - dy / 2), // left
 						new Point(-dx * 2 - textbounds.right - padding, +padding) // lower left
 				};
 
@@ -368,13 +368,13 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 					// Try offset the balloon to various places if there's a clash
 					// The origin for the box and text is the top left corner.
 					final Point[] offsets = { new Point(-textbounds.right / 2 - dx / 2, -dy - dy - textSize - padding), // centred top
-							new Point(-dx - textbounds.right - padding, -textSize - padding - dy), // upper left
 							new Point(-dx - textbounds.right - padding, -textSize / 2 - dy / 2), // left
-							new Point(-dx - textbounds.right - padding, +padding), // lower left
-							new Point(-textbounds.right / 2 - dx / 2, dy + padding), // centred bottom
-							new Point(dx / 2 + padding, +padding), // lower right
 							new Point(dx / 2 + padding, -textSize / 2 - dy / 2), // right
-							new Point(dx / 2 + padding, -textSize - padding - dy) // upper right
+							new Point(-dx - textbounds.right - padding, -textSize - padding - dy), // upper left
+							new Point(-dx - textbounds.right - padding, +padding), // lower left
+							new Point(dx / 2 + padding, +padding), // lower right
+							new Point(dx / 2 + padding, -textSize - padding - dy), // upper right
+							new Point(-textbounds.right / 2 - dx / 2, dy + padding) // centred bottom
 					};
 
 					// See if we can draw the text in any of the spots. If this fails, just ignore it,
