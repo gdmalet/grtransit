@@ -26,7 +26,6 @@ import android.database.Cursor;
 import android.text.format.Time;
 import android.util.Log;
 import android.util.TimeFormatException;
-import android.util.TimingLogger;
 
 public class ServiceCalendar {
 	private static final String TAG = "ServiceCalendar";
@@ -157,9 +156,6 @@ public class ServiceCalendar {
 	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String date, boolean limittotoday,
 			NotificationCallback task) {
 
-		if (!Log.isLoggable(TAG, Log.VERBOSE)) Log.d(TAG, "warning - logging not enabled for timinglogger.");
-		// final TimingLogger timings = new TimingLogger(TAG, "top - all routes");
-
 		final String q = "select departure_time as _id, trips.trip_id, route_id, trip_headsign from stop_times "
 				+ "join trips on stop_times.trip_id = trips.trip_id where " + "stop_id = ? order by departure_time";
 		final String[] selectargs = new String[] { stopid };
@@ -170,29 +166,21 @@ public class ServiceCalendar {
 		int progresscount = 0;
 		final ArrayList<String[]> listdetails = new ArrayList<String[]>(maxcount);
 
-		// timings.addSplit("middle");
-
 		boolean more = csr.moveToFirst();
 		while (more) {
 
-			// timings.addSplit("loop top");
 			final String trip_id = csr.getString(1);
 			final String daysstr = ServiceCalendar.getTripDaysofWeek(trip_id, date, limittotoday);
-			// timings.addSplit("loop middle");
 
 			// Only add if the bus runs on this day.
 			if (daysstr != null) listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(2), csr.getString(3) });
 
 			if (task != null) task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
 
-			// timings.addSplit("loop bottom");
-
 			more = csr.moveToNext();
 		}
 		csr.close();
 
-		// timings.addSplit("end");
-		// timings.dumpToLog();
 		return listdetails;
 	}
 
@@ -201,9 +189,6 @@ public class ServiceCalendar {
 	 */
 	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String routeid, String headsign, String date,
 			boolean limittotoday, NotificationCallback task) {
-
-		if (!Log.isLoggable(TAG, Log.VERBOSE)) Log.d(TAG, "warning - logging not enabled for timinglogger.");
-		final TimingLogger timings = new TimingLogger(TAG, "top - one route");
 
 		final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
 				+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
@@ -215,29 +200,21 @@ public class ServiceCalendar {
 		int progresscount = 0;
 		final ArrayList<String[]> listdetails = new ArrayList<String[]>(maxcount);
 
-		timings.addSplit("middle");
-
 		boolean more = csr.moveToFirst();
 		while (more) {
 
-			timings.addSplit("loop top");
 			final String trip_id = csr.getString(1);
 			final String daysstr = ServiceCalendar.getTripDaysofWeek(trip_id, date, limittotoday);
-			timings.addSplit("loop middle");
 
 			// Only add if the bus runs on this day.
 			if (daysstr != null) listdetails.add(new String[] { csr.getString(0), daysstr });
 
 			if (task != null) task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
 
-			timings.addSplit("loop bottom");
-
 			more = csr.moveToNext();
 		}
 		csr.close();
 
-		timings.addSplit("end");
-		timings.dumpToLog();
 		return listdetails;
 	}
 

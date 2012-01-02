@@ -29,7 +29,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -323,15 +322,15 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 					final String stopid = pref[0];
 					final String headsign = pref[1];
 
-					Log.d(TAG, "Searching for busses for stop " + stopid + " " + headsign);
+					// Log.d(TAG, "Searching for busses for stop " + stopid + " " + headsign);
 					final String[] nextbus = ServiceCalendar.getNextDepartureTime(stopid, datenow);
 					if (nextbus != null) {
-						Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " + nextbus[2]);
+						// Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " + nextbus[2]);
 						pref[2] = nextbus[0]; // time
 						pref[3] = nextbus[2]; // route headsign
 						pref[4] = nextbus[1]; // route number
 					} else {
-						Log.d(TAG, "Next bus for stop " + stopid + ": --none--");
+						// Log.d(TAG, "Next bus for stop " + stopid + ": --none--");
 						pref[2] = " -- -- --"; // time
 						pref[3] = getString(R.string.no_more_busses); // route details
 						pref[4] = "-";
