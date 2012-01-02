@@ -77,13 +77,15 @@ public class ServiceCalendar {
 		final Cursor exp = DatabaseHelper.ReadableDB().rawQuery(mDBQueryDate, selectargs);
 		if (exp.moveToFirst()) {
 			final int exception = exp.getInt(exp.getColumnIndex("exception_type"));
+			exp.close();
 			if (exception == 2) // service removed for this day
 				return null;
 			if (exception == 1) return getDays(csr); // service added for this day
 			Log.e(TAG, "bogus exception type " + exception + " for service " + service_id + "!");
 			return null;
+		} else {
+			exp.close();
 		}
-		exp.close();
 
 		// Check if the bus runs on the given day of the week.
 		final Time t = new Time();
