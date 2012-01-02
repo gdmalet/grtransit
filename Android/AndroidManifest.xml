@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="preferExternal"
     package="net.kw.shrdlu.grtgtfs"
-    android:versionCode="11"
+    android:versionCode="12"
     android:versionName="0.98" >
 
     <uses-sdk
