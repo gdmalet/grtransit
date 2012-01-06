@@ -23,20 +23,14 @@
 
     <TextView
         android:id="@+id/about_header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:text="@string/app_descrip"
         android:autoLink="web"
-        android:background="#FAFAFAFA"
         style="@style/List.Label" />
         
     <TextView
         android:id="@+id/about_credits"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:paddingTop="20dip"
         android:text="@string/app_credits"
-        android:background="#FAFAFAFA"
         style="@style/List.Content" />
 
 </LinearLayout>

@@ -39,7 +39,6 @@ public class ListCursorAdapter extends CursorAdapter {
 
 	public ListCursorAdapter(ListActivity context, int layout, Cursor cursor) {
 		super(context, cursor, true);
-		// Log.v(TAG, "SearchCursorAdapter()");
 
 		this.mInflater = LayoutInflater.from(context);
 		mLayout = layout;
@@ -56,6 +55,14 @@ public class ListCursorAdapter extends CursorAdapter {
 		final TextView valueview = (TextView) view.findViewById(R.id.value);
 		final String descr = cursor.getString(cursor.getColumnIndex("descr"));
 
+		final TextView timeview;
+		final String time;
+		if (mLayout == R.layout.timestopdesc) {
+			timeview = (TextView) view.findViewById(R.id.time);
+			time = cursor.getString(cursor.getColumnIndex("departure_time"));
+			timeview.setText(time);
+		}
+
 		// Look for things like route 7A, where the A is part of the description
 		// TODO - char test should use a type test or something. This assumes US ASCII...
 		if (mLayout == R.layout.route_numanddesc && descr.length() > 2 && descr.charAt(1) == ' ' && descr.charAt(0) >= 'A'
@@ -66,8 +73,6 @@ public class ListCursorAdapter extends CursorAdapter {
 			labelview.setText(item);
 			valueview.setText(descr);
 		}
-
-		// Log.v(TAG, "Bound <" + item + ">, <" + descr + ">");
 	}
 
 	@Override

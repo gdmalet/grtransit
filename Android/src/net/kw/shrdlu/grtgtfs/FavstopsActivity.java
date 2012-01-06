@@ -148,6 +148,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			textView.setVisibility(TextView.GONE);
 			textView = (TextView) messageView.findViewById(R.id.about_credits);
 			textView.setText(R.string.no_favourites);
+			textView.setHorizontallyScrolling(false); // make text wrap.
 
 			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			// builder.setIcon(R.drawable.grticon);
@@ -298,7 +299,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 
 		@Override
 		protected void onPreExecute() {
-			mProgress.setProgress(0);
+			mProgress.setProgress(5); // make partially visible
 			mListDetail.startAnimation(mSlideIn);
 		}
 

@@ -259,6 +259,20 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			bustimes.putExtra(pkgstr + ".headsign", headsign);
 			bustimes.putExtra(pkgstr + ".stop_id", mStop_id);
 			mContext.startActivity(bustimes);
+
+		} else { // 1 route
+
+			final String[] items = (String[]) l.getAdapter().getItem(position);
+			final String trip_id = items[2];
+
+			final Intent tripstops = new Intent(mContext, TripStopsActivity.class);
+			final String pkgstr = mContext.getApplicationContext().getPackageName();
+			tripstops.putExtra(pkgstr + ".trip_id", trip_id);
+			tripstops.putExtra(pkgstr + ".stop_id", mStop_id);
+			tripstops.putExtra(pkgstr + ".route_id", mRoute_id);
+			tripstops.putExtra(pkgstr + ".headsign", mHeadsign);
+			mContext.startActivity(tripstops);
+
 		}
 	}
 

@@ -187,7 +187,8 @@ public class ServiceCalendar {
 	}
 
 	/*
-	 * Return a list of times that all busses for a given route depart a given stop, sorted by time. List is departure_times, and days of week the bus runs.
+	 * Return a list of times that all busses for a given route depart a given stop, sorted by time. List is departure_times, days of week the bus runs, and
+	 * trip_id.
 	 */
 	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String routeid, String headsign, String date,
 			boolean limittotoday, NotificationCallback task) {
@@ -209,7 +210,7 @@ public class ServiceCalendar {
 			final String daysstr = ServiceCalendar.getTripDaysofWeek(trip_id, date, limittotoday);
 
 			// Only add if the bus runs on this day.
-			if (daysstr != null) listdetails.add(new String[] { csr.getString(0), daysstr });
+			if (daysstr != null) listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(1) });
 
 			if (task != null) task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
 
