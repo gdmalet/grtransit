@@ -119,6 +119,9 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			// Log.v(TAG, "doInBackground()");
 
 			final ListView lv = getListView();
+			final TextView tv = new TextView(mContext);
+			tv.setText(R.string.tap_time_for_route);
+			lv.addFooterView(tv);
 			lv.setOnTouchListener(mGestureListener);
 
 			// Will find where to position the list of bus departure times
@@ -179,14 +182,6 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 				return;
 			}
 
-			if (mRoute_id != null) { // showing one route
-				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
-				mContext.setListAdapter(adapter);
-			} else {
-				final TwoRowArrayAdapter adapter = new TwoRowArrayAdapter(mContext, R.layout.row2layout, mListDetails);
-				mContext.setListAdapter(adapter);
-			}
-
 			// Calculate the time difference
 			Toast msg;
 			if (savedpos >= 0) {
@@ -207,10 +202,21 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 					final String plural = hourdiff > 1 ? "s" : "";
 					msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
+
 				getListView().setSelectionFromTop(savedpos, 50); // position next bus just below top
+
 			} else {
 				setSelection(mListDetails.size()); // position the list at the last bus
 				msg = Toast.makeText(mContext, R.string.no_more_busses, Toast.LENGTH_LONG);
+			}
+
+			// This must come after addFooterView.
+			if (mRoute_id != null) { // showing one route
+				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
+				mContext.setListAdapter(adapter);
+			} else {
+				final TwoRowArrayAdapter adapter = new TwoRowArrayAdapter(mContext, R.layout.row2layout, mListDetails);
+				mContext.setListAdapter(adapter);
 			}
 
 			msg.setGravity(Gravity.TOP, 0, 0);

@@ -25,6 +25,7 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -54,16 +55,6 @@ public class SearchStopsActivity extends ListActivity {
 
 			Globals.tracker.trackEvent("Search", "Stop", query, 1);
 
-			final String table = "stops";
-			final String[] columns = { "stop_id as _id", "stop_name as descr" };
-			final String whereclause = "stop_id like '%' || ? || '%' or stop_name like '%' || ? || '%'";
-			final String[] selectargs = { query, query };
-			final Cursor csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, null, null);
-			startManagingCursor(csr);
-
-			final ListCursorAdapter adapter = new ListCursorAdapter(this, R.layout.stop_numanddesc, csr);
-			setListAdapter(adapter);
-
 			// register to get long clicks on bus stop list
 			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -71,6 +62,8 @@ public class SearchStopsActivity extends ListActivity {
 					return true; // we consumed the click
 				}
 			});
+
+			new FindStops().execute(query);
 
 		} else {
 			// Called from another activity, so put up search box
@@ -132,4 +125,39 @@ public class SearchStopsActivity extends ListActivity {
 		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener).setNegativeButton("No", listener)
 				.create().show();
 	}
+
+	private class FindStops extends AsyncTask<String, Void, Cursor> {
+		// static final String TAG = "FindStops";
+
+		@Override
+		protected Cursor doInBackground(String... args) {
+			// Log.v(TAG, "doInBackground()");
+
+			final String query = args[0];
+
+			final String table = "stops";
+			final String[] columns = { "stop_id as _id", "stop_name as descr" };
+			final String whereclause = "stop_id like '%' || ? || '%' or stop_name like '%' || ? || '%'";
+			final String[] selectargs = { query, query };
+			final Cursor csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, null, null);
+			startManagingCursor(csr);
+
+			final ListView lv = getListView();
+			final TextView tv = new TextView(mContext);
+			tv.setText(R.string.longpress_adds_stop);
+			lv.addFooterView(tv);
+
+			return csr;
+		}
+
+		@Override
+		protected void onPostExecute(Cursor csr) {
+			// Log.v(TAG, "onPostExecute()");
+
+			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesc, csr);
+			setListAdapter(adapter);
+
+		}
+	}
+
 }

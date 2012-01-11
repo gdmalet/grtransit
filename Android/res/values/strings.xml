@@ -26,4 +26,6 @@
     <string name="showmap">Show map</string>
     <string name="no_more_busses">No more busses today.</string>
     <string name="app_short_name">GRTransit</string>
+    <string name="longpress_adds_stop">Long press a stop to add to favourites.</string>
+    <string name="tap_time_for_route">Tap a time to show the trip.</string>
 </resources>

@@ -19,7 +19,9 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -33,6 +35,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -72,6 +75,14 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 		mRoute_id = intent.getStringExtra(pkgstr + ".route_id");
 		mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
 
+		// register to get long clicks on bus stop list
+		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				onListItemLongClick(parent, view, position, id);
+				return true; // we consumed the click
+			}
+		});
+
 		new ProcessBusStops().execute();
 	}
 
@@ -86,7 +97,7 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 	 * Do the processing to load the ArrayAdapter for display.
 	 */
 	private class ProcessBusStops extends AsyncTask<Void, Integer, Integer> {
-		static final String TAG = "ProcessBusStops";
+		// static final String TAG = "ProcessBusStops";
 
 		@Override
 		protected void onPreExecute() {
@@ -105,6 +116,9 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 			// Log.v(TAG, "doInBackground()");
 
 			final ListView lv = getListView();
+			final TextView tv = new TextView(mContext);
+			tv.setText(R.string.longpress_adds_stop);
+			lv.addFooterView(tv);
 			lv.setOnTouchListener(mGestureListener);
 
 			final String qry = "select stop_times.stop_id as _id, stop_name as descr, departure_time from stop_times"
@@ -152,13 +166,13 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 
 		final Cursor csr = (Cursor) l.getItemAtPosition(position);
 		final String stop_id = csr.getString(0);
+		final String stop_name = csr.getString(1);
 
-		final Intent bustimes = new Intent(mContext, TimesActivity.class);
+		final Intent routes = new Intent(mContext, RouteselectActivity.class);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
-		// bustimes.putExtra(pkgstr + ".route_id", mRoute_id);
-		// bustimes.putExtra(pkgstr + ".headsign", mHeadsign);
-		bustimes.putExtra(pkgstr + ".stop_id", stop_id);
-		mContext.startActivity(bustimes);
+		routes.putExtra(pkgstr + ".stop_id", stop_id);
+		routes.putExtra(pkgstr + ".stop_name", stop_name);
+		mContext.startActivity(routes);
 	}
 
 	// This is only called once....
@@ -228,13 +242,42 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 			// Catch a fling sort of from left to right
 			if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 				// Log.d(TAG, "fling detected");
-				Globals.tracker.trackEvent("TripStops", "fling left", "", 1);
+				Globals.tracker.trackEvent("TripStops", "fling right", "", 1);
 				finish();
 				return true;
 			}
 			return false;
 		}
 	});
+
+	// Called from the listener above for a long click
+	public void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+		// Log.v(TAG, "long clicked position " + position);
+
+		final Cursor csr = (Cursor) parent.getItemAtPosition(position);
+		final String stop_id = csr.getString(0);
+		final String stop_name = csr.getString(1);
+
+		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				switch (id) {
+				case DialogInterface.BUTTON_POSITIVE:
+					Globals.mPreferences.AddBusstopFavourite(stop_id, stop_name);
+					// mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
+					break;
+				// case DialogInterface.BUTTON_NEGATIVE:
+				// // nothing
+				// break;
+				}
+				dialog.cancel();
+			}
+		};
+
+		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle("Stop " + stop_id + ", " + stop_name);
+		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener).setNegativeButton("No", listener)
+				.create().show();
+	}
 
 	/**
 	 * Make the {@link ProgressBar} visible when our in-animation finishes.
