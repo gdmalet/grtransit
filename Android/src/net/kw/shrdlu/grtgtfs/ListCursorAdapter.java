@@ -58,9 +58,9 @@ public class ListCursorAdapter extends CursorAdapter {
 		final TextView timeview;
 		final String time;
 		if (mLayout == R.layout.timestopdesc) {
-			timeview = (TextView) view.findViewById(R.id.time);
+			timeview = (TextView) view.findViewById(R.id.stoptime);
 			time = cursor.getString(cursor.getColumnIndex("departure_time"));
-			timeview.setText(time);
+			timeview.setText(ServiceCalendar.formattedTime(time));
 		}
 
 		// Look for things like route 7A, where the A is part of the description

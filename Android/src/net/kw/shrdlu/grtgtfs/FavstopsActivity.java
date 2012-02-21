@@ -53,7 +53,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 	private View mListDetail;
 	private Animation mSlideIn, mSlideOut;
 	private ProgressBar mProgress;
-	private TwoRowArrayAdapter mAdapter;
+	private FavstopsArrayAdapter mAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			for (final String[] stop : favstops)
 				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?" }); // will do the rest later.
 		}
-		mAdapter = new TwoRowArrayAdapter(this, R.layout.favouritesrow, mDetails);
+		mAdapter = new FavstopsArrayAdapter(this, R.layout.favouritesrow, mDetails);
 		setListAdapter(mAdapter);
 
 		// Must do all this without doing a database read, which allows database upgrade
@@ -321,9 +321,9 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			synchronized (mDetails) {
 				for (final String[] pref : mDetails) {
 					final String stopid = pref[0];
-					final String headsign = pref[1];
+					// final String stopdescr = pref[1];
 
-					// Log.d(TAG, "Searching for busses for stop " + stopid + " " + headsign);
+					// Log.d(TAG, "Searching for busses for stop " + stopid + " " + stopdescr);
 					final String[] nextbus = ServiceCalendar.getNextDepartureTime(stopid, datenow);
 					if (nextbus != null) {
 						// Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " + nextbus[2]);

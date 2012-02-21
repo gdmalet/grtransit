@@ -10,11 +10,11 @@
 	    android:background="@color/list_dark_background">
         
         <TextView
-            android:id="@+id/label"
-            style="@style/List.Label" />
+            android:id="@+id/stoptime"
+            style="@style/List.Stoptime" />
 
         <TextView
-            android:id="@+id/value"
+            android:id="@+id/desc"
             style="@style/List.Content" />
     </TableRow>
 

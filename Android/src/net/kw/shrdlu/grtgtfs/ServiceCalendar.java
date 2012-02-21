@@ -270,4 +270,24 @@ public class ServiceCalendar {
 		// No more busses today.
 		return null;
 	}
+
+	/*
+	 * Return a properly formatted time. Assumes nn:nn:nn input, may return just that, or convert and add annoying American `p' for pm suffix.
+	 */
+	public static String formattedTime(String time) {
+		if (!Globals.mPreferences.showAMPMTimes()) return time;
+
+		// Hopefully we actually have a time
+		final int i = time.indexOf(':');
+		if (i > 0) {
+			int hours = Integer.parseInt(time.substring(0, i));
+			if (hours > 12 && hours < 24) {
+				hours -= 12;
+				time = String.format("%02d%sp", hours, time.substring(time.indexOf(':')));
+				// time = String.valueOf(hours) + time.substring(time.indexOf(':')) + 'p';
+			}
+		}
+
+		return time;
+	}
 }

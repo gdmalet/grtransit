@@ -197,7 +197,8 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 				hourdiff += mindiff;
 
 				if (hourdiff >= 60)
-					msg = Toast.makeText(mContext, "Next bus leaves at " + nextdeparture, Toast.LENGTH_LONG);
+					msg = Toast.makeText(mContext, "Next bus leaves at " + ServiceCalendar.formattedTime(nextdeparture),
+							Toast.LENGTH_LONG);
 				else {
 					final String plural = hourdiff > 1 ? "s" : "";
 					msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
@@ -215,7 +216,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
 				mContext.setListAdapter(adapter);
 			} else {
-				final TwoRowArrayAdapter adapter = new TwoRowArrayAdapter(mContext, R.layout.row2layout, mListDetails);
+				final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
 				mContext.setListAdapter(adapter);
 			}
 

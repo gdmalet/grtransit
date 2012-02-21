@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    style="@style/List" >
 
     <TextView
         android:id="@+id/title"
@@ -21,7 +22,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true"
-        android:apiKey="0PRfBeQykUNm74M3MdJu9ohhd7lfqkyeulrj3rg"
+        android:apiKey="0PRfBeQykUNnLPBiKjXmum5S98_Qh9JhBAOyDPw"
     />
 <!--
 Release:

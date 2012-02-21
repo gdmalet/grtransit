@@ -31,16 +31,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class TwoRowArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
-	private static final String TAG = "TwoRowAdapter";
+public class TimesArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
+	private static final String TAG = "TiemsAdapter";
 
 	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	public TwoRowArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+	public TimesArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
-		// Log.v(TAG, "TwoRowArrayAdapter()");
+		// Log.v(TAG, "TimesArrayAdapter()");
 
 		mDetails = details;
 		mInflater = LayoutInflater.from(context);
@@ -48,20 +48,16 @@ public class TwoRowArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */
 	}
 
 	static class ViewHolder {
-		TextView label;
-		TextView value;
-		TextView label2;
-		TextView value2;
+		TextView stoptime;
+		TextView desc;
 		TextView routelabel;
+		TextView routedesc;
 	}
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		// Log.v(TAG, "getview(): position " + position);
 		ViewHolder holder;
-
-		// If we're filling the favouritesrow, then there's an extra field,
-		// the route number, which needs to be put its own textview.
 
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
@@ -71,44 +67,31 @@ public class TwoRowArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */
 
 			// Save the view when we look them up.
 			holder = new ViewHolder();
-			holder.label = (TextView) view.findViewById(R.id.label);
-			holder.value = (TextView) view.findViewById(R.id.value);
-			holder.label2 = (TextView) view.findViewById(R.id.label2);
-			holder.value2 = (TextView) view.findViewById(R.id.value2);
-			if (mLayout == R.layout.favouritesrow) holder.routelabel = (TextView) view.findViewById(R.id.routelabel);
+			holder.stoptime = (TextView) view.findViewById(R.id.stoptime);
+			holder.desc = (TextView) view.findViewById(R.id.desc);
+			holder.routelabel = (TextView) view.findViewById(R.id.routelabel);
+			holder.routedesc = (TextView) view.findViewById(R.id.routedesc);
 			view.setTag(holder);
 		} else {
 			// Log.d(TAG, "reusing view " + view);
 			holder = (ViewHolder) view.getTag();
 		}
 
-		holder.label.setText(mDetails.get(position)[0]);
-		holder.value.setText(mDetails.get(position)[1]);
-
-		String route, headsign;
-		if (mLayout != R.layout.favouritesrow) {
-			route = mDetails.get(position)[2];
-			headsign = mDetails.get(position)[3];
-		} else {
-			route = mDetails.get(position)[4];
-			headsign = mDetails.get(position)[3];
-		}
+		holder.stoptime.setText(ServiceCalendar.formattedTime(mDetails.get(position)[0]));
+		holder.desc.setText(mDetails.get(position)[1]);
 
 		// Look for things like route 7A, where the A is part of the description
 		// TODO - char test should use a type test or something. This assumes US ASCII...
+		String route = mDetails.get(position)[2];
+		String headsign = mDetails.get(position)[3];
 		if (headsign.length() > 2 && headsign.charAt(1) == ' ' && headsign.charAt(0) >= 'A' && headsign.charAt(0) <= 'Z') {
 			route += headsign.charAt(0); // route number
 			headsign = headsign.substring(2); // route headsign
 		}
 
-		if (mLayout != R.layout.favouritesrow) {
-			holder.label2.setText(route);
-			holder.value2.setText(headsign);
-		} else {
-			holder.label2.setText(mDetails.get(position)[2]);
-			holder.value2.setText(headsign);
-			holder.routelabel.setText(route);
-		}
+		holder.routelabel.setText(route);
+		holder.routedesc.setText(headsign);
+
 		return view;
 	}
 }
