@@ -277,15 +277,22 @@ public class ServiceCalendar {
 	public static String formattedTime(String time) {
 		if (!Globals.mPreferences.showAMPMTimes()) return time;
 
+		final String AM = "am", PM = "pm";
+
 		// Hopefully we actually have a time
 		final int i = time.indexOf(':');
 		if (i > 0) {
 			int hours = Integer.parseInt(time.substring(0, i));
-			if (hours > 12 && hours < 24) {
-				hours -= 12;
-				time = String.format("%02d%sp", hours, time.substring(time.indexOf(':')));
-				// time = String.valueOf(hours) + time.substring(time.indexOf(':')) + 'p';
+			String prefix = AM;
+
+			if (hours >= 12 && hours < 24) {
+				prefix = PM;
+				if (hours > 12) hours -= 12;
 			}
+			if (hours >= 24) hours -= 24;
+
+			// Reformat to drop leading zero, add prefix
+			time = String.format("%d%s%s", hours, time.substring(i), prefix);
 		}
 
 		return time;

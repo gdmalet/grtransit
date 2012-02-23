@@ -212,8 +212,13 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		case R.id.menu_location: {
 			Globals.tracker.trackEvent("Menu", "Show location", "", 1);
 			final Intent stops = new Intent(mContext, StopsActivity.class);
-			stops.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
 			startActivity(stops);
+			return true;
+		}
+		case R.id.menu_preferences: {
+			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
+			final Intent prefs = new Intent(mContext, PrefsActivity.class);
+			startActivity(prefs);
 			return true;
 		}
 		case R.id.menu_about: {

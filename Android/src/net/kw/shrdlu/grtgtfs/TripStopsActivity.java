@@ -183,36 +183,9 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 		return true;
 	}
 
-	// This is called when redisplaying the menu
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		final boolean showingall = Globals.mPreferences.getShowAllBusses();
-		MenuItem item = menu.findItem(R.id.menu_showallbusses);
-		item.setEnabled(!showingall);
-		item = menu.findItem(R.id.menu_showtodaysbusses);
-		item.setEnabled(showingall);
-		return true;
-	}
-
-	// TODO menus
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showallbusses: {
-			Globals.mPreferences.setShowAllBusses(true);
-			// Just start again
-			final Intent intent = getIntent();
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			return true;
-		}
-		case R.id.menu_showtodaysbusses: {
-			Globals.mPreferences.setShowAllBusses(false);
-			final Intent intent = getIntent();
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			return true;
-		}
 		case R.id.menu_showonmap: {
 			Globals.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
 			// Perform action on click
@@ -222,6 +195,12 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 			busroutes.putExtra(pkgstr + ".headsign", mHeadsign);
 			busroutes.putExtra(pkgstr + ".stop_id", mStop_id);
 			startActivity(busroutes);
+		}
+		case R.id.menu_preferences: {
+			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
+			final Intent prefs = new Intent(mContext, PrefsActivity.class);
+			startActivity(prefs);
+			return true;
 		}
 		}
 		return super.onOptionsItemSelected(item);

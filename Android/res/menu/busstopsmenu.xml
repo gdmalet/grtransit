@@ -8,6 +8,12 @@
         android:icon="@android:drawable/ic_menu_compass">
     </item>
     
+    <item
+        android:id="@+id/menu_preferences"
+        android:title="@string/preferences"
+        android:icon="@android:drawable/ic_menu_preferences">
+    </item>
+    
     <group android:menuCategory="container" android:id="@+id/menu_searchgroup">
         <item android:id="@+id/menu_searchstops" android:icon="@android:drawable/ic_menu_search" android:title="@string/find_stop"></item>
         <item android:id="@+id/menu_searchroutes" android:icon="@android:drawable/ic_menu_search" android:title="@string/find_route"></item>

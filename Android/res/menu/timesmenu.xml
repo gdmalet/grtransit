@@ -6,7 +6,11 @@
         android:title="@string/showonmap"
         android:icon="@android:drawable/ic_menu_compass">
     </item>
-    <item android:checkable="true" android:title="@string/showallbusses" android:checked="false" android:id="@+id/menu_showallbusses"></item>
-    <item android:checkable="true" android:title="@string/showtodaysbusses" android:checked="true" android:id="@+id/menu_showtodaysbusses"></item>
+    
+    <item
+        android:id="@+id/menu_preferences"
+        android:title="@string/preferences"
+        android:icon="@android:drawable/ic_menu_preferences">
+    </item>
     
 </menu>

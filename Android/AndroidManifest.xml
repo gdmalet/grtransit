@@ -32,7 +32,7 @@
                 android:value=".SearchStopsActivity" />
         </activity>
         <activity
-            android:name=".FavstopsActivity"
+            android:name="FavstopsActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -52,6 +52,9 @@
                 android:name="android.app.default_searchable"
                 android:value=".SearchRoutesActivity" />
         </activity>
+        <activity
+            android:name="PrefsActivity"
+            android:label="@string/app_name" />
         <activity
             android:name="RouteselectActivity"
             android:label="@string/app_name" />
