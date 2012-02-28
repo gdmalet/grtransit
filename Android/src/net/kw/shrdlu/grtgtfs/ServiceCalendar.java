@@ -289,7 +289,12 @@ public class ServiceCalendar {
 				prefix = PM;
 				if (hours > 12) hours -= 12;
 			}
-			if (hours >= 24) hours -= 24;
+			if (hours >= 24) {
+				if (hours == 24)
+					hours = 12;
+				else
+					hours -= 24;
+			}
 
 			// Reformat to drop leading zero, add prefix
 			time = String.format("%d%s%s", hours, time.substring(i), prefix);

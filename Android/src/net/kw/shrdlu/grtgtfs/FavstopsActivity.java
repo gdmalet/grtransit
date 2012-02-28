@@ -156,17 +156,6 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		}
 	}
 
-	// This is called when we use SINGLE_TOP, to flush the stack and redraw the list,
-	// which is necessary when the list changes.
-	// @Override
-	// protected void onNewIntent(Intent intent) {
-	// Log.d(TAG, "onNewIntent()");
-	// super.onNewIntent(intent);
-	// View v = findViewById(R.id.detail_area);
-	// v.invalidate();
-	// ProcessStops();
-	// }
-
 	// If we're popping back down the stack, the favourites list could have been added to
 	// since we were last here, so make sure it is reloaded before display.
 	@Override

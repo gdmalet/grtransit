@@ -4,8 +4,7 @@
     <string name="about">About</string>
     <string name="activity_desc">Grand River Transit Bus Stops</string>
     <string name="location">My Location</string>
-    <string name="showallbusses">Show all busses</string>
-    <string name="showtodaysbusses">Show today\'s busses"</string>
+    <string name="showallbusses">Show busses for all days</string>
     <string name="showonmap">Show on map</string>
     <string name="loading_stops">Loading the bus stops…</string>
     <string name="loading_times">Loading the bus times…</string>

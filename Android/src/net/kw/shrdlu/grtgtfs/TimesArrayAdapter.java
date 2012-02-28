@@ -32,7 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class TimesArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
-	private static final String TAG = "TiemsAdapter";
+	private static final String TAG = "TimesAdapter";
 
 	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;

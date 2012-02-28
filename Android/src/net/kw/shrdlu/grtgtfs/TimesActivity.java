@@ -55,6 +55,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 	private String mRoute_id = null, mHeadsign, mStop_id;
 	private TextView mTitle;
 	private ArrayList<String[]> mListDetails = null;
+	private boolean PrefChanged = true; // force redraw
 
 	private static boolean mCalendarChecked = false, mCalendarOK;
 
@@ -80,8 +81,6 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		mRoute_id = intent.getStringExtra(pkgstr + ".route_id");
 		mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
 		mStop_id = intent.getStringExtra(pkgstr + ".stop_id");
-
-		new ProcessBusTimes().execute();
 	}
 
 	@Override
@@ -89,13 +88,20 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		super.onResume();
 		// We want to track a pageView every time this Activity gets the focus.
 		Globals.tracker.trackPageView("/" + this.getLocalClassName());
+
+		// See if we need to recalculate and redraw the screen.
+		// This happens if the user brings up the preferences screen.
+		if (PrefChanged) {
+			new ProcessBusTimes().execute();
+			PrefChanged = false;
+		}
 	}
 
 	/*
 	 * Do the processing to load the ArrayAdapter for display.
 	 */
 	private class ProcessBusTimes extends AsyncTask<Void, Integer, Integer> implements NotificationCallback {
-		static final String TAG = "ProcessBusTimes";
+		static final String TAG = "";
 
 		// A callback from CalendarService, for updating our progress bar
 		public void notificationCallback(Integer progress) {
@@ -118,11 +124,6 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		protected Integer doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
 
-			final ListView lv = getListView();
-			final TextView tv = new TextView(mContext);
-			lv.addFooterView(tv);
-			lv.setOnTouchListener(mGestureListener);
-
 			// Will find where to position the list of bus departure times
 			final Time t = new Time();
 			t.setToNow();
@@ -137,12 +138,10 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 
 			if (mRoute_id == null) {
 				// showing all routes
-				tv.setText(R.string.tap_time_for_route);
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, datenow, !Globals.mPreferences.getShowAllBusses(),
 						this);
 			} else {
 				// showing just one route
-				tv.setText(R.string.tap_time_for_trip);
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, mRoute_id, mHeadsign, datenow,
 						!Globals.mPreferences.getShowAllBusses(), this);
 			}
@@ -164,15 +163,6 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		protected void onPostExecute(Integer savedpos) {
 			// Log.v(TAG, "onPostExecute()");
 
-			mProgress.setVisibility(View.INVISIBLE);
-			mListDetail.startAnimation(mSlideOut);
-
-			if (mRoute_id == null) { // showing all routes
-				mTitle.setText("Stop " + mStop_id + " - all routes");
-			} else {
-				mTitle.setText(mRoute_id + " - " + mHeadsign);
-			}
-
 			if (!mCalendarOK) {
 				final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 				builder.setIcon(R.drawable.grticon);
@@ -181,6 +171,29 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 				builder.create();
 				builder.show();
 				return;
+			}
+
+			mProgress.setVisibility(View.INVISIBLE);
+			mListDetail.startAnimation(mSlideOut);
+
+			TextView tv = null;
+			final ListView lv = getListView();
+			if (lv.getFooterViewsCount() == 0) {
+				tv = new TextView(mContext);
+				lv.addFooterView(tv);
+			}
+			lv.setOnTouchListener(mGestureListener);
+
+			if (mRoute_id == null) { // showing all routes
+				mTitle.setText("Stop " + mStop_id + " - all routes");
+				if (tv != null) tv.setText(R.string.tap_time_for_route);
+				final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
+				mContext.setListAdapter(adapter);
+			} else {
+				mTitle.setText(mRoute_id + " - " + mHeadsign);
+				if (tv != null) tv.setText(R.string.tap_time_for_trip);
+				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
+				mContext.setListAdapter(adapter);
 			}
 
 			// Calculate the time difference
@@ -210,15 +223,6 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			} else {
 				setSelection(mListDetails.size()); // position the list at the last bus
 				msg = Toast.makeText(mContext, R.string.no_more_busses, Toast.LENGTH_LONG);
-			}
-
-			// This must come after addFooterView.
-			if (mRoute_id != null) { // showing one route
-				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
-				mContext.setListAdapter(adapter);
-			} else {
-				final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
-				mContext.setListAdapter(adapter);
 			}
 
 			msg.setGravity(Gravity.TOP, 0, 0);
@@ -292,34 +296,9 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		return true;
 	}
 
-	// This is called when redisplaying the menu
-	// @Override
-	// public boolean onPrepareOptionsMenu(Menu menu) {
-	// final boolean showingall = Globals.mPreferences.getShowAllBusses();
-	// MenuItem item = menu.findItem(R.id.menu_showallbusses);
-	// item.setEnabled(!showingall);
-	// item = menu.findItem(R.id.menu_showtodaysbusses);
-	// item.setEnabled(showingall);
-	// return true;
-	// }
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		// case R.id.menu_showallbusses: {
-		// Globals.mPreferences.setShowAllBusses(true);
-		// // Just start again
-		// final Intent intent = getIntent();
-		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		// startActivity(intent);
-		// return true;
-		// }
-		// case R.id.menu_showtodaysbusses: {
-		// Globals.mPreferences.setShowAllBusses(false);
-		// final Intent intent = getIntent();
-		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		// startActivity(intent);
-		// return true;
-		// }
 		case R.id.menu_showonmap: {
 			Globals.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
 			// Perform action on click
@@ -335,6 +314,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
 			final Intent prefs = new Intent(mContext, PrefsActivity.class);
 			startActivity(prefs);
+			PrefChanged = true; // force screen redraw on return, just in case
 			return true;
 		}
 		}

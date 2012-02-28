@@ -57,22 +57,22 @@ public class Preferences {
 		return prefs.getBoolean(SHOWALLBUSSES_KEY, false);
 	}
 
-	public void setShowAllBusses(boolean b) {
-		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		prefs.edit().putBoolean(SHOWALLBUSSES_KEY, b).commit();
-		Globals.tracker.trackEvent("Preference", "Show all busses", b ? "true" : "false", 1);
-	}
+	// public void setShowAllBusses(boolean b) {
+	// final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
+	// prefs.edit().putBoolean(SHOWALLBUSSES_KEY, b).commit();
+	// Globals.tracker.trackEvent("Preference", "Show all busses", b ? "true" : "false", 1);
+	// }
 
 	public boolean showAMPMTimes() {
 		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		return prefs.getBoolean(AMPMTIMES_KEY, true);
+		return prefs.getBoolean(AMPMTIMES_KEY, false);
 	}
 
-	public void setAMPMTimes(boolean b) {
-		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		prefs.edit().putBoolean(AMPMTIMES_KEY, b).commit();
-		Globals.tracker.trackEvent("Preference", "AM/PM Times", b ? "true" : "false", 1);
-	}
+	// public void setAMPMTimes(boolean b) {
+	// final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
+	// prefs.edit().putBoolean(AMPMTIMES_KEY, b).commit();
+	// Globals.tracker.trackEvent("Preference", "AM/PM Times", b ? "true" : "false", 1);
+	// }
 
 	public void AddBusstopFavourite(String busstop, String stopname) {
 		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
