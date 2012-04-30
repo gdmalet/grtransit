@@ -41,7 +41,7 @@ public class DatabaseHelper {
 	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
 
 	private static String DB_PATH = null;
-	private static final int DB_VERSION = 7; /* As of 24th December 2011 */
+	private static final int DB_VERSION = 8; /* As of 27th April 2012 */
 	private static final String DB_NAME = "GRT.db";
 	private static Context mContext;
 	private static boolean mMustCopy = false;
@@ -49,8 +49,7 @@ public class DatabaseHelper {
 	private static final Semaphore mDBisOpen = new Semaphore(1);
 
 	/**
-	 * Constructor Takes and keeps a reference of the passed context in order to
-	 * access to the application assets and resources.
+	 * Constructor Takes and keeps a reference of the passed context in order to access to the application assets and resources.
 	 * 
 	 * @param context
 	 */
@@ -104,13 +103,10 @@ public class DatabaseHelper {
 		// Do this once, as we don't need them separate anymore.
 		DB_PATH += "/" + DB_NAME;
 		/*
-		 * // The database is on the sdcard. // String sdstate =
-		 * Environment.getExternalStorageState(); if
-		 * (!sdstate.equals(Environment.MEDIA_MOUNTED)) { AlertDialog.Builder
-		 * builder = new AlertDialog.Builder(mContext);
+		 * // The database is on the sdcard. // String sdstate = Environment.getExternalStorageState(); if (!sdstate.equals(Environment.MEDIA_MOUNTED)) {
+		 * AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		 * 
-		 * builder.setTitle("The external database is unavailable.")
-		 * .setMessage("The sdcard is in state `" + sdstate +
+		 * builder.setTitle("The external database is unavailable.") .setMessage("The sdcard is in state `" + sdstate +
 		 * "'.\nPlease retry when it is available.") .create() .show();
 		 * 
 		 * return; }
@@ -156,10 +152,8 @@ public class DatabaseHelper {
 	}
 
 	/*
-	 * Wrap calls to functions that may not be in the version of the OS that
-	 * we're running. This class is only instantiated if we refer to it, at
-	 * which point Dalvik would discover the error. So don't refer to it if we
-	 * know it will fail....
+	 * Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if we refer to it, at which point
+	 * Dalvik would discover the error. So don't refer to it if we know it will fail....
 	 */
 	private static class API8ReflectionWrapper {
 		public static String getDBPath() {
@@ -168,10 +162,8 @@ public class DatabaseHelper {
 	}
 
 	/**
-	 * Copies database from local assets-folder to the system folder, from where
-	 * it can be accessed and handled. This is done by transferring bytestream.
-	 * Note that this class must be public static, since it's embedded in the
-	 * outer class. If it's not static, starting the service will fail.
+	 * Copies database from local assets-folder to the system folder, from where it can be accessed and handled. This is done by transferring bytestream. Note
+	 * that this class must be public static, since it's embedded in the outer class. If it's not static, starting the service will fail.
 	 **/
 	public static class DBcopier extends IntentService {
 		private static final String TAG = "DBcopier";
