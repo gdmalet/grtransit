@@ -195,6 +195,7 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 			busroutes.putExtra(pkgstr + ".headsign", mHeadsign);
 			busroutes.putExtra(pkgstr + ".stop_id", mStop_id);
 			startActivity(busroutes);
+			return true;
 		}
 		case R.id.menu_preferences: {
 			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
