@@ -1,4 +1,4 @@
-Get the data from http://www.grt.ca/en/doingBusiness/supportingsoftwareapplications.asp
+Get the data from http://www.regionofwaterloo.ca/en/regionalGovernment/GRT_GTFSdata.asp
 or perhaps http://www.gtfs-data-exchange.com/agency/grand-river-transit/ .
 
 Unpack into for example GRT-transit-20110904, and then cd into the sqlite3 directory
