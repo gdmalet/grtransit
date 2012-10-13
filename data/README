@@ -15,4 +15,4 @@ That will produce GRT.db - and a bunch of split files. Remove anything in
 $ mv GRT.db.* ../../Android/assets/databases/
 
 The app can then rebuild its database from that, as long as the database version has been
-bumped in the manifest.
+bumped in the code.
