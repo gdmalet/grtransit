@@ -103,6 +103,8 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 	private class ProcessBusTimes extends AsyncTask<Void, Integer, Integer> implements NotificationCallback {
 		static final String TAG = "";
 
+		// TODO -- should set a listener that will call this callback.
+
 		// A callback from CalendarService, for updating our progress bar
 		public void notificationCallback(Integer progress) {
 			publishProgress(progress);
@@ -141,6 +143,9 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, datenow, !Globals.mPreferences.getShowAllBusses(),
 						this);
 			} else {
+
+				// TODO Setting a listener means not passing `this'
+
 				// showing just one route
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, mRoute_id, mHeadsign, datenow,
 						!Globals.mPreferences.getShowAllBusses(), this);
