@@ -12,7 +12,8 @@
     <string name="app_credits">Author: Giles Malet\ngdmalet+GRTransit@gmail.com</string>
     <string name="find_stop">Find a stop</string>
     <string name="find_route">Find a route</string>
-    <string name="no_location_fix">Sorry, don\'t have a location fix!</string>
+    <string name="last_location_fix">No recent location fix, using previous</string>
+    <string name="no_location_fix">No usable location fix!</string>
     <string name="search_bus_hint">Search GRT bus stops</string>
     <string name="search_route_hint">Search GRT bus routes</string>
     <string name="calendar_expired">There is no current schedule data on your system, perhaps because it expired. Please update your app!</string>

@@ -24,6 +24,7 @@ import java.util.List;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -130,7 +131,14 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 		switch (item.getItemId()) {
 		case R.id.menu_location: {
 			// Center the map over the current location
-			final GeoPoint locn = mMylocation.getMyLocation();
+			GeoPoint locn = mMylocation.getMyLocation();
+			if (locn == null) {
+				final Location l = mMylocation.getLastFix();
+				if (l != null) {
+					Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
+					locn = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
+				}
+			}
 			if (locn != null) {
 				final MapController mcp = mMapview.getController();
 				mcp.animateTo(locn);
@@ -161,10 +169,8 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	}
 
 	/**
-	 * Background task to handle initial load of the bus stops. This correctly
-	 * shows and hides the loading animation from the GUI thread before starting
-	 * a background query to the DB. When finished, it transitions back to the
-	 * GUI thread where it updates with the newly-found entries.
+	 * Background task to handle initial load of the bus stops. This correctly shows and hides the loading animation from the GUI thread before starting a
+	 * background query to the DB. When finished, it transitions back to the GUI thread where it updates with the newly-found entries.
 	 */
 	private class LoadOverlay extends AsyncTask<Void, Integer, Void> implements NotificationCallback {
 		static final String TAG = "LoadOverlay";
@@ -175,8 +181,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 		}
 
 		/**
-		 * Before jumping into background thread, start sliding in the
-		 * {@link ProgressBar}. We'll only show it once the animation finishes.
+		 * Before jumping into background thread, start sliding in the {@link ProgressBar}. We'll only show it once the animation finishes.
 		 */
 		@Override
 		protected void onPreExecute() {
@@ -213,6 +218,13 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 			GeoPoint center;
 			if (mStopId == null) {
 				center = mMylocation.getMyLocation();
+				if (center == null) {
+					final Location l = mMylocation.getLastFix();
+					if (l != null) {
+						Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
+						center = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
+					}
+				}
 				if (center != null) {
 					mcp.animateTo(center);
 					while (mMapview.getZoomLevel() < 17)

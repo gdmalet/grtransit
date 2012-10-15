@@ -25,6 +25,7 @@ import java.util.List;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -139,7 +140,14 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 		switch (item.getItemId()) {
 		case R.id.menu_location: {
 			// Center the map over the current location
-			final GeoPoint locn = mMylocation.getMyLocation();
+			GeoPoint locn = mMylocation.getMyLocation();
+			if (locn == null) {
+				final Location l = mMylocation.getLastFix();
+				if (l != null) {
+					Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
+					locn = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
+				}
+			}
 			if (locn != null) {
 				final MapController mcp = mMapview.getController();
 				mcp.animateTo(locn);
@@ -200,10 +208,10 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 			final ArrayList<RouteOverlay> overlays = new ArrayList<RouteOverlay>(16);
 
 			if (mRoute_id != null) { // doing one route
-			// final String whereclause = "stop_id in "
-			// + "(select stop_id from stop_times where trip_id = "
-			// + "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
-			// final String [] selectargs = {mRoute_id, mHeadsign};
+				// final String whereclause = "stop_id in "
+				// + "(select stop_id from stop_times where trip_id = "
+				// + "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
+				// final String [] selectargs = {mRoute_id, mHeadsign};
 
 				// It's too slow to fish out these stops, so for now show them all
 				// mStopsOverlay.LoadDB(whereclause, selectargs, this);
