@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+
     <string name="app_name">Grand River Transit</string>
     <string name="about">About</string>
     <string name="activity_desc">Grand River Transit Bus Stops</string>
-    <string name="location">My Location</string>
+    <string name="closest_stops">Closest stops</string>
     <string name="showallbusses">Show busses for all days</string>
-    <string name="showonmap">Show on map</string>
+    <string name="mylocation">My Location</string>
     <string name="loading_stops">Loading the bus stops…</string>
     <string name="loading_times">Loading the bus times…</string>
     <string name="app_descrip">Grand River Transit details for the Region of Waterloo, Ontario, Canada.\n\nAll data for this application is freely available in Google GTFS format from http://www.grt.ca</string>
@@ -23,14 +24,19 @@
     <string name="stop_unused">No routes use this stop in the current schedule.</string>
     <string name="ga_api_key">UA-27006918-1</string>
     <string name="loading_routes">Loading the bus routes…</string>
-    <string name="showmap">Show map</string>
+    <string name="showonmap">Show on map</string>
     <string name="no_more_busses">No more busses today.</string>
     <string name="app_short_name">GRTransit</string>
     <string name="longpress_adds_stop">Long press a stop to add to favourites.</string>
+    <string name="longpress_removes_stop">Search to add stops, long press to remove.</string>
     <string name="tap_time_for_route">Tap a time to show one route.</string>
     <string name="tap_time_for_trip">Tap a time to show the trip.</string>
     <string name="pref_ampmtimes_key">ampmtimes</string>
     <string name="pref_showallbusses_key">showallbusses</string>
     <string name="ampmtimes">Show times as am/pm</string>
     <string name="preferences">Preferences</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_closest_stops">Closest Stops</string>
+
 </resources>

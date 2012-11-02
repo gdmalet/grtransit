@@ -46,6 +46,11 @@ public class SearchStopsActivity extends ListActivity {
 		// Log.v(TAG, "OnCreate()");
 		mContext = this;
 
+		final ListView lv = getListView();
+		final TextView tv = new TextView(mContext);
+		tv.setText(R.string.longpress_adds_stop);
+		lv.addFooterView(tv);
+
 		final Intent intent = getIntent();
 		if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
 			final String query = intent.getStringExtra(SearchManager.QUERY);
@@ -57,6 +62,7 @@ public class SearchStopsActivity extends ListActivity {
 
 			// register to get long clicks on bus stop list
 			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+				@Override
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 					onListItemLongClick(parent, view, position, id);
 					return true; // we consumed the click
@@ -106,6 +112,7 @@ public class SearchStopsActivity extends ListActivity {
 		final String stop_name = csr.getString(1);
 
 		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
@@ -122,8 +129,8 @@ public class SearchStopsActivity extends ListActivity {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("Stop " + stop_id + ", " + stop_name);
-		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener).setNegativeButton("No", listener)
-				.create().show();
+		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener)
+				.setNegativeButton("No", listener).create().show();
 	}
 
 	private class FindStops extends AsyncTask<String, Void, Cursor> {
@@ -139,13 +146,9 @@ public class SearchStopsActivity extends ListActivity {
 			final String[] columns = { "stop_id as _id", "stop_name as descr" };
 			final String whereclause = "stop_id like '%' || ? || '%' or stop_name like '%' || ? || '%'";
 			final String[] selectargs = { query, query };
-			final Cursor csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, null, null);
+			final Cursor csr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, null,
+					null);
 			startManagingCursor(csr);
-
-			final ListView lv = getListView();
-			final TextView tv = new TextView(mContext);
-			tv.setText(R.string.longpress_adds_stop);
-			lv.addFooterView(tv);
 
 			return csr;
 		}

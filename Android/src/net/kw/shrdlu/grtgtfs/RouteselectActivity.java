@@ -100,6 +100,7 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 	}
 
 	private final View.OnTouchListener mGestureListener = new View.OnTouchListener() {
+		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			return mGestureDetector.onTouchEvent(event);
 		}
@@ -107,28 +108,29 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 
 	// Catch flings, to show all busses coming to this stop.
 	// This must be called on the GIU thread.
-	private final GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			// Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
-			// Catch a fling sort of from right to left
-			if (velocityX < -100 && Math.abs(velocityX) > Math.abs(velocityY)) {
-				// Log.d(TAG, "left fling detected");
-				Globals.tracker.trackEvent("RoutesSelect", "fling left", mStopid, 1);
-				final Intent bustimes = new Intent(mContext, TimesActivity.class);
-				final String pkgstr = mContext.getApplicationContext().getPackageName();
-				bustimes.putExtra(pkgstr + ".stop_id", mStopid);
-				mContext.startActivity(bustimes);
-				return true;
-			} else if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
-				// Log.d(TAG, "right fling detected");
-				Globals.tracker.trackEvent("RouteSelect", "fling right", "", 1);
-				finish();
-				return true;
-			}
-			return false;
-		}
-	});
+	private final GestureDetector mGestureDetector = new GestureDetector(mContext,
+			new GestureDetector.SimpleOnGestureListener() {
+				@Override
+				public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+					// Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
+					// Catch a fling sort of from right to left
+					if (velocityX < -100 && Math.abs(velocityX) > Math.abs(velocityY)) {
+						// Log.d(TAG, "left fling detected");
+						Globals.tracker.trackEvent("RoutesSelect", "fling left", mStopid, 1);
+						final Intent bustimes = new Intent(mContext, TimesActivity.class);
+						final String pkgstr = mContext.getApplicationContext().getPackageName();
+						bustimes.putExtra(pkgstr + ".stop_id", mStopid);
+						mContext.startActivity(bustimes);
+						return true;
+					} else if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
+						// Log.d(TAG, "right fling detected");
+						Globals.tracker.trackEvent("RouteSelect", "fling right", "", 1);
+						finish();
+						return true;
+					}
+					return false;
+				}
+			});
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -152,10 +154,8 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 		return super.onOptionsItemSelected(item);
 	}
 
-	/*
-	 * Do the processing to load the ArrayAdapter for display.
-	 */
-	private class ProcessRoutes extends AsyncTask<Void, Integer, Void> {
+	/* Do the processing to load the ArrayAdapter for display. */
+	private class ProcessRoutes extends AsyncTask<Void, Integer, Integer> {
 		// static final String TAG = "ProcessRoutes";
 
 		@Override
@@ -171,11 +171,8 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 		}
 
 		@Override
-		protected Void doInBackground(Void... foo) {
+		protected Integer doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
-
-			final ListView lv = getListView();
-			lv.setOnTouchListener(mGestureListener);
 
 			publishProgress(25); // fake it
 
@@ -186,7 +183,8 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
 			final String qry = "select distinct route_id as _id, trip_headsign as descr from trips"
 					+ " join calendar on trips.service_id = calendar.service_id where "
-					+ " trip_id in (select trip_id from stop_times where stop_id = ?) and " + " start_date <= ? and end_date >= ?";
+					+ " trip_id in (select trip_id from stop_times where stop_id = ?) and "
+					+ " start_date <= ? and end_date >= ?";
 			final String[] selectargs = { mStopid, datenow, datenow };
 			mCsr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
 
@@ -194,22 +192,26 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 			startManagingCursor(mCsr);
 
 			publishProgress(75); // fake it
-			if (mCsr.getCount() > 1) {
+			return mCsr.getCount();
+		}
+
+		@Override
+		protected void onPostExecute(Integer listcount) {
+			// Log.v(TAG, "onPostExecute()");
+
+			final ListView lv = getListView();
+			lv.setOnTouchListener(mGestureListener);
+
+			if (listcount > 1) {
 				// Show msg describing a fling to see times for all routes.
 				final TextView tv = new TextView(mContext);
 				tv.setText(R.string.route_fling);
 				lv.addFooterView(tv);
-			} else if (mCsr.getCount() == 0) {
+			} else if (listcount == 0) {
 				final TextView tv = new TextView(mContext);
 				tv.setText(R.string.stop_unused);
 				lv.addFooterView(tv);
 			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void foo) {
-			// Log.v(TAG, "onPostExecute()");
 
 			setListAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
 
@@ -224,14 +226,17 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 	/**
 	 * Make the {@link ProgressBar} visible when our in-animation finishes.
 	 */
+	@Override
 	public void onAnimationEnd(Animation animation) {
 		mProgress.setVisibility(View.VISIBLE);
 	}
 
+	@Override
 	public void onAnimationRepeat(Animation animation) {
 		// Not interested if the animation repeats
 	}
 
+	@Override
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
 	}

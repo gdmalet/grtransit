@@ -69,7 +69,9 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		// Log.v(TAG, "OnCreate()");
 
 		mContext = this;
-		if (mGlobals == null) mGlobals = new Globals(mContext);
+		if (mGlobals == null) {
+			mGlobals = new Globals(mContext);
+		}
 
 		setContentView(R.layout.timeslayout);
 
@@ -83,13 +85,16 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		final TextView v = (TextView) findViewById(R.id.timestitle);
 		v.setText(R.string.favourites_title);
 
+		final ListView lv = getListView();
+		final TextView tv = new TextView(mContext);
+		tv.setText(R.string.longpress_removes_stop);
+		lv.addFooterView(tv);
+
 		// ProcessStops(); // will be done in onResume()
 	}
 
-	/*
-	 * Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if we refer to it, at which point
-	 * Dalvik would discover the error. So don't refer to it if we know it will fail....
-	 */
+	/* Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if
+	 * we refer to it, at which point Dalvik would discover the error. So don't refer to it if we know it will fail.... */
 	private static class API9ReflectionWrapper {
 		public static void setStrictMode() {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -104,9 +109,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		}
 	}
 
-	/*
-	 * Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent.
-	 */
+	/* Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent. */
 	static boolean mShownalert = false;
 
 	protected void ProcessStops() {
@@ -115,8 +118,10 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		final ArrayList<String[]> favstops = Globals.mPreferences.GetBusstopFavourites();
 		// Convert from stop/description to required 4-entry layout.
 		synchronized (mDetails) {
-			for (final String[] stop : favstops)
-				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?" }); // will do the rest later.
+			for (final String[] stop : favstops) {
+				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?" }); // will do the rest
+																												// later.
+			}
 		}
 		mAdapter = new FavstopsArrayAdapter(this, R.layout.favouritesrow, mDetails);
 		setListAdapter(mAdapter);
@@ -128,6 +133,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 
 			// register to get long clicks on bus stop list
 			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+				@Override
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 					// Log.i(TAG, "onItemLongClickClick position " + position);
 					onListItemLongClick(parent, view, position, id);
@@ -181,10 +187,6 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.busstopsmenu, menu);
 
-		// Change `Show on map' menu option to `Show map'.
-		final MenuItem item = menu.findItem(R.id.menu_showonmap);
-		item.setTitle(R.string.showmap);
-
 		return true;
 	}
 
@@ -193,14 +195,14 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showonmap: {
-			Globals.tracker.trackEvent("Menu", "Show map", "", 1);
+		case R.id.menu_mylocation: {
+			Globals.tracker.trackEvent("Menu", "My Location", "", 1);
 			startActivity(new Intent(mContext, StopsActivity.class));
 			return true;
 		}
-		case R.id.menu_location: {
-			Globals.tracker.trackEvent("Menu", "Show location", "", 1);
-			final Intent stops = new Intent(mContext, StopsActivity.class);
+		case R.id.menu_closeststops: {
+			Globals.tracker.trackEvent("Menu", "Closest Stops", "", 1);
+			final Intent stops = new Intent(mContext, ClosestStopsActivity.class);
 			startActivity(stops);
 			return true;
 		}
@@ -243,6 +245,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		final int aryposn = position; // so we can access it in the listener class.
 
 		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
@@ -286,9 +289,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		mContext.startActivity(routeselect);
 	}
 
-	/*
-	 * Do the processing to load the ArrayAdapter for display.
-	 */
+	/* Do the processing to load the ArrayAdapter for display. */
 	private class LoadTimes extends AsyncTask<Void, Integer, Void> {
 
 		@Override
@@ -320,7 +321,8 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 					// Log.d(TAG, "Searching for busses for stop " + stopid + " " + stopdescr);
 					final String[] nextbus = ServiceCalendar.getNextDepartureTime(stopid, datenow);
 					if (nextbus != null) {
-						// Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " + nextbus[2]);
+						// Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " +
+						// nextbus[2]);
 						pref[2] = nextbus[0]; // time
 						pref[3] = nextbus[2]; // route headsign
 						pref[4] = nextbus[1]; // route number
@@ -347,14 +349,17 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 	/**
 	 * Make the {@link ProgressBar} visible when our in-animation finishes.
 	 */
+	@Override
 	public void onAnimationEnd(Animation animation) {
 		mProgress.setVisibility(View.VISIBLE);
 	}
 
+	@Override
 	public void onAnimationRepeat(Animation animation) {
 		// Not interested if the animation repeats
 	}
 
+	@Override
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
 	}

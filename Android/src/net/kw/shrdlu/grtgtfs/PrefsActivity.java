@@ -28,7 +28,7 @@ public class PrefsActivity extends PreferenceActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Override the defaul file name, since we already use a name.
+		// Override the default file name, since we already use a name.
 		getPreferenceManager().setSharedPreferencesName(getApplicationInfo().packageName);
 
 		addPreferencesFromResource(R.xml.preferences);

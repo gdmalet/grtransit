@@ -120,16 +120,14 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.busstopsmenu, menu);
 
-		// Hide the `Show on map' menu option
-		menu.removeItem(R.id.menu_showonmap);
-
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_location: {
+		case R.id.menu_mylocation: {
+			Globals.tracker.trackEvent("Menu", "My Location", "", 1);
 			// Center the map over the current location
 			GeoPoint locn = mMylocation.getMyLocation();
 			if (locn == null) {
@@ -142,22 +140,28 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 			if (locn != null) {
 				final MapController mcp = mMapview.getController();
 				mcp.animateTo(locn);
-				while (mMapview.getZoomLevel() < 17)
-					if (!mcp.zoomIn()) break;
+				while (mMapview.getZoomLevel() < 17) {
+					if (!mcp.zoomIn()) {
+						break;
+					}
+				}
 			} else {
 				Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
 			}
 			return true;
 		}
 		case R.id.menu_about: {
+			Globals.tracker.trackEvent("Menu", "Show about", "", 1);
 			Globals.showAbout(this);
 			return true;
 		}
 		case R.id.menu_searchstops: {
+			Globals.tracker.trackEvent("Menu", "Search stops", "", 1);
 			onSearchRequested();
 			return true;
 		}
 		case R.id.menu_searchroutes: {
+			Globals.tracker.trackEvent("Menu", "Search routes", "", 1);
 			final Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
 			routesearch.setAction(Intent.ACTION_MAIN); // anything other than
 														// SEARCH
@@ -169,19 +173,22 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	}
 
 	/**
-	 * Background task to handle initial load of the bus stops. This correctly shows and hides the loading animation from the GUI thread before starting a
-	 * background query to the DB. When finished, it transitions back to the GUI thread where it updates with the newly-found entries.
+	 * Background task to handle initial load of the bus stops. This correctly shows and hides the loading animation from the
+	 * GUI thread before starting a background query to the DB. When finished, it transitions back to the GUI thread where it
+	 * updates with the newly-found entries.
 	 */
 	private class LoadOverlay extends AsyncTask<Void, Integer, Void> implements NotificationCallback {
 		static final String TAG = "LoadOverlay";
 
 		// A callback from LoadDB, for updating our progress bar
+		@Override
 		public void notificationCallback(Integer progress) {
 			publishProgress(progress);
 		}
 
 		/**
-		 * Before jumping into background thread, start sliding in the {@link ProgressBar}. We'll only show it once the animation finishes.
+		 * Before jumping into background thread, start sliding in the {@link ProgressBar}. We'll only show it once the
+		 * animation finishes.
 		 */
 		@Override
 		protected void onPreExecute() {
@@ -227,8 +234,11 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 				}
 				if (center != null) {
 					mcp.animateTo(center);
-					while (mMapview.getZoomLevel() < 17)
-						if (!mcp.zoomIn()) break;
+					while (mMapview.getZoomLevel() < 17) {
+						if (!mcp.zoomIn()) {
+							break;
+						}
+					}
 				} else {
 					Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
 					final Rect boundingbox = mOverlay.getBoundingBoxE6();
@@ -258,14 +268,17 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	/**
 	 * Make the {@link ProgressBar} visible when our in-animation finishes.
 	 */
+	@Override
 	public void onAnimationEnd(Animation animation) {
 		mProgress.setVisibility(View.VISIBLE);
 	}
 
+	@Override
 	public void onAnimationRepeat(Animation animation) {
 		// Not interested if the animation repeats
 	}
 
+	@Override
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
 	}

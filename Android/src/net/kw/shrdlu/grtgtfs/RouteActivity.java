@@ -130,15 +130,13 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 		return true;
 	}
 
-	/*
-	 * // This is called when redisplaying the menu
+	/* This is called when redisplaying the menu
 	 * 
-	 * @Override public boolean onPrepareOptionsMenu(Menu menu) { return true; }
-	 */
+	 * @Override public boolean onPrepareOptionsMenu(Menu menu) { return true; } */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_location: {
+		case R.id.menu_mylocation: {
 			// Center the map over the current location
 			GeoPoint locn = mMylocation.getMyLocation();
 			if (locn == null) {
@@ -151,8 +149,11 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 			if (locn != null) {
 				final MapController mcp = mMapview.getController();
 				mcp.animateTo(locn);
-				while (mMapview.getZoomLevel() < 17)
-					if (!mcp.zoomIn()) break;
+				while (mMapview.getZoomLevel() < 17) {
+					if (!mcp.zoomIn()) {
+						break;
+					}
+				}
 			} else {
 				Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
 			}
@@ -179,12 +180,14 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 		// static final String TAG = "LookupTask";
 
 		// A callback from LoadDB, for updating our progress bar
+		@Override
 		public void notificationCallback(Integer progress) {
 			publishProgress(progress);
 		}
 
 		/**
-		 * Before jumping into background thread, start sliding in the {@link ProgressBar}. We'll only show it once the animation finishes.
+		 * Before jumping into background thread, start sliding in the {@link ProgressBar}. We'll only show it once the
+		 * animation finishes.
 		 */
 		@Override
 		protected void onPreExecute() {
@@ -273,10 +276,11 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 			// Need to calculate span and centre of overlays
 			for (final RouteOverlay overlay : overlays) {
 				mapOverlays.add(overlay);
-				if (boundingbox == null)
+				if (boundingbox == null) {
 					boundingbox = overlay.getBoundingBoxE6();
-				else
+				} else {
 					boundingbox.union(overlay.getBoundingBoxE6());
+				}
 			}
 
 			// Centre the map over the bus stops
@@ -298,14 +302,17 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	/**
 	 * Make the {@link ProgressBar} visible when our in-animation finishes.
 	 */
+	@Override
 	public void onAnimationEnd(Animation animation) {
 		mProgress.setVisibility(View.VISIBLE);
 	}
 
+	@Override
 	public void onAnimationRepeat(Animation animation) {
 		// Not interested if the animation repeats
 	}
 
+	@Override
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
 	}

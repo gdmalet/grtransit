@@ -83,6 +83,12 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 			}
 		});
 
+		final ListView lv = getListView();
+		final TextView tv = new TextView(mContext);
+		tv.setText(R.string.longpress_adds_stop);
+		lv.addFooterView(tv);
+		lv.setOnTouchListener(mGestureListener);
+
 		new ProcessBusStops().execute();
 	}
 
@@ -114,12 +120,6 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 		@Override
 		protected Integer doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
-
-			final ListView lv = getListView();
-			final TextView tv = new TextView(mContext);
-			tv.setText(R.string.longpress_adds_stop);
-			lv.addFooterView(tv);
-			lv.setOnTouchListener(mGestureListener);
 
 			final String qry = "select stop_times.stop_id as _id, stop_name as descr, departure_time from stop_times"
 					+ " join stops on stops.stop_id = stop_times.stop_id where trip_id = ? order by departure_time";

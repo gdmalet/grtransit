@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="preferExternal"
     package="net.kw.shrdlu.grtgtfs"
-    android:versionCode="17"
-    android:versionName="0.98.5" >
+    android:installLocation="preferExternal"
+    android:versionCode="18"
+    android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="4"
-        android:targetSdkVersion="10" />
+        android:minSdkVersion="2" <!-- Android 2.1 -->
+        android:targetSdkVersion="14" /> <!-- Android 4.0-->
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -22,9 +22,7 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name="StopsActivity"
-            class=".BusstopsActivity"
-            android:description="@string/activity_desc"
+            android:name=".StopsActivity" >
             android:label="@string/app_name"
             android:launchMode="singleTop" >
             <meta-data
@@ -32,39 +30,41 @@
                 android:value=".SearchStopsActivity" />
         </activity>
         <activity
-            android:name="FavstopsActivity"
+            android:name=".FavstopsActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchStopsActivity" />
         </activity>
         <activity
-            android:name="RouteActivity"
+            android:name=".RouteActivity"
             android:label="@string/app_name" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchRoutesActivity" />
         </activity>
         <activity
-            android:name="PrefsActivity"
+            android:name=".PrefsActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="RouteselectActivity"
+            android:name=".RouteselectActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="TimesActivity"
+            android:name=".TimesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="TripStopsActivity"
+            android:name=".TripStopsActivity"
             android:label="@string/app_name" />
-        <activity android:name="SearchStopsActivity" >
+        <activity
+            android:name=".ClosestStopsActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity android:name=".SearchStopsActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
@@ -75,7 +75,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/stopsearchable" />
         </activity>
-        <activity android:name="SearchRoutesActivity" >
+        <activity android:name=".SearchRoutesActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
