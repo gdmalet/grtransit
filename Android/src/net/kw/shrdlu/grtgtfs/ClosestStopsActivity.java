@@ -128,6 +128,8 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 				mLocation = location;
 				if (mLocation != null) {
 					new ProcessBusStops().execute();
+				} else {
+					Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
 				}
 			}
 		}

@@ -6,7 +6,7 @@
     <string name="activity_desc">Grand River Transit Bus Stops</string>
     <string name="closest_stops">Closest stops</string>
     <string name="showallbusses">Show busses for all days</string>
-    <string name="mylocation">My Location</string>
+    <string name="mylocation">My location</string>
     <string name="loading_stops">Loading the bus stops…</string>
     <string name="loading_times">Loading the bus times…</string>
     <string name="app_descrip">Grand River Transit details for the Region of Waterloo, Ontario, Canada.\n\nAll data for this application is freely available in Google GTFS format from http://www.grt.ca</string>
@@ -14,7 +14,7 @@
     <string name="find_stop">Find a stop</string>
     <string name="find_route">Find a route</string>
     <string name="last_location_fix">No recent location fix, using previous</string>
-    <string name="no_location_fix">No usable location fix!</string>
+    <string name="no_location_fix">No usable location fix! Waiting....</string>
     <string name="search_bus_hint">Search GRT bus stops</string>
     <string name="search_route_hint">Search GRT bus routes</string>
     <string name="calendar_expired">There is no current schedule data on your system, perhaps because it expired. Please update your app!</string>
