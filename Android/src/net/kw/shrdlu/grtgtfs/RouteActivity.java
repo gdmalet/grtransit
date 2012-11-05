@@ -124,8 +124,8 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 		inflater.inflate(R.menu.busstopsmenu, menu);
 
 		// Hide some menu options
-		menu.removeItem(R.id.menu_showonmap);
 		menu.removeItem(R.id.menu_about);
+		menu.removeItem(R.id.menu_preferences);
 
 		return true;
 	}
@@ -157,6 +157,18 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 			} else {
 				Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
 			}
+			return true;
+		}
+		case R.id.menu_preferences: {
+			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
+			final Intent prefs = new Intent(mContext, PrefsActivity.class);
+			startActivity(prefs);
+			return true;
+		}
+		case R.id.menu_closeststops: {
+			Globals.tracker.trackEvent("Menu", "Closest stops", "", 1);
+			final Intent stops = new Intent(mContext, ClosestStopsActivity.class);
+			startActivity(stops);
 			return true;
 		}
 		case R.id.menu_searchstops: {

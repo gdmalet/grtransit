@@ -120,6 +120,10 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.busstopsmenu, menu);
 
+		// Hide some menu options
+		menu.removeItem(R.id.menu_about);
+		menu.removeItem(R.id.menu_preferences);
+
 		return true;
 	}
 
@@ -127,7 +131,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_mylocation: {
-			Globals.tracker.trackEvent("Menu", "My Location", "", 1);
+			Globals.tracker.trackEvent("Menu", "My location", "", 1);
 			// Center the map over the current location
 			GeoPoint locn = mMylocation.getMyLocation();
 			if (locn == null) {
@@ -150,9 +154,16 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 			}
 			return true;
 		}
-		case R.id.menu_about: {
-			Globals.tracker.trackEvent("Menu", "Show about", "", 1);
-			Globals.showAbout(this);
+		case R.id.menu_preferences: {
+			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
+			final Intent prefs = new Intent(mContext, PrefsActivity.class);
+			startActivity(prefs);
+			return true;
+		}
+		case R.id.menu_closeststops: {
+			Globals.tracker.trackEvent("Menu", "Closest stops", "", 1);
+			final Intent stops = new Intent(mContext, ClosestStopsActivity.class);
+			startActivity(stops);
 			return true;
 		}
 		case R.id.menu_searchstops: {
