@@ -50,8 +50,11 @@ public class ServiceCalendar {
 	private static String getDays(Cursor csr) {
 		String days = new String();
 
-		for (int i = 0; i < 7; i++)
-			if (csr.getInt(csr.getColumnIndex(mWeekDays[i])) == 1) days += mWeekDaysAbbrev[i] + " ";
+		for (int i = 0; i < 7; i++) {
+			if (csr.getInt(csr.getColumnIndex(mWeekDays[i])) == 1) {
+				days += mWeekDaysAbbrev[i] + " ";
+			}
+		}
 
 		return days;
 	}
@@ -60,17 +63,22 @@ public class ServiceCalendar {
 	// sure we close the cursor on exit.
 	private static String process_db(String service_id, String date, boolean limit, Cursor csr) {
 
-		if (!csr.moveToFirst()) return null;
+		if (!csr.moveToFirst()) {
+			return null;
+		}
 
 		// Make sure it's in a current schedule period
 		final String start = csr.getString(csr.getColumnIndex("start_date"));
 		final String end = csr.getString(csr.getColumnIndex("end_date"));
-		if (date.compareTo(start) < 0 || date.compareTo(end) > 0)
-		// return "Schedule data has expired!";
+		if (date.compareTo(start) < 0 || date.compareTo(end) > 0) {
+			// return "Schedule data has expired!";
 			return null;
+		}
 
 		// If we're not limiting the display, return what we have
-		if (!limit) return getDays(csr);
+		if (!limit) {
+			return getDays(csr);
+		}
 
 		// Check for exceptions
 		final String[] selectargs = { service_id, date };
@@ -78,9 +86,12 @@ public class ServiceCalendar {
 		if (exp.moveToFirst()) {
 			final int exception = exp.getInt(exp.getColumnIndex("exception_type"));
 			exp.close();
-			if (exception == 2) // service removed for this day
+			if (exception == 2) {
 				return null;
-			if (exception == 1) return getDays(csr); // service added for this day
+			}
+			if (exception == 1) {
+				return getDays(csr); // service added for this day
+			}
 			Log.e(TAG, "bogus exception type " + exception + " for service " + service_id + "!");
 			return null;
 		} else {
@@ -97,7 +108,9 @@ public class ServiceCalendar {
 			return null;
 		}
 		final int weekday = t.weekDay; // 0--6
-		if (csr.getInt(csr.getColumnIndex(mWeekDays[weekday])) == 1) return getDays(csr);
+		if (csr.getInt(csr.getColumnIndex(mWeekDays[weekday])) == 1) {
+			return getDays(csr);
+		}
 
 		return null; // doesn't run on given date.
 	}
@@ -119,9 +132,13 @@ public class ServiceCalendar {
 			svs.moveToFirst();
 			service_id = svs.getString(0);
 			svs.close();
-			if (service_id != null && !service_id.equals("")) trip2servicemap.put(trip_id, service_id);
+			if (service_id != null && !service_id.equals("")) {
+				trip2servicemap.put(trip_id, service_id);
+			}
 		}
-		if (service_id == null) return null;
+		if (service_id == null) {
+			return null;
+		}
 
 		// First check the cache
 		if (limit) {
@@ -144,17 +161,17 @@ public class ServiceCalendar {
 		csr.close();
 
 		// Save in cache
-		if (limit)
+		if (limit) {
 			truemap.put(service_id + date, retstr);
-		else
+		} else {
 			falsemap.put(service_id + date, retstr);
+		}
 
 		return retstr;
 	}
 
-	/*
-	 * Return a list of times that all busses for all routes depart a given stop, sorted by time. List is departure_time, route_id, trip_headsign.
-	 */
+	/* Return a list of times that all busses for all routes depart a given stop, sorted by time. List is departure_time,
+	 * route_id, trip_headsign. */
 	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String date, boolean limittotoday,
 			NotificationCallback task) {
 
@@ -175,9 +192,13 @@ public class ServiceCalendar {
 			final String daysstr = ServiceCalendar.getTripDaysofWeek(trip_id, date, limittotoday);
 
 			// Only add if the bus runs on this day.
-			if (daysstr != null) listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(2), csr.getString(3) });
+			if (daysstr != null) {
+				listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(2), csr.getString(3) });
+			}
 
-			if (task != null) task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
+			if (task != null) {
+				task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
+			}
 
 			more = csr.moveToNext();
 		}
@@ -186,10 +207,8 @@ public class ServiceCalendar {
 		return listdetails;
 	}
 
-	/*
-	 * Return a list of times that all busses for a given route depart a given stop, sorted by time. List is departure_times, days of week the bus runs, and
-	 * trip_id.
-	 */
+	/* Return a list of times that all busses for a given route depart a given stop, sorted by time. List is departure_times,
+	 * days of week the bus runs, and trip_id. */
 	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String routeid, String headsign, String date,
 			boolean limittotoday, NotificationCallback task) {
 
@@ -210,9 +229,13 @@ public class ServiceCalendar {
 			final String daysstr = ServiceCalendar.getTripDaysofWeek(trip_id, date, limittotoday);
 
 			// Only add if the bus runs on this day.
-			if (daysstr != null) listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(1) });
+			if (daysstr != null) {
+				listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(1) });
+			}
 
-			if (task != null) task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
+			if (task != null) {
+				task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
+			}
 
 			more = csr.moveToNext();
 		}
@@ -221,14 +244,14 @@ public class ServiceCalendar {
 		return listdetails;
 	}
 
-	/*
-	 * Return the time and route details of the next bus for any route, or null if there isn't one today.
-	 */
+	/* Return the time and route details of the next bus for any route, or null if there isn't one today. */
 	public static String[] getNextDepartureTime(String stopid, String date) {
 
 		final ArrayList<String[]> listdetails = getRouteDepartureTimes(stopid, date, true, null);
 
-		if (listdetails == null) return null;
+		if (listdetails == null) {
+			return null;
+		}
 
 		final Time t = new Time();
 		t.setToNow();
@@ -246,14 +269,14 @@ public class ServiceCalendar {
 		return null;
 	}
 
-	/*
-	 * Return the time of the next bus for a given route, or null if there isn't one today.
-	 */
+	/* Return the time of the next bus for a given route, or null if there isn't one today. */
 	public static String getNextDepartureTime(String stopid, String routeid, String headsign, String date) {
 
 		final ArrayList<String[]> listdetails = getRouteDepartureTimes(stopid, routeid, headsign, date, true, null);
 
-		if (listdetails == null) return null;
+		if (listdetails == null) {
+			return null;
+		}
 
 		final Time t = new Time();
 		t.setToNow();
@@ -271,35 +294,54 @@ public class ServiceCalendar {
 		return null;
 	}
 
-	/*
-	 * Return a properly formatted time. Assumes nn:nn:nn input, may return just that, or convert and add annoying American `p' for pm suffix.
-	 */
+	/* Return a properly formatted time. Assumes nn:nn:nn input, may return just that, or convert and add annoying American `p'
+	 * for pm suffix. */
 	public static String formattedTime(String time) {
-		if (!Globals.mPreferences.showAMPMTimes()) return time;
+		final int i = time.indexOf(':'); // Take note of where first colon is
+		final int j = time.lastIndexOf(':'); // and the last.
+
+		if (i < 0) {
+			return time; // strange?
+		}
+
+		String newtime;
+
+		// If the string contains seconds, which are always zero, truncate them.
+		if (time.endsWith(":00") && j > i) {
+			newtime = time.substring(0, j);
+		} else {
+			newtime = time;
+		}
+
+		if (!Globals.mPreferences.showAMPMTimes()) {
+			return newtime;
+		}
 
 		final String AM = "am", PM = "pm";
 
 		// Hopefully we actually have a time
-		final int i = time.indexOf(':');
 		if (i > 0) {
-			int hours = Integer.parseInt(time.substring(0, i));
+			int hours = Integer.parseInt(newtime.substring(0, i));
 			String prefix = AM;
 
 			if (hours >= 12 && hours < 24) {
 				prefix = PM;
-				if (hours > 12) hours -= 12;
+				if (hours > 12) {
+					hours -= 12;
+				}
 			}
 			if (hours >= 24) {
-				if (hours == 24)
+				if (hours == 24) {
 					hours = 12;
-				else
+				} else {
 					hours -= 24;
+				}
 			}
 
 			// Reformat to drop leading zero, add prefix
-			time = String.format("%d%s%s", hours, time.substring(i), prefix);
+			newtime = String.format("%d%s%s", hours, newtime.substring(i), prefix);
 		}
 
-		return time;
+		return newtime;
 	}
 }
