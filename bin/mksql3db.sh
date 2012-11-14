@@ -5,7 +5,7 @@
 # ../../bin/mksql3db.sh ../sqlite3/GRT.db *
 
 MYNAME=$(basename $0)
-SQ3=/usr/local/android-sdk-linux_x86/tools/sqlite3
+SQ3=/usr/local/android-sdk-linux/tools/sqlite3
 
 function usage {
     echo "Usage: $MYNAME dbname file [file ...]"

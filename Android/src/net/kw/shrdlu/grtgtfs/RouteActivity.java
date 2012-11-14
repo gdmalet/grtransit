@@ -159,12 +159,6 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 			}
 			return true;
 		}
-		case R.id.menu_preferences: {
-			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
-			final Intent prefs = new Intent(mContext, PrefsActivity.class);
-			startActivity(prefs);
-			return true;
-		}
 		case R.id.menu_closeststops: {
 			Globals.tracker.trackEvent("Menu", "Closest stops", "", 1);
 			final Intent stops = new Intent(mContext, ClosestStopsActivity.class);

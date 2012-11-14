@@ -41,7 +41,7 @@ public class DatabaseHelper {
 	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
 
 	private static String DB_PATH = null;
-	private static final int DB_VERSION = 11; /* As of 3rd September 2012 */
+	private static final int DB_VERSION = 12; /* As of 22nd September 2012 */
 	private static final String DB_NAME = "GRT.db";
 	private static Context mContext;
 	private static boolean mMustCopy = false;
@@ -70,7 +70,9 @@ public class DatabaseHelper {
 			}
 		}
 
-		if (DB_PATH != null) Log.e(TAG, "constructor has already been called!?");
+		if (DB_PATH != null) {
+			Log.e(TAG, "constructor has already been called!?");
+		}
 
 		if (android.os.Build.VERSION.SDK_INT >= 42 /* 8 */) {
 			// Returns something like
@@ -94,7 +96,9 @@ public class DatabaseHelper {
 		// Delete the old database if it exists, and recreate on the sdcard.
 		if (!DB_PATH.equals(DB_OLD_PATH)) {
 			final File olddb = new File(DB_OLD_PATH + DB_NAME);
-			if (olddb.exists() && !olddb.delete()) Log.e(TAG, "failed to delete old db...!?");
+			if (olddb.exists() && !olddb.delete()) {
+				Log.e(TAG, "failed to delete old db...!?");
+			}
 		}
 		// And another one, due to a mistake in setting DB_PATH in v0.96.
 		new File(BAD_DB_PATH + "/" + DB_NAME).delete();
@@ -102,15 +106,13 @@ public class DatabaseHelper {
 
 		// Do this once, as we don't need them separate anymore.
 		DB_PATH += "/" + DB_NAME;
-		/*
-		 * // The database is on the sdcard. // String sdstate = Environment.getExternalStorageState(); if (!sdstate.equals(Environment.MEDIA_MOUNTED)) {
-		 * AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		/* // The database is on the sdcard. // String sdstate = Environment.getExternalStorageState(); if
+		 * (!sdstate.equals(Environment.MEDIA_MOUNTED)) { AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		 * 
 		 * builder.setTitle("The external database is unavailable.") .setMessage("The sdcard is in state `" + sdstate +
 		 * "'.\nPlease retry when it is available.") .create() .show();
 		 * 
-		 * return; }
-		 */
+		 * return; } */
 		try {
 			DB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
 		} catch (final SQLiteException e) {
@@ -151,10 +153,8 @@ public class DatabaseHelper {
 		// Log.v(TAG, "clean exit of constructor");
 	}
 
-	/*
-	 * Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if we refer to it, at which point
-	 * Dalvik would discover the error. So don't refer to it if we know it will fail....
-	 */
+	/* Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if
+	 * we refer to it, at which point Dalvik would discover the error. So don't refer to it if we know it will fail.... */
 	private static class API8ReflectionWrapper {
 		public static String getDBPath() {
 			return mContext.getExternalFilesDir(null).getPath();
@@ -162,8 +162,9 @@ public class DatabaseHelper {
 	}
 
 	/**
-	 * Copies database from local assets-folder to the system folder, from where it can be accessed and handled. This is done by transferring bytestream. Note
-	 * that this class must be public static, since it's embedded in the outer class. If it's not static, starting the service will fail.
+	 * Copies database from local assets-folder to the system folder, from where it can be accessed and handled. This is done by
+	 * transferring bytestream. Note that this class must be public static, since it's embedded in the outer class. If it's not
+	 * static, starting the service will fail.
 	 **/
 	public static class DBcopier extends IntentService {
 		private static final String TAG = "DBcopier";
