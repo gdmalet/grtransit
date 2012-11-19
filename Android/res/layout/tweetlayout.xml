@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/List"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/list_dark_background"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:stretchColumns="1" >
 
     <TextView
         android:id="@+id/stoptime"
-        style="@style/List.Stoptime" />
+        style="@style/List.TweetTime" />
 
     <TextView
         android:id="@+id/desc"
-        style="@style/List.Content" />
+        style="@style/List.TweetText" />
 
 </LinearLayout>

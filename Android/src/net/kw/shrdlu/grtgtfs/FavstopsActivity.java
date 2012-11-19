@@ -212,6 +212,12 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			startActivity(stops);
 			return true;
 		}
+		case R.id.menu_alerts: {
+			Globals.tracker.trackEvent("Menu", "Alerts", "", 1);
+			final Intent alerts = new Intent(mContext, RiderAlertsActivity.class);
+			startActivity(alerts);
+			return true;
+		}
 		case R.id.menu_about: {
 			Globals.tracker.trackEvent("Menu", "Show about", "", 1);
 			Globals.showAbout(this);

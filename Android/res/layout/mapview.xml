@@ -21,7 +21,7 @@
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="0PRfBeQykUNm74M3MdJu9ohhd7lfqkyeulrj3rg"
+        android:apiKey="0PRfBeQykUNnLPBiKjXmum5S98_Qh9JhBAOyDPw"
         android:clickable="true" />
     <!--
 Release:

@@ -1,3 +1,22 @@
+/*
+ * Copyright 2011 Giles Malet.
+ *
+ * This file is part of GRTransit.
+ * 
+ * GRTransit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * GRTransit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
@@ -297,9 +316,13 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_showonmap: {
-			// Perform action on click
-			Globals.tracker.trackEvent("Menu", "Show map", "", 1);
-			startActivity(new Intent(mContext, StopsActivity.class));
+			// Centre the map on the closest stop, since the GPS takes too much time.
+			final Intent busstop = new Intent(mContext, StopsActivity.class);
+			if (mListDetails.size() > 0) {
+				final String pkgstr = mContext.getApplicationContext().getPackageName();
+				busstop.putExtra(pkgstr + ".stop_id", mListDetails.get(0)[1]);
+			}
+			startActivity(busstop);
 			return true;
 		}
 		case R.id.menu_preferences: {

@@ -38,5 +38,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_closest_stops">Closest Stops</string>
+    <string name="title_rider_alerts">\@GRT Rider Alerts</string>
+    <string name="twitter_fetch_failed">Failed to contact Twitter - make sure you have an Internet connection.</string>
+    <string name="twitter_fetch_nothing">Twitter returned nothing (there are no recent @GRTRiderAlerts).</string>
+    <string name="rideralerts">Rider alerts</string>
 
 </resources>

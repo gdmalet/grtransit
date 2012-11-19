@@ -23,8 +23,12 @@
 package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.ListActivity;
+import android.text.util.Linkify;
+import android.text.util.Linkify.TransformFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +41,12 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
 	private final int mLayout;
+
+	// For Twitter linkify
+	private final Pattern mUserPattern = Pattern.compile("@([A-Za-z0-9_-]+)");
+	private final Pattern mHashPattern = Pattern.compile("#([A-Za-z0-9_-]+)");
+	private final String mUserScheme = "http://twitter.com/";
+	private final String mHashScheme = "http://twitter.com/search?q=%23";
 
 	public ListArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
@@ -54,20 +64,21 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		// Log.v(TAG, "getview(): position " + position);
+
 		ViewHolder holder;
 
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
 			view = mInflater.inflate(mLayout, parent, false);
-			// Log.d(TAG, "new view " + view);
 
 			// Save the view when we look them up.
 			holder = new ViewHolder();
 			holder.stoptime = (TextView) view.findViewById(R.id.stoptime);
 			holder.desc = (TextView) view.findViewById(R.id.desc);
+
 			view.setTag(holder);
+
 		} else {
 			// Log.d(TAG, "reusing view " + view);
 			holder = (ViewHolder) view.getTag();
@@ -75,6 +86,22 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 
 		holder.stoptime.setText(ServiceCalendar.formattedTime(mDetails.get(position)[0]));
 		holder.desc.setText(mDetails.get(position)[1]);
+
+		// Linkify twitter text.
+		if (mLayout == R.layout.tweetlayout) {
+
+			// Transform filter returns just the text captured by the first regular expression group.
+			final TransformFilter TFilter = new TransformFilter() {
+				@Override
+				public final String transformUrl(final Matcher match, String url) {
+					return match.group(1);
+				}
+			};
+
+			Linkify.addLinks(holder.desc, Linkify.ALL); // the defaults
+			Linkify.addLinks(holder.desc, mUserPattern, mUserScheme, null, TFilter);
+			Linkify.addLinks(holder.desc, mHashPattern, mHashScheme, null, TFilter);
+		}
 
 		return view;
 	}

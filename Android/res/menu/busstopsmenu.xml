@@ -7,9 +7,14 @@
         android:title="@string/mylocation">
     </item>
     <item
-        android:id="@+id/menu_preferences"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/preferences">
+        android:id="@+id/menu_closeststops"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/closest_stops">
+    </item>
+    <item
+        android:id="@+id/menu_alerts"
+        android:icon="@drawable/ic_menu_notifications"
+        android:title="@string/rideralerts">
     </item>
 
     <group
@@ -28,9 +33,9 @@
     </group>
 
     <item
-        android:id="@+id/menu_closeststops"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/closest_stops">
+        android:id="@+id/menu_preferences"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/preferences">
     </item>
     <item
         android:id="@+id/menu_about"

@@ -294,8 +294,8 @@ public class ServiceCalendar {
 		return null;
 	}
 
-	/* Return a properly formatted time. Assumes nn:nn:nn input, may return just that, or convert and add annoying American `p'
-	 * for pm suffix. */
+	/* Return a properly formatted time. Assumes nn:nn[:nn] input somewhere in the string, may return just that, or convert and
+	 * add annoying American `am/pm' suffix. */
 	public static String formattedTime(String time) {
 		final int i = time.indexOf(':'); // Take note of where first colon is
 		final int j = time.lastIndexOf(':'); // and the last.
@@ -307,21 +307,27 @@ public class ServiceCalendar {
 		String newtime;
 
 		// If the string contains seconds, which are always zero, truncate them.
-		if (time.endsWith(":00") && j > i) {
-			newtime = time.substring(0, j);
+		if (j == i + 3 && time.substring(j, j + 3).contentEquals(":00")) {
+			newtime = time.substring(0, j) + time.substring(j + 3);
 		} else {
 			newtime = time;
 		}
 
 		if (!Globals.mPreferences.showAMPMTimes()) {
-			return newtime;
+			return newtime.replaceFirst(":", "h");
 		}
 
 		final String AM = "am", PM = "pm";
 
 		// Hopefully we actually have a time
 		if (i > 0) {
-			int hours = Integer.parseInt(newtime.substring(0, i));
+			int hours;
+			try {
+				hours = Integer.parseInt(newtime.substring(i - 2, i));
+			} catch (NumberFormatException e) {
+				Log.d(TAG, "NumberFormatException: " + e.getMessage() + ", for time `" + newtime + "'");
+				return newtime;
+			}
 			String prefix = AM;
 
 			if (hours >= 12 && hours < 24) {
@@ -339,7 +345,13 @@ public class ServiceCalendar {
 			}
 
 			// Reformat to drop leading zero, add prefix
-			newtime = String.format("%d%s%s", hours, newtime.substring(i), prefix);
+			int where = newtime.indexOf(" ", i); // to put the suffix
+			if (where > 0) {
+				newtime = String.format("%s%d%s%s%s", newtime.subSequence(0, i - 2), hours, newtime.substring(i, where),
+						prefix, newtime.substring(where));
+			} else { // stick it on the end
+				newtime = String.format("%s%d%s%s", newtime.subSequence(0, i - 2), hours, newtime.substring(i), prefix);
+			}
 		}
 
 		return newtime;
