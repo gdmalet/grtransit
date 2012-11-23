@@ -26,6 +26,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.format.Time;
@@ -33,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -59,7 +61,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 	public void onCreate(Bundle savedInstanceState) {
 		// Do this before instantiating Globals, as that may do something we'd like
 		// to see by having StrictMode on already.
-		if (Globals.CheckDebugBuild(this) && android.os.Build.VERSION.SDK_INT >= 9) {
+		if (Globals.CheckDebugBuild(this) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD /* 9 */) {
 			API9ReflectionWrapper.setStrictMode();
 		} else {
 			// Log.d(TAG,"Not setting up strict mode.");
@@ -72,6 +74,11 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		if (mGlobals == null) {
 			mGlobals = new Globals(mContext);
 		}
+
+		mContext.setTitle(R.string.favourites_title);
+		// mContext.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		mContext.requestWindowFeature(Window.FEATURE_PROGRESS);
+		mContext.requestWindowFeature(Window.FEATURE_LEFT_ICON);
 
 		setContentView(R.layout.timeslayout);
 
@@ -307,6 +314,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
 			mProgress.setProgress(parms[0]);
+			mContext.setProgress(parms[0] * 100);
 			mAdapter.notifyDataSetChanged();
 		}
 

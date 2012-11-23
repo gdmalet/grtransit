@@ -38,11 +38,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.app.ListActivity;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,8 +57,8 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 	private static final String TAG = "RiderAlerts";
 
 	// The search string to get recent tweets from GRT Rider Alerts
-	private final String TwitterURL = "http://search.twitter.com/search.json";
-	private final String TwitterQry = "?q=@GRTRiderAlerts&rpp=999&include_entities=false&result_type=recent";
+	private final String TwitterURL = "http://api.twitter.com/1/statuses/user_timeline.json";
+	private final String TwitterQry = "?screen_name=GRTRiderAlerts&count=20&include_entities=false&trim_user=true";
 
 	private ListActivity mContext;
 	private View mListDetail;
@@ -85,7 +85,7 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 		mTitle = (TextView) findViewById(R.id.timestitle);
 		mListDetails = new ArrayList<String[]>();
 
-		mTitle.setText(R.string.loading_stops);
+		mTitle.setText(R.string.twitter_querying_feed);
 
 		new ProcessTweets().execute();
 	}
@@ -129,13 +129,13 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 
 			mTitle.setText(R.string.title_rider_alerts);
 
-			mAdapter = new ListArrayAdapter(mContext, R.layout.tweetlayout, mListDetails);
-			mContext.setListAdapter(mAdapter);
-
 			if (mListDetails == null) {
 				Toast.makeText(mContext, R.string.twitter_fetch_failed, Toast.LENGTH_LONG).show();
 			} else if (mListDetails.isEmpty()) {
 				Toast.makeText(mContext, R.string.twitter_fetch_nothing, Toast.LENGTH_LONG).show();
+			} else {
+				mAdapter = new ListArrayAdapter(mContext, R.layout.tweetlayout, mListDetails);
+				mContext.setListAdapter(mAdapter);
 			}
 		}
 	}
@@ -158,6 +158,14 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 		// Not interested when the animation starts
 	}
 
+	/* Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if
+	 * we refer to it, at which point Dalvik would discover the error. So don't refer to it if we know it will fail.... */
+	private static class API9ReflectionWrapper {
+		public static String getDisplayName(Calendar cal, int field, int style, Locale locale) {
+			return cal.getDisplayName(field, style, locale);
+		}
+	}
+
 	/**
 	 * Get the latest twitter info. Some of this copied from http://www.vogella.com/articles/AndroidJSON/article.html
 	 */
@@ -178,16 +186,13 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 					builder.append(line);
 				}
 
-				JSONObject object = (JSONObject) new JSONTokener(builder.toString()).nextValue();
+				// Result is an array of tweets
+				JSONArray arr = (JSONArray) new JSONTokener(builder.toString()).nextValue();
 
-				JSONArray arr = null;
 				ArrayList<String[]> tweets = new ArrayList<String[]>();
 
-				Object j = object.get("results");
-				arr = (JSONArray) j;
-
 				// Need to grok dates of form "created_at": "Thu, 15 Nov 2012 18:27:17 +0000"
-				SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ZZZZZ");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
 				dateFormat.setLenient(true);
 
 				for (int i = 0; i < arr.length(); i++) {
@@ -200,8 +205,29 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 					try {
 						created = dateFormat.parse(tweettime);
 						cal.setTime(created);
-						String day = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-						tweettime = String.format("%s %02d:%02d", day, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+						String day, mon;
+
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD /* 9 */) {
+							day = API9ReflectionWrapper.getDisplayName(cal, Calendar.DAY_OF_WEEK, Calendar.LONG,
+									Locale.getDefault());
+							mon = API9ReflectionWrapper
+									.getDisplayName(cal, Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+						} else { // bah
+							SimpleDateFormat sdf = new SimpleDateFormat("EEEEEEEE", Locale.getDefault());
+							day = sdf.format(new Date());
+							sdf = new SimpleDateFormat("MMM", Locale.getDefault());
+							mon = sdf.format(new Date());
+
+							// final String[] Days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+							// "Saturday" };
+							// final String[] Months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
+							// "Nov", "Dec" };
+							// day = Days[Calendar.DAY_OF_WEEK];
+							// mon = Months[Calendar.MONTH];
+						}
+						tweettime = String.format("%s %02d:%02d - %s %d", day, cal.get(Calendar.HOUR_OF_DAY),
+								cal.get(Calendar.MINUTE), mon, cal.get(Calendar.DAY_OF_MONTH));
+
 					} catch (Exception e) {
 						Log.d(TAG, "Exception: " + e.getMessage() + ", parsing tweet date `" + tweettime + "'");
 						tweettime = "--:--";

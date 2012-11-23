@@ -33,6 +33,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ public class DatabaseHelper {
 	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
 
 	private static String DB_PATH = null;
-	private static final int DB_VERSION = 12; /* As of 22nd September 2012 */
+	private static final int DB_VERSION = 13; /* As of 18th November 2012 */
 	private static final String DB_NAME = "GRT.db";
 	private static Context mContext;
 	private static boolean mMustCopy = false;
@@ -74,7 +75,7 @@ public class DatabaseHelper {
 			Log.e(TAG, "constructor has already been called!?");
 		}
 
-		if (android.os.Build.VERSION.SDK_INT >= 42 /* 8 */) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO /* 8 */) {
 			// Returns something like
 			// /mnt/sdcard/Android/data/net.kw.shrdlu.grtgtfs/files/
 			DB_PATH = API8ReflectionWrapper.getDBPath();

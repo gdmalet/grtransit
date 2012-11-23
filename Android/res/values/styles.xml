@@ -24,6 +24,11 @@
         <item name="android:layout_width">fill_parent</item>
     </style>
 
+    <style name="windowtitle" parent="android:Theme">
+        <item name="android:windowTitleStyle">@android:color/primary_text_light</item>
+        <item name="android:windowTitleBackgroundStyle">@color/list_background</item>
+    </style>
+
     <style name="Text" parent="@android:style/TextAppearance" />
 
     <style name="Text.Loading">
@@ -66,6 +71,8 @@
     <style name="List.TweetText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/grt_yellow</item>
+        <item name="android:background">@drawable/routenumber</item>
     </style>
 
     <style name="List.Rightlabel">
