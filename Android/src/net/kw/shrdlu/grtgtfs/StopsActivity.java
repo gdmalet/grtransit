@@ -166,19 +166,19 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 			startActivity(stops);
 			return true;
 		}
-		case R.id.menu_searchstops: {
-			Globals.tracker.trackEvent("Menu", "Search stops", "", 1);
-			onSearchRequested();
-			return true;
-		}
-		case R.id.menu_searchroutes: {
-			Globals.tracker.trackEvent("Menu", "Search routes", "", 1);
-			final Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
-			routesearch.setAction(Intent.ACTION_MAIN); // anything other than
-														// SEARCH
-			startActivity(routesearch);
-			return true;
-		}
+		// case R.id.menu_searchstops: {
+		// Globals.tracker.trackEvent("Menu", "Search stops", "", 1);
+		// onSearchRequested();
+		// return true;
+		// }
+		// case R.id.menu_searchroutes: {
+		// Globals.tracker.trackEvent("Menu", "Search routes", "", 1);
+		// final Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
+		// routesearch.setAction(Intent.ACTION_MAIN); // anything other than
+		// // SEARCH
+		// startActivity(routesearch);
+		// return true;
+		// }
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -204,6 +204,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 		@Override
 		protected void onPreExecute() {
 			mDetailArea.startAnimation(mSlideIn);
+			mProgress.setVisibility(View.VISIBLE);
 		}
 
 		// Update the progress bar.
@@ -281,7 +282,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	 */
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		mProgress.setVisibility(View.VISIBLE);
 	}
 
 	@Override

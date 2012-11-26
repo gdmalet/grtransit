@@ -97,15 +97,14 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		}
 	}
 
-	/*
-	 * Do the processing to load the ArrayAdapter for display.
-	 */
+	/* Do the processing to load the ArrayAdapter for display. */
 	private class ProcessBusTimes extends AsyncTask<Void, Integer, Integer> implements NotificationCallback {
 		static final String TAG = "";
 
 		// TODO -- should set a listener that will call this callback.
 
 		// A callback from CalendarService, for updating our progress bar
+		@Override
 		public void notificationCallback(Integer progress) {
 			publishProgress(progress);
 		}
@@ -114,6 +113,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
 			mListDetail.startAnimation(mSlideIn);
+			mProgress.setVisibility(View.VISIBLE);
 		}
 
 		// Update the progress bar.
@@ -136,12 +136,14 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			if (!mCalendarChecked) {
 				mCalendarOK = CheckCalendar(datenow);
 			}
-			if (!mCalendarOK) return null;
+			if (!mCalendarOK) {
+				return null;
+			}
 
 			if (mRoute_id == null) {
 				// showing all routes
-				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, datenow, !Globals.mPreferences.getShowAllBusses(),
-						this);
+				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, datenow,
+						!Globals.mPreferences.getShowAllBusses(), this);
 			} else {
 
 				// TODO Setting a listener means not passing `this'
@@ -191,12 +193,16 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 
 			if (mRoute_id == null) { // showing all routes
 				mTitle.setText("Stop " + mStop_id + " - all routes");
-				if (tv != null) tv.setText(R.string.tap_time_for_route);
+				if (tv != null) {
+					tv.setText(R.string.tap_time_for_route);
+				}
 				final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
 				mContext.setListAdapter(adapter);
 			} else {
 				mTitle.setText(mRoute_id + " - " + mHeadsign);
-				if (tv != null) tv.setText(R.string.tap_time_for_trip);
+				if (tv != null) {
+					tv.setText(R.string.tap_time_for_trip);
+				}
 				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
 				mContext.setListAdapter(adapter);
 			}
@@ -215,10 +221,10 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 				mindiff -= t.minute;
 				hourdiff += mindiff;
 
-				if (hourdiff >= 60)
+				if (hourdiff >= 60) {
 					msg = Toast.makeText(mContext, "Next bus leaves at " + ServiceCalendar.formattedTime(nextdeparture),
 							Toast.LENGTH_LONG);
-				else {
+				} else {
 					final String plural = hourdiff > 1 ? "s" : "";
 					msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
@@ -235,9 +241,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		}
 	}
 
-	/*
-	 * Make sure the calendar is current. Updates mCalendarChecked if we get a result of some sort.
-	 */
+	/* Make sure the calendar is current. Updates mCalendarChecked if we get a result of some sort. */
 	private boolean CheckCalendar(String datenow) {
 		boolean retval = true; // report OK even if failure, so we just continue
 		final String[] selectargs = { datenow, datenow };
@@ -251,7 +255,9 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		}
 
 		if (csr != null) {
-			if (csr.getCount() == 0 || !csr.moveToFirst() || csr.getInt(0) <= 0) retval = false;
+			if (csr.getCount() == 0 || !csr.moveToFirst() || csr.getInt(0) <= 0) {
+				retval = false;
+			}
 
 			mCalendarChecked = true;
 			csr.close();
@@ -264,9 +270,13 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// Log.v(TAG, "clicked position " + position);
 
+		final String[] items = (String[]) l.getAdapter().getItem(position);
+		if (items == null) {
+			return;
+		}
+
 		// Allow narrowing to one route, if we're showing many.
 		if (mRoute_id == null) { // showing all routes
-			final String[] items = (String[]) l.getAdapter().getItem(position);
 			final String route_id = items[2];
 			final String headsign = items[3];
 
@@ -278,8 +288,6 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			mContext.startActivity(bustimes);
 
 		} else { // 1 route
-
-			final String[] items = (String[]) l.getAdapter().getItem(position);
 			final String trip_id = items[2];
 
 			final Intent tripstops = new Intent(mContext, TripStopsActivity.class);
@@ -327,6 +335,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 	}
 
 	private final View.OnTouchListener mGestureListener = new View.OnTouchListener() {
+		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			return mGestureDetector.onTouchEvent(event);
 		}
@@ -334,32 +343,35 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 
 	// Catch flings, to show all busses coming to this stop.
 	// This must be called on the GIU thread.
-	private final GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			// Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
-			// Catch a fling sort of from left to right
-			if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
-				// Log.d(TAG, "fling detected");
-				Globals.tracker.trackEvent("Times", "fling left", "", 1);
-				finish();
-				return true;
-			}
-			return false;
-		}
-	});
+	private final GestureDetector mGestureDetector = new GestureDetector(mContext,
+			new GestureDetector.SimpleOnGestureListener() {
+				@Override
+				public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+					// Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
+					// Catch a fling sort of from left to right
+					if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
+						// Log.d(TAG, "fling detected");
+						Globals.tracker.trackEvent("Times", "fling left", "", 1);
+						finish();
+						return true;
+					}
+					return false;
+				}
+			});
 
 	/**
 	 * Make the {@link ProgressBar} visible when our in-animation finishes.
 	 */
+	@Override
 	public void onAnimationEnd(Animation animation) {
-		mProgress.setVisibility(View.VISIBLE);
 	}
 
+	@Override
 	public void onAnimationRepeat(Animation animation) {
 		// Not interested if the animation repeats
 	}
 
+	@Override
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
 	}

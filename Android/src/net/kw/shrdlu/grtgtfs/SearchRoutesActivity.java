@@ -84,6 +84,10 @@ public class SearchRoutesActivity extends ListActivity {
 		// Log.v(TAG, "clicked position " + position);
 
 		final Cursor csr = (Cursor) l.getItemAtPosition(position);
+		if (csr == null) {
+			return;
+		}
+
 		final String route_id = csr.getString(0);
 		final String route_name = csr.getString(1);
 

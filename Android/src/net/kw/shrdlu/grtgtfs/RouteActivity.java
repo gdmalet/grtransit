@@ -165,16 +165,16 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 			startActivity(stops);
 			return true;
 		}
-		case R.id.menu_searchstops: {
-			final Intent stopsearch = new Intent(mContext, SearchStopsActivity.class);
-			stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-			startActivity(stopsearch);
-			return true;
-		}
-		case R.id.menu_searchroutes: {
-			onSearchRequested();
-			return true;
-		}
+		// case R.id.menu_searchstops: {
+		// final Intent stopsearch = new Intent(mContext, SearchStopsActivity.class);
+		// stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
+		// startActivity(stopsearch);
+		// return true;
+		// }
+		// case R.id.menu_searchroutes: {
+		// onSearchRequested();
+		// return true;
+		// }
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -199,6 +199,7 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
 			mDetailArea.startAnimation(mSlideIn);
+			mProgress.setVisibility(View.VISIBLE);
 		}
 
 		// Update the progress bar.
@@ -310,7 +311,6 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	 */
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		mProgress.setVisibility(View.VISIBLE);
 	}
 
 	@Override

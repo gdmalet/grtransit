@@ -3,43 +3,22 @@
 
     <item
         android:id="@+id/menu_mylocation"
-        android:icon="@android:drawable/ic_menu_mylocation"
+        android:icon="@drawable/ic_menu_mylocation"
         android:title="@string/mylocation">
     </item>
     <item
         android:id="@+id/menu_closeststops"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_menu_add"
         android:title="@string/closest_stops">
     </item>
     <item
-        android:id="@+id/menu_alerts"
-        android:icon="@drawable/ic_menu_notifications"
-        android:title="@string/rideralerts">
-    </item>
-
-    <group
-        android:id="@+id/menu_searchgroup"
-        android:menuCategory="container" >
-        <item
-            android:id="@+id/menu_searchstops"
-            android:icon="@android:drawable/ic_menu_search"
-            android:title="@string/find_stop">
-        </item>
-        <item
-            android:id="@+id/menu_searchroutes"
-            android:icon="@android:drawable/ic_menu_search"
-            android:title="@string/find_route">
-        </item>
-    </group>
-
-    <item
         android:id="@+id/menu_preferences"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@drawable/ic_menu_preferences"
         android:title="@string/preferences">
     </item>
     <item
         android:id="@+id/menu_about"
-        android:icon="@android:drawable/ic_menu_info_details"
+        android:icon="@drawable/ic_menu_info_details"
         android:title="@string/about">
     </item>
 

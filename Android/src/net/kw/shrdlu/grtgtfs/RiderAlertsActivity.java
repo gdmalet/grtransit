@@ -103,8 +103,8 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 
 		@Override
 		protected void onPreExecute() {
-			// Log.v(TAG, "onPreExecute()");
 			mListDetail.startAnimation(mSlideIn);
+			mProgress.setVisibility(View.VISIBLE);
 		}
 
 		// Update the progress bar.
@@ -145,7 +145,6 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 	 */
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		mProgress.setVisibility(View.VISIBLE);
 	}
 
 	@Override

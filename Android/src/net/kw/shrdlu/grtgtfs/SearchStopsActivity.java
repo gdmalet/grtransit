@@ -89,6 +89,9 @@ public class SearchStopsActivity extends ListActivity {
 		// Log.v(TAG, "clicked position " + position);
 
 		final Cursor csr = (Cursor) l.getItemAtPosition(position);
+		if (csr == null) {
+			return;
+		}
 		final String stop_id = csr.getString(0);
 		final String stop_name = csr.getString(1);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();

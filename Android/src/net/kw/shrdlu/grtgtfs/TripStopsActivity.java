@@ -77,6 +77,7 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 
 		// register to get long clicks on bus stop list
 		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				onListItemLongClick(parent, view, position, id);
 				return true; // we consumed the click
@@ -99,9 +100,7 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 		Globals.tracker.trackPageView("/" + this.getLocalClassName());
 	}
 
-	/*
-	 * Do the processing to load the ArrayAdapter for display.
-	 */
+	/* Do the processing to load the ArrayAdapter for display. */
 	private class ProcessBusStops extends AsyncTask<Void, Integer, Integer> {
 		// static final String TAG = "ProcessBusStops";
 
@@ -109,6 +108,7 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
 			mListDetail.startAnimation(mSlideIn);
+			mProgress.setVisibility(View.VISIBLE);
 		}
 
 		// Update the progress bar.
@@ -165,6 +165,10 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 		// Log.v(TAG, "clicked position " + position);
 
 		final Cursor csr = (Cursor) l.getItemAtPosition(position);
+		final String[] items = (String[]) l.getAdapter().getItem(position);
+		if (csr == null || items == null) {
+			return;
+		}
 		final String stop_id = csr.getString(0);
 		final String stop_name = csr.getString(1);
 
@@ -208,6 +212,7 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 	}
 
 	private final View.OnTouchListener mGestureListener = new View.OnTouchListener() {
+		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			return mGestureDetector.onTouchEvent(event);
 		}
@@ -215,20 +220,21 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 
 	// Catch flings, to show all busses coming to this stop.
 	// This must be called on the GIU thread.
-	private final GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			// Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
-			// Catch a fling sort of from left to right
-			if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
-				// Log.d(TAG, "fling detected");
-				Globals.tracker.trackEvent("TripStops", "fling right", "", 1);
-				finish();
-				return true;
-			}
-			return false;
-		}
-	});
+	private final GestureDetector mGestureDetector = new GestureDetector(mContext,
+			new GestureDetector.SimpleOnGestureListener() {
+				@Override
+				public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+					// Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
+					// Catch a fling sort of from left to right
+					if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
+						// Log.d(TAG, "fling detected");
+						Globals.tracker.trackEvent("TripStops", "fling right", "", 1);
+						finish();
+						return true;
+					}
+					return false;
+				}
+			});
 
 	// Called from the listener above for a long click
 	public void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
@@ -239,6 +245,7 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 		final String stop_name = csr.getString(1);
 
 		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
@@ -255,21 +262,23 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("Stop " + stop_id + ", " + stop_name);
-		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener).setNegativeButton("No", listener)
-				.create().show();
+		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener)
+				.setNegativeButton("No", listener).create().show();
 	}
 
 	/**
 	 * Make the {@link ProgressBar} visible when our in-animation finishes.
 	 */
+	@Override
 	public void onAnimationEnd(Animation animation) {
-		mProgress.setVisibility(View.VISIBLE);
 	}
 
+	@Override
 	public void onAnimationRepeat(Animation animation) {
 		// Not interested if the animation repeats
 	}
 
+	@Override
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
 	}

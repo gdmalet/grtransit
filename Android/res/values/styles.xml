@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2009 The Android Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-
-          http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
+ * Copyright 2011 Giles Malet.
+ *
+ * This file is part of GRTransit.
+ * 
+ * GRTransit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * GRTransit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
@@ -24,9 +27,9 @@
         <item name="android:layout_width">fill_parent</item>
     </style>
 
-    <style name="windowtitle" parent="android:Theme">
-        <item name="android:windowTitleStyle">@android:color/primary_text_light</item>
-        <item name="android:windowTitleBackgroundStyle">@color/list_background</item>
+    <style name="ActivityTheme" parent="appGlobalTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:label">@string/app_name</item>
     </style>
 
     <style name="Text" parent="@android:style/TextAppearance" />
@@ -36,15 +39,26 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <style name="Text.Title" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
     <style name="List" parent="Text">
         <item name="android:textColor">@android:color/primary_text_light</item>
         <item name="android:background">@color/list_background</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="List.Title">
-        <item name="android:textSize">20sp</item>
+    <style name="List.Title" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:background">@color/list_background</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">3dip</item>
     </style>
 
     <style name="List.Label">
@@ -53,10 +67,19 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="List.Body">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:divider">@color/grt_blue</item>
+        <item name="android:dividerHeight">3dip</item>
+        <item name="android:footerDividersEnabled">false</item>
+        <item name="android:headerDividersEnabled">true</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+
     <style name="List.Content">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">3dip</item>
         <item name="android:scrollHorizontally">false</item>
     </style>
 
@@ -83,6 +106,7 @@
     <style name="List.Stoptime">
         <item name="android:layout_width">76sp</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">3dip</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>

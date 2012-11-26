@@ -34,7 +34,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -51,9 +50,9 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 
 	private ListActivity mContext;
 	private ArrayList<String[]> mDetails;
+	private Animation mSlideIn, mSlideOut;
 	private String mStopid;
 	private View mListDetail;
-	private Animation mSlideIn, mSlideOut;
 	private ProgressBar mProgress;
 	private FavstopsArrayAdapter mAdapter;
 
@@ -75,25 +74,18 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			mGlobals = new Globals(mContext);
 		}
 
-		mContext.setTitle(R.string.favourites_title);
-		// mContext.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		mContext.requestWindowFeature(Window.FEATURE_PROGRESS);
-		mContext.requestWindowFeature(Window.FEATURE_LEFT_ICON);
-
 		setContentView(R.layout.timeslayout);
 
-		// Load animations used to show/hide progress bar
+		// Load the necessary to show/hide progress bar
 		mProgress = (ProgressBar) findViewById(R.id.progress);
 		mListDetail = findViewById(R.id.detail_area);
 		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
 
-		final TextView v = (TextView) findViewById(R.id.timestitle);
-		v.setText(R.string.favourites_title);
-
 		final ListView lv = getListView();
 		final TextView tv = new TextView(mContext);
+
 		tv.setText(R.string.longpress_removes_stop);
 		lv.addFooterView(tv);
 
@@ -219,33 +211,30 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			startActivity(stops);
 			return true;
 		}
-		case R.id.menu_alerts: {
-			Globals.tracker.trackEvent("Menu", "Alerts", "", 1);
-			final Intent alerts = new Intent(mContext, RiderAlertsActivity.class);
-			startActivity(alerts);
-			return true;
-		}
 		case R.id.menu_about: {
 			Globals.tracker.trackEvent("Menu", "Show about", "", 1);
 			Globals.showAbout(this);
 			return true;
 		}
-		case R.id.menu_searchstops: {
-			Globals.tracker.trackEvent("Menu", "Search stops", "", 1);
-			final Intent stopsearch = new Intent(mContext, SearchStopsActivity.class);
-			stopsearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-			startActivity(stopsearch);
-			return true;
-		}
-		case R.id.menu_searchroutes: {
-			Globals.tracker.trackEvent("Menu", "Search routes", "", 1);
-			final Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
-			routesearch.setAction(Intent.ACTION_MAIN); // anything other than SEARCH
-			startActivity(routesearch);
-			return true;
-		}
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	// Called when a button is clicked
+	public void onButtonClick(View v) {
+		switch (v.getId()) {
+		case R.id.button_alerts: {
+			Globals.tracker.trackEvent("Button", "Alerts", "", 1);
+			final Intent alerts = new Intent(mContext, RiderAlertsActivity.class);
+			startActivity(alerts);
+			return;
+		}
+		case R.id.button_refresh: {
+			finish();
+			startActivity(getIntent());
+			return;
+		}
+		}
 	}
 
 	// Called from the listener above for a long click
@@ -290,6 +279,9 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		// Log.v(TAG, "clicked position " + position);
 
 		final String[] strs = (String[]) l.getItemAtPosition(position);
+		if (strs == null) {
+			return;
+		}
 		mStopid = strs[0];
 		final String stop_name = strs[1];
 
@@ -307,14 +299,14 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 
 		@Override
 		protected void onPreExecute() {
-			mProgress.setProgress(5); // make partially visible
 			mListDetail.startAnimation(mSlideIn);
+			mProgress.setVisibility(View.VISIBLE);
+			mProgress.setProgress(5); // make partially visible
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
 			mProgress.setProgress(parms[0]);
-			mContext.setProgress(parms[0] * 100);
 			mAdapter.notifyDataSetChanged();
 		}
 
@@ -356,16 +348,14 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		protected void onPostExecute(Void foo) {
 			mProgress.setVisibility(View.INVISIBLE);
 			mListDetail.startAnimation(mSlideOut);
-		}
 
+			final TextView v = (TextView) findViewById(R.id.timestitle);
+			v.setText(R.string.favourites_title);
+		}
 	}
 
-	/**
-	 * Make the {@link ProgressBar} visible when our in-animation finishes.
-	 */
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		mProgress.setVisibility(View.VISIBLE);
 	}
 
 	@Override

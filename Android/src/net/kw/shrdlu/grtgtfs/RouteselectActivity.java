@@ -88,6 +88,9 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 
 		final String route_id = mCsr.getString(0);
 		final String headsign = mCsr.getString(1);
+		if (route_id == null || headsign == null) {
+			return;
+		}
 
 		Globals.tracker.trackEvent("Routes", "Select route", route_id + " - " + headsign, 1);
 
@@ -160,8 +163,8 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 
 		@Override
 		protected void onPreExecute() {
-			// Log.v(TAG, "onPreExecute()");
 			mListDetail.startAnimation(mSlideIn);
+			mProgress.setVisibility(View.VISIBLE);
 		}
 
 		// Update the progress bar.
@@ -228,7 +231,6 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 	 */
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		mProgress.setVisibility(View.VISIBLE);
 	}
 
 	@Override

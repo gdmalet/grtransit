@@ -112,12 +112,15 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 				mStops.add(new stopDetail(point, csr.getString(2), csr.getString(3)));
 				more = csr.moveToNext();
 
-				if (boundingbox == null)
+				if (boundingbox == null) {
 					boundingbox = new Rect(stop_lat, stop_lon, stop_lat, stop_lon);
-				else
+				} else {
 					boundingbox.union(stop_lat, stop_lon);
+				}
 
-				if (++progresscount % 25 == 0) task.notificationCallback((int) ((progresscount / (float) maxcount) * 100));
+				if (++progresscount % 25 == 0) {
+					task.notificationCallback((int) ((progresscount / (float) maxcount) * 100));
+				}
 			}
 			csr.close();
 
@@ -162,29 +165,32 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 
 	// This must be called on the GIU thread
 	private MapView mView; // TODO this is messy
-	private final GestureDetector mGestureDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
-		@Override
-		public boolean onSingleTapConfirmed(MotionEvent e) {
-			// Log.d(TAG, "Single tap detected at " + e.getX() + "," +
-			// e.getY());
+	private final GestureDetector mGestureDetector = new GestureDetector(mContext,
+			new GestureDetector.SimpleOnGestureListener() {
+				@Override
+				public boolean onSingleTapConfirmed(MotionEvent e) {
+					// Log.d(TAG, "Single tap detected at " + e.getX() + "," +
+					// e.getY());
 
-			final int closestpt = findClosestStop(mView, (int) e.getX(), (int) e.getY());
-			if (closestpt >= 0) {
-				onScreenTap(closestpt, false);
-				return true; // consumed it
-			}
-			return false;
-		}
+					final int closestpt = findClosestStop(mView, (int) e.getX(), (int) e.getY());
+					if (closestpt >= 0) {
+						onScreenTap(closestpt, false);
+						return true; // consumed it
+					}
+					return false;
+				}
 
-		@Override
-		public void onLongPress(MotionEvent e) {
-			// Log.d(TAG, "Long press detected at " + e.getX() + "," +
-			// e.getY());
+				@Override
+				public void onLongPress(MotionEvent e) {
+					// Log.d(TAG, "Long press detected at " + e.getX() + "," +
+					// e.getY());
 
-			final int closestpt = findClosestStop(mView, (int) e.getX(), (int) e.getY());
-			if (closestpt >= 0) onScreenTap(closestpt, true);
-		}
-	});
+					final int closestpt = findClosestStop(mView, (int) e.getX(), (int) e.getY());
+					if (closestpt >= 0) {
+						onScreenTap(closestpt, true);
+					}
+				}
+			});
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e, MapView mapView) {
@@ -211,6 +217,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			Globals.tracker.trackEvent("Map longclick", "Stop", mStopid, 1);
 
 			final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int id) {
 					switch (id) {
 					case DialogInterface.BUTTON_POSITIVE:
@@ -249,11 +256,9 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		return mOverlayItems.size();
 	}
 
-	/*
-	 * Override this so we can add text labels to each pin.
+	/* Override this so we can add text labels to each pin.
 	 * 
-	 * @see com.google.android.maps.ItemizedOverlay#draw(android.graphics.Canvas, com.google.android.maps.MapView, boolean)
-	 */
+	 * @see com.google.android.maps.ItemizedOverlay#draw(android.graphics.Canvas, com.google.android.maps.MapView, boolean) */
 	private class cachedStop {
 		public final Point pt;
 		public final String num, name;
@@ -270,7 +275,9 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		// Log.d(TAG, "starting draw");
 		super.draw(canvas, view, shadow);
 
-		if (shadow) return;
+		if (shadow) {
+			return;
+		}
 
 		// Some constants used in measuring.
 		final int textZoomLimit = 17, textSize = 20, padding = 4;
@@ -307,8 +314,9 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			proj.toPixels(stop.pt, pt_scr);
 
 			// Skip it if it's not visible.
-			if (pt_scr.x < 0 || pt_scr.y < 0 || pt_scr.x > view.getRight() || pt_scr.y > view.getBottom() - view.getTop())
+			if (pt_scr.x < 0 || pt_scr.y < 0 || pt_scr.x > view.getRight() || pt_scr.y > view.getBottom() - view.getTop()) {
 				continue;
+			}
 
 			stopbounds.offsetTo(pt_scr.x - dx / 2, pt_scr.y - dy / 2);
 			stopmarker.setBounds(stopbounds);
@@ -345,7 +353,9 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 
 					boolean intersects = false;
 					for (final Rect rect : cachedRects) {
-						if ((intersects = Rect.intersects(rect, textbounds)) == true) break;
+						if ((intersects = Rect.intersects(rect, textbounds)) == true) {
+							break;
+						}
 					}
 
 					if (!intersects) {
@@ -367,7 +377,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 
 					// Try offset the balloon to various places if there's a clash
 					// The origin for the box and text is the top left corner.
-					final Point[] offsets = { new Point(-textbounds.right / 2 - dx / 2, -dy - dy - textSize - padding), // centred top
+					final Point[] offsets = { new Point(-textbounds.right / 2 - dx / 2, -dy - dy - textSize - padding), // centred
+																														// top
 							new Point(-dx - textbounds.right - padding, -textSize / 2 - dy / 2), // left
 							new Point(dx / 2 + padding, -textSize / 2 - dy / 2), // right
 							new Point(-dx - textbounds.right - padding, -textSize - padding - dy), // upper left
@@ -384,7 +395,9 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 
 						boolean intersects = false;
 						for (final Rect rect : cachedRects) {
-							if ((intersects = Rect.intersects(rect, textbounds)) == true) break;
+							if ((intersects = Rect.intersects(rect, textbounds)) == true) {
+								break;
+							}
 						}
 
 						if (!intersects) {
@@ -398,6 +411,5 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 				}
 			}
 		}
-		// Log.d(TAG, "ending draw");
 	}
 }

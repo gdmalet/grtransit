@@ -8,9 +8,6 @@
     <TextView
         android:id="@+id/title"
         style="@style/List.Title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="3dip"
         android:text="@string/loading_stops" />
 
     <ProgressBar

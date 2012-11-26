@@ -201,8 +201,8 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 
 		@Override
 		protected void onPreExecute() {
-			// Log.v(TAG, "onPreExecute()");
 			mListDetail.startAnimation(mSlideIn);
+			mProgress.setVisibility(View.VISIBLE);
 		}
 
 		// Update the progress bar.
@@ -294,6 +294,9 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 		// Log.v(TAG, "clicked position " + position);
 
 		final String[] strs = (String[]) l.getItemAtPosition(position);
+		if (strs == null) {
+			return;
+		}
 		final String stop_id = strs[1];
 		final String stop_name = strs[2];
 
@@ -370,7 +373,6 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 	 */
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		mProgress.setVisibility(View.VISIBLE);
 	}
 
 	@Override
