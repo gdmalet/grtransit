@@ -230,8 +230,15 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			return;
 		}
 		case R.id.button_refresh: {
+			Globals.tracker.trackEvent("Button", "Refresh", "", 1);
 			finish();
 			startActivity(getIntent());
+			return;
+		}
+		case R.id.button_search: {
+			Globals.tracker.trackEvent("Button", "Search", "", 1);
+			final Intent search = new Intent(mContext, SearchActivity.class);
+			startActivity(search);
 			return;
 		}
 		}

@@ -165,8 +165,7 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 		// Log.v(TAG, "clicked position " + position);
 
 		final Cursor csr = (Cursor) l.getItemAtPosition(position);
-		final String[] items = (String[]) l.getAdapter().getItem(position);
-		if (csr == null || items == null) {
+		if (csr == null) {
 			return;
 		}
 		final String stop_id = csr.getString(0);

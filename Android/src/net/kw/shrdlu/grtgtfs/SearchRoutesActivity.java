@@ -29,7 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class SearchRoutesActivity extends ListActivity {
-	private static final String TAG = "RoutesearchActivity";
+	private static final String TAG = "SearchRoutesActivity";
 
 	private SearchRoutesActivity mContext;
 	private TextView mTitle;

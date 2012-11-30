@@ -33,7 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class SearchStopsActivity extends ListActivity {
-	private static final String TAG = "BusstopsearchActivity";
+	private static final String TAG = "SearchStopsActivity";
 
 	private SearchStopsActivity mContext;
 	private TextView mTitle;

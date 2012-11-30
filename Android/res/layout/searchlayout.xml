@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/List"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/button_searchroutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/routenumber"
+            android:onClick="onButtonClick"
+            android:text="@string/button_routes"
+            android:textColor="@color/grt_yellow" />
+
+        <Button
+            android:id="@+id/button_searchstops"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/button_searchroutes"
+            android:background="@drawable/stopnumber"
+            android:onClick="onButtonClick"
+            android:text="@string/button_stops"
+            android:textColor="@color/grt_blue" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@id/android:list"
+        style="@style/List.Body"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+</LinearLayout>

@@ -5,6 +5,8 @@
     <string name="about">About</string>
     <string name="activity_desc">Grand River Transit Bus Stops</string>
     <string name="closest_stops">Closest stops</string>
+    <string name="button_stops">Stops</string>
+    <string name="button_routes">Routes</string>
     <string name="showallbusses">Show busses for all days</string>
     <string name="mylocation">My location</string>
     <string name="loading_stops">Loading the bus stops…</string>
@@ -15,7 +17,8 @@
     <string name="find_route">Find a route</string>
     <string name="last_location_fix">No recent location fix, using previous</string>
     <string name="no_location_fix">No usable location fix! Waiting....</string>
-    <string name="search_bus_hint">Search GRT bus stops</string>
+    <string name="search_hint">Search GRT bus stops or routes</string>
+    <string name="searchXXX_bus_hint">Search GRT bus stops</string>
     <string name="search_route_hint">Search GRT bus routes</string>
     <string name="calendar_expired">There is no current schedule data on your system, perhaps because it expired. Please update your app!</string>
     <string name="favourites_title">Favourite Stops</string>

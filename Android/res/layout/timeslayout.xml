@@ -12,8 +12,9 @@
             android:id="@+id/titlelogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/activity_title"
+            android:layout_alignBottom="@+id/title"
             android:layout_alignParentLeft="true"
+            android:contentDescription="Logo"
             android:src="@drawable/menu_grticon" />
 
         <TextView
@@ -21,8 +22,10 @@
             style="@style/Text.Title"
             android:layout_alignBaseline="@+id/button_alerts"
             android:layout_alignBottom="@+id/button_alerts"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/button_alerts"
             android:layout_toRightOf="@+id/titlelogo"
+            android:maxLines="1"
             android:text="@string/app_name" />
 
         <Button
@@ -50,7 +53,6 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/button_refresh"
             android:background="@drawable/ic_menu_notifications"
-            android:longClickable="false"
             android:onClick="onButtonClick" />
     </RelativeLayout>
 
