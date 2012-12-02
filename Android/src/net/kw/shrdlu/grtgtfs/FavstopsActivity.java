@@ -356,7 +356,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			mProgress.setVisibility(View.INVISIBLE);
 			mListDetail.startAnimation(mSlideOut);
 
-			final TextView v = (TextView) findViewById(R.id.timestitle);
+			final TextView v = (TextView) findViewById(R.id.listtitle);
 			v.setText(R.string.favourites_title);
 		}
 	}

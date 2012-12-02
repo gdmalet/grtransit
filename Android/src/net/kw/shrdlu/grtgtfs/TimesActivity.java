@@ -74,7 +74,7 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
-		mTitle = (TextView) findViewById(R.id.timestitle);
+		mTitle = (TextView) findViewById(R.id.listtitle);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();

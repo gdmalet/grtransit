@@ -20,6 +20,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="appGlobalTheme"> parent="@android:style/Theme"</style>
+    <style name="appGlobalTheme" parent="@android:style/Theme" />
 
 </resources>

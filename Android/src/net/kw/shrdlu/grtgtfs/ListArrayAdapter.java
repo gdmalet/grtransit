@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.ListActivity;
+import android.text.Html;
 import android.text.util.Linkify;
 import android.text.util.Linkify.TransformFilter;
 import android.view.LayoutInflater;
@@ -85,10 +86,12 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 		}
 
 		holder.stoptime.setText(ServiceCalendar.formattedTime(mDetails.get(position)[0]));
-		holder.desc.setText(mDetails.get(position)[1]);
 
 		// Linkify twitter text.
 		if (mLayout == R.layout.tweetlayout) {
+
+			// Might be things like &amp; in there....
+			holder.desc.setText(Html.fromHtml(mDetails.get(position)[1]));
 
 			// Transform filter returns just the text captured by the first regular expression group.
 			final TransformFilter TFilter = new TransformFilter() {
@@ -101,6 +104,8 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 			Linkify.addLinks(holder.desc, Linkify.ALL); // the defaults
 			Linkify.addLinks(holder.desc, mUserPattern, mUserScheme, null, TFilter);
 			Linkify.addLinks(holder.desc, mHashPattern, mHashScheme, null, TFilter);
+		} else {
+			holder.desc.setText(mDetails.get(position)[1]);
 		}
 
 		return view;

@@ -4,68 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/titlelogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/title"
-            android:layout_alignParentLeft="true"
-            android:contentDescription="Logo"
-            android:src="@drawable/menu_grticon" />
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/Text.Title"
-            android:layout_alignBaseline="@+id/button_alerts"
-            android:layout_alignBottom="@+id/button_alerts"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/button_alerts"
-            android:layout_toRightOf="@+id/titlelogo"
-            android:maxLines="1"
-            android:text="@string/app_name" />
-
-        <Button
-            android:id="@+id/button_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/ic_menu_search"
-            android:onClick="onButtonClick" />
-
-        <Button
-            android:id="@+id/button_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/button_search"
-            android:background="@drawable/ic_menu_refresh"
-            android:onClick="onButtonClick" />
-
-        <Button
-            android:id="@+id/button_alerts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/button_refresh"
-            android:background="@drawable/ic_menu_notifications"
-            android:onClick="onButtonClick" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/timestitle"
-        style="@style/List.Title"
-        android:paddingBottom="3dip"
-        android:paddingLeft="3dip"
-        android:text="@string/loading_times" />
-
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@style/progressbar" />
+    <include layout="@layout/titlelayout" />
 
     <LinearLayout
         android:id="@+id/detail_area"

@@ -63,7 +63,7 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
-		mTitle = (TextView) findViewById(R.id.timestitle);
+		mTitle = (TextView) findViewById(R.id.listtitle);
 		mTitle.setText(R.string.loading_routes);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();

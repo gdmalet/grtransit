@@ -89,7 +89,7 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
-		mTitle = (TextView) findViewById(R.id.timestitle);
+		mTitle = (TextView) findViewById(R.id.listtitle);
 		mListDetails = new ArrayList<String[]>(NUM_CLOSEST_STOPS);
 
 		mTitle.setText(R.string.loading_stops);

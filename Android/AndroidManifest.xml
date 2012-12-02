@@ -40,8 +40,6 @@
         <activity android:name=".PrefsActivity" />
         <activity android:name=".RouteselectActivity" />
         <activity android:name=".TimesActivity" />
-        <activity android:name=".SearchStopsActivity" />
-        <activity android:name=".SearchRoutesActivity" />
         <activity android:name=".TripStopsActivity" />
         <activity android:name=".ClosestStopsActivity" />
         <activity android:name=".RiderAlertsActivity" />
