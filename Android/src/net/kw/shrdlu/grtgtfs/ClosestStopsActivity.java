@@ -266,9 +266,9 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 				String dir = DIRS[(int) (s.bearing + 180 + 22.5) % 360 / 45];
 				String dist;
 				if (s.dist < 1000) {
-					dist = String.format("%3.0f m %s", s.dist, dir);
+					dist = String.format("%3.0fm %s", s.dist, dir);
 				} else {
-					dist = String.format("%3.1f km %s", s.dist / 1000.0, dir);
+					dist = String.format("%3.1fkm %s", s.dist / 1000.0, dir);
 				}
 				mListDetails.add(new String[] { dist, s.stop_id, s.stop_name });
 			}
@@ -352,11 +352,7 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
 					Globals.mPreferences.AddBusstopFavourite(stop_id, stop_name);
-					// mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
-				// case DialogInterface.BUTTON_NEGATIVE:
-				// // nothing
-				// break;
 				}
 				dialog.cancel();
 			}
@@ -366,23 +362,6 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 		builder.setTitle("Stop " + stop_id + ", " + stop_name);
 		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener)
 				.setNegativeButton("No", listener).create().show();
-	}
-
-	/**
-	 * Make the {@link ProgressBar} visible when our in-animation finishes.
-	 */
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// Not interested if the animation repeats
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// Not interested when the animation starts
 	}
 
 	/* The following is copied straight from: http://developer.android.com/guide/topics/location/strategies.html */
@@ -448,4 +427,27 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 		}
 		return provider1.equals(provider2);
 	}
+
+	/**
+	 * Make the {@link ProgressBar} visible when our in-animation finishes.
+	 */
+	@Override
+	public void onAnimationEnd(Animation animation) {
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// Not interested if the animation repeats
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// Not interested when the animation starts
+	}
+
+	// Called when a button is clicked on the title bar
+	public void onTitlebarClick(View v) {
+		TitlebarClick.onTitlebarClick(mContext, v);
+	}
+
 }

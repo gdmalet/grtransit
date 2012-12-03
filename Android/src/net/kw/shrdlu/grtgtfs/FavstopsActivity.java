@@ -118,8 +118,8 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		// Convert from stop/description to required 4-entry layout.
 		synchronized (mDetails) {
 			for (final String[] stop : favstops) {
-				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?" }); // will do the rest
-																												// later.
+				// Just do what we can for now
+				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?" });
 			}
 		}
 		mAdapter = new FavstopsArrayAdapter(this, R.layout.favouritesrow, mDetails);
@@ -157,7 +157,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 
 			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			// builder.setIcon(R.drawable.grticon);
-			builder.setTitle(R.string.favourites_title).setView(messageView).create().show();
+			builder.setTitle(R.string.title_favourites).setView(messageView).create().show();
 		}
 	}
 
@@ -218,30 +218,6 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		}
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	// Called when a button is clicked
-	public void onButtonClick(View v) {
-		switch (v.getId()) {
-		case R.id.button_alerts: {
-			Globals.tracker.trackEvent("Button", "Alerts", "", 1);
-			final Intent alerts = new Intent(mContext, RiderAlertsActivity.class);
-			startActivity(alerts);
-			return;
-		}
-		case R.id.button_refresh: {
-			Globals.tracker.trackEvent("Button", "Refresh", "", 1);
-			finish();
-			startActivity(getIntent());
-			return;
-		}
-		case R.id.button_search: {
-			Globals.tracker.trackEvent("Button", "Search", "", 1);
-			final Intent search = new Intent(mContext, SearchActivity.class);
-			startActivity(search);
-			return;
-		}
-		}
 	}
 
 	// Called from the listener above for a long click
@@ -357,7 +333,7 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			mListDetail.startAnimation(mSlideOut);
 
 			final TextView v = (TextView) findViewById(R.id.listtitle);
-			v.setText(R.string.favourites_title);
+			v.setText(R.string.title_favourites);
 		}
 	}
 
@@ -374,4 +350,10 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
 	}
+
+	// Called when a button is clicked on the title bar
+	public void onTitlebarClick(View v) {
+		TitlebarClick.onTitlebarClick(mContext, v);
+	}
+
 }

@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/List"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/List.Title"
-        android:text="@string/loading_stops" />
-
-    <ProgressBar
-        android:id="@+id/map_progress"
-        style="@style/progressbar" />
+    <include layout="@layout/titlelayout" />
 
     <com.google.android.maps.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="0PRfBeQykUNnLPBiKjXmum5S98_Qh9JhBAOyDPw"
+        android:apiKey="0PRfBeQykUNm74M3MdJu9ohhd7lfqkyeulrj3rg"
         android:clickable="true" />
     <!--
 Release:

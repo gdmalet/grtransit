@@ -79,12 +79,14 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 		mStop_id = intent.getStringExtra(pkgstr + ".stop_id"); // TODO show position?
 
 		// Load animation used to hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.map_progress);
+		mProgress = (ProgressBar) findViewById(R.id.progress);
 		mDetailArea = findViewById(R.id.mapview);
 		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
-		mTitle = (TextView) findViewById(R.id.title);
+
+		mTitle = (TextView) findViewById(R.id.listtitle);
+		mTitle.setText(R.string.loading_stops);
 
 		mMylocation = new MyLocationOverlay(this, mMapview);
 		mapOverlays.add(mMylocation);
@@ -311,5 +313,10 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 	@Override
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
+	}
+
+	// Called when a button is clicked on the title bar
+	public void onTitlebarClick(View v) {
+		TitlebarClick.onTitlebarClick(mContext, v);
 	}
 }

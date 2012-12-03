@@ -11,7 +11,6 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/title"
             android:layout_alignParentLeft="true"
-            android:contentDescription="Logo"
             android:src="@drawable/menu_grticon" />
 
         <TextView
@@ -27,30 +26,30 @@
 
         <Button
             android:id="@+id/button_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/ic_menu_search"
-            android:onClick="onButtonClick" />
+            android:onClick="onTitlebarClick" />
 
         <Button
             android:id="@+id/button_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/button_search"
             android:background="@drawable/ic_menu_refresh"
-            android:onClick="onButtonClick" />
+            android:onClick="onTitlebarClick" />
 
         <Button
             android:id="@+id/button_alerts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/button_refresh"
             android:background="@drawable/ic_menu_notifications"
-            android:onClick="onButtonClick" />
+            android:onClick="onTitlebarClick" />
     </RelativeLayout>
 
     <TextView

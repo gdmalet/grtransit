@@ -66,12 +66,14 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 		setContentView(R.layout.mapview);
 
 		// Load animations used to show/hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.map_progress);
+		mProgress = (ProgressBar) findViewById(R.id.progress);
 		mDetailArea = findViewById(R.id.mapview);
 		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
-		mTitle = (TextView) findViewById(R.id.title);
+
+		mTitle = (TextView) findViewById(R.id.listtitle);
+		mTitle.setText(R.string.loading_stops);
 
 		mMapview = (MapView) findViewById(R.id.mapview);
 		mMapview.setBuiltInZoomControls(true);
@@ -86,6 +88,9 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 		final String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
 		final Intent intent = getIntent();
 		mStopId = intent.getStringExtra(stopstr);
+
+		if (mStopId.equals("2040"))
+			Toast.makeText(mContext, "Aaaaarrrrr!", Toast.LENGTH_LONG).show();
 
 		// Get the busstop overlay set up in the background
 		mOverlay = new StopsOverlay(mContext);
@@ -166,19 +171,6 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 			startActivity(stops);
 			return true;
 		}
-		// case R.id.menu_searchstops: {
-		// Globals.tracker.trackEvent("Menu", "Search stops", "", 1);
-		// onSearchRequested();
-		// return true;
-		// }
-		// case R.id.menu_searchroutes: {
-		// Globals.tracker.trackEvent("Menu", "Search routes", "", 1);
-		// final Intent routesearch = new Intent(mContext, SearchRoutesActivity.class);
-		// routesearch.setAction(Intent.ACTION_MAIN); // anything other than
-		// // SEARCH
-		// startActivity(routesearch);
-		// return true;
-		// }
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -273,7 +265,7 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 
 			mProgress.setVisibility(View.INVISIBLE);
 			mDetailArea.startAnimation(mSlideOut);
-			mTitle.setText(R.string.activity_desc);
+			mTitle.setText(R.string.title_mapstops);
 		}
 	}
 
@@ -292,5 +284,10 @@ public class StopsActivity extends MapActivity implements AnimationListener {
 	@Override
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
+	}
+
+	// Called when a button is clicked on the title bar
+	public void onTitlebarClick(View v) {
+		TitlebarClick.onTitlebarClick(mContext, v);
 	}
 }

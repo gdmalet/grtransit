@@ -140,23 +140,6 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 		}
 	}
 
-	/**
-	 * Make the {@link ProgressBar} visible when our in-animation finishes.
-	 */
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// Not interested if the animation repeats
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// Not interested when the animation starts
-	}
-
 	/* Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if
 	 * we refer to it, at which point Dalvik would discover the error. So don't refer to it if we know it will fail.... */
 	private static class API9ReflectionWrapper {
@@ -249,5 +232,27 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 		}
 
 		return null;
+	}
+
+	/**
+	 * Make the {@link ProgressBar} visible when our in-animation finishes.
+	 */
+	@Override
+	public void onAnimationEnd(Animation animation) {
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// Not interested if the animation repeats
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// Not interested when the animation starts
+	}
+
+	// Called when a button is clicked on the title bar
+	public void onTitlebarClick(View v) {
+		TitlebarClick.onTitlebarClick(mContext, v);
 	}
 }

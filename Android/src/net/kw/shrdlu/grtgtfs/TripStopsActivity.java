@@ -281,4 +281,9 @@ public class TripStopsActivity extends ListActivity implements AnimationListener
 	public void onAnimationStart(Animation animation) {
 		// Not interested when the animation starts
 	}
+
+	// Called when a button is clicked on the title bar
+	public void onTitlebarClick(View v) {
+		TitlebarClick.onTitlebarClick(mContext, v);
+	}
 }

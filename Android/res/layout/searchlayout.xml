@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    tools:context=".SearchActivity" >
 
     <include layout="@layout/titlelayout" />
 
@@ -10,27 +12,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/button_searchroutes"
+        <EditText
+            android:id="@+id/searchtext"
+            style="@style/Text.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/routenumber"
-            android:onClick="onButtonClick"
-            android:text="@string/button_routes"
-            android:textColor="@color/grt_yellow" />
+            android:layout_toLeftOf="@+id/button_searchstops"
+            android:hint="@string/search_hint"
+            android:inputType="text" >
+
+            <requestFocus />
+        </EditText>
 
         <Button
             android:id="@+id/button_searchstops"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/searchtext"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/button_searchroutes"
             android:background="@drawable/stopnumber"
             android:onClick="onButtonClick"
             android:text="@string/button_stops"
             android:textColor="@color/grt_blue" />
+
+        <Button
+            android:id="@+id/button_searchroutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/button_searchstops"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/routenumber"
+            android:onClick="onButtonClick"
+            android:text="@string/button_routes"
+            android:textColor="@color/grt_yellow" />
     </RelativeLayout>
 
     <ListView

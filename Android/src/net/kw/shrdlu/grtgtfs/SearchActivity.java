@@ -21,16 +21,17 @@ package net.kw.shrdlu.grtgtfs;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,10 +40,10 @@ public class SearchActivity extends ListActivity {
 
 	private SearchActivity mContext;
 	private TextView mTitle;
-	private Button mButtonStops, mButtonRoutes;
+	private EditText mSearchText;
 	private Cursor mCsr;
 
-	private int mSearchType;
+	private int mSearchType = R.id.button_searchstops; // default
 	private String mQuery;
 
 	@Override
@@ -51,23 +52,29 @@ public class SearchActivity extends ListActivity {
 		setContentView(R.layout.searchlayout);
 
 		mContext = this;
+		mSearchText = (EditText) findViewById(R.id.searchtext);
+
 		mTitle = (TextView) findViewById(R.id.listtitle);
-		mButtonRoutes = (Button) findViewById(R.id.button_searchroutes);
-		mButtonStops = (Button) findViewById(R.id.button_searchstops);
+		mTitle.setText(R.string.title_search);
 
-		final Intent intent = getIntent();
-		final String action = intent.getAction();
+		mSearchText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable s) {
+				Log.d(TAG, "afterTextChanged");
+			}
 
-		if (action != null && action.equals(Intent.ACTION_SEARCH)) {
-			mQuery = intent.getStringExtra(SearchManager.QUERY);
-			Globals.tracker.trackEvent("Search", "Stop", mQuery, 1);
-			DoSearch(R.id.button_searchstops, intent);
-		} else {
-			// Called from another activity, so put up search box
-			mButtonRoutes.setEnabled(false);
-			mButtonStops.setEnabled(false);
-			onSearchRequested();
-		}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				Log.d(TAG, "beforeTextChanged");
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				Log.d(TAG, "onTextChanged");
+				mQuery = new StringBuffer(s).toString();
+				DoSearch(mSearchType, getIntent());
+			}
+		});
 	}
 
 	// If we have SingleTop, this gets called when the user hits search after entering a query.
@@ -104,16 +111,14 @@ public class SearchActivity extends ListActivity {
 
 	void DoSearch(int Id, Intent intent) {
 
+		if (mQuery == null) {
+			return;
+		}
+
 		mSearchType = Id; // Remember what we're doing: stops or routes
-		mQuery = intent.getStringExtra(SearchManager.QUERY);
 		final ListView lv = getListView();
 
 		if (Id == R.id.button_searchstops) {
-
-			mButtonRoutes.setEnabled(true);
-			mButtonStops.setEnabled(false);
-			mButtonRoutes.setClickable(true);
-			mButtonStops.setClickable(false);
 
 			// register to get long clicks on list
 			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -133,11 +138,6 @@ public class SearchActivity extends ListActivity {
 			new FindStops().execute();
 
 		} else if (Id == R.id.button_searchroutes) {
-
-			mButtonRoutes.setEnabled(false);
-			mButtonStops.setEnabled(true);
-			mButtonRoutes.setClickable(false);
-			mButtonStops.setClickable(true);
 
 			if (lv.getFooterViewsCount() > 0) {
 				final TextView tv = (TextView) findViewById(R.id.about_credits);
@@ -272,4 +272,10 @@ public class SearchActivity extends ListActivity {
 			// adapter.notifyDataSetChanged();
 		}
 	}
+
+	// Called when a button is clicked on the title bar
+	public void onTitlebarClick(View v) {
+		TitlebarClick.onTitlebarClick(mContext, v);
+	}
+
 }
