@@ -60,35 +60,34 @@ public class SearchActivity extends ListActivity {
 		mSearchText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void afterTextChanged(Editable s) {
-				Log.d(TAG, "afterTextChanged");
+				// Log.d(TAG, "afterTextChanged");
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				Log.d(TAG, "beforeTextChanged");
+				// Log.d(TAG, "beforeTextChanged");
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				Log.d(TAG, "onTextChanged");
+				// Log.d(TAG, "onTextChanged");
 				mQuery = new StringBuffer(s).toString();
 				DoSearch(mSearchType, getIntent());
 			}
 		});
 	}
 
-	// If we have SingleTop, this gets called when the user hits search after entering a query.
-	@Override
-	protected void onNewIntent(Intent intent) {
-		setIntent(intent);
-		DoSearch(R.id.button_searchstops, intent);
-	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// We want to track a pageView every time this Activity gets the focus.
-		Globals.tracker.trackPageView("/" + this.getLocalClassName());
+		// We want to track a pageView every time this activity gets the focus - but if the activity was
+		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
+		if (Globals.tracker == null) {
+			Log.e(TAG, "null tracker!");
+			startActivity(new Intent(this, FavstopsActivity.class));
+		} else {
+			Globals.tracker.trackPageView("/" + this.getLocalClassName());
+		}
 	}
 
 	// Called when a button is clicked
