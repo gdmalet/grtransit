@@ -169,8 +169,14 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// We want to track a pageView every time this Activity gets the focus.
-		Globals.tracker.trackPageView("/" + this.getLocalClassName());
+		// We want to track a pageView every time this activity gets the focus - but if the activity was
+		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
+		if (Globals.tracker == null) {
+			Log.e(TAG, "null tracker!");
+			startActivity(new Intent(this, FavstopsActivity.class));
+		} else {
+			Globals.tracker.trackPageView("/" + this.getLocalClassName());
+		}
 
 		// Get location updates
 		try {

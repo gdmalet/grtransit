@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONTokener;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,7 +55,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class RiderAlertsActivity extends ListActivity implements AnimationListener {
-	private static final String TAG = "RiderAlerts";
+	private static final String TAG = "RiderAlertsActivity";
 
 	// The search string to get recent tweets from GRT Rider Alerts
 	private final String TwitterURL = "http://api.twitter.com/1/statuses/user_timeline.json";
@@ -93,8 +94,14 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// We want to track a pageView every time this Activity gets the focus.
-		Globals.tracker.trackPageView("/" + this.getLocalClassName());
+		// We want to track a pageView every time this activity gets the focus - but if the activity was
+		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
+		if (Globals.tracker == null) {
+			Log.e(TAG, "null tracker!");
+			startActivity(new Intent(this, FavstopsActivity.class));
+		} else {
+			Globals.tracker.trackPageView("/" + this.getLocalClassName());
+		}
 	}
 
 	/* Do the processing to load the ArrayAdapter for display. */
@@ -116,7 +123,9 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 		@Override
 		protected Void doInBackground(Void... foo) {
 
+			publishProgress(25); // fake it
 			mListDetails = readTwitterFeed();
+			publishProgress(75); // fake it
 
 			return null;
 		}
@@ -137,6 +146,8 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 				mAdapter = new ListArrayAdapter(mContext, R.layout.tweetlayout, mListDetails);
 				mContext.setListAdapter(mAdapter);
 			}
+
+			publishProgress(100); // fake it
 		}
 	}
 

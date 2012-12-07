@@ -33,7 +33,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class Globals {
 	public static final String TAG = "Globals";
-	public static GoogleAnalyticsTracker tracker;
+	public static GoogleAnalyticsTracker tracker = null;
 	public static Preferences mPreferences = null;
 	public static DatabaseHelper dbHelper = null;
 	public static boolean isDebugBuild = false;
@@ -73,7 +73,9 @@ public class Globals {
 
 		try {
 			String v = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-			if (isDebugBuild) v += " debug";
+			if (isDebugBuild) {
+				v += " debug";
+			}
 			tracker.setCustomVar(TRACKER_VERSION, "Version", v, TRACKER_VISITOR_SCOPE);
 		} catch (final NameNotFoundException e) {
 			Log.e(TAG, "Exception when getting versionName");
