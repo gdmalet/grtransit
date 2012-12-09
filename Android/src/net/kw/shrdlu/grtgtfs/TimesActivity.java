@@ -22,7 +22,6 @@ package net.kw.shrdlu.grtgtfs;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -32,28 +31,17 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TimesActivity extends ListActivity implements AnimationListener {
+public class TimesActivity extends MenuListActivity {
 	private static final String TAG = "TimesActivity";
 
-	private ListActivity mContext;
-	private View mListDetail;
-	private Animation mSlideIn, mSlideOut;
-	private ProgressBar mProgress;
 	private String mRoute_id = null, mHeadsign, mStop_id;
-	private TextView mTitle;
 	private ArrayList<String[]> mListDetails = null;
 	private boolean PrefChanged = true; // force redraw
 
@@ -61,20 +49,9 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Log.v(TAG, "OnCreate()");
-
 		mContext = this;
-
 		setContentView(R.layout.timeslayout);
-
-		// Load animations used to show/hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.progress);
-		mListDetail = findViewById(R.id.detail_area);
-		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
-		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-		mSlideIn.setAnimationListener(this);
-		mTitle = (TextView) findViewById(R.id.listtitle);
+		super.onCreate(savedInstanceState);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();
@@ -86,14 +63,6 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// We want to track a pageView every time this activity gets the focus - but if the activity was
-		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
-			Log.e(TAG, "null tracker!");
-			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
-		}
 
 		// See if we need to recalculate and redraw the screen.
 		// This happens if the user brings up the preferences screen.
@@ -307,18 +276,10 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 		}
 	}
 
-	// This is only called once....
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.timesmenu, menu);
-		return true;
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showonmap: {
+		case R.id.menu_showmap: {
 			Globals.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
 			// Perform action on click
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -329,15 +290,10 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 			startActivity(busroutes);
 			return true;
 		}
-		case R.id.menu_preferences: {
-			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
-			final Intent prefs = new Intent(mContext, PrefsActivity.class);
-			startActivity(prefs);
-			PrefChanged = true; // force screen redraw on return, just in case
-			return true;
+		default: {
+			return TitlebarClick.onOptionsItemSelected(mContext, item);
 		}
 		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	private final View.OnTouchListener mGestureListener = new View.OnTouchListener() {
@@ -364,26 +320,4 @@ public class TimesActivity extends ListActivity implements AnimationListener {
 					return false;
 				}
 			});
-
-	/**
-	 * Make the {@link ProgressBar} visible when our in-animation finishes.
-	 */
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// Not interested if the animation repeats
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// Not interested when the animation starts
-	}
-
-	// Called when a button is clicked on the title bar
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
-	}
 }

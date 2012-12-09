@@ -19,15 +19,11 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -81,27 +77,6 @@ public class Globals {
 			Log.e(TAG, "Exception when getting versionName");
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Show an about dialog that cites data sources.
-	 */
-	public static void showAbout(Activity context) {
-
-		final View messageView = context.getLayoutInflater().inflate(R.layout.about, null, false);
-
-		// When linking text, force to always use default color. This works
-		// around a pressed color state bug.
-		final TextView textView = (TextView) messageView.findViewById(R.id.about_credits);
-		final int defaultColor = textView.getTextColors().getDefaultColor();
-		textView.setTextColor(defaultColor);
-
-		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setIcon(R.drawable.grticon);
-		builder.setTitle(R.string.app_name);
-		builder.setView(messageView);
-		builder.create();
-		builder.show();
 	}
 
 	// Checks if this apk was built using the debug certificate

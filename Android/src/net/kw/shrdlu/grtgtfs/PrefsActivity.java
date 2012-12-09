@@ -19,10 +19,8 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.util.Log;
 
 public class PrefsActivity extends PreferenceActivity {
 	private static final String TAG = "PreferenceActivity";
@@ -40,13 +38,6 @@ public class PrefsActivity extends PreferenceActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// We want to track a pageView every time this activity gets the focus - but if the activity was
-		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
-			Log.e(TAG, "null tracker!");
-			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
-		}
+		Globals.tracker.trackPageView("/" + this.getLocalClassName());
 	}
 }

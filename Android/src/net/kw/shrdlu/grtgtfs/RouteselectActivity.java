@@ -19,53 +19,29 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class RouteselectActivity extends ListActivity implements AnimationListener {
+public class RouteselectActivity extends MenuListActivity {
 	private static final String TAG = "RouteselectActivity";
 
-	private ListActivity mContext;
-	private View mListDetail;
-	private Animation mSlideIn, mSlideOut;
-	private ProgressBar mProgress;
 	private String mStopid, mStopname;
-	private TextView mTitle;
 	private Cursor mCsr;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Log.v(TAG, "OnCreate()");
-
-		setContentView(R.layout.timeslayout);
 		mContext = this;
-
-		// Load animations used to show/hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.progress);
-		mListDetail = findViewById(R.id.detail_area);
-		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
-		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-		mSlideIn.setAnimationListener(this);
-		mTitle = (TextView) findViewById(R.id.listtitle);
-		mTitle.setText(R.string.loading_routes);
+		setContentView(R.layout.timeslayout);
+		super.onCreate(savedInstanceState);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();
@@ -74,19 +50,6 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 
 		// Do the rest off the main thread
 		new ProcessRoutes().execute();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		// We want to track a pageView every time this activity gets the focus - but if the activity was
-		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
-			Log.e(TAG, "null tracker!");
-			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
-		}
 	}
 
 	@Override
@@ -143,16 +106,9 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 			});
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.routeselectmenu, menu);
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showonmap: {
+		case R.id.menu_showmap: {
 			Globals.tracker.trackEvent("Menu", "Show stop", mStopid, 1);
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busstop = new Intent(mContext, StopsActivity.class);
@@ -160,8 +116,10 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 			startActivity(busstop);
 			return true;
 		}
+		default: {
+			return TitlebarClick.onOptionsItemSelected(mContext, item);
 		}
-		return super.onOptionsItemSelected(item);
+		}
 	}
 
 	/* Do the processing to load the ArrayAdapter for display. */
@@ -231,27 +189,5 @@ public class RouteselectActivity extends ListActivity implements AnimationListen
 			mListDetail.startAnimation(mSlideOut);
 			mTitle.setText("Routes using stop " + mStopid + ", " + mStopname);
 		}
-	}
-
-	/**
-	 * Make the {@link ProgressBar} visible when our in-animation finishes.
-	 */
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// Not interested if the animation repeats
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// Not interested when the animation starts
-	}
-
-	// Called when a button is clicked on the title bar
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
 	}
 }

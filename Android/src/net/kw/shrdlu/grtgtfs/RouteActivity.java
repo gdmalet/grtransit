@@ -20,58 +20,28 @@
 package net.kw.shrdlu.grtgtfs;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.Overlay;
 
-public class RouteActivity extends MapActivity implements AnimationListener {
+public class RouteActivity extends MenuMapActivity {
 	private static final String TAG = "RouteActivity";
 
-	private MapActivity mContext;
-	private MapView mMapview;
-	private List<Overlay> mapOverlays;
-	private View mDetailArea;
-	private TextView mTitle;
-	private Animation mSlideIn, mSlideOut;
-	private ProgressBar mProgress;
-	private MyLocationOverlay mMylocation;
 	private String mRoute_id, mHeadsign, mStop_id;
-	private StopsOverlay mStopsOverlay = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		mContext = this;
-		setContentView(R.layout.mapview);
-
-		mMapview = (MapView) findViewById(R.id.mapview);
-		mMapview.setBuiltInZoomControls(true);
-
-		mapOverlays = mMapview.getOverlays();
+		super.onCreate(savedInstanceState);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();
@@ -79,102 +49,8 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 		mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
 		mStop_id = intent.getStringExtra(pkgstr + ".stop_id"); // TODO show position?
 
-		// Load animation used to hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.progress);
-		mDetailArea = findViewById(R.id.mapview);
-		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
-		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-		mSlideIn.setAnimationListener(this);
-
-		mTitle = (TextView) findViewById(R.id.listtitle);
-		mTitle.setText(R.string.loading_stops);
-
-		mMylocation = new MyLocationOverlay(this, mMapview);
-		mapOverlays.add(mMylocation);
-
 		// Get the busstop overlay set up in the background
-		mStopsOverlay = new StopsOverlay(mContext);
 		new PrepareOverlays().execute();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		// We want to track a pageView every time this activity gets the focus - but if the activity was
-		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
-			Log.e(TAG, "null tracker!");
-			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
-		}
-
-		mMylocation.enableMyLocation();
-		mMylocation.enableCompass();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		// Log.d(TAG, "onPause()");
-		mMylocation.disableMyLocation();
-		mMylocation.disableCompass();
-	}
-
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.busstopsmenu, menu);
-
-		// Hide some menu options
-		menu.removeItem(R.id.menu_about);
-		menu.removeItem(R.id.menu_preferences);
-
-		return true;
-	}
-
-	/* This is called when redisplaying the menu
-	 * 
-	 * @Override public boolean onPrepareOptionsMenu(Menu menu) { return true; } */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_mylocation: {
-			// Center the map over the current location
-			GeoPoint locn = mMylocation.getMyLocation();
-			if (locn == null) {
-				final Location l = mMylocation.getLastFix();
-				if (l != null) {
-					Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
-					locn = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
-				}
-			}
-			if (locn != null) {
-				final MapController mcp = mMapview.getController();
-				mcp.animateTo(locn);
-				while (mMapview.getZoomLevel() < 17) {
-					if (!mcp.zoomIn()) {
-						break;
-					}
-				}
-			} else {
-				Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
-			}
-			return true;
-		}
-		case R.id.menu_closeststops: {
-			Globals.tracker.trackEvent("Menu", "Closest stops", "", 1);
-			final Intent stops = new Intent(mContext, ClosestStopsActivity.class);
-			startActivity(stops);
-			return true;
-		}
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	/**
@@ -302,27 +178,5 @@ public class RouteActivity extends MapActivity implements AnimationListener {
 				mTitle.setText("Routes using stop " + mStop_id);
 			}
 		}
-	}
-
-	/**
-	 * Make the {@link ProgressBar} visible when our in-animation finishes.
-	 */
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// Not interested if the animation repeats
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// Not interested when the animation starts
-	}
-
-	// Called when a button is clicked on the title bar
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
 	}
 }

@@ -20,7 +20,6 @@
 package net.kw.shrdlu.grtgtfs;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -31,15 +30,14 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class SearchActivity extends ListActivity {
+public class SearchActivity extends MenuListActivity {
 	private static final String TAG = "SearchActivity";
 
-	private SearchActivity mContext;
-	private TextView mTitle;
 	private EditText mSearchText;
 	private Cursor mCsr;
 
@@ -48,13 +46,17 @@ public class SearchActivity extends ListActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.searchlayout);
-
 		mContext = this;
+		setContentView(R.layout.searchlayout);
+		super.onCreate(savedInstanceState);
+
+		// Remove search option from titlebar
+		Button search = (Button) findViewById(R.id.button_search);
+		search.setClickable(false);
+		search.setVisibility(View.GONE);
+
 		mSearchText = (EditText) findViewById(R.id.searchtext);
 
-		mTitle = (TextView) findViewById(R.id.listtitle);
 		mTitle.setText(R.string.title_search);
 
 		mSearchText.addTextChangedListener(new TextWatcher() {
@@ -75,19 +77,6 @@ public class SearchActivity extends ListActivity {
 				DoSearch(mSearchType, getIntent());
 			}
 		});
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		// We want to track a pageView every time this activity gets the focus - but if the activity was
-		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
-			Log.e(TAG, "null tracker!");
-			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
-		}
 	}
 
 	// Called when a button is clicked
@@ -273,8 +262,8 @@ public class SearchActivity extends ListActivity {
 	}
 
 	// Called when a button is clicked on the title bar
+	@Override
 	public void onTitlebarClick(View v) {
 		TitlebarClick.onTitlebarClick(mContext, v);
 	}
-
 }

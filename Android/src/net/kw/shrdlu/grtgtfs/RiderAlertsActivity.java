@@ -40,68 +40,34 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONTokener;
 
-import android.app.ListActivity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class RiderAlertsActivity extends ListActivity implements AnimationListener {
+public class RiderAlertsActivity extends MenuListActivity {
 	private static final String TAG = "RiderAlertsActivity";
 
 	// The search string to get recent tweets from GRT Rider Alerts
 	private final String TwitterURL = "http://api.twitter.com/1/statuses/user_timeline.json";
 	private final String TwitterQry = "?screen_name=GRTRiderAlerts&count=20&include_entities=false&trim_user=true";
 
-	private ListActivity mContext;
-	private View mListDetail;
-	private Animation mSlideIn, mSlideOut;
-	private ProgressBar mProgress;
-	private TextView mTitle;
 	private ListArrayAdapter mAdapter;
 	private ArrayList<String[]> mListDetails;;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		mContext = this;
+		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
-		mContext = this;
-
-		setContentView(R.layout.timeslayout);
-
-		// Load animations used to show/hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.progress);
-		mListDetail = findViewById(R.id.detail_area);
-		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
-		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-		mSlideIn.setAnimationListener(this);
-		mTitle = (TextView) findViewById(R.id.listtitle);
 		mListDetails = new ArrayList<String[]>();
 
 		mTitle.setText(R.string.twitter_querying_feed);
 
 		new ProcessTweets().execute();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		// We want to track a pageView every time this activity gets the focus - but if the activity was
-		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
-			Log.e(TAG, "null tracker!");
-			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
-		}
 	}
 
 	/* Do the processing to load the ArrayAdapter for display. */
@@ -243,27 +209,5 @@ public class RiderAlertsActivity extends ListActivity implements AnimationListen
 		}
 
 		return null;
-	}
-
-	/**
-	 * Make the {@link ProgressBar} visible when our in-animation finishes.
-	 */
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// Not interested if the animation repeats
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// Not interested when the animation starts
-	}
-
-	// Called when a button is clicked on the title bar
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
 	}
 }

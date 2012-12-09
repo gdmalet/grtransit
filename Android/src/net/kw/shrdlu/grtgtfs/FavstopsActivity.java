@@ -22,7 +22,6 @@ package net.kw.shrdlu.grtgtfs;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -30,31 +29,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.format.Time;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class FavstopsActivity extends ListActivity implements AnimationListener {
+public class FavstopsActivity extends MenuListActivity {
 	private static final String TAG = "FavstopsActivity";
 
-	// Need one instance of this
-	private static Globals mGlobals = null;
-
-	private ListActivity mContext;
 	private ArrayList<String[]> mDetails;
-	private Animation mSlideIn, mSlideOut;
 	private String mStopid;
-	private View mListDetail;
-	private ProgressBar mProgress;
 	private FavstopsArrayAdapter mAdapter;
 
 	@Override
@@ -67,26 +51,12 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			// Log.d(TAG,"Not setting up strict mode.");
 		}
 
-		super.onCreate(savedInstanceState);
-		// Log.v(TAG, "OnCreate()");
-
 		mContext = this;
-		if (mGlobals == null) {
-			mGlobals = new Globals(mContext);
-		}
-
 		setContentView(R.layout.timeslayout);
-
-		// Load the necessary to show/hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.progress);
-		mListDetail = findViewById(R.id.detail_area);
-		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
-		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-		mSlideIn.setAnimationListener(this);
+		super.onCreate(savedInstanceState);
 
 		final ListView lv = getListView();
 		final TextView tv = new TextView(mContext);
-
 		tv.setText(R.string.longpress_removes_stop);
 		lv.addFooterView(tv);
 
@@ -167,16 +137,8 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// We want to track a pageView every time this activity gets the focus - but if the activity was
-		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
-			Log.e(TAG, "null tracker!");
-			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
-		}
 
-		findViewById(R.id.detail_area).invalidate();
+		mListDetail.invalidate();
 		ProcessStops();
 	}
 
@@ -185,45 +147,6 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 		super.onDestroy();
 		Globals.tracker.dispatch(); // perhaps unnecessary?
 		Globals.tracker.stopSession();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.busstopsmenu, menu);
-
-		return true;
-	}
-
-	// Should have a super class that defines and handles these menus, and
-	// then derive this and other activities that use the same menus from that.
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_mylocation: {
-			Globals.tracker.trackEvent("Menu", "My location", "", 1);
-			startActivity(new Intent(mContext, StopsActivity.class));
-			return true;
-		}
-		case R.id.menu_preferences: {
-			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
-			final Intent prefs = new Intent(mContext, PrefsActivity.class);
-			startActivity(prefs);
-			return true;
-		}
-		case R.id.menu_closeststops: {
-			Globals.tracker.trackEvent("Menu", "Closest stops", "", 1);
-			final Intent stops = new Intent(mContext, ClosestStopsActivity.class);
-			startActivity(stops);
-			return true;
-		}
-		case R.id.menu_about: {
-			Globals.tracker.trackEvent("Menu", "Show about", "", 1);
-			Globals.showAbout(this);
-			return true;
-		}
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	// Called from the listener above for a long click
@@ -342,24 +265,4 @@ public class FavstopsActivity extends ListActivity implements AnimationListener 
 			v.setText(R.string.title_favourites);
 		}
 	}
-
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// Not interested if the animation repeats
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// Not interested when the animation starts
-	}
-
-	// Called when a button is clicked on the title bar
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
-	}
-
 }

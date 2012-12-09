@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,31 +34,20 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ClosestStopsActivity extends ListActivity implements AnimationListener {
+public class ClosestStopsActivity extends MenuListActivity {
 	private static final String TAG = "ClosestStopsActivity";
 
 	private static final int MIN_LOCN_UPDATE_TIME = 10000; // ms
 	private static final int MIN_LOCN_UPDATE_DIST = 10; // m
 	private static final int NUM_CLOSEST_STOPS = 25;
 
-	private ListActivity mContext;
-	private View mListDetail;
-	private Animation mSlideIn, mSlideOut;
-	private ProgressBar mProgress;
-	private TextView mTitle;
 	private LocationManager mLocationManager;
 	private Location mLocation;
 	private timestopdescArrayAdapter mAdapter;
@@ -76,19 +64,11 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Log.v(TAG, "OnCreate()");
-
 		mContext = this;
-
 		setContentView(R.layout.timeslayout);
+		super.onCreate(savedInstanceState);
 
 		// Load animations used to show/hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.progress);
-		mListDetail = findViewById(R.id.detail_area);
-		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
-		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-		mSlideIn.setAnimationListener(this);
 		mTitle = (TextView) findViewById(R.id.listtitle);
 		mListDetails = new ArrayList<String[]>(NUM_CLOSEST_STOPS);
 
@@ -169,14 +149,6 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// We want to track a pageView every time this activity gets the focus - but if the activity was
-		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
-			Log.e(TAG, "null tracker!");
-			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
-		}
 
 		// Get location updates
 		try {
@@ -313,18 +285,10 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 		mContext.startActivity(routes);
 	}
 
-	// This is only called once....
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.timesmenu, menu);
-		return true;
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showonmap: {
+		case R.id.menu_showmap: {
 			// Centre the map on the closest stop, since the GPS takes too much time.
 			final Intent busstop = new Intent(mContext, StopsActivity.class);
 			if (mListDetails.size() > 0) {
@@ -334,14 +298,10 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 			startActivity(busstop);
 			return true;
 		}
-		case R.id.menu_preferences: {
-			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
-			final Intent prefs = new Intent(mContext, PrefsActivity.class);
-			startActivity(prefs);
-			return true;
+		default: {
+			return TitlebarClick.onOptionsItemSelected(mContext, item);
 		}
 		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	// Called from the listener above for a long click
@@ -433,27 +393,4 @@ public class ClosestStopsActivity extends ListActivity implements AnimationListe
 		}
 		return provider1.equals(provider2);
 	}
-
-	/**
-	 * Make the {@link ProgressBar} visible when our in-animation finishes.
-	 */
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// Not interested if the animation repeats
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// Not interested when the animation starts
-	}
-
-	// Called when a button is clicked on the title bar
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
-	}
-
 }

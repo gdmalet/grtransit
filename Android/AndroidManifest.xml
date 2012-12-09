@@ -3,8 +3,8 @@
     package="net.kw.shrdlu.grtgtfs"
     android:installLocation="preferExternal"
     android:theme="@style/ActivityTheme"
-    android:versionCode="20"
-    android:versionName="1.1.1" >
+    android:versionCode="21"
+    android:versionName="1.1.2" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -37,7 +37,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RouteActivity" />
-        <activity android:name=".PrefsActivity" />
+        <activity
+            android:name=".PrefsActivity"
+            android:theme="@android:style/Theme.Holo" />
         <activity android:name=".RouteselectActivity" />
         <activity android:name=".TimesActivity" />
         <activity android:name=".TripStopsActivity" />
