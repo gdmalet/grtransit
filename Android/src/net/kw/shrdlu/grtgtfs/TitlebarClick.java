@@ -29,9 +29,18 @@ import android.view.View;
  *  Called when a button is clicked on the title bar.
  */
 public class TitlebarClick {
+	private static final String TAG = "TitlebarClick";
 
 	public static void onTitlebarClick(Activity context, View v) {
 		switch (v.getId()) {
+		case R.id.titlelogo: {
+			Globals.tracker.trackEvent("Button", "Title logo", "", 1);
+			final Intent home = new Intent(context, FavstopsActivity.class);
+			home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(home);
+			context.finish(); // This clears the stack and returns to the home screen.
+			return;
+		}
 		case R.id.button_search: {
 			Globals.tracker.trackEvent("Button", "Search", "", 1);
 			final Intent search = new Intent(context, SearchActivity.class);

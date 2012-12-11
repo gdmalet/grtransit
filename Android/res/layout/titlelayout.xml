@@ -5,29 +5,27 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
-        <ImageView
+        <Button
             android:id="@+id/titlelogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/title"
+            android:layout_width="44dp"
+            android:layout_height="36dp"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/menu_grticon" />
+            android:layout_alignParentTop="true"
+            android:background="@drawable/grticon_home"
+            android:onClick="onTitlebarClick" />
 
         <TextView
             android:id="@+id/title"
             style="@style/Text.Title"
-            android:layout_alignBaseline="@+id/button_alerts"
-            android:layout_alignBottom="@+id/button_alerts"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/button_alerts"
             android:layout_toRightOf="@+id/titlelogo"
             android:maxLines="1"
             android:text="@string/app_name" />
 
         <Button
             android:id="@+id/button_overflow"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/ic_menu_moreoverflow_normal_holo_dark"
@@ -35,8 +33,8 @@
 
         <Button
             android:id="@+id/button_search"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/button_overflow"
             android:background="@drawable/ic_menu_search"

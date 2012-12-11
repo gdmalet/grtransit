@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.os.StrictMode;
 import android.text.format.Time;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -54,6 +56,12 @@ public class FavstopsActivity extends MenuListActivity {
 		mContext = this;
 		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
+
+		// Switch title bar icon to the one without the < hint.
+		Button logo = (Button) findViewById(R.id.titlelogo);
+		Drawable d = getResources().getDrawable(R.drawable.grticon_nohome);
+		logo.setClickable(false);
+		logo.setBackgroundDrawable(d);
 
 		final ListView lv = getListView();
 		final TextView tv = new TextView(mContext);
