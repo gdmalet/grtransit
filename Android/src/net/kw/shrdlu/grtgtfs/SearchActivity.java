@@ -24,10 +24,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -50,10 +52,14 @@ public class SearchActivity extends MenuListActivity {
 		setContentView(R.layout.searchlayout);
 		super.onCreate(savedInstanceState);
 
-		// Remove search option from titlebar
-		Button search = (Button) findViewById(R.id.button_search);
-		search.setClickable(false);
-		search.setVisibility(View.GONE);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
+			// Remove search option from the fake actionbar.
+			Button search = (Button) findViewById(R.id.button_search);
+			if (search != null) {
+				search.setClickable(false);
+				search.setVisibility(View.GONE);
+			}
+		}
 
 		mSearchText = (EditText) findViewById(R.id.searchtext);
 
@@ -77,6 +83,17 @@ public class SearchActivity extends MenuListActivity {
 				DoSearch(mSearchType, getIntent());
 			}
 		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB /* 11 */) {
+			menu.removeItem(R.id.menu_search);
+		}
+
+		return true;
 	}
 
 	// Called when a button is clicked

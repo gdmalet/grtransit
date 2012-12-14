@@ -43,8 +43,7 @@ public class TitlebarClick {
 		}
 		case R.id.button_search: {
 			Globals.tracker.trackEvent("Button", "Search", "", 1);
-			final Intent search = new Intent(context, SearchActivity.class);
-			context.startActivity(search);
+			context.startActivity(new Intent(context, SearchActivity.class));
 			return;
 		}
 		case R.id.button_overflow: {
@@ -57,6 +56,19 @@ public class TitlebarClick {
 
 	public static boolean onOptionsItemSelected(Activity context, MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home: {
+			Globals.tracker.trackEvent("Home", "Title logo", "", 1);
+			final Intent home = new Intent(context, FavstopsActivity.class);
+			home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(home);
+			context.finish(); // This clears the stack and returns to the home screen.
+			return true;
+		}
+		case R.id.menu_search: {
+			Globals.tracker.trackEvent("Menu", "Search", "", 1);
+			context.startActivity(new Intent(context, SearchActivity.class));
+			return true;
+		}
 		case R.id.menu_refresh: {
 			Globals.tracker.trackEvent("Menu", "Refresh", "", 1);
 			context.finish();

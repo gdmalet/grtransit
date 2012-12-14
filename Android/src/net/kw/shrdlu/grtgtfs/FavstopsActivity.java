@@ -28,7 +28,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.text.format.Time;
 import android.view.View;
 import android.widget.AdapterView;
@@ -48,20 +47,20 @@ public class FavstopsActivity extends MenuListActivity {
 		// Do this before instantiating Globals, as that may do something we'd like
 		// to see by having StrictMode on already.
 		if (Globals.CheckDebugBuild(this) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD /* 9 */) {
-			API9ReflectionWrapper.setStrictMode();
-		} else {
-			// Log.d(TAG,"Not setting up strict mode.");
+			APIReflectionWrapper.API9.setStrictMode();
 		}
 
 		mContext = this;
 		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
-		// Switch title bar icon to the one without the < hint.
-		Button logo = (Button) findViewById(R.id.titlelogo);
-		Drawable d = getResources().getDrawable(R.drawable.grticon_nohome);
-		logo.setClickable(false);
-		logo.setBackgroundDrawable(d);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
+			// Switch title bar icon to the one without the < hint.
+			Button logo = (Button) findViewById(R.id.titlelogo);
+			Drawable d = getResources().getDrawable(R.drawable.grticon_nohome);
+			logo.setClickable(false);
+			logo.setBackgroundDrawable(d);
+		}
 
 		final ListView lv = getListView();
 		final TextView tv = new TextView(mContext);
@@ -69,22 +68,6 @@ public class FavstopsActivity extends MenuListActivity {
 		lv.addFooterView(tv);
 
 		// ProcessStops(); // will be done in onResume()
-	}
-
-	/* Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if
-	 * we refer to it, at which point Dalvik would discover the error. So don't refer to it if we know it will fail.... */
-	private static class API9ReflectionWrapper {
-		public static void setStrictMode() {
-			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-			// .detectDiskReads()
-			// .detectDiskWrites()
-					.detectNetwork()
-					// .penaltyFlashScreen()
-					.build());
-			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
-			// .detectLeakedClosableObjects()
-					.penaltyLog().penaltyDeath().build());
-		}
 	}
 
 	/* Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent. */

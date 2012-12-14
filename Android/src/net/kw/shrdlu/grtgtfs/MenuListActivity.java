@@ -20,6 +20,7 @@
 package net.kw.shrdlu.grtgtfs;
 
 import android.app.ListActivity;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -59,6 +60,10 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 		mSlideIn = AnimationUtils.loadAnimation(mContext, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(mContext, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB /* 11 */) {
+			APIReflectionWrapper.API11.prepActionBar(mContext);
+		}
 	}
 
 	@Override
@@ -77,6 +82,12 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.busstopsmenu, menu);
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
+			// Remove search from the menu, as we put it on the title bar.
+			menu.removeItem(R.id.menu_search);
+		}
+
 		return true;
 	}
 

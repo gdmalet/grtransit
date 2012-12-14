@@ -23,6 +23,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -81,6 +82,10 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		mapOverlays.add(mMylocation);
 
 		mStopsOverlay = new StopsOverlay(mContext);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB /* 11 */) {
+			APIReflectionWrapper.API11.prepActionBar(mContext);
+		}
 	}
 
 	@Override
@@ -121,6 +126,11 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		menu.removeItem(R.id.menu_about);
 		menu.removeItem(R.id.menu_preferences);
 		menu.findItem(R.id.menu_showmap).setTitle(R.string.mylocation);
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
+			// Remove search from the menu, as we put it on the title bar.
+			menu.removeItem(R.id.menu_search);
+		}
 
 		return true;
 	}

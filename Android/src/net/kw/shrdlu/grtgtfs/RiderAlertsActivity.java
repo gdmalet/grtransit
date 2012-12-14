@@ -117,14 +117,6 @@ public class RiderAlertsActivity extends MenuListActivity {
 		}
 	}
 
-	/* Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if
-	 * we refer to it, at which point Dalvik would discover the error. So don't refer to it if we know it will fail.... */
-	private static class API9ReflectionWrapper {
-		public static String getDisplayName(Calendar cal, int field, int style, Locale locale) {
-			return cal.getDisplayName(field, style, locale);
-		}
-	}
-
 	/**
 	 * Get the latest twitter info. Some of this copied from http://www.vogella.com/articles/AndroidJSON/article.html
 	 */
@@ -167,10 +159,10 @@ public class RiderAlertsActivity extends MenuListActivity {
 						String day, mon;
 
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD /* 9 */) {
-							day = API9ReflectionWrapper.getDisplayName(cal, Calendar.DAY_OF_WEEK, Calendar.LONG,
+							day = APIReflectionWrapper.API9.getDisplayName(cal, Calendar.DAY_OF_WEEK, Calendar.LONG,
 									Locale.getDefault());
-							mon = API9ReflectionWrapper
-									.getDisplayName(cal, Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+							mon = APIReflectionWrapper.API9.getDisplayName(cal, Calendar.MONTH, Calendar.SHORT,
+									Locale.getDefault());
 						} else { // bah
 							SimpleDateFormat sdf = new SimpleDateFormat("EEEEEEEE", Locale.getDefault());
 							day = sdf.format(new Date());

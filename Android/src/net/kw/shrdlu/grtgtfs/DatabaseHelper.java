@@ -27,8 +27,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.Semaphore;
 
+import android.app.Activity;
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,7 +44,7 @@ public class DatabaseHelper {
 	private static String DB_PATH = null;
 	private static final int DB_VERSION = 13; /* As of 18th November 2012 */
 	private static final String DB_NAME = "GRT.db";
-	private static Context mContext;
+	private static Activity mContext;
 	private static boolean mMustCopy = false;
 	private static SQLiteDatabase DB = null;
 	private static final Semaphore mDBisOpen = new Semaphore(1);
@@ -54,7 +54,7 @@ public class DatabaseHelper {
 	 * 
 	 * @param context
 	 */
-	public DatabaseHelper(Context context) {
+	public DatabaseHelper(Activity context) {
 		mContext = context;
 		final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
 		final String BAD_DB_PATH = "/sdcard/data/Android/" + mContext.getApplicationContext().getPackageName();
@@ -78,7 +78,7 @@ public class DatabaseHelper {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO /* 8 */) {
 			// Returns something like
 			// /mnt/sdcard/Android/data/net.kw.shrdlu.grtgtfs/files/
-			DB_PATH = API8ReflectionWrapper.getDBPath();
+			DB_PATH = APIReflectionWrapper.API8.getDBPath(mContext);
 		} else { // bah, make similar path
 			DB_PATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/"
 					+ mContext.getApplicationContext().getPackageName();
@@ -152,14 +152,6 @@ public class DatabaseHelper {
 			mDBisOpen.release(); // otherwise the service does that
 		}
 		// Log.v(TAG, "clean exit of constructor");
-	}
-
-	/* Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if
-	 * we refer to it, at which point Dalvik would discover the error. So don't refer to it if we know it will fail.... */
-	private static class API8ReflectionWrapper {
-		public static String getDBPath() {
-			return mContext.getExternalFilesDir(null).getPath();
-		}
 	}
 
 	/**

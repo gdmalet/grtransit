@@ -28,7 +28,7 @@
 
         <Button
             android:id="@+id/button_searchstops"
-            android:layout_width="wrap_content"
+            android:layout_width="72sp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/searchtext"
             android:layout_alignParentTop="true"
@@ -40,7 +40,7 @@
 
         <Button
             android:id="@+id/button_searchroutes"
-            android:layout_width="wrap_content"
+            android:layout_width="72sp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/button_searchstops"
             android:layout_alignParentRight="true"

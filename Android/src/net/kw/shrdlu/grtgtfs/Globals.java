@@ -19,6 +19,7 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -46,7 +47,7 @@ public class Globals {
 
 	// private static final int TRACKER_CV_SCREEN_ORIENTATION_SLOT = 3;
 
-	public Globals(Context context) {
+	public Globals(Activity context) {
 		isDebugBuild = CheckDebugBuild(context);
 		mPreferences = new Preferences(context);
 		dbHelper = new DatabaseHelper(context);
