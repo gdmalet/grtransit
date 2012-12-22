@@ -60,7 +60,7 @@ public class Globals {
 		} else {
 			tracker.setDebug(false);
 			tracker.setDryRun(false);
-			tracker.startNewSession(context.getString(R.string.ga_api_key), 77, context);
+			tracker.startNewSession(context.getString(R.string.ga_api_key), 420, context);
 		}
 
 		tracker.setCustomVar(TRACKER_UUID, // Slot

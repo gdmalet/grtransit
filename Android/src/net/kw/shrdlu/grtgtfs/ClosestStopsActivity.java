@@ -309,6 +309,9 @@ public class ClosestStopsActivity extends MenuListActivity {
 		// Log.v(TAG, "long clicked position " + position);
 
 		final String[] strs = (String[]) parent.getItemAtPosition(position);
+		if (strs == null) {
+			return;
+		}
 		final String stop_id = strs[1];
 		final String stop_name = strs[2];
 

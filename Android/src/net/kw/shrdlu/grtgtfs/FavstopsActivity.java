@@ -145,6 +145,9 @@ public class FavstopsActivity extends MenuListActivity {
 		// Log.v(TAG, "long clicked position " + position);
 
 		final String[] strs = (String[]) parent.getItemAtPosition(position);
+		if (strs == null) {
+			return;
+		}
 		mStopid = strs[0];
 		final String stop_name = strs[1];
 		final int aryposn = position; // so we can access it in the listener class.

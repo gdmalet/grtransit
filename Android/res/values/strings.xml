@@ -29,7 +29,7 @@
     <string name="pref_ampmtimes_key">ampmtimes</string>
     <string name="pref_showallbusses_key">showallbusses</string>
     <string name="refresh">Refresh</string>
-    <string name="rider_alerts">Rider Alerts</string>
+    <string name="rider_alerts">Rider alerts</string>
     <string name="route_fling">Swipe left to show all routes, or tap to show one.</string>
     <string name="search_hint">Enter search text</string>
     <string name="showallbusses">Show busses for all days</string>
@@ -45,5 +45,6 @@
     <string name="twitter_fetch_failed">Failed to contact Twitter - make sure you have an Internet connection.</string>
     <string name="twitter_fetch_nothing">Twitter returned nothing (there are no recent @GRTRiderAlerts).</string>
     <string name="twitter_querying_feed">Querying @GRTRiderAlerts...</string>
+    <string name="legal_notices">Legal notices:</string>
 
 </resources>

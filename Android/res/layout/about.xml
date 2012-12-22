@@ -37,4 +37,18 @@
         android:paddingTop="20dip"
         android:text="@string/app_credits" />
 
+    <!--
+    Need this for maps v2.
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/legal_notices"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/about_legalese"
+        style="@style/List.Content"
+        android:paddingTop="20dip" />
+    -->
+
 </LinearLayout>

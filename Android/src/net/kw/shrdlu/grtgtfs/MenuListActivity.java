@@ -22,7 +22,6 @@ package net.kw.shrdlu.grtgtfs;
 import android.app.ListActivity;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -69,7 +68,7 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.v(TAG, "localclassname is " + getLocalClassName());
+		// Log.v(TAG, "localclassname is " + getLocalClassName());
 		Globals.tracker.trackPageView("/" + getLocalClassName());
 	}
 

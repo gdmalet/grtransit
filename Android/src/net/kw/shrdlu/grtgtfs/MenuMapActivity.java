@@ -61,7 +61,12 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.mapview);
+		// Make sure we get the correct API key to match the build key.
+		if (Globals.isDebugBuild == true) {
+			setContentView(R.layout.mapview_debug);
+		} else {
+			setContentView(R.layout.mapview);
+		}
 
 		mMapview = (MapView) findViewById(R.id.mapview);
 		mMapview.setBuiltInZoomControls(true);

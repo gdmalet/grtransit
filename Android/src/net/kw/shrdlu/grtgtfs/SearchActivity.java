@@ -200,6 +200,9 @@ public class SearchActivity extends MenuListActivity {
 		}
 
 		final Cursor csr = (Cursor) parent.getItemAtPosition(position);
+		if (csr == null) {
+			return;
+		}
 		final String stop_id = csr.getString(0);
 		final String stop_name = csr.getString(1);
 

@@ -42,7 +42,7 @@ public class DatabaseHelper {
 	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
 
 	private static String DB_PATH = null;
-	private static final int DB_VERSION = 13; /* As of 18th November 2012 */
+	private static final int DB_VERSION = 14; /* As of 21st December 2012 */
 	private static final String DB_NAME = "GRT.db";
 	private static Activity mContext;
 	private static boolean mMustCopy = false;

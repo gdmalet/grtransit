@@ -104,6 +104,19 @@ public class TitlebarClick {
 			builder.setIcon(R.drawable.grticon);
 			builder.setTitle(R.string.app_name);
 			builder.setView(messageView);
+
+			// Only do this on newer code -- reqd if using maps v2.
+			// try {
+			// // Maps API requires us to provide attribution.
+			// TextView legal = (TextView) messageView.findViewById(R.id.about_legalese);
+			// if (legal != null && GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
+			// String text = new String(GooglePlayServicesUtil.getOpenSourceSoftwareLicenseInfo(context));
+			// legal.setText(text);
+			// }
+			// } catch (Exception e) {
+			// Log.w(TAG, "Problems contacting Google Play services");
+			// }
+
 			builder.create();
 			builder.show();
 			return true;
