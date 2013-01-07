@@ -44,7 +44,7 @@
     <string name="title_search">Search bus stops or routes</string>
     <string name="twitter_fetch_failed">Failed to contact Twitter - make sure you have an Internet connection.</string>
     <string name="twitter_fetch_nothing">Twitter returned nothing (there are no recent @GRTRiderAlerts).</string>
-    <string name="twitter_querying_feed">Querying @GRTRiderAlerts...</string>
+    <string name="twitter_querying_feed">Querying @GRT_ROW...</string>
     <string name="legal_notices">Legal notices:</string>
 
 </resources>

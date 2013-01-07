@@ -52,10 +52,10 @@ public class RiderAlertsActivity extends MenuListActivity {
 
 	// The search string to get recent tweets from GRT Rider Alerts
 	private final String TwitterURL = "http://api.twitter.com/1/statuses/user_timeline.json";
-	private final String TwitterQry = "?screen_name=GRTRiderAlerts&count=20&include_entities=false&trim_user=true";
+	private final String TwitterQry = "?screen_name=GRT_ROW&count=20&include_entities=false&trim_user=true";
 
 	private ListArrayAdapter mAdapter;
-	private ArrayList<String[]> mListDetails;;
+	private ArrayList<String[]> mListDetails;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
