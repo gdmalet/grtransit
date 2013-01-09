@@ -34,7 +34,7 @@ public class TitlebarClick {
 	public static void onTitlebarClick(Activity context, View v) {
 		switch (v.getId()) {
 		case R.id.titlelogo: {
-			Globals.tracker.trackEvent("Button", "Title logo", "", 1);
+			GRTApplication.tracker.trackEvent("Button", "Title logo", "", 1);
 			final Intent home = new Intent(context, FavstopsActivity.class);
 			home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(home);
@@ -42,12 +42,12 @@ public class TitlebarClick {
 			return;
 		}
 		case R.id.button_search: {
-			Globals.tracker.trackEvent("Button", "Search", "", 1);
+			GRTApplication.tracker.trackEvent("Button", "Search", "", 1);
 			context.startActivity(new Intent(context, SearchActivity.class));
 			return;
 		}
 		case R.id.button_overflow: {
-			Globals.tracker.trackEvent("Button", "Overflow", "", 1);
+			GRTApplication.tracker.trackEvent("Button", "Overflow", "", 1);
 			context.openOptionsMenu();
 			return;
 		}
@@ -57,7 +57,7 @@ public class TitlebarClick {
 	public static boolean onOptionsItemSelected(Activity context, MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
-			Globals.tracker.trackEvent("Home", "Title logo", "", 1);
+			GRTApplication.tracker.trackEvent("Home", "Title logo", "", 1);
 			final Intent home = new Intent(context, FavstopsActivity.class);
 			home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(home);
@@ -65,40 +65,40 @@ public class TitlebarClick {
 			return true;
 		}
 		case R.id.menu_search: {
-			Globals.tracker.trackEvent("Menu", "Search", "", 1);
+			GRTApplication.tracker.trackEvent("Menu", "Search", "", 1);
 			context.startActivity(new Intent(context, SearchActivity.class));
 			return true;
 		}
 		case R.id.menu_refresh: {
-			Globals.tracker.trackEvent("Menu", "Refresh", "", 1);
+			GRTApplication.tracker.trackEvent("Menu", "Refresh", "", 1);
 			context.finish();
 			context.startActivity(context.getIntent());
 			return true;
 		}
 		case R.id.menu_alerts: {
-			Globals.tracker.trackEvent("Menu", "Alerts", "", 1);
+			GRTApplication.tracker.trackEvent("Menu", "Alerts", "", 1);
 			context.startActivity(new Intent(context, RiderAlertsActivity.class));
 			return true;
 		}
 		case R.id.menu_showmap: {
-			Globals.tracker.trackEvent("Menu", "Show map", "", 1);
+			GRTApplication.tracker.trackEvent("Menu", "Show map", "", 1);
 			context.startActivity(new Intent(context, StopsActivity.class));
 			return true;
 		}
 		case R.id.menu_preferences: {
-			Globals.tracker.trackEvent("Menu", "Preferences", "", 1);
+			GRTApplication.tracker.trackEvent("Menu", "Preferences", "", 1);
 			final Intent prefs = new Intent(context, PrefsActivity.class);
 			context.startActivity(prefs);
 			return true;
 		}
 		case R.id.menu_closeststops: {
-			Globals.tracker.trackEvent("Menu", "Closest stops", "", 1);
+			GRTApplication.tracker.trackEvent("Menu", "Closest stops", "", 1);
 			final Intent stops = new Intent(context, ClosestStopsActivity.class);
 			context.startActivity(stops);
 			return true;
 		}
 		case R.id.menu_about: {
-			Globals.tracker.trackEvent("Menu", "Show about", "", 1);
+			GRTApplication.tracker.trackEvent("Menu", "Show about", "", 1);
 			final View messageView = context.getLayoutInflater().inflate(R.layout.about, null, false);
 			final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setIcon(R.drawable.grticon);

@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.os.StrictMode;
 
 /**
@@ -35,8 +36,8 @@ public class APIReflectionWrapper {
 
 	public static class API8 {
 
-		public static String getDBPath(Activity context) {
-			return context.getExternalFilesDir(null).getPath();
+		public static String getDBPath(Context mContext) {
+			return mContext.getExternalFilesDir(null).getPath();
 		}
 	}
 

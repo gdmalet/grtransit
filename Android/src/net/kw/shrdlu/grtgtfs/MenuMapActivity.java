@@ -62,7 +62,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		super.onCreate(savedInstanceState);
 
 		// Make sure we get the correct API key to match the build key.
-		if (Globals.isDebugBuild == true) {
+		if (GRTApplication.isDebugBuild == true) {
 			setContentView(R.layout.mapview_debug);
 		} else {
 			setContentView(R.layout.mapview);
@@ -98,11 +98,11 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		super.onResume();
 		// We want to track a pageView every time this activity gets the focus - but if the activity was
 		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
-		if (Globals.tracker == null) {
+		if (GRTApplication.tracker == null) {
 			Log.e(TAG, "null tracker!");
 			startActivity(new Intent(this, FavstopsActivity.class));
 		} else {
-			Globals.tracker.trackPageView("/" + this.getLocalClassName());
+			GRTApplication.tracker.trackPageView("/" + this.getLocalClassName());
 		}
 
 		mMylocation.enableMyLocation();
@@ -144,7 +144,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_showmap: {
-			Globals.tracker.trackEvent("Menu", "My location", "", 1);
+			GRTApplication.tracker.trackEvent("Menu", "My location", "", 1);
 			// Center the map over the current location
 			GeoPoint locn = mMylocation.getMyLocation();
 			if (locn == null) {

@@ -62,7 +62,7 @@ public class RouteselectActivity extends MenuListActivity {
 			return;
 		}
 
-		Globals.tracker.trackEvent("Routes", "Select route", route_id + " - " + headsign, 1);
+		GRTApplication.tracker.trackEvent("Routes", "Select route", route_id + " - " + headsign, 1);
 
 		final Intent bustimes = new Intent(mContext, TimesActivity.class);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -89,7 +89,7 @@ public class RouteselectActivity extends MenuListActivity {
 					// Catch a fling sort of from right to left
 					if (velocityX < -100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 						// Log.d(TAG, "left fling detected");
-						Globals.tracker.trackEvent("RoutesSelect", "fling left", mStopid, 1);
+						GRTApplication.tracker.trackEvent("RoutesSelect", "fling left", mStopid, 1);
 						final Intent bustimes = new Intent(mContext, TimesActivity.class);
 						final String pkgstr = mContext.getApplicationContext().getPackageName();
 						bustimes.putExtra(pkgstr + ".stop_id", mStopid);
@@ -97,7 +97,7 @@ public class RouteselectActivity extends MenuListActivity {
 						return true;
 					} else if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 						// Log.d(TAG, "right fling detected");
-						Globals.tracker.trackEvent("RouteSelect", "fling right", "", 1);
+						GRTApplication.tracker.trackEvent("RouteSelect", "fling right", "", 1);
 						finish();
 						return true;
 					}
@@ -109,7 +109,7 @@ public class RouteselectActivity extends MenuListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_showmap: {
-			Globals.tracker.trackEvent("Menu", "Show stop", mStopid, 1);
+			GRTApplication.tracker.trackEvent("Menu", "Show stop", mStopid, 1);
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busstop = new Intent(mContext, StopsActivity.class);
 			busstop.putExtra(pkgstr + ".stop_id", mStopid);

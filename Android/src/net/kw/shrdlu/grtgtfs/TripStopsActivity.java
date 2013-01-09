@@ -152,7 +152,7 @@ public class TripStopsActivity extends MenuListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_showmap: {
-			Globals.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
+			GRTApplication.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
 			// Perform action on click
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busroutes = new Intent(mContext, RouteActivity.class);
@@ -185,7 +185,7 @@ public class TripStopsActivity extends MenuListActivity {
 					// Catch a fling sort of from left to right
 					if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 						// Log.d(TAG, "fling detected");
-						Globals.tracker.trackEvent("TripStops", "fling right", "", 1);
+						GRTApplication.tracker.trackEvent("TripStops", "fling right", "", 1);
 						finish();
 						return true;
 					}
@@ -209,7 +209,7 @@ public class TripStopsActivity extends MenuListActivity {
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
-					Globals.mPreferences.AddBusstopFavourite(stop_id, stop_name);
+					GRTApplication.mPreferences.AddBusstopFavourite(stop_id, stop_name);
 					// mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
 				// case DialogInterface.BUTTON_NEGATIVE:

@@ -44,12 +44,6 @@ public class FavstopsActivity extends MenuListActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// Do this before instantiating Globals, as that may do something we'd like
-		// to see by having StrictMode on already.
-		if (Globals.CheckDebugBuild(this) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD /* 9 */) {
-			APIReflectionWrapper.API9.setStrictMode();
-		}
-
 		mContext = this;
 		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
@@ -76,7 +70,7 @@ public class FavstopsActivity extends MenuListActivity {
 	protected void ProcessStops() {
 
 		mDetails = new ArrayList<String[]>();
-		final ArrayList<String[]> favstops = Globals.mPreferences.GetBusstopFavourites();
+		final ArrayList<String[]> favstops = GRTApplication.mPreferences.GetBusstopFavourites();
 		// Convert from stop/description to required 4-entry layout.
 		synchronized (mDetails) {
 			for (final String[] stop : favstops) {
@@ -136,8 +130,8 @@ public class FavstopsActivity extends MenuListActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Globals.tracker.dispatch(); // perhaps unnecessary?
-		Globals.tracker.stopSession();
+		GRTApplication.tracker.dispatch(); // perhaps unnecessary?
+		GRTApplication.tracker.stopSession();
 	}
 
 	// Called from the listener above for a long click
@@ -157,7 +151,7 @@ public class FavstopsActivity extends MenuListActivity {
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
-					Globals.mPreferences.RemoveBusstopFavourite(mStopid);
+					GRTApplication.mPreferences.RemoveBusstopFavourite(mStopid);
 					synchronized (mDetails) {
 						mDetails.remove(aryposn);
 					}
@@ -191,7 +185,7 @@ public class FavstopsActivity extends MenuListActivity {
 		mStopid = strs[0];
 		final String stop_name = strs[1];
 
-		Globals.tracker.trackEvent("Favourites", "Select stop", mStopid, 1);
+		GRTApplication.tracker.trackEvent("Favourites", "Select stop", mStopid, 1);
 
 		final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();

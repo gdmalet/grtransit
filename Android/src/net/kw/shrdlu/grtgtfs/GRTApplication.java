@@ -19,21 +19,24 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.os.Build;
 import android.util.Log;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
-public class Globals {
-	public static final String TAG = "Globals";
+public class GRTApplication extends android.app.Application {
+	public static final String TAG = "GRTApplication";
+
 	public static GoogleAnalyticsTracker tracker = null;
 	public static Preferences mPreferences = null;
 	public static DatabaseHelper dbHelper = null;
 	public static boolean isDebugBuild = false;
+
+	private Context mContext;
 
 	// Define the debug signature hash (Android default debug cert). Code from sigs[i].hashCode()
 	protected final static int DEBUG_SIGNATURE_HASH = -1270195494;
@@ -47,29 +50,42 @@ public class Globals {
 
 	// private static final int TRACKER_CV_SCREEN_ORIENTATION_SLOT = 3;
 
-	public Globals(Activity context) {
-		isDebugBuild = CheckDebugBuild(context);
-		mPreferences = new Preferences(context);
-		dbHelper = new DatabaseHelper(context);
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		// Log.d(TAG, "onCreate");
+
+		mContext = this; // also returned by getApplicationContext();
+
+		isDebugBuild = CheckDebugBuild();
+
+		// Do this before instantiating Globals, as that may do something we'd like
+		// to see by having StrictMode on already.
+		if (isDebugBuild && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD /* 9 */) {
+			APIReflectionWrapper.API9.setStrictMode();
+		}
+
+		mPreferences = new Preferences(mContext);
+		dbHelper = new DatabaseHelper(mContext);
 
 		tracker = GoogleAnalyticsTracker.getInstance();
 		if (isDebugBuild) {
 			tracker.setDebug(true);
 			tracker.setDryRun(true);
-			tracker.startNewSession(context.getString(R.string.ga_api_key), 1, context);
+			tracker.startNewSession(getString(R.string.ga_api_key), 1, mContext);
 		} else {
 			tracker.setDebug(false);
 			tracker.setDryRun(false);
-			tracker.startNewSession(context.getString(R.string.ga_api_key), 420, context);
+			tracker.startNewSession(getString(R.string.ga_api_key), 420, mContext);
 		}
 
 		tracker.setCustomVar(TRACKER_UUID, // Slot
 				"UUID", // Name
-				Globals.mPreferences.getUUID(), // Value
+				GRTApplication.mPreferences.getUUID(), // Value
 				TRACKER_VISITOR_SCOPE); // Scope
 
 		try {
-			String v = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+			String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 			if (isDebugBuild) {
 				v += " debug";
 			}
@@ -84,11 +100,10 @@ public class Globals {
 	// See http://stackoverflow.com/questions/3029819/android-automatically-choose-debug-release-maps-api-key/3828864#3828864
 	private static boolean checkedBuild = false;
 
-	public static boolean CheckDebugBuild(Context context) {
+	private boolean CheckDebugBuild() {
 		if (!checkedBuild) {
 			try {
-				final Signature[] sigs = context.getPackageManager().getPackageInfo(context.getPackageName(),
-						PackageManager.GET_SIGNATURES).signatures;
+				final Signature[] sigs = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES).signatures;
 				for (final Signature sig : sigs) {
 					if (sig.hashCode() == DEBUG_SIGNATURE_HASH) {
 						Log.d(TAG, "This is a debug build!");

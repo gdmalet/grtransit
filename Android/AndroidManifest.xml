@@ -18,6 +18,7 @@
     <!-- android:uiOptions="splitActionBarWhenNarrow" -->
 
     <application
+        android:name=".GRTApplication"
         android:description="@string/app_name"
         android:icon="@drawable/grticon"
         android:label="@string/app_short_name"

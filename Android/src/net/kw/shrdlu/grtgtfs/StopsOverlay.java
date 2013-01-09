@@ -214,14 +214,14 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 
 		if (longpress == true) {
 
-			Globals.tracker.trackEvent("Map longclick", "Stop", mStopid, 1);
+			GRTApplication.tracker.trackEvent("Map longclick", "Stop", mStopid, 1);
 
 			final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int id) {
 					switch (id) {
 					case DialogInterface.BUTTON_POSITIVE:
-						Globals.mPreferences.AddBusstopFavourite(mStopid, stopname);
+						GRTApplication.mPreferences.AddBusstopFavourite(mStopid, stopname);
 						break;
 					// case DialogInterface.BUTTON_NEGATIVE:
 					// // nothing
@@ -235,7 +235,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			builder.setTitle("Stop " + mStopid + ", " + stopname).setMessage("Add to your list of favourites?")
 					.setPositiveButton("Yes", listener).setNegativeButton("No", listener).create().show();
 		} else {
-			Globals.tracker.trackEvent("Map click", "Stop", mStopid, 1);
+			GRTApplication.tracker.trackEvent("Map click", "Stop", mStopid, 1);
 			// Show route select activity
 			final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
 			final String pkgstr = mContext.getApplicationContext().getPackageName();

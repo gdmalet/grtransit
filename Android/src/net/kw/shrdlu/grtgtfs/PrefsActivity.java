@@ -38,6 +38,6 @@ public class PrefsActivity extends PreferenceActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Globals.tracker.trackPageView("/" + this.getLocalClassName());
+		GRTApplication.tracker.trackPageView("/" + this.getLocalClassName());
 	}
 }

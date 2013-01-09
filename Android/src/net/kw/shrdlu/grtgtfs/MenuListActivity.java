@@ -20,8 +20,10 @@
 package net.kw.shrdlu.grtgtfs;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,9 +37,6 @@ import android.widget.TextView;
 public class MenuListActivity extends ListActivity implements AnimationListener {
 	private static final String TAG = "MenuListActivity";
 
-	// Need one instance of this
-	protected static Globals mGlobals = null;
-
 	protected ListActivity mContext;
 	protected ProgressBar mProgress;
 	protected Animation mSlideIn, mSlideOut;
@@ -47,10 +46,6 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		if (mGlobals == null) {
-			mGlobals = new Globals(mContext);
-		}
 
 		mProgress = (ProgressBar) findViewById(R.id.progress);
 		mTitle = (TextView) findViewById(R.id.listtitle);
@@ -68,8 +63,14 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// Log.v(TAG, "localclassname is " + getLocalClassName());
-		Globals.tracker.trackPageView("/" + getLocalClassName());
+		// We want to track a pageView every time this activity gets the focus - but if the activity was
+		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
+		if (GRTApplication.tracker == null) {
+			Log.e(TAG, "null tracker!");
+			startActivity(new Intent(this, FavstopsActivity.class));
+		} else {
+			GRTApplication.tracker.trackPageView("/" + this.getLocalClassName());
+		}
 	}
 
 	// Called when a button is clicked on the title bar

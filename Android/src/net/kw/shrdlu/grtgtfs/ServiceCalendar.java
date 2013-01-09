@@ -313,7 +313,7 @@ public class ServiceCalendar {
 			newtime = time;
 		}
 
-		if (!Globals.mPreferences.showAMPMTimes()) {
+		if (!GRTApplication.mPreferences.showAMPMTimes()) {
 			return newtime.replaceFirst(":", "h");
 		}
 

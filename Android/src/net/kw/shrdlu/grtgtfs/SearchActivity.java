@@ -102,12 +102,12 @@ public class SearchActivity extends MenuListActivity {
 
 		switch (v.getId()) {
 		case R.id.button_searchstops: {
-			Globals.tracker.trackEvent("Button", "Search stops", "", 1);
+			GRTApplication.tracker.trackEvent("Button", "Search stops", "", 1);
 			DoSearch(v.getId(), intent);
 			return;
 		}
 		case R.id.button_searchroutes: {
-			Globals.tracker.trackEvent("Button", "Search routes", "", 1);
+			GRTApplication.tracker.trackEvent("Button", "Search routes", "", 1);
 			DoSearch(v.getId(), intent);
 			return;
 		}
@@ -211,7 +211,7 @@ public class SearchActivity extends MenuListActivity {
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
-					Globals.mPreferences.AddBusstopFavourite(stop_id, stop_name);
+					GRTApplication.mPreferences.AddBusstopFavourite(stop_id, stop_name);
 					// mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
 				// case DialogInterface.BUTTON_NEGATIVE:

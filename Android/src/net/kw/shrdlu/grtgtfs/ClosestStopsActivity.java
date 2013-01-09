@@ -320,7 +320,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
-					Globals.mPreferences.AddBusstopFavourite(stop_id, stop_name);
+					GRTApplication.mPreferences.AddBusstopFavourite(stop_id, stop_name);
 					break;
 				}
 				dialog.cancel();

@@ -27,8 +27,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.Semaphore;
 
-import android.app.Activity;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,7 +44,7 @@ public class DatabaseHelper {
 	private static String DB_PATH = null;
 	private static final int DB_VERSION = 15; /* As of 6th January 2013 */
 	private static final String DB_NAME = "GRT.db";
-	private static Activity mContext;
+	private static Context mContext;
 	private static boolean mMustCopy = false;
 	private static SQLiteDatabase DB = null;
 	private static final Semaphore mDBisOpen = new Semaphore(1);
@@ -54,7 +54,7 @@ public class DatabaseHelper {
 	 * 
 	 * @param context
 	 */
-	public DatabaseHelper(Activity context) {
+	public DatabaseHelper(Context context) {
 		mContext = context;
 		final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
 		final String BAD_DB_PATH = "/sdcard/data/Android/" + mContext.getApplicationContext().getPackageName();

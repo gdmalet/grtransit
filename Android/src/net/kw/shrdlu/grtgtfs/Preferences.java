@@ -97,7 +97,7 @@ public class Preferences {
 			Toast.makeText(mContext, "Stop " + busstop + " was added to your favourites.", Toast.LENGTH_LONG).show();
 			;
 		}
-		Globals.tracker.trackEvent("Favourites", "Add stop", busstop, 1);
+		GRTApplication.tracker.trackEvent("Favourites", "Add stop", busstop, 1);
 	}
 
 	public void RemoveBusstopFavourite(String busstop) {
@@ -114,7 +114,7 @@ public class Preferences {
 		prefs.edit().putString(FAVSTOPS_KEY, newfavs).remove(FAVSTOPS_KEY + "-" + busstop).commit();
 		Toast.makeText(mContext, "Stop " + busstop + " was removed from your favourites.", Toast.LENGTH_LONG).show();
 
-		Globals.tracker.trackEvent("Favourites", "Remove stop", busstop, 1);
+		GRTApplication.tracker.trackEvent("Favourites", "Remove stop", busstop, 1);
 	}
 
 	public ArrayList<String[]> GetBusstopFavourites() {

@@ -118,14 +118,14 @@ public class TimesActivity extends MenuListActivity {
 			if (mRoute_id == null) {
 				// showing all routes
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, datenow,
-						!Globals.mPreferences.getShowAllBusses(), this);
+						!GRTApplication.mPreferences.getShowAllBusses(), this);
 			} else {
 
 				// TODO Setting a listener means not passing `this'
 
 				// showing just one route
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, mRoute_id, mHeadsign, datenow,
-						!Globals.mPreferences.getShowAllBusses(), this);
+						!GRTApplication.mPreferences.getShowAllBusses(), this);
 			}
 
 			// Find when the next bus leaves
@@ -280,7 +280,7 @@ public class TimesActivity extends MenuListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_showmap: {
-			Globals.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
+			GRTApplication.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
 			// Perform action on click
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busroutes = new Intent(mContext, RouteActivity.class);
@@ -313,7 +313,7 @@ public class TimesActivity extends MenuListActivity {
 					// Catch a fling sort of from left to right
 					if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 						// Log.d(TAG, "fling detected");
-						Globals.tracker.trackEvent("Times", "fling left", "", 1);
+						GRTApplication.tracker.trackEvent("Times", "fling left", "", 1);
 						finish();
 						return true;
 					}
