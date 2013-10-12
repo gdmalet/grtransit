@@ -120,9 +120,10 @@ public class RouteActivity extends MenuMapActivity {
 				final Time t = new Time(); // TODO - this duplicates BusTimes?
 				t.setToNow();
 				final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
-				final String qry = "select distinct route_id, trip_headsign from trips"
-						+ " join calendar on trips.service_id = calendar.service_id where "
-						+ " trip_id in (select trip_id from stop_times where stop_id = ?) and "
+				final String qry = "select distinct routes.route_short_name, trip_headsign from trips"
+						+ " join routes on routes.trip_id = trips.route_id"
+						+ " join calendar on trips.service_id = calendar.service_id where"
+						+ " trip_id in (select trip_id from stop_times where stop_id = ?) and"
 						+ " start_date <= ? and end_date >= ?";
 				final String[] selectargs = new String[] { mStop_id, datenow, datenow };
 				final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
@@ -173,6 +174,7 @@ public class RouteActivity extends MenuMapActivity {
 			mDetailArea.startAnimation(mSlideOut);
 
 			if (mRoute_id != null) { // doing one route
+				// TODO should be route_short_name?
 				mTitle.setText("Rt " + mRoute_id + " - " + mHeadsign);
 			} else {
 				mTitle.setText("Routes using stop " + mStop_id);

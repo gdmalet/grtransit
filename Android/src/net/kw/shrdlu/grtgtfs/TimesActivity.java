@@ -174,6 +174,7 @@ public class TimesActivity extends MenuListActivity {
 				final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
 				mContext.setListAdapter(adapter);
 			} else {
+				// TODO should be route_short_name?
 				mTitle.setText(mRoute_id + " - " + mHeadsign);
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_trip);

@@ -175,8 +175,9 @@ public class ServiceCalendar {
 	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String date, boolean limittotoday,
 			NotificationCallback task) {
 
-		final String q = "select departure_time as _id, trips.trip_id, route_id, trip_headsign from stop_times "
-				+ "join trips on stop_times.trip_id = trips.trip_id where " + "stop_id = ? order by departure_time";
+		final String q = "select departure_time as _id, trips.trip_id, routes.route_short_name, trip_headsign from stop_times "
+				+ "join trips on stop_times.trip_id = trips.trip_id " + "join routes on routes.route_id = trips.route_id  "
+				+ "where stop_id = ? order by departure_time";
 		final String[] selectargs = new String[] { stopid };
 		final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
 

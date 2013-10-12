@@ -149,7 +149,8 @@ public class RouteselectActivity extends MenuListActivity {
 			final Time t = new Time(); // TODO - this duplicates BusTimes?
 			t.setToNow();
 			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
-			final String qry = "select distinct route_id as _id, trip_headsign as descr from trips"
+			final String qry = "select distinct routes.route_short_name as _id, trip_headsign as descr from trips"
+					+ " join routes on routes.route_id = trips.route_id"
 					+ " join calendar on trips.service_id = calendar.service_id where "
 					+ " trip_id in (select trip_id from stop_times where stop_id = ?) and "
 					+ " start_date <= ? and end_date >= ?";

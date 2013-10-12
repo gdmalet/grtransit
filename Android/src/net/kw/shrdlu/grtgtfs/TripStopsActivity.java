@@ -121,6 +121,7 @@ public class TripStopsActivity extends MenuListActivity {
 			mProgress.setVisibility(View.INVISIBLE);
 			mListDetail.startAnimation(mSlideOut);
 
+			// TODO should be route_short_name?
 			mTitle.setText("Stops on route " + mRoute_id + ": " + mHeadsign);
 
 			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.timestopdesc, mCsr);

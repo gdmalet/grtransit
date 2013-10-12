@@ -261,11 +261,11 @@ public class SearchActivity extends MenuListActivity {
 			// TODO Need to deal with search for `7A', where the 7 is the route_id,
 			// and the A is the start of the trip_headsign.
 
-			final String table = "trips";
-			final String[] columns = { "distinct route_id as _id", "trip_headsign as descr" };
-			final String whereclause = "route_id like '%' || ? || '%' or trip_headsign like '%' || ? || '%'";
+			final String table = "trips join routes on routes.route_id = trips.route_id";
+			final String[] columns = { "distinct routes.route_short_name as _id", "trip_headsign as descr" };
+			final String whereclause = "routes.route_short_name like '%' || ? || '%' or trip_headsign like '%' || ? || '%'";
 			final String[] selectargs = { mQuery, mQuery };
-			final String orderby = "cast(route_id as integer)";
+			final String orderby = "cast(routes.route_short_name as integer)";
 			mCsr = DatabaseHelper.ReadableDB().query(table, columns, whereclause, selectargs, null, null, orderby, null);
 			startManagingCursor(mCsr);
 
