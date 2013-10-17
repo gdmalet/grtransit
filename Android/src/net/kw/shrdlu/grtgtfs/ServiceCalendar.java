@@ -175,7 +175,7 @@ public class ServiceCalendar {
 	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String date, boolean limittotoday,
 			NotificationCallback task) {
 
-		final String q = "select departure_time as _id, trips.trip_id, routes.route_short_name, trip_headsign from stop_times "
+		final String q = "select distinct departure_time as _id, trips.trip_id, routes.route_short_name, trip_headsign from stop_times "
 				+ "join trips on stop_times.trip_id = trips.trip_id " + "join routes on routes.route_id = trips.route_id  "
 				+ "where stop_id = ? order by departure_time";
 		final String[] selectargs = new String[] { stopid };
@@ -213,7 +213,7 @@ public class ServiceCalendar {
 	public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String routeid, String headsign, String date,
 			boolean limittotoday, NotificationCallback task) {
 
-		final String q = "select departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
+		final String q = "select distinct departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
 				+ "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
 		final String[] selectargs = new String[] { stopid, routeid, headsign };
 		final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
@@ -325,7 +325,7 @@ public class ServiceCalendar {
 			int hours;
 			try {
 				hours = Integer.parseInt(newtime.substring(i - 2, i));
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				Log.d(TAG, "NumberFormatException: " + e.getMessage() + ", for time `" + newtime + "'");
 				return newtime;
 			}
@@ -346,7 +346,7 @@ public class ServiceCalendar {
 			}
 
 			// Reformat to drop leading zero, add prefix
-			int where = newtime.indexOf(" ", i); // to put the suffix
+			final int where = newtime.indexOf(" ", i); // to put the suffix
 			if (where > 0) {
 				newtime = String.format("%s%d%s%s%s", newtime.subSequence(0, i - 2), hours, newtime.substring(i, where),
 						prefix, newtime.substring(where));
