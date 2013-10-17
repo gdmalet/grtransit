@@ -22,15 +22,17 @@ package net.kw.shrdlu.grtgtfs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 /*
  *  Called when a button is clicked on the title bar.
  */
 public class TitlebarClick {
-	private static final String TAG = "TitlebarClick";
-
 	public static void onTitlebarClick(Activity context, View v) {
 		switch (v.getId()) {
 		case R.id.titlelogo: {
@@ -99,7 +101,27 @@ public class TitlebarClick {
 		}
 		case R.id.menu_about: {
 			GRTApplication.tracker.trackEvent("Menu", "Show about", "", 1);
+
+			// Show the about screen
+			String versionName = "unknown";
+			int versionCode = 0;
+			final int dbVersion = DatabaseHelper.DB_VERSION;
+
+			try {
+				final String pn = context.getPackageName();
+				final PackageManager pm = context.getPackageManager();
+				final PackageInfo pi = pm.getPackageInfo(pn, 0);
+				versionCode = pi.versionCode;
+				versionName = pi.versionName;
+			} catch (final NameNotFoundException e) {
+				e.printStackTrace();
+			}
+
 			final View messageView = context.getLayoutInflater().inflate(R.layout.about, null, false);
+			final String credits = context.getString(R.string.app_credits, versionName, versionCode, dbVersion);
+			final TextView cv = (TextView) messageView.findViewById(R.id.about_credits);
+			cv.setText(credits);
+
 			final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setIcon(R.drawable.grticon);
 			builder.setTitle(R.string.app_name);

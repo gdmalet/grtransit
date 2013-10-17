@@ -4,7 +4,7 @@
     <string name="about">About</string>
     <string name="ampmtimes">Show times as am/pm</string>
     <string name="app_description">Grand River Transit details for the Region of Waterloo, Ontario, Canada.\n\nAll data for this application is freely available in Google GTFS format from http://www.grt.ca</string>
-    <string name="app_credits">Author: Giles Malet\ngdmalet+GRTransit@gmail.com</string>
+    <string name="app_credits">Version: %1$s (internal %2$d), DB %3$d\n\nAuthor: Giles Malet\ngdmalet+GRTransit@gmail.com</string>
     <string name="app_name">Grand River Transit</string>
     <string name="app_short_name">GRTransit</string>
     <string name="button_routes">Routes</string>
