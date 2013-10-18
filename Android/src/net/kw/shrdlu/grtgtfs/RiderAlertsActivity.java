@@ -28,21 +28,31 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -51,14 +61,19 @@ public class RiderAlertsActivity extends MenuListActivity {
 	private static final String TAG = "RiderAlertsActivity";
 
 	// The search string to get recent tweets from GRT Rider Alerts
-	private final String TwitterURL = "http://api.twitter.com/1/statuses/user_timeline.json";
-	private final String TwitterQry = "?screen_name=GRT_ROW&count=20&include_entities=false&trim_user=true";
+	private final String TwitterURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
+	private final String TwitterQry = "?screen_name=GRT_ROW&count=20&trim_user=true";
+
+	private final String TwitterOauth = "https://api.twitter.com/oauth2/token";
+	private static String AccessToken = null;
 
 	private ListArrayAdapter mAdapter;
 	private ArrayList<String[]> mListDetails;
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		mContext = this;
 		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
@@ -89,9 +104,58 @@ public class RiderAlertsActivity extends MenuListActivity {
 		@Override
 		protected Void doInBackground(Void... foo) {
 
+			if (AccessToken == null) {
+				String ConsumerKeyEnc, ConsumerSecretEnc, BearerToken, BearerToken64;
+				ConsumerKeyEnc = Uri.encode(TwitterCredentials.ConsumerKey);
+				ConsumerSecretEnc = Uri.encode(TwitterCredentials.ConsumerSecret);
+				BearerToken = ConsumerKeyEnc + ":" + ConsumerSecretEnc;
+				BearerToken64 = Base64.encodeToString(BearerToken.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+
+				// Get the Twitter OAuth token
+				final HttpClient httpclient = new DefaultHttpClient();
+				final HttpPost httppost = new HttpPost(TwitterOauth);
+				httppost.setHeader("Authorization", "Basic " + BearerToken64);
+
+				publishProgress(15); // fake it
+
+				try {
+					final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+					nameValuePairs.add(new BasicNameValuePair("grant_type", "client_credentials"));
+					final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+					entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+					httppost.setEntity(entity);
+
+					// Execute HTTP Post Request
+					final HttpResponse response = httpclient.execute(httppost);
+
+					final StatusLine statusLine = response.getStatusLine();
+					final int statusCode = statusLine.getStatusCode();
+					if (statusCode == 200) {
+						final HttpEntity responseEntity = response.getEntity();
+						final String s = EntityUtils.toString(responseEntity);
+						final JSONObject object = (JSONObject) new JSONTokener(s).nextValue();
+						final String type = object.getString("token_type");
+						final String token = object.getString("access_token");
+
+						if (type.contentEquals("bearer") && !token.isEmpty()) {
+							AccessToken = token;	// stash it
+						}
+					}
+				} catch (final ClientProtocolException e) {
+					// TODO Auto-generated catch block
+				} catch (final IOException e) {
+					// TODO Auto-generated catch block
+				} catch (final JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
 			publishProgress(25); // fake it
-			mListDetails = readTwitterFeed();
-			publishProgress(75); // fake it
+			if (AccessToken != null) {
+				mListDetails = readTwitterFeed();
+			}
+			publishProgress(90); // fake it
 
 			return null;
 		}
@@ -121,38 +185,41 @@ public class RiderAlertsActivity extends MenuListActivity {
 	 * Get the latest twitter info. Some of this copied from http://www.vogella.com/articles/AndroidJSON/article.html
 	 */
 	public ArrayList<String[]> readTwitterFeed() {
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(TwitterURL + TwitterQry);
+		final StringBuilder builder = new StringBuilder();
+		final HttpClient client = new DefaultHttpClient();
+		final HttpGet httpGet = new HttpGet(TwitterURL + TwitterQry);
+		httpGet.setHeader("Authorization", "Bearer " + AccessToken);
+
 		try {
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
+			final HttpResponse response = client.execute(httpGet);
+
+			final StatusLine statusLine = response.getStatusLine();
+			final int statusCode = statusLine.getStatusCode();
 			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+				final HttpEntity entity = response.getEntity();
+				final InputStream content = entity.getContent();
+				final BufferedReader reader = new BufferedReader(new InputStreamReader(content));
 				String line;
 				while ((line = reader.readLine()) != null) {
 					builder.append(line);
 				}
 
 				// Result is an array of tweets
-				JSONArray arr = (JSONArray) new JSONTokener(builder.toString()).nextValue();
+				final JSONArray arr = (JSONArray) new JSONTokener(builder.toString()).nextValue();
 
-				ArrayList<String[]> tweets = new ArrayList<String[]>();
+				final ArrayList<String[]> tweets = new ArrayList<String[]>();
 
 				// Need to grok dates of form "created_at": "Thu, 15 Nov 2012 18:27:17 +0000"
-				SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+				final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
 				dateFormat.setLenient(true);
 
 				for (int i = 0; i < arr.length(); i++) {
-					String text = new String(arr.getJSONObject(i).get("text").toString());
+					final String text = new String(arr.getJSONObject(i).get("text").toString());
 					String tweettime = new String(arr.getJSONObject(i).get("created_at").toString());
 
 					// Extract & reformat the date
 					Date created = null;
-					GregorianCalendar cal = new GregorianCalendar();
+					final GregorianCalendar cal = new GregorianCalendar();
 					try {
 						created = dateFormat.parse(tweettime);
 						cal.setTime(created);
@@ -168,18 +235,11 @@ public class RiderAlertsActivity extends MenuListActivity {
 							day = sdf.format(new Date());
 							sdf = new SimpleDateFormat("MMM", Locale.getDefault());
 							mon = sdf.format(new Date());
-
-							// final String[] Days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-							// "Saturday" };
-							// final String[] Months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
-							// "Nov", "Dec" };
-							// day = Days[Calendar.DAY_OF_WEEK];
-							// mon = Months[Calendar.MONTH];
 						}
 						tweettime = String.format("%s %02d:%02d - %s %d", day, cal.get(Calendar.HOUR_OF_DAY),
 								cal.get(Calendar.MINUTE), mon, cal.get(Calendar.DAY_OF_MONTH));
 
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						Log.d(TAG, "Exception: " + e.getMessage() + ", parsing tweet date `" + tweettime + "'");
 						tweettime = "--:--";
 					}
@@ -192,11 +252,11 @@ public class RiderAlertsActivity extends MenuListActivity {
 			} else {
 				Log.d(TAG, "Failed to download twitter info");
 			}
-		} catch (ClientProtocolException e) {
+		} catch (final ClientProtocolException e) {
 			Log.d(TAG, "ClientProtocolException: " + e.getMessage() + ", Failed to download twitter info");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			Log.d(TAG, "IOException: " + e.getMessage() + ", Failed to download twitter info");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			Log.d(TAG, "Exception: " + e.getMessage() + ", Failed to download twitter info");
 		}
 

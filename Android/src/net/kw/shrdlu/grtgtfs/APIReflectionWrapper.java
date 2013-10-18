@@ -19,6 +19,7 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -37,7 +38,12 @@ public class APIReflectionWrapper {
 	public static class API8 {
 
 		public static String getDBPath(Context mContext) {
-			return mContext.getExternalFilesDir(null).getPath();
+			final File f = mContext.getExternalFilesDir(null);
+			if (f != null) {
+				return f.getPath();
+			} else {
+				return null;
+			}
 		}
 	}
 

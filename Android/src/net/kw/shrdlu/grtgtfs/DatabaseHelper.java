@@ -83,6 +83,9 @@ public class DatabaseHelper {
 			DB_PATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/"
 					+ mContext.getApplicationContext().getPackageName();
 		}
+		if (DB_PATH == null) {
+			DB_PATH = DB_OLD_PATH;
+		}
 
 		final File f = new File(DB_PATH);
 		if (!f.exists() && !f.mkdirs()) {
