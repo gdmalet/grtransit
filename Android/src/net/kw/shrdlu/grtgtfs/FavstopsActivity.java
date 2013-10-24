@@ -50,8 +50,8 @@ public class FavstopsActivity extends MenuListActivity {
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
 			// Switch title bar icon to the one without the < hint.
-			Button logo = (Button) findViewById(R.id.titlelogo);
-			Drawable d = getResources().getDrawable(R.drawable.grticon_nohome);
+			final Button logo = (Button) findViewById(R.id.titlelogo);
+			final Drawable d = getResources().getDrawable(R.drawable.grticon_nohome);
 			logo.setClickable(false);
 			logo.setBackgroundDrawable(d);
 		}
@@ -158,9 +158,9 @@ public class FavstopsActivity extends MenuListActivity {
 					// activities in the stack may contain out of date lists, so flush and start again.
 					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
-				// case DialogInterface.BUTTON_NEGATIVE:
-				// // nothing
-				// break;
+					// case DialogInterface.BUTTON_NEGATIVE:
+					// // nothing
+					// break;
 				}
 				dialog.cancel();
 			}
@@ -168,8 +168,8 @@ public class FavstopsActivity extends MenuListActivity {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("Stop " + mStopid + ", " + stop_name);
-		builder.setMessage("Remove from your list of favourites?").setPositiveButton("Yes", listener)
-				.setNegativeButton("No", listener);
+		builder.setMessage(R.string.favs_remove_from_list).setPositiveButton(R.string.yes, listener)
+		.setNegativeButton(R.string.no, listener);
 		builder.create();
 		builder.show();
 	}

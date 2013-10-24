@@ -10,11 +10,16 @@
     <string name="button_routes">Routes</string>
     <string name="button_stops">Stops</string>
     <string name="calendar_expired">There is no current schedule data on your system, perhaps because it expired. Please update your app!</string>
+    <string name="cancel">Cancel</string>
+    <string name="favs_add_to_list">Add to your list of favourites?</string>
+    <string name="favs_remove_from_list">Remove from your list of favourites?</string>
+    <string name="favs_reorder_item">Reorder in your list?</string>
     <string name="closest_stops">Closest stops</string>
     <string name="find_route">Find a route</string>
     <string name="find_stop">Find a stop</string>
     <string name="ga_api_key">UA-27006918-1</string>
     <string name="last_location_fix">No recent location fix, using previous</string>
+    <string name="legal_notices">Legal notices:</string>
     <string name="loading_routes">Loading the bus routes…</string>
     <string name="loading_stops">Loading the bus stops…</string>
     <string name="loading_times">Loading the bus times…</string>
@@ -22,6 +27,7 @@
     <string name="longpress_removes_stop">Search to add stops, long press to remove.</string>
     <string name="menu_settings">Settings</string>
     <string name="mylocation">My location</string>
+    <string name="no">No</string>
     <string name="no_favourites">Use the search facility from the menu to find stops, or locate them on the map, and long-press to add them to your favourites list. Then a click shows all routes using that stop, and another shows the times.\n\nTo remove a favourite, long-press on the favourites list.</string>
     <string name="no_location_fix">No usable location fix! Searching....</string>
     <string name="no_more_busses">No more busses today.</string>
@@ -43,8 +49,8 @@
     <string name="title_rider_alerts">GRT Rider Alerts</string>
     <string name="title_search">Search bus stops or routes</string>
     <string name="twitter_fetch_failed">Failed to contact Twitter - make sure you have an Internet connection.</string>
-    <string name="twitter_fetch_nothing">Twitter returned nothing (there are no recent @GRTRiderAlerts).</string>
+    <string name="twitter_fetch_nothing">Twitter returned nothing (there are no recent tweets).</string>
     <string name="twitter_querying_feed">Querying @GRT_ROW...</string>
-    <string name="legal_notices">Legal notices:</string>
+    <string name="yes">Yes</string>
 
 </resources>

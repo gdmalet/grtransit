@@ -54,7 +54,7 @@ public class SearchActivity extends MenuListActivity {
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
 			// Remove search option from the fake actionbar.
-			Button search = (Button) findViewById(R.id.button_search);
+			final Button search = (Button) findViewById(R.id.button_search);
 			if (search != null) {
 				search.setClickable(false);
 				search.setVisibility(View.GONE);
@@ -214,9 +214,9 @@ public class SearchActivity extends MenuListActivity {
 					GRTApplication.mPreferences.AddBusstopFavourite(stop_id, stop_name);
 					// mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
-				// case DialogInterface.BUTTON_NEGATIVE:
-				// // nothing
-				// break;
+					// case DialogInterface.BUTTON_NEGATIVE:
+					// // nothing
+					// break;
 				}
 				dialog.cancel();
 			}
@@ -224,8 +224,8 @@ public class SearchActivity extends MenuListActivity {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("Stop " + stop_id + ", " + stop_name);
-		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener)
-				.setNegativeButton("No", listener).create().show();
+		builder.setMessage(R.string.favs_add_to_list).setPositiveButton(R.string.yes, listener)
+		.setNegativeButton(R.string.no, listener).create().show();
 	}
 
 	private class FindStops extends AsyncTask<Void, Void, Void> {
@@ -247,7 +247,7 @@ public class SearchActivity extends MenuListActivity {
 		@Override
 		protected void onPostExecute(Void foo) {
 			mTitle.setText("Stops matching `" + mQuery + "'");
-			ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesc, mCsr);
+			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesc, mCsr);
 			setListAdapter(adapter);
 			// adapter.notifyDataSetChanged();
 		}
@@ -275,7 +275,7 @@ public class SearchActivity extends MenuListActivity {
 		@Override
 		protected void onPostExecute(Void foo) {
 			mTitle.setText("Routes matching `" + mQuery + "'");
-			ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr);
+			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr);
 			setListAdapter(adapter);
 			// adapter.notifyDataSetChanged();
 		}

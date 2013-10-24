@@ -167,30 +167,30 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private MapView mView; // TODO this is messy
 	private final GestureDetector mGestureDetector = new GestureDetector(mContext,
 			new GestureDetector.SimpleOnGestureListener() {
-				@Override
-				public boolean onSingleTapConfirmed(MotionEvent e) {
-					// Log.d(TAG, "Single tap detected at " + e.getX() + "," +
-					// e.getY());
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			// Log.d(TAG, "Single tap detected at " + e.getX() + "," +
+			// e.getY());
 
-					final int closestpt = findClosestStop(mView, (int) e.getX(), (int) e.getY());
-					if (closestpt >= 0) {
-						onScreenTap(closestpt, false);
-						return true; // consumed it
-					}
-					return false;
-				}
+			final int closestpt = findClosestStop(mView, (int) e.getX(), (int) e.getY());
+			if (closestpt >= 0) {
+				onScreenTap(closestpt, false);
+				return true; // consumed it
+			}
+			return false;
+		}
 
-				@Override
-				public void onLongPress(MotionEvent e) {
-					// Log.d(TAG, "Long press detected at " + e.getX() + "," +
-					// e.getY());
+		@Override
+		public void onLongPress(MotionEvent e) {
+			// Log.d(TAG, "Long press detected at " + e.getX() + "," +
+			// e.getY());
 
-					final int closestpt = findClosestStop(mView, (int) e.getX(), (int) e.getY());
-					if (closestpt >= 0) {
-						onScreenTap(closestpt, true);
-					}
-				}
-			});
+			final int closestpt = findClosestStop(mView, (int) e.getX(), (int) e.getY());
+			if (closestpt >= 0) {
+				onScreenTap(closestpt, true);
+			}
+		}
+	});
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e, MapView mapView) {
@@ -223,17 +223,17 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 					case DialogInterface.BUTTON_POSITIVE:
 						GRTApplication.mPreferences.AddBusstopFavourite(mStopid, stopname);
 						break;
-					// case DialogInterface.BUTTON_NEGATIVE:
-					// // nothing
-					// break;
+						// case DialogInterface.BUTTON_NEGATIVE:
+						// // nothing
+						// break;
 					}
 					dialog.cancel();
 				}
 			};
 
 			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-			builder.setTitle("Stop " + mStopid + ", " + stopname).setMessage("Add to your list of favourites?")
-					.setPositiveButton("Yes", listener).setNegativeButton("No", listener).create().show();
+			builder.setTitle("Stop " + mStopid + ", " + stopname).setMessage(R.string.favs_add_to_list)
+			.setPositiveButton(R.string.yes, listener).setNegativeButton(R.string.no, listener).create().show();
 		} else {
 			GRTApplication.tracker.trackEvent("Map click", "Stop", mStopid, 1);
 			// Show route select activity
@@ -378,7 +378,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 					// Try offset the balloon to various places if there's a clash
 					// The origin for the box and text is the top left corner.
 					final Point[] offsets = { new Point(-textbounds.right / 2 - dx / 2, -dy - dy - textSize - padding), // centred
-																														// top
+							// top
 							new Point(-dx - textbounds.right - padding, -textSize / 2 - dy / 2), // left
 							new Point(dx / 2 + padding, -textSize / 2 - dy / 2), // right
 							new Point(-dx - textbounds.right - padding, -textSize - padding - dy), // upper left

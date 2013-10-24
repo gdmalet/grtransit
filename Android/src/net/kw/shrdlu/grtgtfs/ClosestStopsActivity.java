@@ -98,12 +98,12 @@ public class ClosestStopsActivity extends MenuListActivity {
 		Location nwlocn = null, gpslocn = null;
 		try {
 			nwlocn = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			Log.e(TAG, "Exception requesting last location from GPS_PROVIDER");
 		}
 		try {
 			gpslocn = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			Log.e(TAG, "Exception requesting last location from NETWORK_PROVIDER");
 		}
 		if (isBetterLocation(gpslocn, nwlocn)) {
@@ -154,14 +154,14 @@ public class ClosestStopsActivity extends MenuListActivity {
 		try {
 			mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_LOCN_UPDATE_TIME, MIN_LOCN_UPDATE_DIST,
 					locationListener);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			Log.e(TAG, "Exception requesting location from GPS_PROVIDER");
 		}
 
 		try {
 			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_LOCN_UPDATE_TIME,
 					MIN_LOCN_UPDATE_DIST, locationListener);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			Log.e(TAG, "Exception requesting location from NETWORK_PROVIDER");
 		}
 	}
@@ -198,7 +198,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 			// Load the stops from the database the first time through
 			if (mStops == null) {
-				Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, null);
+				final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, null);
 				maxcount = csr.getCount();
 				mStops = new StopLocn[maxcount];
 				boolean more = csr.moveToPosition(0);
@@ -219,8 +219,8 @@ public class ClosestStopsActivity extends MenuListActivity {
 			}
 
 			// Calculate the distance to each point in the array
-			float[] results = new float[2];
-			for (StopLocn s : mStops) {
+			final float[] results = new float[2];
+			for (final StopLocn s : mStops) {
 				Location.distanceBetween(mLocation.getLatitude(), mLocation.getLongitude(), s.lat, s.lon, results);
 				s.dist = results[0];
 				s.bearing = results[1];
@@ -239,9 +239,9 @@ public class ClosestStopsActivity extends MenuListActivity {
 			mListDetails.clear();
 			final String[] DIRS = { "S", "SW", "W", "NW", "N", "NE", "E", "SE", };
 			for (int i = 0; i < NUM_CLOSEST_STOPS; i++) {
-				StopLocn s = mStops[i];
+				final StopLocn s = mStops[i];
 
-				String dir = DIRS[(int) (s.bearing + 180 + 22.5) % 360 / 45];
+				final String dir = DIRS[(int) (s.bearing + 180 + 22.5) % 360 / 45];
 				String dist;
 				if (s.dist < 1000) {
 					dist = String.format("%3.0fm %s", s.dist, dir);
@@ -329,8 +329,8 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("Stop " + stop_id + ", " + stop_name);
-		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener)
-				.setNegativeButton("No", listener).create().show();
+		builder.setMessage(R.string.favs_add_to_list).setPositiveButton(R.string.yes, listener)
+		.setNegativeButton(R.string.no, listener).create().show();
 	}
 
 	/* The following is copied straight from: http://developer.android.com/guide/topics/location/strategies.html */
@@ -355,10 +355,10 @@ public class ClosestStopsActivity extends MenuListActivity {
 		}
 
 		// Check whether the new location fix is newer or older
-		long timeDelta = location.getTime() - currentBestLocation.getTime();
-		boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-		boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
-		boolean isNewer = timeDelta > 0;
+		final long timeDelta = location.getTime() - currentBestLocation.getTime();
+		final boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+		final boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+		final boolean isNewer = timeDelta > 0;
 
 		// If it's been more than two minutes since the current location, use the new location
 		// because the user has likely moved
@@ -370,13 +370,13 @@ public class ClosestStopsActivity extends MenuListActivity {
 		}
 
 		// Check whether the new location fix is more or less accurate
-		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-		boolean isLessAccurate = accuracyDelta > 0;
-		boolean isMoreAccurate = accuracyDelta < 0;
-		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+		final int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+		final boolean isLessAccurate = accuracyDelta > 0;
+		final boolean isMoreAccurate = accuracyDelta < 0;
+		final boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
 		// Check if the old and new location are from the same provider
-		boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
+		final boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
 
 		// Determine location quality using a combination of timeliness and accuracy
 		if (isMoreAccurate) {

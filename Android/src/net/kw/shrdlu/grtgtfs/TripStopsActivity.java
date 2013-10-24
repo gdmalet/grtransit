@@ -180,19 +180,19 @@ public class TripStopsActivity extends MenuListActivity {
 	// This must be called on the GIU thread.
 	private final GestureDetector mGestureDetector = new GestureDetector(mContext,
 			new GestureDetector.SimpleOnGestureListener() {
-				@Override
-				public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-					// Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
-					// Catch a fling sort of from left to right
-					if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
-						// Log.d(TAG, "fling detected");
-						GRTApplication.tracker.trackEvent("TripStops", "fling right", "", 1);
-						finish();
-						return true;
-					}
-					return false;
-				}
-			});
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+			// Log.d(TAG, "fling X " + velocityX + ", Y " + velocityY);
+			// Catch a fling sort of from left to right
+			if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
+				// Log.d(TAG, "fling detected");
+				GRTApplication.tracker.trackEvent("TripStops", "fling right", "", 1);
+				finish();
+				return true;
+			}
+			return false;
+		}
+	});
 
 	// Called from the listener above for a long click
 	public void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
@@ -213,9 +213,9 @@ public class TripStopsActivity extends MenuListActivity {
 					GRTApplication.mPreferences.AddBusstopFavourite(stop_id, stop_name);
 					// mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 					break;
-				// case DialogInterface.BUTTON_NEGATIVE:
-				// // nothing
-				// break;
+					// case DialogInterface.BUTTON_NEGATIVE:
+					// // nothing
+					// break;
 				}
 				dialog.cancel();
 			}
@@ -223,7 +223,7 @@ public class TripStopsActivity extends MenuListActivity {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("Stop " + stop_id + ", " + stop_name);
-		builder.setMessage("Add to your list of favourites?").setPositiveButton("Yes", listener)
-				.setNegativeButton("No", listener).create().show();
+		builder.setMessage(R.string.favs_add_to_list).setPositiveButton(R.string.yes, listener)
+		.setNegativeButton(R.string.no, listener).create().show();
 	}
 }
