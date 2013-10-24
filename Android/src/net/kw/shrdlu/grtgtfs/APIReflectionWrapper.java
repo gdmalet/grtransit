@@ -73,7 +73,8 @@ public class APIReflectionWrapper {
 				ab.setTitle(R.string.app_name);
 
 				// FavstopsActivity is the home screen.
-				if (context.getLocalClassName().equals("FavstopsActivity")) {
+				if (context.getLocalClassName().equals("FavstopsActivity") ||
+						context.getLocalClassName().equals("StartupActivity")) {
 					ab.setDisplayOptions(0, ActionBar.DISPLAY_HOME_AS_UP);
 				} else {
 					ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -41,6 +42,7 @@ public class FavstopsActivity extends MenuListActivity {
 	private ArrayList<String[]> mDetails;
 	private String mStopid;
 	private FavstopsArrayAdapter mAdapter;
+	private final SQLiteDatabase DB = DatabaseHelper.ReadableDB();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,23 @@ public class FavstopsActivity extends MenuListActivity {
 		final TextView tv = new TextView(mContext);
 		tv.setText(R.string.longpress_removes_stop);
 		lv.addFooterView(tv);
+
+		/* Make sure we can access a database */
+		if (DB == null) {
+			final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					mContext.finish();
+					return;
+				}
+			};
+			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setTitle(R.string.db_is_awol)
+			.setMessage(R.string.db_not_avail)
+			.setNegativeButton(R.string.exit, listener)
+			.create()
+			.show();
+		}
 
 		// ProcessStops(); // will be done in onResume()
 	}
@@ -122,6 +141,11 @@ public class FavstopsActivity extends MenuListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		/* Give up if there's no database */
+		if (DB == null) {
+			return;
+		}
 
 		mListDetail.invalidate();
 		ProcessStops();

@@ -2,12 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.kw.shrdlu.grtgtfs"
     android:theme="@style/ActivityTheme"
-    android:versionCode="30"
-    android:versionName="1.7.2" >
+    android:versionCode="31"
+    android:versionName="1.8" >
 
     <uses-sdk
         android:minSdkVersion="7"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,6 +19,7 @@
 
     <application
         android:name=".GRTApplication"
+        android:allowBackup="false"
         android:description="@string/app_name"
         android:icon="@drawable/grticon"
         android:label="@string/app_short_name"
@@ -29,8 +30,9 @@
             android:name=".StopsActivity"
             android:launchMode="singleTop" >
         </activity>
+        <activity android:name=".FavstopsActivity" />
         <activity
-            android:name=".FavstopsActivity"
+            android:name=".StartupActivity"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,11 +53,6 @@
             android:name=".SearchActivity"
             android:launchMode="singleTop" >
         </activity>
-
-        <!-- This is used for copying the database -->
-        <service
-            android:name="DatabaseHelper$DBcopier"
-            class=".DatabaseHelper$DBcopier" />
 
         <!--
         Need the following for maps api v2.

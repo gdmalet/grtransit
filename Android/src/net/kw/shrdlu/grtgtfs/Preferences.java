@@ -31,52 +31,51 @@ public class Preferences {
 
 	private final Context mContext;
 	private static String mPrefsFile;
-	private static final String FAVSTOPS_KEY = "favstops";
-	private static final String SHOWALLBUSSES_KEY = "showallbusses";
-	private static final String UUID_KEY = "uuid";
-	private static final String AMPMTIMES_KEY = "ampmtimes";
+	private static SharedPreferences mPrefs;
+
+	private static String AMPMTIMES_KEY, AUTOUPDATE_KEY, FAVSTOPS_KEY, SHOWALLBUSSES_KEY, UUID_KEY;
 
 	public Preferences(Context context) {
 		mContext = context;
 		mPrefsFile = mContext.getApplicationInfo().packageName;
+		mPrefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
+
+		AMPMTIMES_KEY = new String(mContext.getString(R.string.pref_ampmtimes_key));
+		AUTOUPDATE_KEY = new String(mContext.getString(R.string.pref_db_autoupdate_key));
+		FAVSTOPS_KEY = new String(mContext.getString(R.string.pref_favstops_key));
+		SHOWALLBUSSES_KEY = new String(mContext.getString(R.string.pref_showallbusses_key));
+		UUID_KEY = new String(mContext.getString(R.string.pref_uuid_key));
 	}
 
 	// If we don't already have a uuid, generate and save one.
 	public String getUUID() {
-		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		String uuid = prefs.getString(UUID_KEY, "");
+		String uuid = mPrefs.getString(UUID_KEY, "");
 		if (uuid.equals("")) {
 			uuid = UUID.randomUUID().toString();
-			prefs.edit().putString(UUID_KEY, uuid).commit();
+			mPrefs.edit().putString(UUID_KEY, uuid).commit();
 		}
 		return uuid;
 	}
 
-	public boolean getShowAllBusses() {
-		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		return prefs.getBoolean(SHOWALLBUSSES_KEY, false);
+	/* Force values to match the defaults the first time round, so the preferences screen reflects that. This is only necessary
+	 * where the default is `true', since on-screen the default is `false'. */
+	public boolean autoDbUpdate() {
+		if (!mPrefs.contains(AUTOUPDATE_KEY)) {
+			mPrefs.edit().putBoolean(AUTOUPDATE_KEY, true).commit();
+		}
+		return mPrefs.getBoolean(AUTOUPDATE_KEY, true);
 	}
 
-	// public void setShowAllBusses(boolean b) {
-	// final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-	// prefs.edit().putBoolean(SHOWALLBUSSES_KEY, b).commit();
-	// Globals.tracker.trackEvent("Preference", "Show all busses", b ? "true" : "false", 1);
-	// }
+	public boolean showAllBusses() {
+		return mPrefs.getBoolean(SHOWALLBUSSES_KEY, false);
+	}
 
 	public boolean showAMPMTimes() {
-		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		return prefs.getBoolean(AMPMTIMES_KEY, false);
+		return mPrefs.getBoolean(AMPMTIMES_KEY, false);
 	}
 
-	// public void setAMPMTimes(boolean b) {
-	// final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-	// prefs.edit().putBoolean(AMPMTIMES_KEY, b).commit();
-	// Globals.tracker.trackEvent("Preference", "AM/PM Times", b ? "true" : "false", 1);
-	// }
-
 	public void AddBusstopFavourite(String busstop, String stopname) {
-		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		String favs = prefs.getString(FAVSTOPS_KEY, "");
+		String favs = mPrefs.getString(FAVSTOPS_KEY, "");
 
 		final TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
 		splitter.setString(favs);
@@ -93,7 +92,7 @@ public class Preferences {
 			;
 		} else {
 			favs += busstop + ";";
-			prefs.edit().putString(FAVSTOPS_KEY, favs).putString(FAVSTOPS_KEY + "-" + busstop, stopname).commit();
+			mPrefs.edit().putString(FAVSTOPS_KEY, favs).putString(FAVSTOPS_KEY + "-" + busstop, stopname).commit();
 			Toast.makeText(mContext, "Stop " + busstop + " was added to your favourites.", Toast.LENGTH_LONG).show();
 			;
 		}
@@ -101,25 +100,25 @@ public class Preferences {
 	}
 
 	public void RemoveBusstopFavourite(String busstop) {
-		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		final String favs = prefs.getString(FAVSTOPS_KEY, "");
+		final String favs = mPrefs.getString(FAVSTOPS_KEY, "");
 		String newfavs = "";
 
 		final TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
 		splitter.setString(favs);
 
 		for (final String s : splitter) {
-			if (!s.equals(busstop)) newfavs += s + ";";
+			if (!s.equals(busstop)) {
+				newfavs += s + ";";
+			}
 		}
-		prefs.edit().putString(FAVSTOPS_KEY, newfavs).remove(FAVSTOPS_KEY + "-" + busstop).commit();
+		mPrefs.edit().putString(FAVSTOPS_KEY, newfavs).remove(FAVSTOPS_KEY + "-" + busstop).commit();
 		Toast.makeText(mContext, "Stop " + busstop + " was removed from your favourites.", Toast.LENGTH_LONG).show();
 
 		GRTApplication.tracker.trackEvent("Favourites", "Remove stop", busstop, 1);
 	}
 
 	public ArrayList<String[]> GetBusstopFavourites() {
-		final SharedPreferences prefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
-		final String favs = prefs.getString(FAVSTOPS_KEY, "");
+		final String favs = mPrefs.getString(FAVSTOPS_KEY, "");
 
 		// Load the array for the list
 		final ArrayList<String[]> details = new ArrayList<String[]>();
@@ -130,7 +129,7 @@ public class Preferences {
 			final TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(';');
 			splitter.setString(favs);
 			for (final String s : splitter) {
-				final String[] strs = { s, prefs.getString(FAVSTOPS_KEY + "-" + s, "") };
+				final String[] strs = { s, mPrefs.getString(FAVSTOPS_KEY + "-" + s, "") };
 				details.add(strs);
 			}
 		}

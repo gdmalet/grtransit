@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    
+
     <CheckBoxPreference
+        android:defaultValue="false"
         android:key="@string/pref_showallbusses_key"
-        android:defaultValue="false"
-        android:title="@string/showallbusses"/>
-    
+        android:title="@string/showallbusses" />
     <CheckBoxPreference
-        android:key="@string/pref_ampmtimes_key"
         android:defaultValue="false"
-        android:title="@string/ampmtimes"/>
+        android:key="@string/pref_ampmtimes_key"
+        android:title="@string/ampmtimes" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_db_autoupdate_key"
+        android:title="@string/auto_check4dbupdate" />
 
 </PreferenceScreen>

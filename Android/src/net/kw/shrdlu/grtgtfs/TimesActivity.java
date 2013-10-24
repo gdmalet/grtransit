@@ -118,14 +118,14 @@ public class TimesActivity extends MenuListActivity {
 			if (mRoute_id == null) {
 				// showing all routes
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, datenow,
-						!GRTApplication.mPreferences.getShowAllBusses(), this);
+						!GRTApplication.mPreferences.showAllBusses(), this);
 			} else {
 
 				// TODO Setting a listener means not passing `this'
 
 				// showing just one route
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, mRoute_id, mHeadsign, datenow,
-						!GRTApplication.mPreferences.getShowAllBusses(), this);
+						!GRTApplication.mPreferences.showAllBusses(), this);
 			}
 
 			// Find when the next bus leaves

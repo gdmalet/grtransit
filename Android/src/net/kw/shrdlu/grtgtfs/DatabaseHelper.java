@@ -20,60 +20,34 @@
 package net.kw.shrdlu.grtgtfs;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.Semaphore;
 
-import android.app.IntentService;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 public class DatabaseHelper {
 	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
 
 	private static String DB_PATH = null;
-	public static final int DB_VERSION = 19; /* As of 11th October 2013 */
+	private static int DB_VERSION = -1;
 	private static final String DB_NAME = "GRT.db";
 	private static Context mContext;
-	private static boolean mMustCopy = false;
 	private static SQLiteDatabase DB = null;
-	private static final Semaphore mDBisOpen = new Semaphore(1);
 
 	/**
-	 * Constructor Takes and keeps a reference of the passed context in order to access to the application assets and resources.
+	 * Constructor Takes and keeps a reference of the passed context in order to access the application assets and resources.
 	 * 
 	 * @param context
 	 */
 	public DatabaseHelper(Context context) {
 		mContext = context;
+
 		final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
-		final String BAD_DB_PATH = "/sdcard/data/Android/" + mContext.getApplicationContext().getPackageName();
-
-		while (true) {
-			try {
-				// Log.d(TAG, "constructor about to acquire semaphore");
-				mDBisOpen.acquire();
-				// Log.d(TAG, " ... constructor got semaphore");
-				break;
-			} catch (final InterruptedException e1) {
-				// Log.w(TAG, "constructor interrupted exception?"); // just
-				// loop and try again?
-			}
-		}
-
-		if (DB_PATH != null) {
-			Log.e(TAG, "constructor has already been called!?");
-		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO /* 8 */) {
 			// Returns something like
@@ -103,152 +77,62 @@ public class DatabaseHelper {
 			if (olddb.exists() && !olddb.delete()) {
 				Log.e(TAG, "failed to delete old db...!?");
 			}
+
+			// The database is on the sdcard.
+			final String sdstate = Environment.getExternalStorageState();
+			if (!sdstate.equals(Environment.MEDIA_MOUNTED)) {
+				final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+				builder.setTitle("The external database is unavailable.")
+				.setMessage("The sdcard is in state `" + sdstate
+						+ "'.\nPlease retry when it is available.").create().show();
+				return;
+			}
 		}
-		// And another one, due to a mistake in setting DB_PATH in v0.96.
-		new File(BAD_DB_PATH + "/" + DB_NAME).delete();
-		new File(BAD_DB_PATH).delete();
 
 		// Do this once, as we don't need them separate anymore.
 		DB_PATH += "/" + DB_NAME;
-		/* // The database is on the sdcard. // String sdstate = Environment.getExternalStorageState(); if
-		 * (!sdstate.equals(Environment.MEDIA_MOUNTED)) { AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		 * 
-		 * builder.setTitle("The external database is unavailable.") .setMessage("The sdcard is in state `" + sdstate +
-		 * "'.\nPlease retry when it is available.") .create() .show();
-		 * 
-		 * return; } */
-		try {
-			DB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
-		} catch (final SQLiteException e) {
-			// Log.d(TAG, "open database failed - will copy");
-			mMustCopy = true; // presumably no database exists
-		}
+	}
 
+	/* Return path to the database. */
+	public static String GetDBPath()
+	{
+		return DB_PATH;
+	}
+
+	/* Force close the DB so we can recreate it */
+	public static void CloseDB()
+	{
 		if (DB != null) {
-			int version = 0;
+			DB.close();
+			DB = null;
+		}
+	}
+	/* Return a handle for reading the database. */
+	public static SQLiteDatabase ReadableDB() {
+
+		if (DB == null) {
 			try {
+				DB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
+
+				// Stash the version
 				final Cursor csr = DB.rawQuery("PRAGMA user_version", null);
 				csr.moveToPosition(0);
-				version = csr.getInt(0);
+				DB_VERSION = csr.getInt(0);
 				csr.close();
-				if (version != DB_VERSION) {
-					mMustCopy = true;
-					// Log.d(TAG, "must copy db version " + version + " to new "
-					// + DB_VERSION);
-				}
-			} catch (final Exception e) {
-				mMustCopy = true; // something went haywire
-			}
-		}
 
-		if (mMustCopy) {
-			if (DB != null) {
-				DB.close();
-				DB = null;
-			}
-			Toast.makeText(mContext, "The database will be (re)created. This may take some time.", Toast.LENGTH_LONG).show();
-
-			// Copy the database in the background.
-			// Log.d(TAG, "starting database upgrade service");
-			mContext.startService(new Intent(mContext, DBcopier.class));
-		} else {
-			mDBisOpen.release(); // otherwise the service does that
-		}
-		// Log.v(TAG, "clean exit of constructor");
-	}
-
-	/**
-	 * Copies database from local assets-folder to the system folder, from where it can be accessed and handled. This is done by
-	 * transferring bytestream. Note that this class must be public static, since it's embedded in the outer class. If it's not
-	 * static, starting the service will fail.
-	 **/
-	public static class DBcopier extends IntentService {
-		private static final String TAG = "DBcopier";
-
-		// Must have a default constructor
-		public DBcopier() {
-			super("DBcopier");
-			// Log.v(TAG, "constructor");
-		}
-
-		@Override
-		protected void onHandleIntent(Intent intent) {
-			// Log.v(TAG, "Copying new database " + DB_NAME);
-
-			// Open the empty db as the output stream
-			OutputStream myOutput;
-			try {
-				myOutput = new FileOutputStream(DB_PATH);
-
-				// transfer bytes from the inputfile to the outputfile
-				final byte[] buffer = new byte[8 * 1024];
-				int i;
-				for (i = 0;; i++) {
-					// Loop and pick up all pieces of the file, an concatenate
-					// into one.
-					final String input = String.format("databases/" + DB_NAME + ".%02d", i);
-
-					// Open local db piece as the input stream
-					InputStream myInput;
-					try {
-						myInput = mContext.getAssets().open(input);
-					} catch (final IOException e) {
-						break; // no more files
-					}
-
-					int length;
-					while ((length = myInput.read(buffer)) > 0) {
-						myOutput.write(buffer, 0, length);
-					}
-
-					myInput.close();
-				}
-
-				// Close the streams
-				myOutput.flush();
-				myOutput.close();
-
-				// Set the version to match, so we don't keep copying, even if
-				// the db is the wrong version to start.
-				DB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
-				DB.execSQL("PRAGMA user_version = " + DB_VERSION);
-				DB.close();
-
-				// Log.v(TAG, " ... database " + DB_NAME +
-				// " copy complete: re-opening db & releasing lock");
-				DB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
-				mDBisOpen.release();
-
-			} catch (final FileNotFoundException e) {
-				Log.e(TAG, "FileNotFoundException exception");
-				e.printStackTrace();
-			} catch (final IOException e) {
-				Log.e(TAG, "IOException exception");
-				e.printStackTrace();
-			} catch (final Exception e) {
-				Log.e(TAG, "unknown exception exception");
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public static SQLiteDatabase ReadableDB() {
-		// Log.d(TAG,"in ReadableDB()");
-
-		// If the DB is not open yet, we need to wait for the constructor, which
-		// is perhaps
-		// copying over a new database.
-		while (DB == null) {
-			try {
-				// Log.d(TAG, "... ReadableDB about to acquire semaphore");
-				mDBisOpen.acquire();
-				// Log.d(TAG, " ... ReadableDB got semaphore");
-			} catch (final InterruptedException e1) {
-				// Log.w(TAG, "interrupted exception?"); // just loop and try
-				// again?
+			} catch (final SQLiteException e) {
+				// bah
 			}
 		}
 
 		return DB;
+	}
+
+	/* Return version of current DB */
+	public static int GetDBVersion() {
+		if (DB == null) {
+			ReadableDB();
+		}
+		return DB_VERSION;
 	}
 }

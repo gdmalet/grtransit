@@ -105,7 +105,7 @@ public class TitlebarClick {
 			// Show the about screen
 			String versionName = "unknown";
 			int versionCode = 0;
-			final int dbVersion = DatabaseHelper.DB_VERSION;
+			final int dbVersion = DatabaseHelper.GetDBVersion();
 
 			try {
 				final String pn = context.getPackageName();
