@@ -91,7 +91,7 @@ public class TripStopsActivity extends MenuListActivity {
 		protected Integer doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
 
-			final String qry = "select stop_times.stop_id as _id, stop_name as descr, departure_time from stop_times"
+			final String qry = "select distinct stop_times.stop_id as _id, stop_name as descr, departure_time from stop_times"
 					+ " join stops on stops.stop_id = stop_times.stop_id where trip_id = ? order by departure_time";
 			final String[] selectargs = new String[] { mTrip_id };
 			mCsr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
