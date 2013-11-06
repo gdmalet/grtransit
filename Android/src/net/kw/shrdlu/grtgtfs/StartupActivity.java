@@ -122,8 +122,7 @@ public class StartupActivity extends Activity {
 		protected void onPostExecute(Void foo) {
 
 			/* If versions match, or we can't check the new version, just continue. */
-			if ((newdbv > 0 && olddbv > 0 && newdbv == olddbv) ||
-					(newdbv < 0 && olddbv > 0)) {
+			if ((newdbv > 0 && olddbv > 0 && newdbv == olddbv) || (newdbv < 0)) {
 				startFavstops();
 				return;
 			}

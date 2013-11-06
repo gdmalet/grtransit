@@ -121,7 +121,7 @@ public class RouteActivity extends MenuMapActivity {
 				t.setToNow();
 				final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
 				final String qry = "select distinct routes.route_short_name, trip_headsign from trips"
-						+ " join routes on routes.trip_id = trips.route_id"
+						+ " join routes on routes.route_id = trips.route_id"
 						+ " join calendar on trips.service_id = calendar.service_id where"
 						+ " trip_id in (select trip_id from stop_times where stop_id = ?) and"
 						+ " start_date <= ? and end_date >= ?";
