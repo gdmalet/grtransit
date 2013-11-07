@@ -17,6 +17,14 @@
 
     <!-- android:uiOptions="splitActionBarWhenNarrow" -->
 
+
+    <!--
+         Hardware acceleration is turned off on the maps, else zooming on the maps causes lines to
+		 eventually disappear, and sudden crashes.  Logcat also says "Shape path too
+		 large to be rendered into a texture".
+		 See http://stackoverflow.com/questions/9896804/android-paths-for-real-time-charting
+    -->
+
     <application
         android:name=".GRTApplication"
         android:allowBackup="false"
@@ -28,7 +36,7 @@
 
         <activity
             android:name=".StopsActivity"
-            android:launchMode="singleTop" >
+            android:hardwareAccelerated="false" >
         </activity>
         <activity android:name=".FavstopsActivity" />
         <activity
@@ -40,7 +48,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RouteActivity" />
+        <activity
+            android:name=".RouteActivity"
+            android:hardwareAccelerated="false" >
+        </activity>
         <activity
             android:name=".PrefsActivity"
             android:theme="@android:style/Theme.Holo" />
