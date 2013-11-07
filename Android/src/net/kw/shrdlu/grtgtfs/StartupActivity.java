@@ -58,8 +58,8 @@ public class StartupActivity extends Activity {
 	protected TextView mTitle;
 	protected ProgressBar mProgress;
 
-	private static final String DBVersionURL = "http://baleka.org/gdmalet/android/grtransit/GRT.db.version";
-	private static final String DBDatabaseURL = "http://baleka.org/gdmalet/android/grtransit/GRT.db.gz";
+	private static String DBVersionURL = "http://baleka.org/gdmalet/android/grtransit/GRT.db.version";
+	private static String DBDatabaseURL = "http://baleka.org/gdmalet/android/grtransit/GRT.db.gz";
 
 	private static String DB_PATH;
 	private static NewDBVersion DBV = null;
@@ -69,6 +69,12 @@ public class StartupActivity extends Activity {
 		mContext = this;
 		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
+
+		/* Keep test files clear of production files. */
+		if (GRTApplication.isDebugBuild) {
+			DBVersionURL += ".dbg";
+			DBDatabaseURL += ".dbg";
+		}
 
 		mTitle = (TextView) findViewById(R.id.listtitle);
 		mProgress = (ProgressBar) findViewById(R.id.progress);
