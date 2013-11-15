@@ -12,9 +12,27 @@ function usage {
     exit 1
 }
 
-function error {
+function warn {
     echo "$MYNAME: $@" 1>&2
+}
+
+function error {
+    warn "$@"
     exit 1
+}
+
+function getdbversion {
+    db=$1
+
+    test -s "$db" || { warn "no existing db; using version 1"; return 1; }
+
+    local version=$(echo 'PRAGMA user_version;' | sqlite3 "$db")
+    test -z "$version" -o "$version" -lt 0 -o "$version" -gt 999 && {
+	warn "strange version \"$version\"; using version 1"
+	return 1
+    }
+
+    return $version
 }
 
 test $# -lt 2 && usage
@@ -22,11 +40,15 @@ test $# -lt 2 && usage
 DB=$1
 shift
 
+getdbversion $DB
+version=$(expr $? + 1)
+echo "using database version $version"
+
 tmpfile=$(mktemp)
-trap "rm -f $tmpfile" 0
+trap "rm -f $tmpfile $DB.new" 0
 
 # Create the necessary metadata table
-$SQ3 $DB <<-EOT
+$SQ3 $DB.new <<-EOT
   CREATE TABLE "android_metadata" ("locale" TEXT DEFAULT 'en_US');
   INSERT INTO "android_metadata" VALUES ('en_US');
 EOT
@@ -35,6 +57,7 @@ EOT
 while [ $# -gt 0 ]
 do
     file=$1
+    echo $file
     table=$(echo `basename $1` | sed -e 's/\..*//')
     columns=$(head -1 $file)
     cat $file | sed -e1d > $tmpfile
@@ -42,30 +65,11 @@ do
 	echo "create table $table($columns);"
 	echo ".separator ,"
 	echo ".import $tmpfile $table"
-    ) | $SQ3 $DB
+    ) | $SQ3 $DB.new
     shift
 done
 
-echo "$0: warning: make sure you bump the db version in the code (DB_VERSION)."
-version=$(grep 'int DB_VERSION = ' ../../Android/src/net/kw/shrdlu/grtgtfs/DatabaseHelper.java)
-versionN=0
-if [ -z "$version" ]
-then
-	echo "DB_VERSION not found: using 0"
-else
-	echo "$version"
-	versionN=$(echo "$version" | \
-		sed -e 's/.* int DB_VERSION = //' \
-		    -e 's/\([0-9]*\);.*/\1/')
-	if [ -n "$versionN" ]
-	then
-		echo "Using version $versionN"
-	else
-		echo "Failed to parse version: using 0"
-	fi
-fi
-
-$SQ3 $DB <<-EOT
+$SQ3 $DB.new <<-EOT
   create index stops_stop_id on stops ( stop_id );
   create index routes_route_id on routes ( route_id );
   create index trips_trip_id on trips ( trip_id );
@@ -74,10 +78,22 @@ $SQ3 $DB <<-EOT
   create index shapes_shape_id on shapes ( shape_id );
   create index calendar_service_id on calendar ( service_id );
   create index calendar_dates_service_id on calendar_dates ( service_id );
-  PRAGMA user_version = $versionN;
+  PRAGMA user_version = $version;
   vacuum;
 EOT
 
-split -d -b 1m $DB $DB.
+mv $DB $DB.old
+mv $DB.new $DB
+mv $DB.version $DB.version.old
+
+gzip -9v -c $DB > $DB.gz
+
+md5=$(md5sum $DB | cut -f1 -d' ')
+size=$(stat -c "%s" $DB.gz)
+sizem=$(echo "1k $size 512+ 1024/1024/p" | dc)
+echo "$version $sizem $md5" > $DB.version
+
+ls -l $DB $DB.gz $DB.version
+cat $DB.version
 
 exit 0
