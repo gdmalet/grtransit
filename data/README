@@ -2,17 +2,14 @@ Get the data from http://www.regionofwaterloo.ca/en/regionalGovernment/GRT_GTFSd
 or perhaps http://www.gtfs-data-exchange.com/agency/grand-river-transit/ .
 
 Unpack into for example GRT-transit-20110904, and then cd into the sqlite3 directory
-at the level of this README, delete GRT.db*, and run:
+at the level of this README, and run:
 
 $ ../../bin/mksql3db.sh GRT.db ../GRT-transit-20110904/*
 
-Note that it will warn you about the database version. This must be
-bumped in the code for each new db (the DB_VERSION value).
+This will work out the version number from your previous GRT.db. If you don't have
+one you'll get a warning or two and it will use version 1.
 
-That will produce GRT.db - and a bunch of split files. Remove anything in
-../../Android/assets/databases/, and then
-
-$ mv GRT.db.* ../../Android/assets/databases/
-
-The app can then rebuild its database from that, as long as the database version has been
-bumped in the code.
+That will produce GRT.db.gz, with an internal version number one more than the prior
+version. It will also produce GRT.db.version, a text file that is fetched by the
+running app for checking if a new db is available for download (by comparing the
+intenal DB version number to the one in the file).

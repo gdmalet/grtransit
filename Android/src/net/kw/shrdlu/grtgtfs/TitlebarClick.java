@@ -117,6 +117,10 @@ public class TitlebarClick {
 				e.printStackTrace();
 			}
 
+			if (GRTApplication.isDebugBuild) {
+				versionName += "dbg";
+			}
+
 			final View messageView = context.getLayoutInflater().inflate(R.layout.about, null, false);
 			final String credits = context.getString(R.string.app_credits, versionName, versionCode, dbVersion);
 			final TextView cv = (TextView) messageView.findViewById(R.id.about_credits);
