@@ -8,3 +8,6 @@
 /Android/app/src/main/java/net/kw/shrdlu/grtgtfs/TwitterCredentials.java
 /data/sqlite3
 /.gitreview
+/lisp/grtransit.fas
+/lisp/grtransit.lib
+/lisp/tmp/

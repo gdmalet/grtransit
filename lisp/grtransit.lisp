@@ -1,6 +1,6 @@
 ;;;; Grand River Transit
 
-(defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp") "Where we're doing it")
+(defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp" "tmp") "Where we're doing it")
 (defparameter *tables* () "Root of all the tables read from the input files.")
 (defparameter *table-files*
 	 '(("agency.txt" . 2)
@@ -23,8 +23,80 @@
 				(acons (string-to-symbol-name (car p))
 					   (load-table (car p) (make-hash-table :test 'equal :size (cdr p)))
 					   *tables*)))
-		*table-files*)
-  t)
+		*table-files*))
+
+;;; Trip 815513 uses stop 1123, but not showing in GRT app?
+;;;
+;;;$ grep 815413 trips.txt 
+;;; 7,13FALL-All-Weekday-06,815413,"31 Lexington to UW",0,130424,70061
+;;;
+;;;$ grep 815413 stop_times.txt 
+;;; [...]
+;;; 815413,08:17:00,08:17:00,1123,9,0,0
+;;;
+;;; -- it's excluded by service:
+;;;$ grep 13FALL-All-Weekday-06, calendar.txt
+;;; 13FALL-All-Weekday-06,1,1,1,1,1,0,0,20131011,20131018
+
+(defun routes-using-stop (stop-id)
+  "Return a list of conses of routes and headsigns that use a particular stop."
+  (let ((routes-hash (make-hash-table :test 'equal :size 42))
+		(routes-list ()))
+	(mapc
+	 (lambda (trip-id)
+	   (multiple-value-bind (id sign) (trip-id-to-route-id trip-id)
+		 (setf (gethash (cons id sign) routes-hash) t)))
+	 (trips-using-stop stop-id))
+
+	(maphash
+	 (lambda (route-sign foo)
+	   (push route-sign routes-list))
+	 routes-hash)
+  routes-list))
+
+;;; TODO -- this is a sequential search through values to return a key....
+(defun trip-id-to-route-id (trip-id)
+  "Return the route-id & trip headsign for a given trip-id"
+  (maphash 
+	 (lambda (route-id trips-instance)
+	   (case (type-of trips-instance)
+		 ('CONS
+		  (mapc (lambda (route)
+				  (when (equalp trip-id (slot-value route 'trip-id))
+					(return-from trip-id-to-route-id
+					  (values
+					   route-id
+					   (slot-value route 'trip-headsign)))))
+				trips-instance))
+		 (t
+		  (if (equalp trip-id (slot-value trips-instance 'trip-id))
+			  (return-from trip-id-to-route-id
+				(values
+				 route-id
+				 (slot-value trips-instance 'trip-headsign)))))))
+	 (cdr (assoc "trips" *tables* :test #'equalp))))
+
+;;; TODO -- this is a sequential search through values to return a key....
+;;; If a route does a loop back to a stop, there will be dups in this list.
+(defun trips-using-stop (stop-id)
+  "Return a list of trips that use a particular stop. May contain dups."
+  (let ((trip-ids ()))
+	(maphash 
+	 (lambda (trip-id stop-time-instance)
+	   ;;(format t "Key: ~A, value ~A~%" trip-id stop-time-instance)
+	   (case (type-of stop-time-instance)
+		 ('CONS
+		  (mapc (lambda (trip-stop)
+				  (when (equalp stop-id (slot-value trip-stop 'stop-id))
+					;; TODO could exit mapc early after next line
+					(push trip-id trip-ids)))
+				stop-time-instance))
+		 (t
+		  ;;; A trip with one stop?
+		  (if (equalp stop-id (slot-value stop-time-instance 'stop-id))
+			  (push trip-id trip-ids)))))
+	 (cdr (assoc "stop-times" *tables* :test #'equalp)))
+	trip-ids))
 
 ;;; Load data from a standard text input file.
 ;;; If file is "foo.txt", stores each line from the file in an instance
