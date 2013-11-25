@@ -1,7 +1,7 @@
 ;;;; Grand River Transit
 
 (defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp") "Where we're doing it")
-
+(defparameter *tables* () "Root of all the tables read from the input files.")
 (defparameter *table-files*
 	 '(("agency.txt" . 2)
 	   ("calendar_dates.txt" . 32)
@@ -14,13 +14,17 @@
 	   ("trips.txt" . 32768))
 	   "A list of files to slurp in, and approximate number of lines per file.")
 
+;;; Read table files, and store the results in pairlis *table-files*.
+;;; Fetch with (assoc "trips" *tables* :test #'equalp)
 (defun main ()
+  (setq *tables* ())
   (mapc (lambda (p)
-		  (let* ((table-name (string-to-symbol (car p)))
-				 (tbl (load-table (car p) (make-hash-table :test 'equal :size (cdr p)))))
-			(format t "Stashing table ~A~%" table-name)
-			(eval (list 'setq (intern table-name) tbl))))
-		*table-files*))
+		  (setq *tables*
+				(acons (string-to-symbol-name (car p))
+					   (load-table (car p) (make-hash-table :test 'equal :size (cdr p)))
+					   *tables*)))
+		*table-files*)
+  t)
 
 ;;; Load data from a standard text input file.
 ;;; If file is "foo.txt", stores each line from the file in an instance
@@ -40,8 +44,8 @@
 
 	;; Set up initial values: column names from first line of file, class name
 	;; from the passed in file name, and define the class using the headers.
-	(do* ((headers (mapcar #'string-to-symbol (parsed-input-line s)))
-		  (class-name (string-to-symbol from-file))
+	(do* ((headers (mapcar #'string-to-symbol-name (parsed-input-line s)))
+		  (class-name (string-to-symbol-name from-file))
 		  (c (eval (list 'defclass (intern class-name) () (mapcar (lambda (x) (list (intern x))) headers))))
 		  (l (parsed-input-line s) (parsed-input-line s)))
 		((null l) table)
@@ -63,7 +67,7 @@
 		   (setf (gethash (car l) table) (list h c))))))))
 
 ;;; Given "foo_bar.txt", return "FOO-BAR"
-(defun string-to-symbol (str)
+(defun string-to-symbol-name (str)
   "Convert give file name to a symbol name."
   (substitute #\- #\_
 			  (string-upcase
