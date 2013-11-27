@@ -1,6 +1,9 @@
 ;;;; Grand River Transit
 
 (defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp" "tmp") "Where we're doing it")
+(defparameter *working-date* (multiple-value-list (get-decoded-time)) "System's notion of today's date and time")
+(defparameter *tomorrow* (multiple-value-list (decode-universal-time (+ (get-universal-time) (* 60 60 24))))
+  "Tomorrow's date, used for dealing with times of the form 25:00:00")
 (defparameter *tables* () "Root of all the tables read from the input files.")
 (defparameter *table-files*
 	 '(("agency.txt" . 2)
@@ -14,19 +17,6 @@
 	   ("trips.txt" . 32768))
 	   "A list of files to slurp in, and approximate number of lines per file.")
 
-;;; Read table files, and store the results in pairlis *table-files*.
-;;; Fetch with (assoc "trips" *tables* :test #'equalp)
-(defun main ()
-  (setq *tables* ())
-  (mapc (lambda (p)
-		  (setq *tables*
-				(acons (string-to-symbol-name (car p))
-					   (load-table (car p) (make-hash-table :test 'equal :size (cdr p)))
-					   *tables*)))
-		*table-files*))
-
-;;; Trip 815513 uses stop 1123, but not showing in GRT app?
-;;;
 ;;;$ grep 815413 trips.txt 
 ;;; 7,13FALL-All-Weekday-06,815413,"31 Lexington to UW",0,130424,70061
 ;;;
@@ -38,16 +28,74 @@
 ;;;$ grep 13FALL-All-Weekday-06, calendar.txt
 ;;; 13FALL-All-Weekday-06,1,1,1,1,1,0,0,20131011,20131018
 
+;;; Read table files, and store the results in pairlis *table-files*.
+;;; Fetch with (assoc "trips" *tables* :test #'equalp)
+(defun main ()
+  (setq *tables* ())
+  (mapc (lambda (p)
+		  (setq *tables*
+				(acons (string-to-symbol-name (car p))
+					   (load-table (car p) (make-hash-table :test 'equal :size (cdr p)))
+					   *tables*)))
+		*table-files*))
+
+(defun show-next-bus-at-stop (stop-id)
+  "A pretty printed version of next-bus-at-stop."
+  (mapc
+   (lambda (bus)
+	 (multiple-value-bind
+		   (sec min hr day mon year)
+		 (decode-universal-time (caddr bus))
+	   (format t "~2,'0d:~2,'0d ~3A \"~A\"~%"
+			   hr min
+			   (car bus)
+			   (cadr bus))))
+   (sort
+	(next-bus-at-stop stop-id)
+	(lambda (a b)
+	  (< (caddr a) (caddr b))))))
+
+(defun next-bus-at-stop (stop-id)
+  "Return route and time of the next bus to come through the given stop."
+  (let ((routes-hash (make-hash-table :test 'equal :size 42))
+		(routes-list ())
+		(now (get-universal-time)))
+
+	;; For each trip using a stop, stash all the routes numbers & headsigns.
+	;; Use a hash table to track times.
+	(mapc
+	 (lambda (trip-details)
+	   (multiple-value-bind (id sign) (trip-id-to-route-id (car trip-details))
+		 (let ((this-time (timestr-to-epoch (cadr trip-details))))
+		   (when (> this-time now)
+			 (let ((latest (gethash (cons id sign) routes-hash)))
+			   (if (or (null latest) (< this-time latest))
+				   (setf (gethash (cons id sign) routes-hash) this-time)))))))
+	 (trips-using-stop stop-id))
+
+	;; Fetch unique copies off the hash table and stash in list for return.
+	(maphash
+	 (lambda (route-sign time)
+	   (push (list (car route-sign) (cdr route-sign) time) routes-list))
+	 routes-hash)
+  routes-list))
+
+
+
 (defun routes-using-stop (stop-id)
   "Return a list of conses of routes and headsigns that use a particular stop."
   (let ((routes-hash (make-hash-table :test 'equal :size 42))
 		(routes-list ()))
+
+	;; For each trip using a stop, stash all the routes numbers & headsigns.
+	;; Use a hash table to get a unique copy of each.
 	(mapc
-	 (lambda (trip-id)
-	   (multiple-value-bind (id sign) (trip-id-to-route-id trip-id)
+	 (lambda (trip-details)
+	   (multiple-value-bind (id sign) (trip-id-to-route-id (car trip-details))
 		 (setf (gethash (cons id sign) routes-hash) t)))
 	 (trips-using-stop stop-id))
 
+	;; Fetch unique copies off the hash table and stash in list for return.
 	(maphash
 	 (lambda (route-sign foo)
 	   (push route-sign routes-list))
@@ -79,7 +127,8 @@
 ;;; TODO -- this is a sequential search through values to return a key....
 ;;; If a route does a loop back to a stop, there will be dups in this list.
 (defun trips-using-stop (stop-id)
-  "Return a list of trips that use a particular stop. May contain dups."
+  "Return a list of trips, with arrival & departure times,
+that use a particular stop. May contain dups."
   (let ((trip-ids ()))
 	(maphash 
 	 (lambda (trip-id stop-time-instance)
@@ -89,12 +138,18 @@
 		  (mapc (lambda (trip-stop)
 				  (when (equalp stop-id (slot-value trip-stop 'stop-id))
 					;; TODO could exit mapc early after next line
-					(push trip-id trip-ids)))
+					(push (list trip-id
+								(slot-value trip-stop 'arrival-time)
+								(slot-value trip-stop 'departure-time))
+						  trip-ids)))
 				stop-time-instance))
 		 (t
 		  ;;; A trip with one stop?
 		  (if (equalp stop-id (slot-value stop-time-instance 'stop-id))
-			  (push trip-id trip-ids)))))
+			  (push (list trip-id
+						  (slot-value stop-time-instance 'arrival-time)
+						  (slot-value stop-time-instance 'departure-time))
+					trip-ids)))))
 	 (cdr (assoc "stop-times" *tables* :test #'equalp)))
 	trip-ids))
 
@@ -147,7 +202,7 @@
 
 ;;; Read one line from the input stream, and break up into a list.
 ;;; Separator is a comma.
-;;; TODO - this will b0rk if a quoted string contains a comma.
+;;; TODO - this will b0rk if a quoted string contains a comma or quote.
 (defun parsed-input-line (stream)
   "Return a list of values from one line of comma separated input stream."
   (let ((line (read-line stream nil)))
@@ -157,6 +212,7 @@
 	    collect (cleanup (subseq line (1+ last-comma)
 			    (setf last-comma (position #\, line :start (1+ last-comma)))))))))
 
+;;; Clean up crap coming from the input files.
 (defun cleanup (str)
   "Trim leading & trailing space from string, & remove quotes."
   (when (> (length str) 0)
@@ -166,3 +222,29 @@
 			(return-from cleanup (subseq s 1 (1- (length s))))
 			(format t "~A is badly formed (quotes)~%" s)))
 	  (return-from cleanup s))))
+
+(defun timestr-to-epoch (timestr)
+  "Convert a given HH:MM:SS time string to seconds since the epoch, so we can compare."
+  ;(format t "time conversion \"~A\"~%" timestr)
+  (let ((result ())
+		(hms
+		 (loop with last-colon = -1
+			while last-colon
+			collect (parse-integer (subseq timestr (1+ last-colon)
+							(setf last-colon (position #\: timestr :start (1+ last-colon))))))))
+
+	(if (> (nth 0 hms) 23)
+		  (encode-universal-time
+		   (nth 2 hms)					;second
+		   (nth 1 hms)					;minute
+		   (- (nth 0 hms) 24)			;hour
+		   (nth 3 *tomorrow*)			;day of month
+		   (nth 4 *tomorrow*)			;month
+		   (nth 5 *tomorrow*))			;year
+		  (encode-universal-time
+		   (nth 2 hms)					;second
+		   (nth 1 hms)					;minute
+		   (nth 0 hms)					;hour
+		   (nth 3 *working-date*)			;day of month
+		   (nth 4 *working-date*)			;month
+		   (nth 5 *working-date*)))))			;year
