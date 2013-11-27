@@ -1,5 +1,9 @@
 ;;;; Grand River Transit
 
+;;; TODO Time comparisons will screw up just past midnight, as schedule times
+;;; become 24:nn:nn, but `now' is the following day, so lookups in calendar_dates
+;;; don't match..... True of GRTransit app too.
+
 (defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp" "tmp") "Where we're doing it")
 (defparameter *working-date* (multiple-value-list (get-decoded-time)) "System's notion of today's date and time")
 (defparameter *tomorrow* (multiple-value-list (decode-universal-time (+ (get-universal-time) (* 60 60 24))))
@@ -17,6 +21,10 @@
 	   ("trips.txt" . 32768))
 	   "A list of files to slurp in, and approximate number of lines per file.")
 
+(defun get-table (table)
+  "Return the hash table associates with the table name."
+  (cdr (assoc table *tables* :test #'equalp)))
+
 ;;;$ grep 815413 trips.txt 
 ;;; 7,13FALL-All-Weekday-06,815413,"31 Lexington to UW",0,130424,70061
 ;;;
@@ -30,6 +38,7 @@
 
 ;;; Read table files, and store the results in pairlis *table-files*.
 ;;; Fetch with (assoc "trips" *tables* :test #'equalp)
+
 (defun main ()
   (setq *tables* ())
   (mapc (lambda (p)
@@ -43,44 +52,57 @@
   "A pretty printed version of next-bus-at-stop."
   (mapc
    (lambda (bus)
-	 (multiple-value-bind
-		   (sec min hr day mon year)
-		 (decode-universal-time (caddr bus))
-	   (format t "~2,'0d:~2,'0d ~3A \"~A\"~%"
-			   hr min
+	 (format t "~A ~4A \"~A\"~%"
 			   (car bus)
-			   (cadr bus))))
-   (sort
-	(next-bus-at-stop stop-id)
-	(lambda (a b)
-	  (< (caddr a) (caddr b))))))
+			   (cadr bus)
+			   (caddr bus)))
+   (next-bus-at-stop stop-id))
+  t)
+
+(defun all-busses-at-stop (stop-id)
+  "Return all the busses for a stop, in time order."
+
+  ;; For each trip using a stop, stash time, routes number & headsign.
+  (sort
+   (mapcar
+	(lambda (trip-details)
+	  (multiple-value-bind (id sign) (trip-id-to-route-id (car trip-details))
+		(list (cadr trip-details) id sign trip-details)))
+	(trips-using-stop stop-id))
+   (lambda (a b)
+	 (string< (car a) (car b)))))
 
 (defun next-bus-at-stop (stop-id)
   "Return route and time of the next bus to come through the given stop."
   (let ((routes-hash (make-hash-table :test 'equal :size 42))
 		(routes-list ())
-		(now (get-universal-time)))
+		(now (multiple-value-bind (s m h)
+				 (decode-universal-time (get-universal-time))
+			   (format nil "~2,'0d:~2,'0d:~2,'0d" h m s))))
 
 	;; For each trip using a stop, stash all the routes numbers & headsigns.
 	;; Use a hash table to track times.
 	(mapc
 	 (lambda (trip-details)
 	   (multiple-value-bind (id sign) (trip-id-to-route-id (car trip-details))
-		 (let ((this-time (timestr-to-epoch (cadr trip-details))))
-		   (when (> this-time now)
+		 (let ((this-time (cadr trip-details)))
+		   ;(format t "this time ~A, now ~A~%" this-time now)
+		   (when (string> this-time now)
 			 (let ((latest (gethash (cons id sign) routes-hash)))
-			   (if (or (null latest) (< this-time latest))
+			   (if (or (null latest) (string< this-time latest))
 				   (setf (gethash (cons id sign) routes-hash) this-time)))))))
 	 (trips-using-stop stop-id))
 
 	;; Fetch unique copies off the hash table and stash in list for return.
 	(maphash
 	 (lambda (route-sign time)
-	   (push (list (car route-sign) (cdr route-sign) time) routes-list))
+	   (push (list time (car route-sign) (cdr route-sign)) routes-list))
 	 routes-hash)
-  routes-list))
 
-
+	(sort
+	 routes-list
+	 (lambda (a b)
+	   (string< (car a) (car b))))))
 
 (defun routes-using-stop (stop-id)
   "Return a list of conses of routes and headsigns that use a particular stop."
@@ -98,6 +120,7 @@
 	;; Fetch unique copies off the hash table and stash in list for return.
 	(maphash
 	 (lambda (route-sign foo)
+	   (declare (ignore foo))
 	   (push route-sign routes-list))
 	 routes-hash)
   routes-list))
@@ -122,7 +145,7 @@
 				(values
 				 route-id
 				 (slot-value trips-instance 'trip-headsign)))))))
-	 (cdr (assoc "trips" *tables* :test #'equalp))))
+	 (get-table "trips")))
 
 ;;; TODO -- this is a sequential search through values to return a key....
 ;;; If a route does a loop back to a stop, there will be dups in this list.
@@ -150,7 +173,7 @@ that use a particular stop. May contain dups."
 						  (slot-value stop-time-instance 'arrival-time)
 						  (slot-value stop-time-instance 'departure-time))
 					trip-ids)))))
-	 (cdr (assoc "stop-times" *tables* :test #'equalp)))
+	 (get-table "stop-times"))
 	trip-ids))
 
 ;;; Load data from a standard text input file.
@@ -224,10 +247,9 @@ that use a particular stop. May contain dups."
 	  (return-from cleanup s))))
 
 (defun timestr-to-epoch (timestr)
-  "Convert a given HH:MM:SS time string to seconds since the epoch, so we can compare."
+  "Convert a given HH:MM:SS time string to seconds since the epoch."
   ;(format t "time conversion \"~A\"~%" timestr)
-  (let ((result ())
-		(hms
+  (let ((hms
 		 (loop with last-colon = -1
 			while last-colon
 			collect (parse-integer (subseq timestr (1+ last-colon)
