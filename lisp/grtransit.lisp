@@ -5,9 +5,16 @@
 ;;; don't match..... True of GRTransit app too.
 
 (defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp" "tmp") "Where we're doing it")
+
 (defparameter *working-date* (multiple-value-list (get-decoded-time)) "System's notion of today's date and time")
 (defparameter *tomorrow* (multiple-value-list (decode-universal-time (+ (get-universal-time) (* 60 60 24))))
   "Tomorrow's date, used for dealing with times of the form 25:00:00")
+(defparameter *yesterday* (multiple-value-list (decode-universal-time (- (get-universal-time) (* 60 60 24))))
+  "Yesterday's date, used for dealing with times of the form 25:00:00")
+(defparameter *today-ymd* (format nil "~A~2,'0A~2,'0A"
+								  (nth 5 *working-date*) (nth 4 *working-date*) (nth 3 *working-date*))
+  "Today's date in yyyymmdd format, for comparisons with calendar entries.")
+
 (defparameter *tables* () "Root of all the tables read from the input files.")
 (defparameter *table-files*
 	 '(("agency.txt" . 2)
@@ -24,6 +31,10 @@
 (defun get-table (table)
   "Return the hash table associates with the table name."
   (cdr (assoc table *tables* :test #'equalp)))
+
+(defun day-of-week ()
+  "Return the day of week from *working-date*"
+  (nth 6 *working-date*))
 
 ;;;$ grep 815413 trips.txt 
 ;;; 7,13FALL-All-Weekday-06,815413,"31 Lexington to UW",0,130424,70061
@@ -245,6 +256,24 @@ that use a particular stop. May contain dups."
 			(return-from cleanup (subseq s 1 (1- (length s))))
 			(format t "~A is badly formed (quotes)~%" s)))
 	  (return-from cleanup s))))
+
+(defun check-calendar-exception (service-id)
+  "Check the calendar-dates to see if a trip runs today."
+  ;; TODO use flet or labels or whatever
+  (let ((override (gethash service-id (get-table "calendar-dates"))))
+	(case (type-of override)
+	  ('CONS
+	   (mapc
+		(lambda (entry)
+		  (if (string>= *today-ymd* (slot-value entry 'DATE))
+			  (return-from check-calendar-exception ; 1 is added, 2 is removed
+				(string= "1" (slot-value entry 'EXCEPTION-TYPE)))))
+		override))
+	  ('CALENDAR-DATES
+	   (if (string>= *today-ymd* (slot-value override 'DATE))
+		   (string= "1" (slot-value override 'EXCEPTION-TYPE))))
+	  (t								;no override
+	   nil))))
 
 (defun timestr-to-epoch (timestr)
   "Convert a given HH:MM:SS time string to seconds since the epoch."
