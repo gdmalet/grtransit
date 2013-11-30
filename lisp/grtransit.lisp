@@ -4,10 +4,10 @@
 ;;; become 24:nn:nn, but `now' is the following day, so lookups in calendar_dates
 ;;; don't match..... True of GRTransit app too.
 
-(defpackage :grtransit
-  (:use :common-lisp))
-;  (:export check-passwords))
-(in-package :grtransit)
+;(defpackage :grtransit
+;  (:use :common-lisp))
+;;  (:export check-passwords))
+;(in-package :grtransit)
 
 
 (defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp" "tmp") "Where we're doing it")
@@ -45,17 +45,6 @@
   "Return the day of week from *working-date*"
   (nth 6 *working-date*))
 
-;;;$ grep 815413 trips.txt 
-;;; 7,13FALL-All-Weekday-06,815413,"31 Lexington to UW",0,130424,70061
-;;;
-;;;$ grep 815413 stop_times.txt 
-;;; [...]
-;;; 815413,08:17:00,08:17:00,1123,9,0,0
-;;;
-;;; -- it's excluded by service:
-;;;$ grep 13FALL-All-Weekday-06, calendar.txt
-;;; 13FALL-All-Weekday-06,1,1,1,1,1,0,0,20131011,20131018
-
 (defun main ()
   (setq *tables* ())
   (mapc (lambda (p)
@@ -64,6 +53,15 @@
 					   (load-table (car p) (make-hash-table :test 'equal :size (cdr p)))
 					   *tables*)))
 		*table-files*))
+
+(defun stops-with-no-trips ()
+  "Find bogus stops."
+  (maphash
+   (lambda (stop-id details)
+	 (declare (ignore details))
+	 (unless (trips-using-stop stop-id nil)
+		 (format t "~A~%" stop-id)))
+   (get-table "stops")))
 
 (defun show-next-bus-at-stop (stop-id)
   "A pretty printed version of next-bus-at-stop."
@@ -78,12 +76,12 @@
 
 (defun all-busses-at-stop (stop-id)
   "Return all the busses for a stop, in time order."
-
   ;; For each trip using a stop, stash time, routes number & headsign.
   (sort
    (mapcar
 	(lambda (trip-details)
-	  (multiple-value-bind (id sign) (get-route-details (car trip-details))
+	  (multiple-value-bind (id sign)
+		  (get-route-details-for-trip (car trip-details))
 		(list (cadr trip-details)
 			  (caddr trip-details)
 			  id sign)))
@@ -103,9 +101,10 @@
 	;; Use a hash table to track times.
 	(mapc
 	 (lambda (trip-details)
-	   (multiple-value-bind (id sign) (get-route-details (car trip-details))
+	   (multiple-value-bind (id sign)
+		   (get-route-details-for-trip (car trip-details))
 		 (let ((this-time (cadr trip-details)))
-		   ;(format t "this time ~A, now ~A~%" this-time now)
+		   ;;(format t "this time ~A, now ~A~%" this-time now)
 		   (when (string> this-time now)
 			 (let ((latest (gethash (cons id sign) routes-hash)))
 			   (if (or (null latest) (string< this-time latest))
@@ -123,10 +122,23 @@
 	 (lambda (a b)
 	   (string< (car a) (car b))))))
 
-(defun trips-for-route-by-headsign (stop-id)
+(defun trips-for-route-by-headsign (stop-id headsign)
   "Return trips (in time order) passing through a particular stop,
 limited to one route."
-  'TODO)
+  (let ((trips ()))
+	(mapcar
+	 (lambda (trip-details)
+	   (multiple-value-bind (id sign)
+		   (get-route-details-for-trip (car trip-details))
+		 (declare (ignore id))
+		 (if (string= sign headsign)
+			 (push trip-details trips))))
+	 (trips-using-stop stop-id))
+
+	(sort 
+	 trips
+	 (lambda (a b)
+	   (string< (cadr a) (cadr b))))))
 
 (defun routes-using-stop (stop-id)
   "Return a list of conses of routes and headsigns that use a particular stop."
@@ -137,7 +149,8 @@ limited to one route."
 	;; Use a hash table to get a unique copy of each.
 	(mapc
 	 (lambda (trip-details)
-	   (multiple-value-bind (id sign) (get-route-details (car trip-details))
+	   (multiple-value-bind (id sign)
+		   (get-route-details-for-trip (car trip-details))
 		 (setf (gethash (cons id sign) routes-hash) t)))
 	 (trips-using-stop stop-id))
 
@@ -150,15 +163,15 @@ limited to one route."
   routes-list))
 
 ;;; TODO -- this is a sequential search through values to return a key....
-(defun get-route-details (trip-id)
+(defun get-route-details-for-trip (trip-id)
   "Return the route-id, trip headsign & service-id for a given trip-id"
   (maphash 
 	 (lambda (route-id trips-instance)
 	   (case (type-of trips-instance)
-		 ('CONS
+		 (CONS
 		  (mapc (lambda (route)
 				  (when (equalp trip-id (slot-value route 'trip-id))
-					(return-from get-route-details
+					(return-from get-route-details-for-trip
 					  (values
 					   route-id
 					   (slot-value route 'trip-headsign)
@@ -166,7 +179,7 @@ limited to one route."
 				trips-instance))
 		 (t
 		  (if (equalp trip-id (slot-value trips-instance 'trip-id))
-			  (return-from get-route-details
+			  (return-from get-route-details-for-trip
 				(values
 				 route-id
 				 (slot-value trips-instance 'trip-headsign)
@@ -176,40 +189,39 @@ limited to one route."
 (defun trip-runs-today-p (trip-id)
   "Check whether a certain trip runs today."
   (multiple-value-bind (route-id headsign service-id)
-	  (get-route-details trip-id)
+	  (get-route-details-for-trip trip-id)
+	(declare (ignore route-id headsign))
 	(check-calendar service-id)))
 
 ;;; TODO -- this is a sequential search through values to return a key....
-;;; TODO use flet or labels or whatever
+;;; TODO use flet
 ;;; If a route does a loop back to a stop, there will be dups in this list.
-(defun trips-using-stop (stop-id)
+(defun trips-using-stop (stop-id &optional (verify t))
   "Return a list of trips, with arrival & departure times,
 that use a particular stop. May contain dups."
   (let ((trip-details ()))
-	(maphash 
+	(flet ((maybe-save-trip (trip-id instance)
+			 (when (equalp stop-id (slot-value instance 'stop-id))
+			   (unless (and verify
+							(trip-runs-today-p trip-id))
+				 (push (list trip-id
+							 (slot-value instance 'arrival-time)
+							 (slot-value instance 'departure-time))
+					   trip-details)))))
+	(maphash
 	 (lambda (trip-id stop-time-instance)
-	   ;;(format t "Key: ~A, value ~A~%" trip-id stop-time-instance)
+	   ;(format t "Key: ~A, value ~A~%" trip-id stop-time-instance)
 	   (case (type-of stop-time-instance)
-		 ('CONS
+		 (CONS
 		  (mapc (lambda (trip-stop)
-				  (when (and (equalp stop-id (slot-value trip-stop 'stop-id))
-							 (trip-runs-today-p trip-id))
-					;; TODO could exit mapc early after next line
-					(push (list trip-id
-								(slot-value trip-stop 'arrival-time)
-								(slot-value trip-stop 'departure-time))
-						  trip-details)))
+				  ;; TODO could exit mapc early after next line
+				  (maybe-save-trip trip-id trip-stop))
 				stop-time-instance))
 		 (t
 		  ;;; A trip with one stop?
-		  (if (and (equalp stop-id (slot-value stop-time-instance 'stop-id))
-				   (trip-runs-today-p trip-id))
-			  (push (list trip-id
-						  (slot-value stop-time-instance 'arrival-time)
-						  (slot-value stop-time-instance 'departure-time))
-					trip-details)))))
+		  (maybe-save-trip trip-id stop-time-instance))))
 	 (get-table "stop-times"))
-	trip-details))
+	trip-details)))
 
 ;;; Load data from a standard text input file.
 ;;; If file is "foo.txt", stores each line from the file in an instance
@@ -244,9 +256,9 @@ that use a particular stop. May contain dups."
 
 		;; Stash the instance in the hash table
 		(case (type-of h)
-		  (null						; store instance of class
+		  (null							; store instance of class
 		   (setf (gethash (car l) table) c))
-		  ('CONS						; add to the list
+		  (CONS							; add to the list
 		   (setf (gethash (car l) table) (append h (list c))))
 		  (t							; class presumably, so create list
 		   (setf (gethash (car l) table) (list h c))))))))
@@ -298,23 +310,20 @@ calendar-dates, and if the schedule is current in the calendar."
 (defun check-calendar-exception (service-id)
   "Check the calendar-dates to see if a trip runs today.
 Returns string '1' if it is added today, '2' removed, nil if no exception."
-  ;; TODO use flet or labels or whatever
-  (let ((override (gethash service-id (get-table "calendar-dates"))))
-	(case (type-of override)
-	  ('CONS
-	   (mapc
-		(lambda (entry)
-		  (if (string>= *today-ymd* (slot-value entry 'DATE))
-			  (return-from check-calendar-exception ; 1 is added, 2 is removed
-				(slot-value entry 'EXCEPTION-TYPE))))
-		override)
-	   nil)
-	  ('CALENDAR-DATES
-	   (if (string>= *today-ymd* (slot-value override 'DATE))
-		   (return-from check-calendar-exception ; 1 is added, 2 is removed
-			 (slot-value override 'EXCEPTION-TYPE)))
-	   nil)
-	  (t nil))))						;no override
+  (flet ((maybe-return (instance)
+		   (if (string>= *today-ymd* (slot-value instance 'DATE))
+			   (return-from check-calendar-exception
+				 (slot-value instance 'EXCEPTION-TYPE)))))
+
+	(let ((override (gethash service-id (get-table "calendar-dates"))))
+	  (case (type-of override)
+		(CONS
+		 (mapc #'maybe-return override)
+		 nil)
+		(CALENDAR-DATES
+		 (maybe-return override)
+		 nil)
+		(t nil)))))						;no override
 
 (defun timestr-to-epoch (timestr)
   "Convert a given HH:MM:SS time string to seconds since the epoch."
