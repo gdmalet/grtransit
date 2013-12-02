@@ -17,7 +17,7 @@
   "Tomorrow's date, used for dealing with times of the form 25:00:00")
 (defparameter *yesterday* (multiple-value-list (decode-universal-time (- (get-universal-time) (* 60 60 24))))
   "Yesterday's date, used for dealing with times of the form 25:00:00")
-(defparameter *today-ymd* (format nil "~A~2,'0A~2,'0A"
+(defparameter *today-ymd* (format nil "~D~2,'0D~2,'0D"
 								  (nth 5 *working-date*) (nth 4 *working-date*) (nth 3 *working-date*))
   "Today's date in yyyymmdd format, for comparisons with calendar entries.")
 
@@ -46,13 +46,41 @@
   (nth 6 *working-date*))
 
 (defun main ()
+  "Load the files into internal tables, and get ready for work."
   (setq *tables* ())
   (mapc (lambda (p)
 		  (setq *tables*
 				(acons (string-to-symbol-name (car p))
 					   (load-table (car p) (make-hash-table :test 'equal :size (cdr p)))
 					   *tables*)))
-		*table-files*))
+		*table-files*)
+
+  ;; Create a table giving all trips using a stop, since this is such a common need.
+  (setq *tables*
+		(acons (string-to-symbol-name "stop-trips")
+			   (let ((tbl (make-hash-table :test 'equal
+										   :size (cdr (find "stops.txt" *table-files*
+															:test (lambda (const l) (string= const (car l))))))))
+				 (flet ((save-trip (trip-id instance)
+						  ;;(format t "saving trip ~A to stop ~A~%" trip-id (slot-value instance 'stop-id))
+						  (push (list trip-id
+								  (slot-value instance 'arrival-time)
+								  (slot-value instance 'departure-time))
+								(gethash (slot-value instance 'stop-id) tbl))))
+				   (maphash
+					(lambda (trip-id stop-time-instance)
+					  (case (type-of stop-time-instance)
+						(CONS
+						 (mapc (lambda (trip-stop)
+								 (save-trip trip-id trip-stop))
+							   stop-time-instance))
+						(t
+						 (save-trip trip-id stop-time-instance))))
+					(get-table "stop-times")))
+				 tbl)
+			   *tables*))
+  t)
+
 
 (defun stops-with-no-trips ()
   "Find bogus stops."
@@ -194,9 +222,22 @@ limited to one route."
 	(check-calendar service-id)))
 
 ;;; TODO -- this is a sequential search through values to return a key....
-;;; TODO use flet
 ;;; If a route does a loop back to a stop, there will be dups in this list.
 (defun trips-using-stop (stop-id &optional (verify t))
+  "Return a list of trips, with arrival & departure times,
+that use a particular stop. May contain dups."
+  (unless verify
+	(return-from trips-using-stop
+	  (gethash stop-id (get-table "stop-trips"))))
+
+  (let ((trip-details ()))
+	(dolist (deets (gethash stop-id (get-table "stop-trips")))
+	  (when (trip-runs-today-p (car deets))
+		(push deets trip-details))
+	  trip-details)
+	trip-details))
+
+(defun old-trips-using-stop (stop-id &optional (verify t))
   "Return a list of trips, with arrival & departure times,
 that use a particular stop. May contain dups."
   (let ((trip-details ()))
