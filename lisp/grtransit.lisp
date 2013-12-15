@@ -237,33 +237,6 @@ that use a particular stop. May contain dups."
 	  trip-details)
 	trip-details))
 
-(defun old-trips-using-stop (stop-id &optional (verify t))
-  "Return a list of trips, with arrival & departure times,
-that use a particular stop. May contain dups."
-  (let ((trip-details ()))
-	(flet ((maybe-save-trip (trip-id instance)
-			 (when (equalp stop-id (slot-value instance 'stop-id))
-			   (unless (and verify
-							(trip-runs-today-p trip-id))
-				 (push (list trip-id
-							 (slot-value instance 'arrival-time)
-							 (slot-value instance 'departure-time))
-					   trip-details)))))
-	(maphash
-	 (lambda (trip-id stop-time-instance)
-	   ;(format t "Key: ~A, value ~A~%" trip-id stop-time-instance)
-	   (case (type-of stop-time-instance)
-		 (CONS
-		  (mapc (lambda (trip-stop)
-				  ;; TODO could exit mapc early after next line
-				  (maybe-save-trip trip-id trip-stop))
-				stop-time-instance))
-		 (t
-		  ;;; A trip with one stop?
-		  (maybe-save-trip trip-id stop-time-instance))))
-	 (get-table "stop-times"))
-	trip-details)))
-
 ;;; Load data from a standard text input file.
 ;;; If file is "foo.txt", stores each line from the file in an instance
 ;;; of a class that is created from the header line of the file. Each
