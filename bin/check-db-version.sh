@@ -2,6 +2,7 @@
 # Check for new versions of the GRT database, and upload if so.
 
 dir=~/src/GRT-GTFS/data/sqlite3
+dest=/var/www/html/gdmalet/android/grtransit/
 url="http://www.regionofwaterloo.ca/opendatadownloads/GRT_GTFS.zip"
 file=GRT_GTFS.zip
 
@@ -30,7 +31,7 @@ bzip2 -9v ../$name.tar
 
 ../../bin/mksql3db.sh GRT.db ../$name/*
 
-scp -p GRT.db.gz balekaor@baleka.org:www/gdmalet/android/grtransit/GRT.db.gz.dbg
-scp -p GRT.db.version balekaor@baleka.org:www/gdmalet/android/grtransit/GRT.db.version.dbg
+new=$(ls -tr GRT.db-*.version | tail -1)
+cp -p ${new} ${new/%version/gz} $dest
 
 exit 0

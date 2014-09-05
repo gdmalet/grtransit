@@ -1,11 +1,12 @@
 #!/bin/bash
 # Automatically create sqlite3 db from GTFS files
-# Creates DB of given name in current dir from all files
+# Creates DB of given name in current dir from all files.
 # rm the sqlite3/GRT.db, then cd to the data/GRT-?? dir, and run
 # ../../bin/mksql3db.sh ../sqlite3/GRT.db *
 
 MYNAME=$(basename $0)
-SQ3=/usr/local/android-sdk-linux/tools/sqlite3
+#SQ3=/usr/local/android-sdk-linux/tools/sqlite3
+SQ3=/usr/bin/sqlite3
 
 function usage {
     echo "Usage: $MYNAME dbname file [file ...]"
@@ -46,6 +47,7 @@ echo "using database version $version"
 
 tmpfile=$(mktemp)
 trap "rm -f $tmpfile $DB.new" 0
+rm -f $DB.new
 
 # Create the necessary metadata table
 $SQ3 $DB.new <<-EOT
@@ -84,16 +86,14 @@ EOT
 
 mv $DB $DB.old
 mv $DB.new $DB
-mv $DB.version $DB.version.old
-
-gzip -9v -c $DB > $DB.gz
+gzip -9v -c $DB > $DB-$version.gz
 
 md5=$(md5sum $DB | cut -f1 -d' ')
-size=$(stat -c "%s" $DB.gz)
+size=$(stat -c "%s" $DB-$version.gz)
 sizem=$(echo "1k $size 512+ 1024/1024/p" | dc)
-echo "$version $sizem $md5" > $DB.version
+echo "$version $sizem $md5" > $DB-$version.version
 
-ls -l $DB $DB.gz $DB.version
-cat $DB.version
+ls -l $DB $DB-$version.gz $DB-$version.version
+cat $DB-$version.version
 
 exit 0
