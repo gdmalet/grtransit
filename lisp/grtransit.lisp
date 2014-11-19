@@ -279,7 +279,7 @@ that use a particular stop. May contain dups."
 
 ;;; Given "foo_bar.txt", return "FOO-BAR"
 (defun string-to-symbol-name (str)
-  "Convert give file name to a symbol name."
+  "Convert given file name to a symbol name."
   (substitute #\- #\_
 			  (string-upcase
 			   (subseq str 0 (position #\. str)))))
@@ -363,3 +363,28 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 		   (nth 3 *working-date*)			;day of month
 		   (nth 4 *working-date*)			;month
 		   (nth 5 *working-date*)))))			;year
+
+
+;;; See http://www.clisp.org/impnotes/socket.html for other examples
+;;; Returns simple-base-string of returned web page, minus headers.
+(defun wget-text (host page &optional (port 80))
+  (with-open-stream (socket (socket:socket-connect port host :external-format :DOS))
+	(format socket "GET ~A HTTP/1.1~%Host: ~A~%Connection: close~2%" page host)
+   (LOOP :with content-length :for line = (READ-LINE socket nil nil)
+      ;; header is separated from the data with a blank line
+      :until (ZEROP (LENGTH line)) :do
+	  ;;(format t "read header len ~A \"~A\"~%" (length line) line)
+      (WHEN (and
+			 (> (length line) #1=#.(LENGTH #2="Content-Length: "))
+			 (STRING-equal line #2# :end1 #1#))
+        (SETQ content-length (PARSE-INTEGER line :start #1#))
+		;;(format t "got content length ~A~%" content-length))
+		;; this will not work if the server does not supply the content-length header
+		:finally (RETURN (LET ((data (MAKE-ARRAY content-length
+												 :element-type '(unsigned-byte 8))))
+						   (SETF (STREAM-ELEMENT-TYPE socket) '(unsigned-byte 8)) ; binary input
+						   ;; read the whole file in one system call
+						   (setf fill-pointer (read-sequence data socket))
+						   (map 'string #'code-char
+								(subseq data 0 (min content-length fill-pointer))))))))
+
