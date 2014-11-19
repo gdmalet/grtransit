@@ -9,6 +9,8 @@
 ;;  (:export check-passwords))
 ;(in-package :grtransit)
 
+;; Need this for parsing the JSON returned from the realtime site
+(load "st-json/st-json")
 
 (defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp" "tmp") "Where we're doing it")
 
@@ -91,7 +93,7 @@
 		 (format t "~A~%" stop-id)))
    (get-table "stops")))
 
-(defun show-next-bus-at-stop (stop-id)
+(defun next-bus-at-stop* (stop-id)
   "A pretty printed version of next-bus-at-stop."
   (mapc
    (lambda (bus)
@@ -381,10 +383,32 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 		;;(format t "got content length ~A~%" content-length))
 		;; this will not work if the server does not supply the content-length header
 		:finally (RETURN (LET ((data (MAKE-ARRAY content-length
-												 :element-type '(unsigned-byte 8))))
+												 :element-type '(unsigned-byte 8)))
+							   (fill-pointer))
+						   (read-line socket nil nil) ; swallow empty line
 						   (SETF (STREAM-ELEMENT-TYPE socket) '(unsigned-byte 8)) ; binary input
 						   ;; read the whole file in one system call
 						   (setf fill-pointer (read-sequence data socket))
+						   ;;(format t "fill-pointer: ~A~%~A~%" fill-pointer data)
 						   (map 'string #'code-char
-								(subseq data 0 (min content-length fill-pointer))))))))
+								(subseq data 0 (min content-length fill-pointer)))))))))
 
+(defun next-bus-at-stop-realtime (stop-id)
+  "Return realtime data with route and time of the next bus to come
+through the given stop."
+  (mapcar
+   (lambda (bus)
+	 (get-realtime stop-id (cadr bus)))
+   ;; TODO this is calling e.g. route 7 multiple times, for 7, 7E etc.
+   (next-bus-at-stop stop-id)))
+
+
+(defun get-realtime (stop-id route)
+  "Get the realtime data for a given route at given stop.
+Returns a list of JSO objects, one for each arrival."
+  (let ((url (make-array 0 :fill-pointer t :adjustable t :element-type 'character))
+		(jso))
+	(format url "/Stop/GetStopInfo?stopId=~A&routeId=~A" stop-id route)
+	(setf jso (st-json:read-json (wget-text "realtimemap.grt.ca" url)))
+	(when (string= (st-json:getjso "status" jso) "success")
+	  (st-json:getjso "stopTimes" jso))))

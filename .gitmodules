@@ -1,0 +1,3 @@
+[submodule "st-json"]
+	path = lisp/st-json
+	url = http://marijnhaverbeke.nl/git/st-json
