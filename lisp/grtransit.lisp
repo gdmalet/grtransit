@@ -10,7 +10,8 @@
 ;(in-package :grtransit)
 
 ;; Need this for parsing the JSON returned from the realtime site
-(load "st-json/st-json")
+(require 'asdf)
+(asdf:load-system :jsown)
 
 (defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp" "tmp") "Where we're doing it")
 
@@ -40,7 +41,7 @@
   "Used with index (day-of-week) to fetch values out of the calendar.")
 
 (defun get-table (table)
-  "Return the hash table associates with the table name."
+  "Return the hash table associated with the table name."
   (cdr (assoc table *tables* :test #'equalp)))
 
 (defun day-of-week ()
@@ -106,18 +107,19 @@
 
 (defun all-busses-at-stop (stop-id)
   "Return all the busses for a stop, in time order."
-  ;; For each trip using a stop, stash time, routes number & headsign.
+  ;; For each trip using a stop, stash trip id, times, route number & headsign.
   (sort
    (mapcar
 	(lambda (trip-details)
 	  (multiple-value-bind (id sign)
 		  (get-route-details-for-trip (car trip-details))
-		(list (cadr trip-details)
+		(list (car trip-details)
+			  (cadr trip-details)
 			  (caddr trip-details)
 			  id sign)))
 	(trips-using-stop stop-id))
    (lambda (a b)
-	 (string< (car a) (car b)))))
+	 (string< (cadr a) (cadr b)))))
 
 (defun next-bus-at-stop (stop-id)
   "Return route and time of the next bus to come through the given stop."
@@ -396,12 +398,26 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 (defun next-bus-at-stop-realtime (stop-id)
   "Return realtime data with route and time of the next bus to come
 through the given stop."
-  (mapcar
-   (lambda (bus)
-	 (get-realtime stop-id (cadr bus)))
-   ;; TODO this is calling e.g. route 7 multiple times, for 7, 7E etc.
-   (next-bus-at-stop stop-id)))
+  (let ((routes-hash (make-hash-table :test 'equal :size 42))
+		(times-list ()))
+	;; Get a unique list of route numbers, so we can grab realtime data for them
+	(mapc
+	 (lambda (bus)
+	   (multiple-value-bind (route headsign)
+		   (values (car bus) (cdr bus))
+		 (let ((this-one (gethash route routes-hash)))
+		   (when (null this-one)
+			 (format t "stashing ~A ~A~%" route headsign)
+			 (setf (gethash route routes-hash) t)))))
+	 (routes-using-stop stop-id))
 
+	;; Get RT data for each unique route
+	(maphash
+	 (lambda (route foo)
+	   (format t "fetching ~A~%" route)
+	   (push (get-realtime stop-id route) times-list))
+	 routes-hash)
+	times-list))
 
 (defun get-realtime (stop-id route)
   "Get the realtime data for a given route at given stop.
@@ -409,6 +425,6 @@ Returns a list of JSO objects, one for each arrival."
   (let ((url (make-array 0 :fill-pointer t :adjustable t :element-type 'character))
 		(jso))
 	(format url "/Stop/GetStopInfo?stopId=~A&routeId=~A" stop-id route)
-	(setf jso (st-json:read-json (wget-text "realtimemap.grt.ca" url)))
-	(when (string= (st-json:getjso "status" jso) "success")
-	  (st-json:getjso "stopTimes" jso))))
+	(setf jso (jsown:parse (wget-text "realtimemap.grt.ca" url)))
+	(when (string= (jsown:val jso "status") "success")
+	  (jsown:val jso "stopTimes"))))
