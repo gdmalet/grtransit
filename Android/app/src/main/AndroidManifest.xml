@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.kw.shrdlu.grtgtfs"
+    android:theme="@style/ActivityTheme"
+    android:versionCode="31"
+    android:versionName="1.8" >
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- android:uiOptions="splitActionBarWhenNarrow" -->
+
+
+    <!--
+         Hardware acceleration is turned off on the maps, else zooming on the maps causes lines to
+		 eventually disappear, and sudden crashes.  Logcat also says "Shape path too
+		 large to be rendered into a texture".
+		 See http://stackoverflow.com/questions/9896804/android-paths-for-real-time-charting
+    -->
+
+    <application
+        android:name=".GRTApplication"
+        android:allowBackup="false"
+        android:description="@string/app_name"
+        android:icon="@drawable/grticon"
+        android:label="@string/app_short_name"
+        android:theme="@style/ActivityTheme" >
+        <uses-library android:name="com.google.android.maps" />
+
+        <activity
+            android:name=".StopsActivity"
+            android:hardwareAccelerated="false" >
+        </activity>
+        <activity android:name=".FavstopsActivity" />
+        <activity
+            android:name=".StartupActivity"
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".RouteActivity"
+            android:hardwareAccelerated="false" >
+        </activity>
+        <activity
+            android:name=".PrefsActivity"
+            android:theme="@android:style/Theme.Holo" />
+        <activity android:name=".RouteselectActivity" />
+        <activity android:name=".TimesActivity" />
+        <activity android:name=".TripStopsActivity" />
+        <activity android:name=".ClosestStopsActivity" />
+        <activity android:name=".RiderAlertsActivity" />
+        <activity
+            android:name=".SearchActivity"
+            android:launchMode="singleTop" >
+        </activity>
+
+        <!--
+        Need the following for maps api v2.
+        <uses-feature
+        	android:glEsVersion="0x00020000"
+        	android:required="true" />
+        
+        <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBnV3o4q37PV6uz5RmXd2Z17li8MIAWmjI" />
+
+        Release
+            android:value="AIzaSyBKsFJiBLKH-i2ejI7Pcpfwm7dooqiEsno" />
+        Debug
+            android:value="AIzaSyBnV3o4q37PV6uz5RmXd2Z17li8MIAWmjI" />
+        -->
+
+    </application>
+
+</manifest>

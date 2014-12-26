@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/List"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:stretchColumns="1" >
+
+    <TextView
+        android:id="@+id/stoptime"
+        style="@style/List.TweetTime" />
+
+    <TextView
+        android:id="@+id/desc"
+        style="@style/List.TweetText" />
+
+</LinearLayout>
