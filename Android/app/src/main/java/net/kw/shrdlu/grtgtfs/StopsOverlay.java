@@ -19,8 +19,6 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,16 +37,19 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 
+import java.util.ArrayList;
+
 public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	private static final String TAG = "GrtItemizedOverlay";
 
-	private final ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>(1);
+	private final ArrayList<OverlayItem> mOverlayItems = new ArrayList<>(1);
 	private Rect mBoundingBox;
 	private static Rect mCachedBoundingBox;
 	private Context mContext = null;
@@ -65,7 +66,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 	}
 
-	private ArrayList<stopDetail> mStops = new ArrayList<stopDetail>(3000);
+	private ArrayList<stopDetail> mStops = new ArrayList<>(3000);
 	private static ArrayList<stopDetail> mCachedStops = null;
 
 	// Used to limit which stops are displayed
@@ -212,9 +213,13 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		mStopid = stop.num;
 		final String stopname = stop.name;
 
-		if (longpress == true) {
+		if (longpress) {
 
-			GRTApplication.tracker.trackEvent("Map longclick", "Stop", mStopid, 1);
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Map longclick")
+                    .setAction("Stop")
+                    .setLabel(mStopid)
+                    .build());
 
 			final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
 				@Override
@@ -235,7 +240,12 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			builder.setTitle("Stop " + mStopid + ", " + stopname).setMessage(R.string.favs_add_to_list)
 			.setPositiveButton(R.string.yes, listener).setNegativeButton(R.string.no, listener).create().show();
 		} else {
-			GRTApplication.tracker.trackEvent("Map click", "Stop", mStopid, 1);
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Map click")
+                    .setAction("stop")
+                    .setLabel(mStopid)
+                    .build());
+
 			// Show route select activity
 			final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -305,8 +315,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			final Bitmap bmTextBox = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.stopnumber);
 			npTextBox = new NinePatch(bmTextBox, bmTextBox.getNinePatchChunk(), "stopnumber");
 			textbounds = new Rect();
-			cachedStops = new ArrayList<cachedStop>(32);
-			cachedRects = new ArrayList<Rect>(64);
+			cachedStops = new ArrayList<>(32);
+			cachedRects = new ArrayList<>(64);
 		}
 
 		// First loop over all visible stops, drawing them and caching boundaries.
@@ -323,7 +333,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			stopmarker.draw(canvas);
 
 			if (zoom > textZoomLimit) {
-				cachedStops.add(new cachedStop(new Point(pt_scr), new String(stop.num), new String(stop.name)));
+				cachedStops.add(new cachedStop(new Point(pt_scr), stop.num, stop.name));
 				cachedRects.add(new Rect(stopbounds));
 			}
 		}

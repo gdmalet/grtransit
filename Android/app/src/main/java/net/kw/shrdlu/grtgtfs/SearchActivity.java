@@ -24,7 +24,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,10 +31,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.gms.analytics.HitBuilders;
 
 public class SearchActivity extends MenuListActivity {
 	private static final String TAG = "SearchActivity";
@@ -51,15 +51,6 @@ public class SearchActivity extends MenuListActivity {
 		mContext = this;
 		setContentView(R.layout.searchlayout);
 		super.onCreate(savedInstanceState);
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
-			// Remove search option from the fake actionbar.
-			final Button search = (Button) findViewById(R.id.button_search);
-			if (search != null) {
-				search.setClickable(false);
-				search.setVisibility(View.GONE);
-			}
-		}
 
 		mSearchText = (EditText) findViewById(R.id.searchtext);
 
@@ -79,7 +70,7 @@ public class SearchActivity extends MenuListActivity {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				// Log.d(TAG, "onTextChanged");
-				mQuery = new StringBuffer(s).toString();
+				mQuery = String.valueOf(s);
 				DoSearch(mSearchType, getIntent());
 			}
 		});
@@ -89,9 +80,7 @@ public class SearchActivity extends MenuListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB /* 11 */) {
-			menu.removeItem(R.id.menu_search);
-		}
+		menu.removeItem(R.id.menu_search);
 
 		return true;
 	}
@@ -102,12 +91,12 @@ public class SearchActivity extends MenuListActivity {
 
 		switch (v.getId()) {
 		case R.id.button_searchstops: {
-			GRTApplication.tracker.trackEvent("Button", "Search stops", "", 1);
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder(mContext.getLocalClassName(), "Search stops").build());
 			DoSearch(v.getId(), intent);
 			return;
 		}
 		case R.id.button_searchroutes: {
-			GRTApplication.tracker.trackEvent("Button", "Search routes", "", 1);
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder(mContext.getLocalClassName(), "Search routes").build());
 			DoSearch(v.getId(), intent);
 			return;
 		}

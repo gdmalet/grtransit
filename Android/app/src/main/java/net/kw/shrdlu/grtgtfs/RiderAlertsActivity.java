@@ -19,17 +19,13 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -48,14 +44,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 public class RiderAlertsActivity extends MenuListActivity {
 	private static final String TAG = "RiderAlertsActivity";
@@ -78,7 +77,7 @@ public class RiderAlertsActivity extends MenuListActivity {
 		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
-		mListDetails = new ArrayList<String[]>();
+		mListDetails = new ArrayList<>();
 
 		mTitle.setText(R.string.twitter_querying_feed);
 
@@ -119,7 +118,7 @@ public class RiderAlertsActivity extends MenuListActivity {
 				publishProgress(15); // fake it
 
 				try {
-					final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+					final List<NameValuePair> nameValuePairs = new ArrayList<>(1);
 					nameValuePairs.add(new BasicNameValuePair("grant_type", "client_credentials"));
 					final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 					entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
@@ -141,8 +140,6 @@ public class RiderAlertsActivity extends MenuListActivity {
 							AccessToken = token;	// stash it
 						}
 					}
-				} catch (final ClientProtocolException e) {
-					// TODO Auto-generated catch block
 				} catch (final IOException e) {
 					// TODO Auto-generated catch block
 				} catch (final JSONException e) {
@@ -207,35 +204,27 @@ public class RiderAlertsActivity extends MenuListActivity {
 				// Result is an array of tweets
 				final JSONArray arr = (JSONArray) new JSONTokener(builder.toString()).nextValue();
 
-				final ArrayList<String[]> tweets = new ArrayList<String[]>();
+				final ArrayList<String[]> tweets = new ArrayList<>();
 
 				// Need to grok dates of form "created_at": "Thu, 15 Nov 2012 18:27:17 +0000"
 				final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
 				dateFormat.setLenient(true);
 
 				for (int i = 0; i < arr.length(); i++) {
-					final String text = new String(arr.getJSONObject(i).get("text").toString());
-					String tweettime = new String(arr.getJSONObject(i).get("created_at").toString());
+					final String text = arr.getJSONObject(i).get("text").toString();
+					String tweettime = arr.getJSONObject(i).get("created_at").toString();
 
 					// Extract & reformat the date
-					Date created = null;
+					Date created;
 					final GregorianCalendar cal = new GregorianCalendar();
 					try {
 						created = dateFormat.parse(tweettime);
 						cal.setTime(created);
 						String day, mon;
 
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD /* 9 */) {
-							day = APIReflectionWrapper.API9.getDisplayName(cal, Calendar.DAY_OF_WEEK, Calendar.LONG,
-									Locale.getDefault());
-							mon = APIReflectionWrapper.API9.getDisplayName(cal, Calendar.MONTH, Calendar.SHORT,
-									Locale.getDefault());
-						} else { // bah
-							SimpleDateFormat sdf = new SimpleDateFormat("EEEEEEEE", Locale.getDefault());
-							day = sdf.format(new Date());
-							sdf = new SimpleDateFormat("MMM", Locale.getDefault());
-							mon = sdf.format(new Date());
-						}
+                        day = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+                        mon = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+
 						tweettime = String.format("%s %02d:%02d - %s %d", day, cal.get(Calendar.HOUR_OF_DAY),
 								cal.get(Calendar.MINUTE), mon, cal.get(Calendar.DAY_OF_MONTH));
 

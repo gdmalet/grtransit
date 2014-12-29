@@ -22,14 +22,14 @@
  */
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class TimesArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
 	private static final String TAG = "TimesAdapter";

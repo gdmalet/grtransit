@@ -19,13 +19,15 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.google.android.gms.analytics.HitBuilders;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class Preferences {
 
@@ -40,11 +42,11 @@ public class Preferences {
 		mPrefsFile = mContext.getApplicationInfo().packageName;
 		mPrefs = mContext.getSharedPreferences(mPrefsFile, Context.MODE_PRIVATE);
 
-		AMPMTIMES_KEY = new String(mContext.getString(R.string.pref_ampmtimes_key));
-		AUTOUPDATE_KEY = new String(mContext.getString(R.string.pref_db_autoupdate_key));
-		FAVSTOPS_KEY = new String(mContext.getString(R.string.pref_favstops_key));
-		SHOWALLBUSSES_KEY = new String(mContext.getString(R.string.pref_showallbusses_key));
-		UUID_KEY = new String(mContext.getString(R.string.pref_uuid_key));
+		AMPMTIMES_KEY = mContext.getString(R.string.pref_ampmtimes_key);
+		AUTOUPDATE_KEY = mContext.getString(R.string.pref_db_autoupdate_key);
+		FAVSTOPS_KEY = mContext.getString(R.string.pref_favstops_key);
+		SHOWALLBUSSES_KEY = mContext.getString(R.string.pref_showallbusses_key);
+		UUID_KEY = mContext.getString(R.string.pref_uuid_key);
 	}
 
 	// If we don't already have a uuid, generate and save one.
@@ -52,7 +54,7 @@ public class Preferences {
 		String uuid = mPrefs.getString(UUID_KEY, "");
 		if (uuid.equals("")) {
 			uuid = UUID.randomUUID().toString();
-			mPrefs.edit().putString(UUID_KEY, uuid).commit();
+			mPrefs.edit().putString(UUID_KEY, uuid).apply();
 		}
 		return uuid;
 	}
@@ -61,7 +63,7 @@ public class Preferences {
 	 * where the default is `true', since on-screen the default is `false'. */
 	public boolean autoDbUpdate() {
 		if (!mPrefs.contains(AUTOUPDATE_KEY)) {
-			mPrefs.edit().putBoolean(AUTOUPDATE_KEY, true).commit();
+			mPrefs.edit().putBoolean(AUTOUPDATE_KEY, true).apply();
 		}
 		return mPrefs.getBoolean(AUTOUPDATE_KEY, true);
 	}
@@ -89,14 +91,16 @@ public class Preferences {
 
 		if (already) {
 			Toast.makeText(mContext, "Stop " + busstop + " is already a favourite!", Toast.LENGTH_LONG).show();
-			;
-		} else {
+        } else {
 			favs += busstop + ";";
-			mPrefs.edit().putString(FAVSTOPS_KEY, favs).putString(FAVSTOPS_KEY + "-" + busstop, stopname).commit();
+			mPrefs.edit().putString(FAVSTOPS_KEY, favs).putString(FAVSTOPS_KEY + "-" + busstop, stopname).apply();
 			Toast.makeText(mContext, "Stop " + busstop + " was added to your favourites.", Toast.LENGTH_LONG).show();
-			;
-		}
-		GRTApplication.tracker.trackEvent("Favourites", "Add stop", busstop, 1);
+        }
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Preferences")
+                .setAction("Add stop")
+                .setLabel(busstop)
+                .build());
 	}
 
 	public void RemoveBusstopFavourite(String busstop) {
@@ -111,17 +115,21 @@ public class Preferences {
 				newfavs += s + ";";
 			}
 		}
-		mPrefs.edit().putString(FAVSTOPS_KEY, newfavs).remove(FAVSTOPS_KEY + "-" + busstop).commit();
+		mPrefs.edit().putString(FAVSTOPS_KEY, newfavs).remove(FAVSTOPS_KEY + "-" + busstop).apply();
 		Toast.makeText(mContext, "Stop " + busstop + " was removed from your favourites.", Toast.LENGTH_LONG).show();
 
-		GRTApplication.tracker.trackEvent("Favourites", "Remove stop", busstop, 1);
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Preferences")
+                .setAction("Remove stop")
+                .setLabel(busstop)
+                .build());
 	}
 
 	public ArrayList<String[]> GetBusstopFavourites() {
 		final String favs = mPrefs.getString(FAVSTOPS_KEY, "");
 
 		// Load the array for the list
-		final ArrayList<String[]> details = new ArrayList<String[]>();
+		final ArrayList<String[]> details = new ArrayList<>();
 
 		// favs is a semi-colon separated string of stops, with a trailing semi-colon.
 		// Then each stop has a description stored as KEY-stop.

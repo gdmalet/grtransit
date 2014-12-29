@@ -19,8 +19,6 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -37,6 +35,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.analytics.HitBuilders;
+
+import java.util.ArrayList;
 
 public class TimesActivity extends MenuListActivity {
 	private static final String TAG = "TimesActivity";
@@ -281,7 +283,12 @@ public class TimesActivity extends MenuListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_showmap: {
-			GRTApplication.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                    .setCategory(mContext.getLocalClassName())
+                    .setAction("Menu show route")
+                    .setLabel(mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign)
+                    .build());
+
 			// Perform action on click
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busroutes = new Intent(mContext, RouteActivity.class);
@@ -314,7 +321,7 @@ public class TimesActivity extends MenuListActivity {
 					// Catch a fling sort of from left to right
 					if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 						// Log.d(TAG, "fling detected");
-						GRTApplication.tracker.trackEvent("Times", "fling left", "", 1);
+                        GRTApplication.tracker.send(new HitBuilders.EventBuilder(mContext.getLocalClassName(), "fling left").build());
 						finish();
 						return true;
 					}

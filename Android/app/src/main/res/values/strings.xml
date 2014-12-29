@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="about">About</string>
     <string name="ampmtimes">Show times as am/pm</string>
@@ -28,7 +28,7 @@
     <string name="favs_reorder_item">Reorder in your list?</string>
     <string name="find_route">Find a route</string>
     <string name="find_stop">Find a stop</string>
-    <string name="ga_api_key">UA-27006918-1</string>
+    <string name="ga_api_key" tools:ignore="TypographyDashes">UA-27006918-1</string>
     <string name="last_location_fix">No recent location fix, using previous</string>
     <string name="legal_notices">Legal notices:</string>
     <string name="loading_routes">Loading the bus routes…</string>

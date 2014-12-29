@@ -34,10 +34,4 @@ public class PrefsActivity extends PreferenceActivity {
 
 		addPreferencesFromResource(R.xml.preferences);
 	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		GRTApplication.tracker.trackPageView("/" + this.getLocalClassName());
-	}
 }

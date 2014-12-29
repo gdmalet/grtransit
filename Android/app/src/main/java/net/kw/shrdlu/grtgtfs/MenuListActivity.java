@@ -19,9 +19,9 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -55,9 +55,17 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 		mSlideOut = AnimationUtils.loadAnimation(mContext, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB /* 11 */) {
-			APIReflectionWrapper.API11.prepActionBar(mContext);
-		}
+        // Set up the action bar.
+        final ActionBar ab = mContext.getActionBar();
+        if (ab != null) {
+            ab.setTitle(R.string.app_name);
+            String lcn = mContext.getLocalClassName();
+            if (lcn.equals("FavstopsActivity")) {   // home screen
+                ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME, ActionBar.DISPLAY_SHOW_HOME);
+            } else {
+                ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+            }
+        }
 	}
 
 	@Override
@@ -68,8 +76,6 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 		if (GRTApplication.tracker == null) {
 			Log.e(TAG, "null tracker!");
 			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			GRTApplication.tracker.trackPageView("/" + this.getLocalClassName());
 		}
 	}
 
@@ -83,21 +89,13 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.busstopsmenu, menu);
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
-			// Remove search from the menu, as we put it on the title bar.
-			menu.removeItem(R.id.menu_search);
-		}
-
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (!TitlebarClick.onOptionsItemSelected(mContext, item)) {
-			return super.onOptionsItemSelected(item);
-		}
-		return true;
-	}
+        return TitlebarClick.onOptionsItemSelected(mContext, item) || super.onOptionsItemSelected(item);
+    }
 
 	@Override
 	public void onAnimationEnd(Animation animation) {

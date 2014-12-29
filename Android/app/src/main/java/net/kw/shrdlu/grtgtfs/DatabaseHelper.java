@@ -19,16 +19,15 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.io.File;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+
+import java.io.File;
 
 public class DatabaseHelper {
 	private static final String TAG = "DatabaseHelper"; // getClass().getSimpleName();
@@ -40,28 +39,24 @@ public class DatabaseHelper {
 	private static SQLiteDatabase DB = null;
 
 	/**
-	 * Constructor Takes and keeps a reference of the passed context in order to access the application assets and resources.
-	 * 
-	 * @param context
+	 * Constructor takes and keeps a reference of the passed context in order to access the application assets and resources.
 	 */
 	public DatabaseHelper(Context context) {
 		mContext = context;
 
+        // Fallback to old-style location if we're struggling....
 		final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO /* 8 */) {
-			// Returns something like
-			// /mnt/sdcard/Android/data/net.kw.shrdlu.grtgtfs/files/
-			DB_PATH = APIReflectionWrapper.API8.getDBPath(mContext);
-		} else { // bah, make similar path
-			DB_PATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/"
-					+ mContext.getApplicationContext().getPackageName();
-		}
-		if (DB_PATH == null) {
+    	// Returns something like
+		// /mnt/sdcard/Android/data/net.kw.shrdlu.grtgtfs/files/
+        File f = context.getExternalFilesDir(null);
+        if (f != null) {
+            DB_PATH = f.getPath();
+        } else {
 			DB_PATH = DB_OLD_PATH;
+            f = new File(DB_PATH);
 		}
 
-		final File f = new File(DB_PATH);
 		if (!f.exists() && !f.mkdirs()) {
 			Log.e(TAG, "can't create sdcard dirs, using phone storage :-(");
 			DB_PATH = DB_OLD_PATH;

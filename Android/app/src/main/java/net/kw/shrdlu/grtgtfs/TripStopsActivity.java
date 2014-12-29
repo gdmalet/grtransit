@@ -33,6 +33,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 public class TripStopsActivity extends MenuListActivity {
 	private static final String TAG = "TripStopsActivity";
 
@@ -153,7 +155,11 @@ public class TripStopsActivity extends MenuListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_showmap: {
-			GRTApplication.tracker.trackEvent("Menu", "Show route", mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign, 1);
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                    .setCategory(mContext.getLocalClassName())
+                    .setAction("Menu - show route")
+                    .setLabel(mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign)
+                    .build());
 			// Perform action on click
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busroutes = new Intent(mContext, RouteActivity.class);
@@ -186,7 +192,7 @@ public class TripStopsActivity extends MenuListActivity {
 			// Catch a fling sort of from left to right
 			if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
 				// Log.d(TAG, "fling detected");
-				GRTApplication.tracker.trackEvent("TripStops", "fling right", "", 1);
+                GRTApplication.tracker.send(new HitBuilders.EventBuilder(mContext.getLocalClassName(), "fling right").build());
 				finish();
 				return true;
 			}

@@ -22,10 +22,6 @@
  */
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.ListActivity;
 import android.text.Html;
 import android.text.util.Linkify;
@@ -36,7 +32,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 	// private static final String TAG = "ListArrayAdapter";
 
 	private final ArrayList<String[]> mDetails;

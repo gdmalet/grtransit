@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 'Google Inc.:Google APIs:19'
+    compileSdkVersion 'Google Inc.:Google APIs:21'
     buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
-        minSdkVersion 7
-        targetSdkVersion 19
+        minSdkVersion 15
+        targetSdkVersion 21
     }
 
     buildTypes {
@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.1.0'
-    compile files('libs/libGoogleAnalytics.jar')
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.google.android.gms:play-services-base:6.5.+'
+    compile 'com.google.android.gms:play-services-maps:6.5.+'
 }

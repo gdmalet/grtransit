@@ -19,6 +19,25 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -27,29 +46,6 @@ import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.zip.GZIPInputStream;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class StartupActivity extends Activity {
 	private static final String TAG = "StartupActivity";
@@ -83,19 +79,9 @@ public class StartupActivity extends Activity {
 
 		mTitle.setText(R.string.db_opening);
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
-			// Switch title bar icon to the one without the < hint.
-			final Button logo = (Button) findViewById(R.id.titlelogo);
-			final Drawable d = getResources().getDrawable(R.drawable.grticon_nohome);
-			logo.setClickable(false);
-			logo.setBackgroundDrawable(d);
-		} else {
-			APIReflectionWrapper.API11.prepActionBar(mContext);
-		}
-
 		DB_PATH = DatabaseHelper.GetDBPath();
 
-		if (GRTApplication.mPreferences.autoDbUpdate() == true) {
+		if (GRTApplication.mPreferences.autoDbUpdate()) {
 			new LatestDB().execute();
 		} else {
 			startFavstops();
@@ -196,11 +182,7 @@ public class StartupActivity extends Activity {
 						DBmd5 = s.substring(s.lastIndexOf(' ') + 1);
 					}
 				}
-			} catch (final ClientProtocolException e) {
-				// TODO Auto-generated catch block
-			} catch (final IOException e) {
-				// TODO Auto-generated catch block
-			} catch (final NumberFormatException e) {
+			} catch (final IOException | NumberFormatException e) {
 				// TODO Auto-generated catch block
 			} catch (final Exception e) {
 				// TODO Auto-generated catch block
@@ -225,8 +207,8 @@ public class StartupActivity extends Activity {
 	}
 
 	/**
-	 * Copies database from local assets-folder to the system folder, from where it can be accessed and handled. This is done by
-	 * transferring bytestream. Note that this class must be public static, since it's embedded in the outer class. If it's not
+	 * Copies database from the web to the system folder, from where it can be accessed and handled.
+	 * Note that this class must be public static, since it's embedded in the outer class. If it's not
 	 * static, starting the service will fail.
 	 **/
 	private class DBCopier extends AsyncTask<Void, Integer, Void> {
@@ -284,8 +266,13 @@ public class StartupActivity extends Activity {
 					digest = md.digest();
 				}
 
+                // Make sure we got something
+                if (digest == null) {
+                    throw new IOException();
+                }
+
 				// Did it get munged on the way?
-				final StringBuffer sb = new StringBuffer();
+				final StringBuilder sb = new StringBuilder();
 				for (final byte element : digest) {
 					// Force in a leading zero if required, and watch out for sign extensions....
 					sb.append(Integer.toHexString((element & 0xFF) | 0x100).substring(1, 3));
@@ -296,7 +283,8 @@ public class StartupActivity extends Activity {
 
 				final File o = new File(DB_PATH);
 				final File n = new File(DB_PATH + ".new");
-				o.delete();
+                //noinspection ResultOfMethodCallIgnored
+                o.delete();
 				n.renameTo(o);
 
 				alliswell = true;
@@ -333,8 +321,7 @@ public class StartupActivity extends Activity {
 					}
 					dialog.cancel();
 					startFavstops();
-					return;
-				}
+                }
 			};
 
 			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

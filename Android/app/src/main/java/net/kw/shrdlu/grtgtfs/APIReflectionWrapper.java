@@ -19,15 +19,6 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.Locale;
-
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Context;
-import android.os.StrictMode;
-
 /**
  * Wrap calls to functions that may not be in the version of the OS that we're running. This class is only instantiated if we
  * refer to it, at which point Dalvik would discover the error. So don't refer to it if we know it will fail....
@@ -35,51 +26,15 @@ import android.os.StrictMode;
 
 public class APIReflectionWrapper {
 
-	public static class API8 {
-
-		public static String getDBPath(Context mContext) {
-			final File f = mContext.getExternalFilesDir(null);
-			if (f != null) {
-				return f.getPath();
-			} else {
-				return null;
-			}
-		}
-	}
-
 	public static class API9 {
-
-		public static void setStrictMode() {
-			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().build());
-			// .detectDiskReads() -- too noisy
-			// .detectDiskWrites() -- too noisy
-			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath()
-					.build());
-			// .detectLeakedClosableObjects() -- API11
-			// .detectActivityLeaks() -- API11
-		}
-
+        /*
 		public static String getDisplayName(Calendar cal, int field, int style, Locale locale) {
 			return cal.getDisplayName(field, style, locale);
 		}
+		*/
 	}
 
 	public static class API11 {
 
-		public static void prepActionBar(Activity context) {
-			final ActionBar ab = context.getActionBar();
-			if (ab != null) {
-				ab.setHomeButtonEnabled(true);
-				ab.setTitle(R.string.app_name);
-
-				// FavstopsActivity is the home screen.
-				if (context.getLocalClassName().equals("FavstopsActivity") ||
-						context.getLocalClassName().equals("StartupActivity")) {
-					ab.setDisplayOptions(0, ActionBar.DISPLAY_HOME_AS_UP);
-				} else {
-					ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
-				}
-			}
-		}
 	}
 }

@@ -19,8 +19,6 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.zip.Adler32;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -36,12 +34,14 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
+import java.util.zip.Adler32;
+
 public class RouteOverlay extends Overlay {
 	private static final String TAG = "BusrouteOverlay";
 
 	private int mCount;
 	private int[] mPoints = null;
-	private int mColourDiff;
+	private final int mColourDiff;
 	private Rect mBoundingBox;
 
 	public RouteOverlay(Context context, String route, String headsign) {
@@ -50,7 +50,7 @@ public class RouteOverlay extends Overlay {
 
 		// Try get different colours for different routes
 		final Adler32 chksum = new Adler32();
-		chksum.update(new String(route + headsign).getBytes());
+		chksum.update((route + headsign).getBytes());
 		mColourDiff = chksum.hashCode() % 128;
 
 		final String table = "shapes";

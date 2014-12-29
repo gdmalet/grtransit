@@ -19,10 +19,6 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,6 +37,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class ClosestStopsActivity extends MenuListActivity {
 	private static final String TAG = "ClosestStopsActivity";
 
@@ -51,16 +51,16 @@ public class ClosestStopsActivity extends MenuListActivity {
 	private LocationManager mLocationManager;
 	private Location mLocation;
 	private timestopdescArrayAdapter mAdapter;
-	private ArrayList<String[]> mListDetails;;
+	private ArrayList<String[]> mListDetails;
 
-	// Need to store some stuff in an array, so we can sort by distance
+    // Need to store some stuff in an array, so we can sort by distance
 	class StopLocn {
 		public float dist, bearing;
 		public double lat, lon;
 		public String stop_id, stop_name;
 	}
 
-	static StopLocn[] mStops = null;
+	private static StopLocn[] mStops = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 		// Load animations used to show/hide progress bar
 		mTitle = (TextView) findViewById(R.id.listtitle);
-		mListDetails = new ArrayList<String[]>(NUM_CLOSEST_STOPS);
+		mListDetails = new ArrayList<>(NUM_CLOSEST_STOPS);
 
 		mTitle.setText(R.string.loading_stops);
 
@@ -120,7 +120,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 	}
 
 	// Define a listener that responds to location updates
-	LocationListener locationListener = new LocationListener() {
+    private final LocationListener locationListener = new LocationListener() {
 		@Override
 		public void onLocationChanged(Location location) {
 			if (isBetterLocation(location, mLocation)) {
@@ -305,7 +305,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 	}
 
 	// Called from the listener above for a long click
-	public void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+    void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 		// Log.v(TAG, "long clicked position " + position);
 
 		final String[] strs = (String[]) parent.getItemAtPosition(position);
@@ -344,7 +344,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 	 * @param currentBestLocation
 	 *            The current Location fix, to which you want to compare the new one
 	 */
-	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+    boolean isBetterLocation(Location location, Location currentBestLocation) {
 		if (location == null) {
 			// An old location is always better than no location
 			return false;

@@ -19,22 +19,21 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.gms.analytics.HitBuilders;
+
+import java.util.ArrayList;
 
 public class FavstopsActivity extends MenuListActivity {
 	private static final String TAG = "FavstopsActivity";
@@ -50,14 +49,6 @@ public class FavstopsActivity extends MenuListActivity {
 		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
-			// Switch title bar icon to the one without the < hint.
-			final Button logo = (Button) findViewById(R.id.titlelogo);
-			final Drawable d = getResources().getDrawable(R.drawable.grticon_nohome);
-			logo.setClickable(false);
-			logo.setBackgroundDrawable(d);
-		}
-
 		final ListView lv = getListView();
 		final TextView tv = new TextView(mContext);
 		tv.setText(R.string.longpress_removes_stop);
@@ -69,8 +60,7 @@ public class FavstopsActivity extends MenuListActivity {
 				@Override
 				public void onClick(DialogInterface dialog, int id) {
 					mContext.finish();
-					return;
-				}
+                }
 			};
 			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setTitle(R.string.db_is_awol)
@@ -84,11 +74,11 @@ public class FavstopsActivity extends MenuListActivity {
 	}
 
 	/* Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent. */
-	static boolean mShownalert = false;
+	private static boolean mShownalert = false;
 
-	protected void ProcessStops() {
+	void ProcessStops() {
 
-		mDetails = new ArrayList<String[]>();
+		mDetails = new ArrayList<>();
 		final ArrayList<String[]> favstops = GRTApplication.mPreferences.GetBusstopFavourites();
 		// Convert from stop/description to required 4-entry layout.
 		synchronized (mDetails) {
@@ -100,7 +90,10 @@ public class FavstopsActivity extends MenuListActivity {
 		mAdapter = new FavstopsArrayAdapter(this, R.layout.favouritesrow, mDetails);
 		setListAdapter(mAdapter);
 
-		// Must do all this without doing a database read, which allows database upgrade
+        // TODO synchronising on non-final var... and accessing that var outside the lock, above & below.
+        // See http://stackoverflow.com/questions/21458625/when-a-lock-holds-a-non-final-object-can-the-objects-reference-still-be-change/21460055#21460055
+
+        // Must do all this without doing a database read, which allows database upgrade
 		// to happen in the background on a service thread, without us blocking, until
 		// we really have to.
 		if (!mDetails.isEmpty()) {
@@ -151,15 +144,8 @@ public class FavstopsActivity extends MenuListActivity {
 		ProcessStops();
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		GRTApplication.tracker.dispatch(); // perhaps unnecessary?
-		GRTApplication.tracker.stopSession();
-	}
-
 	// Called from the listener above for a long click
-	protected void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+    void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 		// Log.v(TAG, "long clicked position " + position);
 
 		final String[] strs = (String[]) parent.getItemAtPosition(position);
@@ -209,7 +195,11 @@ public class FavstopsActivity extends MenuListActivity {
 		mStopid = strs[0];
 		final String stop_name = strs[1];
 
-		GRTApplication.tracker.trackEvent("Favourites", "Select stop", mStopid, 1);
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory(mContext.getLocalClassName())
+                .setAction("Select stop")
+                .setLabel(mStopid)
+                .build());
 
 		final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();

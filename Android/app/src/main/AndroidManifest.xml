@@ -2,12 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.kw.shrdlu.grtgtfs"
     android:theme="@style/ActivityTheme"
-    android:versionCode="31"
-    android:versionName="1.8" >
+    android:versionCode="32"
+    android:versionName="1.9" >
 
-    <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="19" />
+    <uses-sdk/>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -59,6 +57,8 @@
         <activity android:name=".TimesActivity" />
         <activity android:name=".TripStopsActivity" />
         <activity android:name=".ClosestStopsActivity" />
+        <activity android:name=".MenuListActivity" />
+        <activity android:name=".MenuMapActivity" />
         <activity android:name=".RiderAlertsActivity" />
         <activity
             android:name=".SearchActivity"

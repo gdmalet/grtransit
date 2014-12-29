@@ -19,8 +19,6 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
@@ -32,6 +30,8 @@ import android.widget.ProgressBar;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
+
+import java.util.ArrayList;
 
 public class RouteActivity extends MenuMapActivity {
 	private static final String TAG = "RouteActivity";
@@ -89,7 +89,7 @@ public class RouteActivity extends MenuMapActivity {
 		protected ArrayList<RouteOverlay> doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
 
-			final ArrayList<RouteOverlay> overlays = new ArrayList<RouteOverlay>(16);
+			final ArrayList<RouteOverlay> overlays = new ArrayList<>(16);
 
 			if (mRoute_id != null) { // doing one route
 				// final String whereclause = "stop_id in "

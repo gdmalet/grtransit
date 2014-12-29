@@ -23,15 +23,17 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
-import android.os.Build;
+import android.os.StrictMode;
 import android.util.Log;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 public class GRTApplication extends android.app.Application {
 	public static final String TAG = "GRTApplication";
 
-	public static GoogleAnalyticsTracker tracker = null;
+	public static Tracker tracker = null;
 	public static Preferences mPreferences = null;
 	public static DatabaseHelper dbHelper = null;
 	public static boolean isDebugBuild = false;
@@ -40,15 +42,6 @@ public class GRTApplication extends android.app.Application {
 
 	// Define the debug signature hash (Android default debug cert). Code from sigs[i].hashCode()
 	protected final static int DEBUG_SIGNATURE_HASH = -1270195494;
-
-	// Used by tracker.
-	private static final int TRACKER_VISITOR_SCOPE = 1;
-	// private static final int TRACKER_SESSION_SCOPE = 2;
-	// private static final int TRACKER_PAGE_SCOPE = 3;
-	private static final int TRACKER_UUID = 1;
-	private static final int TRACKER_VERSION = 2;
-
-	// private static final int TRACKER_CV_SCREEN_ORIENTATION_SLOT = 3;
 
 	@Override
 	public void onCreate() {
@@ -61,35 +54,45 @@ public class GRTApplication extends android.app.Application {
 
 		// Do this before instantiating Globals, as that may do something we'd like
 		// to see by having StrictMode on already.
-		if (isDebugBuild && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD /* 9 */) {
-			APIReflectionWrapper.API9.setStrictMode();
+		if (isDebugBuild) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectNetwork()
+                    .detectDiskReads()
+                    .build());
+            // .detectDiskReads() -- too noisy
+            // .detectDiskWrites() -- too noisy
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .detectActivityLeaks()
+                    .penaltyLog().penaltyDeath().build());
 		}
 
 		mPreferences = new Preferences(mContext);
 		dbHelper = new DatabaseHelper(mContext);
 
-		tracker = GoogleAnalyticsTracker.getInstance();
-		if (isDebugBuild) {
-			tracker.setDebug(true);
-			tracker.setDryRun(true);
-			tracker.startNewSession(getString(R.string.ga_api_key), 1, mContext);
-		} else {
-			tracker.setDebug(false);
-			tracker.setDryRun(false);
-			tracker.startNewSession(getString(R.string.ga_api_key), 420, mContext);
-		}
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(mContext);
+        analytics.enableAutoActivityReports(this);
+		tracker = analytics.newTracker(getString(R.string.ga_api_key));
+        tracker.enableAutoActivityTracking(true);   // need this here and in the parent?
+        tracker.setClientId(GRTApplication.mPreferences.getUUID());
+		//if (isDebugBuild) {
+		//	analytics.setDryRun(true);
+		//} else {
+		//	analytics.setDryRun(false);
+		//}
 
-		tracker.setCustomVar(TRACKER_UUID, // Slot
-				"UUID", // Name
-				GRTApplication.mPreferences.getUUID(), // Value
-				TRACKER_VISITOR_SCOPE); // Scope
-
+        // Report whether it's a debug build (not reported if DryRun is set).
 		try {
 			String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 			if (isDebugBuild) {
 				v += " debug";
 			}
-			tracker.setCustomVar(TRACKER_VERSION, "Version", v, TRACKER_VISITOR_SCOPE);
+            tracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Startup")
+                    .setAction(getString(R.string.app_short_name))
+                    .setLabel(v)
+                    .build());
 		} catch (final NameNotFoundException e) {
 			Log.e(TAG, "Exception when getting versionName");
 			e.printStackTrace();

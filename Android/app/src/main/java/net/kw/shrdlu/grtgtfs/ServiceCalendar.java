@@ -19,13 +19,13 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.database.Cursor;
 import android.text.format.Time;
 import android.util.Log;
 import android.util.TimeFormatException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ServiceCalendar {
 	private static final String TAG = "ServiceCalendar";
@@ -33,9 +33,9 @@ public class ServiceCalendar {
 	private static final String mDBQueryDate = "select * from calendar_dates where service_id = ? and date = ?";
 
 	// Cache some results, to save db lookups
-	private static final HashMap<String, String> truemap = new HashMap<String, String>(32);
-	private static final HashMap<String, String> falsemap = new HashMap<String, String>(32);
-	private static final HashMap<String, String> trip2servicemap = new HashMap<String, String>(64);
+	private static final HashMap<String, String> truemap = new HashMap<>(32);
+	private static final HashMap<String, String> falsemap = new HashMap<>(32);
+	private static final HashMap<String, String> trip2servicemap = new HashMap<>(64);
 
 	// Match day number to a string and an abbreviation
 	private static final String[] mWeekDays = { "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" };
@@ -48,7 +48,7 @@ public class ServiceCalendar {
 	// Return string showing days this bus runs.
 	// Cursor points to a row in the calendar table for this service_id.
 	private static String getDays(Cursor csr) {
-		String days = new String();
+		String days = "";
 
 		for (int i = 0; i < 7; i++) {
 			if (csr.getInt(csr.getColumnIndex(mWeekDays[i])) == 1) {
@@ -119,10 +119,10 @@ public class ServiceCalendar {
 	// run on the given date. Limit to correct days of week, or not.
 	public static String getTripDaysofWeek(String trip_id, String date, boolean limit) {
 
-		String retstr = null;
+		String retstr;
 
 		// Get and translate the service id
-		String service_id = null;
+		String service_id;
 		if (trip2servicemap.containsKey(trip_id)) {
 			service_id = trip2servicemap.get(trip_id);
 		} else {
@@ -184,7 +184,7 @@ public class ServiceCalendar {
 		// Load the array for the list
 		final int maxcount = csr.getCount();
 		int progresscount = 0;
-		final ArrayList<String[]> listdetails = new ArrayList<String[]>(maxcount);
+		final ArrayList<String[]> listdetails = new ArrayList<>(maxcount);
 
 		boolean more = csr.moveToFirst();
 		while (more) {
@@ -221,7 +221,7 @@ public class ServiceCalendar {
 		// Load the array for the list
 		final int maxcount = csr.getCount();
 		int progresscount = 0;
-		final ArrayList<String[]> listdetails = new ArrayList<String[]>(maxcount);
+		final ArrayList<String[]> listdetails = new ArrayList<>(maxcount);
 
 		boolean more = csr.moveToFirst();
 		while (more) {

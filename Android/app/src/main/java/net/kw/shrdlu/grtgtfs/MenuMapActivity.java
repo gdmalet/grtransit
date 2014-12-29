@@ -19,11 +19,9 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import java.util.List;
-
+import android.app.ActionBar;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -37,12 +35,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+
+import java.util.List;
 
 public class MenuMapActivity extends MapActivity implements AnimationListener {
 	private static final String TAG = "MenuMapActivity";
@@ -62,7 +63,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		super.onCreate(savedInstanceState);
 
 		// Make sure we get the correct API key to match the build key.
-		if (GRTApplication.isDebugBuild == true) {
+		if (GRTApplication.isDebugBuild) {
 			setContentView(R.layout.mapview_debug);
 		} else {
 			setContentView(R.layout.mapview);
@@ -88,9 +89,12 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 
 		mStopsOverlay = new StopsOverlay(mContext);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB /* 11 */) {
-			APIReflectionWrapper.API11.prepActionBar(mContext);
-		}
+        // Set up the action bar.
+        final ActionBar ab = mContext.getActionBar();
+        if (ab != null) {
+            ab.setTitle(R.string.app_name);
+            ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+        }
 	}
 
 	@Override
@@ -101,8 +105,6 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		if (GRTApplication.tracker == null) {
 			Log.e(TAG, "null tracker!");
 			startActivity(new Intent(this, FavstopsActivity.class));
-		} else {
-			GRTApplication.tracker.trackPageView("/" + this.getLocalClassName());
 		}
 
 		mMylocation.enableMyLocation();
@@ -132,11 +134,6 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		menu.removeItem(R.id.menu_preferences);
 		menu.findItem(R.id.menu_showmap).setTitle(R.string.mylocation);
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB /* 11 */) {
-			// Remove search from the menu, as we put it on the title bar.
-			menu.removeItem(R.id.menu_search);
-		}
-
 		return true;
 	}
 
@@ -144,7 +141,11 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_showmap: {
-			GRTApplication.tracker.trackEvent("Menu", "My location", "", 1);
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                    .setCategory(mContext.getLocalClassName())
+                    .setAction("Menu")
+                    .setLabel("My location")
+                    .build());
 			// Center the map over the current location
 			GeoPoint locn = mMylocation.getMyLocation();
 			if (locn == null) {
