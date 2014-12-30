@@ -36,7 +36,7 @@ public class GRTApplication extends android.app.Application {
 	public static Tracker tracker = null;
 	public static Preferences mPreferences = null;
 	public static DatabaseHelper dbHelper = null;
-	public static boolean isDebugBuild = false;
+    public final static boolean isDebugBuild = BuildConfig.DEBUG;
 
 	private Context mContext;
 
@@ -49,8 +49,6 @@ public class GRTApplication extends android.app.Application {
 		// Log.d(TAG, "onCreate");
 
 		mContext = this; // also returned by getApplicationContext();
-
-		isDebugBuild = CheckDebugBuild();
 
 		// Do this before instantiating Globals, as that may do something we'd like
 		// to see by having StrictMode on already.
@@ -82,43 +80,13 @@ public class GRTApplication extends android.app.Application {
 		//	analytics.setDryRun(false);
 		//}
 
-        // Report whether it's a debug build (not reported if DryRun is set).
-		try {
-			String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-			if (isDebugBuild) {
-				v += " debug";
-			}
-            tracker.send(new HitBuilders.EventBuilder()
-                    .setCategory("Startup")
-                    .setAction(getString(R.string.app_short_name))
-                    .setLabel(v)
-                    .build());
-		} catch (final NameNotFoundException e) {
-			Log.e(TAG, "Exception when getting versionName");
-			e.printStackTrace();
-		}
-	}
-
-	// Checks if this apk was built using the debug certificate
-	// See http://stackoverflow.com/questions/3029819/android-automatically-choose-debug-release-maps-api-key/3828864#3828864
-	private static boolean checkedBuild = false;
-
-	private boolean CheckDebugBuild() {
-		if (!checkedBuild) {
-			try {
-				final Signature[] sigs = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES).signatures;
-				for (final Signature sig : sigs) {
-					if (sig.hashCode() == DEBUG_SIGNATURE_HASH) {
-						Log.d(TAG, "This is a debug build!");
-						isDebugBuild = true;
-						break;
-					}
-				}
-			} catch (final NameNotFoundException e) {
-				e.printStackTrace();
-			}
-			checkedBuild = true;
-		}
-		return isDebugBuild;
+        // Report version details (not reported if analytics DryRun is set).
+        String v = "Version " + BuildConfig.VERSION_NAME + " " + BuildConfig.BUILD_TYPE;
+        v += ", Db " + dbHelper.GetDBVersion();
+        tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Startup")
+                .setAction(GRTApplication.mPreferences.getUUID())
+                .setLabel(v)
+                .build());
 	}
 }
