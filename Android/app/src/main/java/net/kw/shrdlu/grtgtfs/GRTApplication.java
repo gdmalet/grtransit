@@ -20,28 +20,27 @@
 package net.kw.shrdlu.grtgtfs;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.os.StrictMode;
-import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
+
+import java.util.ArrayList;
+
 public class GRTApplication extends android.app.Application {
 	public static final String TAG = "GRTApplication";
 
-	public static Tracker tracker = null;
-	public static Preferences mPreferences = null;
-	public static DatabaseHelper dbHelper = null;
-    public final static boolean isDebugBuild = BuildConfig.DEBUG;
+	protected static Tracker tracker = null;
+	protected static Preferences mPreferences = null;
+	protected static DatabaseHelper dbHelper = null;
+    protected final static boolean isDebugBuild = BuildConfig.DEBUG;
+
+    protected static ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
 
 	private Context mContext;
-
-	// Define the debug signature hash (Android default debug cert). Code from sigs[i].hashCode()
-	protected final static int DEBUG_SIGNATURE_HASH = -1270195494;
 
 	@Override
 	public void onCreate() {
@@ -55,7 +54,6 @@ public class GRTApplication extends android.app.Application {
 		if (isDebugBuild) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectNetwork()
-                    .detectDiskReads()
                     .build());
             // .detectDiskReads() -- too noisy
             // .detectDiskWrites() -- too noisy
@@ -74,11 +72,11 @@ public class GRTApplication extends android.app.Application {
 		tracker = analytics.newTracker(getString(R.string.ga_api_key));
         tracker.enableAutoActivityTracking(true);   // need this here and in the parent?
         tracker.setClientId(GRTApplication.mPreferences.getUUID());
-		//if (isDebugBuild) {
-		//	analytics.setDryRun(true);
-		//} else {
-		//	analytics.setDryRun(false);
-		//}
+		if (isDebugBuild) {
+			analytics.setDryRun(true);
+		} else {
+			analytics.setDryRun(false);
+		}
 
         // Report version details (not reported if analytics DryRun is set).
         String v = "Version " + BuildConfig.VERSION_NAME + " " + BuildConfig.BUILD_TYPE;

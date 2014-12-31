@@ -51,7 +51,7 @@
     <string name="refresh">Refresh</string>
     <string name="rider_alerts">Rider alerts</string>
     <string name="route_fling">Swipe left to show all routes, or tap to show one.</string>
-    <string name="search_hint">Enter search text</string>
+    <string name="search">Search</string>
     <string name="showallbusses">Show busses for all days</string>
     <string name="showmap">Show map</string>
     <string name="stop_unused">No routes use this stop in the current schedule.</string>
@@ -66,5 +66,4 @@
     <string name="twitter_fetch_nothing">Twitter returned nothing (there are no recent tweets).</string>
     <string name="twitter_querying_feed">Querying @GRT_ROW&#8230;</string>
     <string name="yes">Yes</string>
-
 </resources>

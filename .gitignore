@@ -1,6 +1,10 @@
-/Android/bin/
-/Android/gen/
+/Android/.gradle/
+/Android/.idea/workspace.xml
+/Android/.idea/libraries/
+/Android/.navigation/
 /Android/.settings/
+/Android/app/build/
+/Android/build/
 /Android/src/net/kw/shrdlu/grtgtfs/TwitterCredentials.java
 /data/sqlite3
 /.gitreview

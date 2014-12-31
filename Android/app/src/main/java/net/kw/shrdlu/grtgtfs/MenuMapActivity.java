@@ -119,20 +119,15 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		mMylocation.disableCompass();
 	}
 
-	// Called when a button is clicked on the title bar
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.busstopsmenu, menu);
+		inflater.inflate(R.menu.actionbarmenu, menu);
 
 		// Twiddle menu options
-		menu.removeItem(R.id.menu_about);
-		menu.removeItem(R.id.menu_preferences);
-		menu.findItem(R.id.menu_showmap).setTitle(R.string.mylocation);
+//		menu.removeItem(R.id.menu_about);
+//		menu.removeItem(R.id.menu_preferences);
+//		menu.findItem(R.id.menu_showmap).setTitle(R.string.mylocation);
 
 		return true;
 	}
@@ -140,7 +135,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showmap: {
+            case R.id.menu_showmap: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
                     .setCategory(mContext.getLocalClassName())
                     .setAction("Menu")
@@ -169,7 +164,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 			return true;
 		}
 		default: {
-			return TitlebarClick.onOptionsItemSelected(mContext, item);
+			return TitlebarClick.onOptionsItemSelected(mContext, item.getItemId());
 		}
 		}
 	}

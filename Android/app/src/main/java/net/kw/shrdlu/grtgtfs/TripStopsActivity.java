@@ -154,7 +154,7 @@ public class TripStopsActivity extends MenuListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showmap: {
+            case 42: { // TODO R.id.menu_showmap: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
                     .setCategory(mContext.getLocalClassName())
                     .setAction("Menu - show route")
@@ -170,7 +170,7 @@ public class TripStopsActivity extends MenuListActivity {
 			return true;
 		}
 		default: {
-			return TitlebarClick.onOptionsItemSelected(mContext, item);
+			return TitlebarClick.onOptionsItemSelected(mContext, item.getItemId());
 		}
 		}
 	}

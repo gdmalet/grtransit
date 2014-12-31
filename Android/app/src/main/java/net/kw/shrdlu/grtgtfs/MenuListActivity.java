@@ -19,11 +19,14 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,8 +34,17 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerListAdapter;
+
+import java.util.ArrayList;
+
+import static android.widget.ListView.*;
 
 public class MenuListActivity extends ListActivity implements AnimationListener {
 	private static final String TAG = "MenuListActivity";
@@ -42,6 +54,15 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 	protected Animation mSlideIn, mSlideOut;
 	protected TextView mTitle;
 	protected View mListDetail;
+
+    // For the navigation drawer
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerListView;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    // slide menu items
+    //private ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
+    private NavDrawerListAdapter mNavAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,22 +76,65 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 		mSlideOut = AnimationUtils.loadAnimation(mContext, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
 
-        // Set up the action bar.
-        final ActionBar ab = mContext.getActionBar();
-        if (ab != null) {
-            ab.setTitle(R.string.app_name);
-            String lcn = mContext.getLocalClassName();
-            if (lcn.equals("FavstopsActivity")) {   // home screen
-                ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME, ActionBar.DISPLAY_SHOW_HOME);
-            } else {
-                ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+        // Load up the navigation drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerListView = (ListView) findViewById(R.id.left_drawer);
+
+        //String[] navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        //TypedArray navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+        //for (int i=0; i < navMenuTitles.length; i++) {
+        //    mDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
+        //}
+        //navMenuIcons.recycle();
+
+        mNavAdapter = new NavDrawerListAdapter(mContext, R.layout.drawer_list_item, GRTApplication.mDrawerItems);
+        mDrawerListView.setAdapter(mNavAdapter);
+
+        mDrawerToggle = new ActionBarDrawerToggle(mContext, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //getActionBar().setTitle("Favourite Stops"); // TODO -- will vary by activity
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle(R.string.app_name);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        mDrawerListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                TitlebarClick.onOptionsItemSelected(mContext, GRTApplication.mDrawerItems.get(position).getId());
+            }
+        });
+
+        // Display the hamburger in the home screen, else the < home symbol.
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        String lcn = mContext.getLocalClassName();
+        if (lcn.equals("FavstopsActivity")) {   // home screen
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+        } else {
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
         }
-	}
+    }
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+        if (mDrawerLayout != null)
+            mDrawerLayout.closeDrawers();
+
 		// We want to track a pageView every time this activity gets the focus - but if the activity was
 		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
 		if (GRTApplication.tracker == null) {
@@ -79,22 +143,67 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 		}
 	}
 
-	// Called when a button is clicked on the title bar
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
-	}
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.busstopsmenu, menu);
 
-		return true;
+        // This can be called multiple times, for difference activities, or the
+        // action bar & nav drawer. So try process things only once, else the menus are doubled up.
+
+        // Borrow this menu for a moment to expand the nav menu first.
+        if (GRTApplication.mDrawerItems.size() == 0) {
+            inflater.inflate(R.menu.navdrawermenu, menu);
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+                GRTApplication.mDrawerItems.add(new NavDrawerItem(item.getIcon(), item.getTitle(), item.getItemId()));
+            }
+            mNavAdapter.notifyDataSetChanged();
+            menu.clear();
+        }
+
+        inflater.inflate(R.menu.actionbarmenu, menu);
+        return super.onCreateOptionsMenu(menu);
 	}
 
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerListView);
+        menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
+        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    // on user selecting something from the action bar....
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-        return TitlebarClick.onOptionsItemSelected(mContext, item) || super.onOptionsItemSelected(item);
+        // if we're already on the home screen & user hit home, just toggle the drawer state
+        int itemid = item.getItemId();
+        String lcn = mContext.getLocalClassName();
+        if (itemid == android.R.id.home) {
+            if (lcn.equals("FavstopsActivity")) {
+                if (mDrawerLayout.isDrawerOpen(Gravity.LEFT))
+                    mDrawerLayout.closeDrawers();
+                else
+                    mDrawerLayout.openDrawer(Gravity.LEFT);
+                return true;
+            }
+        }
+        // Otherwise deal with the options.
+        return TitlebarClick.onOptionsItemSelected(mContext, itemid) || super.onOptionsItemSelected(item);
     }
 
 	@Override

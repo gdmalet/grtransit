@@ -269,10 +269,4 @@ public class SearchActivity extends MenuListActivity {
 			// adapter.notifyDataSetChanged();
 		}
 	}
-
-	// Called when a button is clicked on the title bar
-	@Override
-	public void onTitlebarClick(View v) {
-		TitlebarClick.onTitlebarClick(mContext, v);
-	}
 }

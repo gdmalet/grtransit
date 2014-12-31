@@ -27,8 +27,7 @@
         <item name="android:layout_width">fill_parent</item>
     </style>
 
-    <style name="ActivityTheme" parent="appGlobalTheme">
-        <item name="android:windowNoTitle">true</item>
+    <style name="ActivityTheme" parent="@android:style/Theme.Holo">
         <item name="android:label">@string/app_name</item>
     </style>
 

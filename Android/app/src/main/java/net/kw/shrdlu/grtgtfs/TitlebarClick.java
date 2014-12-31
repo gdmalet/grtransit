@@ -35,31 +35,9 @@ import com.google.android.gms.analytics.HitBuilders;
  *  Called when a button is clicked on the title bar.
  */
 public class TitlebarClick {
-	public static void onTitlebarClick(Activity context, View v) {
-		switch (v.getId()) {
-		case R.id.titlelogo: {
-            GRTApplication.tracker.send(new HitBuilders.EventBuilder("Titlebar click", "Logo").build());
-			final Intent home = new Intent(context, FavstopsActivity.class);
-			home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(home);
-			context.finish(); // This clears the stack and returns to the home screen.
-			return;
-		}
-		case R.id.button_search: {
-            GRTApplication.tracker.send(new HitBuilders.EventBuilder("Titlebar click", "Search").build());
-			context.startActivity(new Intent(context, SearchActivity.class));
-			return;
-		}
-		case R.id.button_overflow: {
-            GRTApplication.tracker.send(new HitBuilders.EventBuilder("Titlebar click", "Overflow").build());
-			context.openOptionsMenu();
-			return;
-		}
-		}
-	}
 
-	public static boolean onOptionsItemSelected(Activity context, MenuItem item) {
-		switch (item.getItemId()) {
+	public static boolean onOptionsItemSelected(Activity context, int itemid) {
+		switch (itemid) {
 		case android.R.id.home: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder("Option select", "Logo").build());
 			final Intent home = new Intent(context, FavstopsActivity.class);
@@ -75,8 +53,8 @@ public class TitlebarClick {
 		}
 		case R.id.menu_refresh: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder("Option select", "Refresh").build());
-			context.finish();
 			context.startActivity(context.getIntent());
+            context.finish();
 			return true;
 		}
 		case R.id.menu_alerts: {
@@ -105,22 +83,11 @@ public class TitlebarClick {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder("Option select", "About").build());
 
 			// Show the about screen
-			String versionName = "unknown";
-			int versionCode = 0;
 			final int dbVersion = DatabaseHelper.GetDBVersion();
-
-			try {
-				final String pn = context.getPackageName();
-				final PackageManager pm = context.getPackageManager();
-				final PackageInfo pi = pm.getPackageInfo(pn, 0);
-				versionCode = pi.versionCode;
-				versionName = pi.versionName;
-			} catch (final NameNotFoundException e) {
-				e.printStackTrace();
-			}
-
+            final int versionCode = BuildConfig.VERSION_CODE;
+            String versionName = BuildConfig.VERSION_NAME;
 			if (GRTApplication.isDebugBuild) {
-				versionName += "dbg";
+				versionName += " dbg";
 			}
 
 			final View messageView = context.getLayoutInflater().inflate(R.layout.about, null, false);

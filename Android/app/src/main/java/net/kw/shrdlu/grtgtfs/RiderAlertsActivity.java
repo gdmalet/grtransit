@@ -200,6 +200,8 @@ public class RiderAlertsActivity extends MenuListActivity {
 				while ((line = reader.readLine()) != null) {
 					builder.append(line);
 				}
+                reader.close();
+                content.close();
 
 				// Result is an array of tweets
 				final JSONArray arr = (JSONArray) new JSONTokener(builder.toString()).nextValue();

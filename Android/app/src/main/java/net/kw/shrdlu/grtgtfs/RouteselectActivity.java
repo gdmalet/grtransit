@@ -45,6 +45,8 @@ public class RouteselectActivity extends MenuListActivity {
 		setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
+        getActionBar().setTitle("Select Route");
+
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();
 		mStopid = intent.getStringExtra(pkgstr + ".stop_id");
@@ -121,7 +123,7 @@ public class RouteselectActivity extends MenuListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showmap: {
+            case 42: { // TODO R.id.menu_showmap: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
                     .setCategory(mContext.getLocalClassName())
                     .setAction("Show stop")
@@ -134,7 +136,7 @@ public class RouteselectActivity extends MenuListActivity {
 			return true;
 		}
 		default: {
-			return TitlebarClick.onOptionsItemSelected(mContext, item);
+			return TitlebarClick.onOptionsItemSelected(mContext, item.getItemId());
 		}
 		}
 	}

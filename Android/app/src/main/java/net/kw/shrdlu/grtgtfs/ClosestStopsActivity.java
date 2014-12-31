@@ -288,7 +288,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_showmap: {
+		case 42: { // TODO R.id.menu_showmap: {
 			// Centre the map on the closest stop, since the GPS takes too much time.
 			final Intent busstop = new Intent(mContext, StopsActivity.class);
 			if (mListDetails.size() > 0) {
@@ -299,7 +299,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 			return true;
 		}
 		default: {
-			return TitlebarClick.onOptionsItemSelected(mContext, item);
+			return TitlebarClick.onOptionsItemSelected(mContext, item.getItemId());
 		}
 		}
 	}

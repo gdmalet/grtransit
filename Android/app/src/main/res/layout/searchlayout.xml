@@ -20,7 +20,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/button_searchstops"
-            android:hint="@string/search_hint"
+            android:hint="@string/search"
             android:inputType="text" >
 
             <requestFocus />

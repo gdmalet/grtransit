@@ -2,33 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_search"
-        android:icon="@drawable/ic_menu_search"
-        android:showAsAction="ifRoom"
-        android:title="@string/search_hint">
-    </item>
-    <item
-        android:id="@+id/menu_refresh"
-        android:icon="@drawable/ic_menu_refresh"
-        android:showAsAction="ifRoom"
-        android:title="@string/refresh">
-    </item>
-    <item
         android:id="@+id/menu_closeststops"
         android:icon="@drawable/ic_menu_add"
-        android:showAsAction="ifRoom|withText"
         android:title="@string/closest_stops">
     </item>
     <item
         android:id="@+id/menu_alerts"
         android:icon="@drawable/ic_menu_notifications"
-        android:showAsAction="ifRoom|withText"
         android:title="@string/rider_alerts">
     </item>
     <item
         android:id="@+id/menu_showmap"
         android:icon="@drawable/ic_menu_mylocation"
-        android:showAsAction="ifRoom|withText"
         android:title="@string/showmap">
     </item>
     <item
