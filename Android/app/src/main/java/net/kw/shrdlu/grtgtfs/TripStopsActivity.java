@@ -29,11 +29,14 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
+
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
 
 public class TripStopsActivity extends MenuListActivity {
 	private static final String TAG = "TripStopsActivity";
@@ -44,7 +47,11 @@ public class TripStopsActivity extends MenuListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		mContext = this;
-		setContentView(R.layout.timeslayout);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -80,13 +87,13 @@ public class TripStopsActivity extends MenuListActivity {
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
 			mListDetail.startAnimation(mSlideIn);
-			mProgress.setVisibility(View.VISIBLE);
-		}
+            setProgressBarVisibility(true);
+        }
 
 		// Update the progress bar.
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
+			setProgress(parms[0]);
 		}
 
 		@Override
@@ -110,7 +117,7 @@ public class TripStopsActivity extends MenuListActivity {
 					break;
 				}
 				more = mCsr.moveToNext();
-				publishProgress(((int) ((++progresscount / (float) maxcount) * 100)));
+				publishProgress(((int) ((++progresscount / (float) maxcount) * 10000)));
 			}
 
 			return savedpos;
@@ -120,11 +127,9 @@ public class TripStopsActivity extends MenuListActivity {
 		protected void onPostExecute(Integer savedpos) {
 			// Log.v(TAG, "onPostExecute()");
 
-			mProgress.setVisibility(View.INVISIBLE);
-			mListDetail.startAnimation(mSlideOut);
-
-			// TODO should be route_short_name?
-			mTitle.setText("Stops on route " + mRoute_id + ": " + mHeadsign);
+            mListDetail.startAnimation(mSlideOut);
+            getActionBar().setTitle("Stops on route " + mRoute_id + ": " + mHeadsign);
+            setProgress(10000); // max -- makes it slide away
 
 			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.timestopdesc, mCsr);
 			mContext.setListAdapter(adapter);

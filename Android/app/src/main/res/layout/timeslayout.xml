@@ -11,8 +11,6 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
-        <include layout="@layout/titlelayout" />
-
         <LinearLayout
             android:id="@+id/detail_area"
             android:layout_width="fill_parent"

@@ -26,6 +26,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -40,7 +41,11 @@ public class StopsActivity extends MenuMapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		mContext = this;
-		super.onCreate(savedInstanceState);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        super.onCreate(savedInstanceState);
 
 		// See if we're entering as a result of a search. Show given stop if so,
 		// else will try show current location.
@@ -76,13 +81,13 @@ public class StopsActivity extends MenuMapActivity {
 		@Override
 		protected void onPreExecute() {
 			mDetailArea.startAnimation(mSlideIn);
-			mProgress.setVisibility(View.VISIBLE);
+            setProgressBarVisibility(true);
 		}
 
 		// Update the progress bar.
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
+            setProgress(parms[0]);
 		}
 
 		/**
@@ -143,9 +148,9 @@ public class StopsActivity extends MenuMapActivity {
 				locn.close();
 			}
 
-			mProgress.setVisibility(View.INVISIBLE);
 			mDetailArea.startAnimation(mSlideOut);
-			mTitle.setText(R.string.title_mapstops);
+            getActionBar().setTitle(R.string.title_mapstops);
+            setProgress(10000); // max -- makes it slide away
 		}
 	}
 }

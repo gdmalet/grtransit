@@ -198,7 +198,7 @@ public class ServiceCalendar {
 			}
 
 			if (task != null) {
-				task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
+				task.notificationCallback((int) ((++progresscount / (float) maxcount) * 10000));
 			}
 
 			more = csr.moveToNext();
@@ -235,7 +235,7 @@ public class ServiceCalendar {
 			}
 
 			if (task != null) {
-				task.notificationCallback((int) ((++progresscount / (float) maxcount) * 100));
+				task.notificationCallback((int) ((++progresscount / (float) maxcount) * 10000));
 			}
 
 			more = csr.moveToNext();

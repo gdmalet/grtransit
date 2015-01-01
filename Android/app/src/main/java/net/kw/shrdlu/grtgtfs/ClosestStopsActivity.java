@@ -32,10 +32,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.timestopdescArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,14 +68,17 @@ public class ClosestStopsActivity extends MenuListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		mContext = this;
-		setContentView(R.layout.timeslayout);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
 		// Load animations used to show/hide progress bar
-		mTitle = (TextView) findViewById(R.id.listtitle);
 		mListDetails = new ArrayList<>(NUM_CLOSEST_STOPS);
 
-		mTitle.setText(R.string.loading_stops);
+        getActionBar().setTitle(R.string.loading_stops);
 
 		// register to get long clicks on bus stop list
 		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -180,13 +186,13 @@ public class ClosestStopsActivity extends MenuListActivity {
 		@Override
 		protected void onPreExecute() {
 			mListDetail.startAnimation(mSlideIn);
-			mProgress.setVisibility(View.VISIBLE);
+            setProgressBarVisibility(true);
 		}
 
 		// Update the progress bar.
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
+            setProgress(parms[0]);
 		}
 
 		@Override
@@ -213,7 +219,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 					mStops[locidx].stop_name = csr.getString(3);
 
 					more = csr.moveToNext();
-					publishProgress(((int) ((++locidx / (float) maxcount) * 100)));
+					publishProgress(((int) ((++locidx / (float) maxcount) * 10000)));
 				}
 				csr.close();
 			}
@@ -258,11 +264,10 @@ public class ClosestStopsActivity extends MenuListActivity {
 		protected void onPostExecute(Void foo) {
 			// Log.v(TAG, "onPostExecute()");
 
-			mProgress.setVisibility(View.INVISIBLE);
+            getActionBar().setTitle(R.string.title_activity_closest_stops);
+            setProgress(10000); // max -- makes it slide away
+
 			mListDetail.startAnimation(mSlideOut);
-
-			mTitle.setText(R.string.title_activity_closest_stops);
-
 			mAdapter.notifyDataSetChanged();
 		}
 	}

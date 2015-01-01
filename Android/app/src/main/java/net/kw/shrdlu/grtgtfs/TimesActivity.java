@@ -32,11 +32,15 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
+
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimesArrayAdapter;
 
 import java.util.ArrayList;
 
@@ -52,7 +56,11 @@ public class TimesActivity extends MenuListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		mContext = this;
-		setContentView(R.layout.timeslayout);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -90,13 +98,13 @@ public class TimesActivity extends MenuListActivity {
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
 			mListDetail.startAnimation(mSlideIn);
-			mProgress.setVisibility(View.VISIBLE);
+            setProgressBarVisibility(true);
 		}
 
 		// Update the progress bar.
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
+			setProgress(parms[0]);
 		}
 
 		@Override
@@ -157,7 +165,7 @@ public class TimesActivity extends MenuListActivity {
 				return;
 			}
 
-			mProgress.setVisibility(View.INVISIBLE);
+            setProgress(10000); // max -- makes it slide away
 			mListDetail.startAnimation(mSlideOut);
 
 			TextView tv = null;
@@ -169,7 +177,7 @@ public class TimesActivity extends MenuListActivity {
 			lv.setOnTouchListener(mGestureListener);
 
 			if (mRoute_id == null) { // showing all routes
-				mTitle.setText("Stop " + mStop_id + " - all routes");
+                getActionBar().setTitle("Stop " + mStop_id + " - all routes");
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_route);
 				}
@@ -177,7 +185,7 @@ public class TimesActivity extends MenuListActivity {
 				mContext.setListAdapter(adapter);
 			} else {
 				// TODO should be route_short_name?
-				mTitle.setText(mRoute_id + " - " + mHeadsign);
+                getActionBar().setTitle(mRoute_id + " - " + mHeadsign);
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_trip);
 				}

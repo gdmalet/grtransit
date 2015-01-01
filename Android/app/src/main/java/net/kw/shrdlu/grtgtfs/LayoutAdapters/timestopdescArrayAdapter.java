@@ -20,7 +20,7 @@
 /**
  * An adapter that is used when drawing the main window list of details.
  */
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.ListActivity;
 import android.view.LayoutInflater;
@@ -28,6 +28,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import net.kw.shrdlu.grtgtfs.R;
 
 import java.util.ArrayList;
 

@@ -24,8 +24,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
+
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -72,14 +74,17 @@ public class RiderAlertsActivity extends MenuListActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 		mContext = this;
-		setContentView(R.layout.timeslayout);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
 		mListDetails = new ArrayList<>();
 
-		mTitle.setText(R.string.twitter_querying_feed);
+        getActionBar().setTitle(R.string.twitter_querying_feed);
 
 		new ProcessTweets().execute();
 	}
@@ -91,13 +96,13 @@ public class RiderAlertsActivity extends MenuListActivity {
 		@Override
 		protected void onPreExecute() {
 			mListDetail.startAnimation(mSlideIn);
-			mProgress.setVisibility(View.VISIBLE);
+            setProgressBarVisibility(true);
 		}
 
 		// Update the progress bar.
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
+			setProgress(parms[0]);
 		}
 
 		@Override
@@ -148,22 +153,20 @@ public class RiderAlertsActivity extends MenuListActivity {
 				}
 			}
 
-			publishProgress(25); // fake it
+			publishProgress(2500); // fake it
 			if (AccessToken != null) {
 				mListDetails = readTwitterFeed();
 			}
-			publishProgress(90); // fake it
+			publishProgress(9000); // fake it
 
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void foo) {
-
-			mProgress.setVisibility(View.INVISIBLE);
-			mListDetail.startAnimation(mSlideOut);
-
-			mTitle.setText(R.string.title_rider_alerts);
+            mListDetail.startAnimation(mSlideOut);
+            getActionBar().setTitle(R.string.title_rider_alerts);
+            setProgress(10000); // max -- makes it slide away
 
 			if (mListDetails == null) {
 				Toast.makeText(mContext, R.string.twitter_fetch_failed, Toast.LENGTH_LONG).show();
@@ -173,8 +176,6 @@ public class RiderAlertsActivity extends MenuListActivity {
 				mAdapter = new ListArrayAdapter(mContext, R.layout.tweetlayout, mListDetails);
 				mContext.setListAdapter(mAdapter);
 			}
-
-			publishProgress(100); // fake it
 		}
 	}
 

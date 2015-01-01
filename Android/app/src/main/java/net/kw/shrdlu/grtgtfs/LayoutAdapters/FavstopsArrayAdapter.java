@@ -20,38 +20,30 @@
 /**
  * An adapter that is used when drawing the main window list of details.
  */
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.ListActivity;
-import android.text.Html;
-import android.text.util.Linkify;
-import android.text.util.Linkify.TransformFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
-class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
-	// private static final String TAG = "ListArrayAdapter";
+import java.util.ArrayList;
+
+public class FavstopsArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
+	private static final String TAG = "FavstopsArrayAdapter";
 
 	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	// For Twitter linkify
-	private final Pattern mUserPattern = Pattern.compile("@([A-Za-z0-9_-]+)");
-	private final Pattern mHashPattern = Pattern.compile("#([A-Za-z0-9_-]+)");
-	private final String mUserScheme = "http://twitter.com/";
-	private final String mHashScheme = "http://twitter.com/search?q=%23";
-
-	public ListArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+	public FavstopsArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
-		// Log.v(TAG, "TimesArrayAdapter()");
+		// Log.v(TAG, "FavstopsArrayAdapter()");
 
 		mDetails = details;
 		mInflater = LayoutInflater.from(context);
@@ -59,54 +51,52 @@ class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 	}
 
 	static class ViewHolder {
+		TextView stoplabel;
+		TextView stopdesc;
 		TextView stoptime;
-		TextView desc;
+		TextView routelabel;
+		TextView routedesc;
 	}
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-
+		// Log.v(TAG, "getview(): position " + position);
 		ViewHolder holder;
 
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
 			view = mInflater.inflate(mLayout, parent, false);
+			// Log.d(TAG, "new view " + view);
 
 			// Save the view when we look them up.
 			holder = new ViewHolder();
+			holder.stoplabel = (TextView) view.findViewById(R.id.stoplabel);
+			holder.stopdesc = (TextView) view.findViewById(R.id.stopdesc);
 			holder.stoptime = (TextView) view.findViewById(R.id.stoptime);
-			holder.desc = (TextView) view.findViewById(R.id.desc);
-
+			holder.routelabel = (TextView) view.findViewById(R.id.routelabel);
+			holder.routedesc = (TextView) view.findViewById(R.id.routedesc);
 			view.setTag(holder);
-
 		} else {
 			// Log.d(TAG, "reusing view " + view);
 			holder = (ViewHolder) view.getTag();
 		}
 
-		holder.stoptime.setText(ServiceCalendar.formattedTime(mDetails.get(position)[0]));
+		holder.stoplabel.setText(mDetails.get(position)[0]);
+		holder.stopdesc.setText(mDetails.get(position)[1]);
+		holder.stoptime.setText(ServiceCalendar.formattedTime(mDetails.get(position)[2]));
 
-		// Linkify twitter text.
-		if (mLayout == R.layout.tweetlayout) {
-
-			// Might be things like &amp; in there....
-			holder.desc.setText(Html.fromHtml(mDetails.get(position)[1]));
-
-			// Transform filter returns just the text captured by the first regular expression group.
-			final TransformFilter TFilter = new TransformFilter() {
-				@Override
-				public final String transformUrl(final Matcher match, String url) {
-					return match.group(1);
-				}
-			};
-
-			Linkify.addLinks(holder.desc, Linkify.ALL); // the defaults
-			Linkify.addLinks(holder.desc, mUserPattern, mUserScheme, null, TFilter);
-			Linkify.addLinks(holder.desc, mHashPattern, mHashScheme, null, TFilter);
-		} else {
-			holder.desc.setText(mDetails.get(position)[1]);
+		// Look for things like route 7A, where the A is part of the description
+		// TODO - char test should use a type test or something. This assumes US ASCII...
+		String headsign = mDetails.get(position)[3];
+		String route = mDetails.get(position)[4];
+		if (headsign.length() > 2 && headsign.charAt(1) == ' ' && headsign.charAt(0) >= 'A' && headsign.charAt(0) <= 'Z') {
+			route += headsign.charAt(0); // route number
+			headsign = headsign.substring(2); // route headsign
 		}
+
+		holder.routedesc.setText(headsign);
+		holder.routelabel.setText(route);
 
 		return view;
 	}

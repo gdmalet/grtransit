@@ -38,8 +38,6 @@ public class GRTApplication extends android.app.Application {
 	protected static DatabaseHelper dbHelper = null;
     protected final static boolean isDebugBuild = BuildConfig.DEBUG;
 
-    protected static ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
-
 	private Context mContext;
 
 	@Override
@@ -57,11 +55,11 @@ public class GRTApplication extends android.app.Application {
                     .build());
             // .detectDiskReads() -- too noisy
             // .detectDiskWrites() -- too noisy
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .detectActivityLeaks()
-                    .penaltyLog().penaltyDeath().build());
+//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                    .detectLeakedSqlLiteObjects()
+//                    .detectActivityLeaks()
+//                    .penaltyLog().penaltyDeath().build());
+                    //.detectLeakedClosableObjects()
 		}
 
 		mPreferences = new Preferences(mContext);

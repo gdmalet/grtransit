@@ -20,13 +20,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="progressbar" parent="@android:style/Widget.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:layout_height">4dip</item>
-        <item name="android:layout_width">fill_parent</item>
-    </style>
-
     <style name="ActivityTheme" parent="@android:style/Theme.Holo">
         <item name="android:label">@string/app_name</item>
     </style>
@@ -45,7 +38,7 @@
 
     <style name="List" parent="Text">
         <item name="android:textColor">@android:color/primary_text_light</item>
-        <item name="android:background">@color/list_background</item>
+        <item name="android:background">@color/list_dark_background</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">18sp</item>
@@ -73,7 +66,7 @@
         <item name="android:dividerHeight">3dip</item>
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:headerDividersEnabled">true</item>
-        <item name="android:background">@android:color/black</item>
+        <item name="android:background">@color/list_black_background</item>
     </style>
 
     <style name="List.Content">

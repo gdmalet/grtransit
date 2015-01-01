@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -51,8 +52,6 @@ public class StartupActivity extends Activity {
 	private static final String TAG = "StartupActivity";
 
 	protected Activity mContext;
-	protected TextView mTitle;
-	protected ProgressBar mProgress;
 
 	private static String DBVersionURL = "http://baleka.org/gdmalet/android/grtransit/GRT.db.version";
 	private static String DBDatabaseURL = "http://baleka.org/gdmalet/android/grtransit/GRT.db.gz";
@@ -63,7 +62,11 @@ public class StartupActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		mContext = this;
-		setContentView(R.layout.timeslayout);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
 		/* Keep test files clear of production files. */
@@ -72,12 +75,7 @@ public class StartupActivity extends Activity {
 			DBDatabaseURL += ".dbg";
 		}
 
-		mTitle = (TextView) findViewById(R.id.listtitle);
-		mProgress = (ProgressBar) findViewById(R.id.progress);
-		mProgress.setVisibility(View.VISIBLE);
-		mProgress.setProgress(5); // make partially visible
-
-		mTitle.setText(R.string.db_opening);
+		getActionBar().setTitle(R.string.db_opening);
 
 		DB_PATH = DatabaseHelper.GetDBPath();
 
@@ -217,12 +215,13 @@ public class StartupActivity extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-			mTitle.setText(R.string.db_downloading);
-		}
+            getActionBar().setTitle(R.string.db_downloading);
+            setProgressBarVisibility(true);
+        }
 
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
+			setProgress(parms[0]);
 		}
 
 		@Override
@@ -257,7 +256,7 @@ public class StartupActivity extends Activity {
 					while ((count = dis.read(buffer, 0, buffer.length)) > 0) {
 						DBtotal += count;
 						myOutput.write(buffer, 0, count);
-						publishProgress((int) ((DBtotal / tot) * 100.0f));
+						publishProgress((int) ((DBtotal / tot) * 10000.0f));
 					}
 
 					myOutput.flush();
@@ -306,7 +305,9 @@ public class StartupActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void foo) {
 
-			if (alliswell) {
+            setProgress(10000); // max -- makes it slide away
+
+            if (alliswell) {
 				startFavstops();
 				return;
 			}

@@ -20,7 +20,7 @@
 /**
  * An adapter that is used when drawing the main window list of details.
  */
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -30,6 +30,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+
+import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 public class ListCursorAdapter extends CursorAdapter {
 	// private static final String TAG = "ListCursorAdapter";

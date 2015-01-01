@@ -19,6 +19,7 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,11 +28,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
+
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.FavstopsArrayAdapter;
 
 import java.util.ArrayList;
 
@@ -46,7 +50,11 @@ public class FavstopsActivity extends MenuListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		mContext = this;
-		setContentView(R.layout.timeslayout);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
 		final ListView lv = getListView();
@@ -214,14 +222,13 @@ public class FavstopsActivity extends MenuListActivity {
 		@Override
 		protected void onPreExecute() {
 			mListDetail.startAnimation(mSlideIn);
-			mProgress.setVisibility(View.VISIBLE);
-			mProgress.setProgress(5); // make partially visible
+            setProgressBarVisibility(true);
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
 			mAdapter.notifyDataSetChanged();
+            setProgress(parms[0]);
 		}
 
 		@Override
@@ -252,7 +259,7 @@ public class FavstopsActivity extends MenuListActivity {
 						pref[3] = getString(R.string.no_more_busses); // route details
 						pref[4] = "-";
 					}
-					publishProgress(++progresscount * 100 / mDetails.size());
+					publishProgress(++progresscount * 10000 / mDetails.size());
 				}
 			}
 			return null;
@@ -260,11 +267,9 @@ public class FavstopsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPostExecute(Void foo) {
-			mProgress.setVisibility(View.INVISIBLE);
 			mListDetail.startAnimation(mSlideOut);
-
-			final TextView v = (TextView) findViewById(R.id.listtitle);
-			v.setText(R.string.title_favourites);
+            getActionBar().setTitle(R.string.title_favourites);
+            setProgress(10000); // max -- makes it slide away
 		}
 	}
 }

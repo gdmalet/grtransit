@@ -28,10 +28,13 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
+
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
 
 public class RouteselectActivity extends MenuListActivity {
 	private static final String TAG = "RouteselectActivity";
@@ -42,7 +45,11 @@ public class RouteselectActivity extends MenuListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		mContext = this;
-		setContentView(R.layout.timeslayout);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
         getActionBar().setTitle("Select Route");
@@ -123,7 +130,7 @@ public class RouteselectActivity extends MenuListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-            case 42: { // TODO R.id.menu_showmap: {
+            case R.id.menu_showmap: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
                     .setCategory(mContext.getLocalClassName())
                     .setAction("Show stop")
@@ -148,20 +155,20 @@ public class RouteselectActivity extends MenuListActivity {
 		@Override
 		protected void onPreExecute() {
 			mListDetail.startAnimation(mSlideIn);
-			mProgress.setVisibility(View.VISIBLE);
+            setProgressBarVisibility(true);
 		}
 
 		// Update the progress bar.
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
+			setProgress(parms[0]);
 		}
 
 		@Override
 		protected Integer doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
 
-			publishProgress(25); // fake it
+			publishProgress(2500); // fake it
 
 			// Find which routes use the given stop.
 			// Only show bus routes where the schedule is valid for the current date
@@ -176,10 +183,10 @@ public class RouteselectActivity extends MenuListActivity {
 			final String[] selectargs = { mStopid, datenow, datenow };
 			mCsr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
 
-			publishProgress(50); // fake it
+			publishProgress(5000); // fake it
 			startManagingCursor(mCsr);
 
-			publishProgress(75); // fake it
+			publishProgress(7500); // fake it
 			return mCsr.getCount();
 		}
 
@@ -203,11 +210,9 @@ public class RouteselectActivity extends MenuListActivity {
 
 			setListAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
 
-			publishProgress(100); // fake it
-
-			mProgress.setVisibility(View.INVISIBLE);
-			mListDetail.startAnimation(mSlideOut);
-			mTitle.setText("Routes using stop " + mStopid + ", " + mStopname);
+            mListDetail.startAnimation(mSlideOut);
+            getActionBar().setTitle("Routes using stop " + mStopid + ", " + mStopname);
+            setProgress(10000); // max -- makes it slide away
 		}
 	}
 }

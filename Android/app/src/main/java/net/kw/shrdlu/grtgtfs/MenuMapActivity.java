@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -50,9 +51,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 
 	protected MapActivity mContext;
 	protected View mDetailArea;
-	protected TextView mTitle;
 	protected Animation mSlideIn, mSlideOut;
-	protected ProgressBar mProgress;
 	protected MapView mMapview;
 	protected List<Overlay> mapOverlays;
 	protected MyLocationOverlay mMylocation;
@@ -75,14 +74,12 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		mapOverlays = mMapview.getOverlays();
 
 		// Load animations used to show/hide progress bar
-		mProgress = (ProgressBar) findViewById(R.id.progress);
 		mDetailArea = findViewById(R.id.mapview);
 		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
 		mSlideIn.setAnimationListener(this);
 
-		mTitle = (TextView) findViewById(R.id.listtitle);
-		mTitle.setText(R.string.loading_stops);
+		getActionBar().setTitle(R.string.loading_stops);
 
 		mMylocation = new MyLocationOverlay(this, mMapview);
 		mapOverlays.add(mMylocation);

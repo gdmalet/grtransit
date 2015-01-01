@@ -22,6 +22,8 @@
     <string name="db_new_avail">A new schedule database is available.</string>
     <string name="db_not_avail">You need to download the schedule database.</string>
     <string name="db_opening">Checking schedule database versions&#8230;</string>
+    <string name="drawer_close">Close drawer</string>
+    <string name="drawer_open">Open drawer</string>
     <string name="exit">Exit</string>
     <string name="favs_add_to_list">Add to your list of favourites?</string>
     <string name="favs_remove_from_list">Remove from your list of favourites?</string>

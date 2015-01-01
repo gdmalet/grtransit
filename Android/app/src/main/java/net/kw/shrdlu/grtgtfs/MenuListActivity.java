@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -50,27 +51,21 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 	private static final String TAG = "MenuListActivity";
 
 	protected ListActivity mContext;
-	protected ProgressBar mProgress;
 	protected Animation mSlideIn, mSlideOut;
-	protected TextView mTitle;
 	protected View mListDetail;
 
     // For the navigation drawer
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
-
-    // slide menu items
-    //private ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
+    private ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
     private NavDrawerListAdapter mNavAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mProgress = (ProgressBar) findViewById(R.id.progress);
-		mTitle = (TextView) findViewById(R.id.listtitle);
-		mListDetail = findViewById(R.id.detail_area);
+        mListDetail = findViewById(R.id.detail_area);
 
 		mSlideIn = AnimationUtils.loadAnimation(mContext, R.anim.slide_in);
 		mSlideOut = AnimationUtils.loadAnimation(mContext, R.anim.slide_out);
@@ -80,14 +75,7 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
 
-        //String[] navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-        //TypedArray navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
-        //for (int i=0; i < navMenuTitles.length; i++) {
-        //    mDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
-        //}
-        //navMenuIcons.recycle();
-
-        mNavAdapter = new NavDrawerListAdapter(mContext, R.layout.drawer_list_item, GRTApplication.mDrawerItems);
+        mNavAdapter = new NavDrawerListAdapter(mContext, R.layout.drawer_list_item, mDrawerItems);
         mDrawerListView.setAdapter(mNavAdapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(mContext, mDrawerLayout,
@@ -96,7 +84,7 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                //getActionBar().setTitle("Favourite Stops"); // TODO -- will vary by activity
+                getActionBar().setSubtitle("Favourite Stops"); // TODO -- will vary by activity
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
@@ -114,7 +102,8 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
         mDrawerListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                TitlebarClick.onOptionsItemSelected(mContext, GRTApplication.mDrawerItems.get(position).getId());
+                mDrawerLayout.closeDrawers();
+                TitlebarClick.onOptionsItemSelected(mContext, mDrawerItems.get(position).getId());
             }
         });
 
@@ -132,8 +121,6 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 	@Override
 	protected void onResume() {
 		super.onResume();
-        if (mDrawerLayout != null)
-            mDrawerLayout.closeDrawers();
 
 		// We want to track a pageView every time this activity gets the focus - but if the activity was
 		// previously destroyed we could have lost our global data, so this is a bit of a hack to avoid a crash!
@@ -165,11 +152,11 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
         // action bar & nav drawer. So try process things only once, else the menus are doubled up.
 
         // Borrow this menu for a moment to expand the nav menu first.
-        if (GRTApplication.mDrawerItems.size() == 0) {
+        if (mDrawerItems.size() == 0) {
             inflater.inflate(R.menu.navdrawermenu, menu);
             for (int i = 0; i < menu.size(); i++) {
                 MenuItem item = menu.getItem(i);
-                GRTApplication.mDrawerItems.add(new NavDrawerItem(item.getIcon(), item.getTitle(), item.getItemId()));
+                mDrawerItems.add(new NavDrawerItem(item.getIcon(), item.getTitle(), item.getItemId()));
             }
             mNavAdapter.notifyDataSetChanged();
             menu.clear();
@@ -180,10 +167,15 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 	}
 
     @Override
-    public boolean onPrepareOptionsMenu (Menu menu) {
+    public boolean onPrepareOptionsMenu(Menu menu) {
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerListView);
-        menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
-        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+        MenuItem item;
+        item = menu.findItem(R.id.menu_search);
+        if (item != null)
+            item.setVisible(!drawerOpen);
+        item = menu.findItem(R.id.menu_refresh);
+        if (item != null)
+            item.setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 

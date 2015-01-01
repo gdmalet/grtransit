@@ -37,6 +37,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
+
 public class SearchActivity extends MenuListActivity {
 	private static final String TAG = "SearchActivity";
 
@@ -54,7 +56,7 @@ public class SearchActivity extends MenuListActivity {
 
 		mSearchText = (EditText) findViewById(R.id.searchtext);
 
-		mTitle.setText(R.string.title_search);
+        getActionBar().setTitle(R.string.title_search);
 
 		mSearchText.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -235,7 +237,7 @@ public class SearchActivity extends MenuListActivity {
 
 		@Override
 		protected void onPostExecute(Void foo) {
-			mTitle.setText("Stops matching `" + mQuery + "'");
+            getActionBar().setTitle("Stops matching `" + mQuery + "'");
 			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesc, mCsr);
 			setListAdapter(adapter);
 			// adapter.notifyDataSetChanged();
@@ -263,7 +265,7 @@ public class SearchActivity extends MenuListActivity {
 
 		@Override
 		protected void onPostExecute(Void foo) {
-			mTitle.setText("Routes matching `" + mQuery + "'");
+            getActionBar().setTitle("Routes matching `" + mQuery + "'");
 			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr);
 			setListAdapter(adapter);
 			// adapter.notifyDataSetChanged();

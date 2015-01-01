@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.View;
+import android.view.Window;
 import android.widget.ProgressBar;
 
 import com.google.android.maps.GeoPoint;
@@ -41,7 +42,11 @@ public class RouteActivity extends MenuMapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		mContext = this;
-		super.onCreate(savedInstanceState);
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        super.onCreate(savedInstanceState);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();
@@ -73,13 +78,13 @@ public class RouteActivity extends MenuMapActivity {
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
 			mDetailArea.startAnimation(mSlideIn);
-			mProgress.setVisibility(View.VISIBLE);
-		}
+            setProgressBarVisibility(true);
+        }
 
 		// Update the progress bar.
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mProgress.setProgress(parms[0]);
+			setProgress(parms[0]);
 		}
 
 		/**
@@ -135,7 +140,7 @@ public class RouteActivity extends MenuMapActivity {
 					final RouteOverlay routeoverlay = new RouteOverlay(mContext, csr.getString(0), csr.getString(1));
 					overlays.add(routeoverlay);
 					more = csr.moveToNext();
-					publishProgress(((int) ((++progresscount / (float) maxcount) * 100)));
+					publishProgress(((int) ((++progresscount / (float) maxcount) * 10000)));
 				}
 				csr.close();
 			}
@@ -170,14 +175,14 @@ public class RouteActivity extends MenuMapActivity {
 			mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
 			mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
 
-			mProgress.setVisibility(View.INVISIBLE);
 			mDetailArea.startAnimation(mSlideOut);
+            setProgress(10000); // max -- makes it slide away
 
 			if (mRoute_id != null) { // doing one route
 				// TODO should be route_short_name?
-				mTitle.setText("Rt " + mRoute_id + " - " + mHeadsign);
+                getActionBar().setTitle("Rt " + mRoute_id + " - " + mHeadsign);
 			} else {
-				mTitle.setText("Routes using stop " + mStop_id);
+				getActionBar().setTitle("Routes using stop " + mStop_id);
 			}
 		}
 	}

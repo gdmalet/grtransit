@@ -120,7 +120,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 				}
 
 				if (++progresscount % 25 == 0) {
-					task.notificationCallback((int) ((progresscount / (float) maxcount) * 100));
+					task.notificationCallback((int) ((progresscount / (float) maxcount) * 10000));
 				}
 			}
 			csr.close();

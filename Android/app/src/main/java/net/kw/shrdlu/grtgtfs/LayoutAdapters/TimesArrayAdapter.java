@@ -20,7 +20,7 @@
 /**
  * An adapter that is used when drawing the main window list of details.
  */
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.ListActivity;
 import android.view.LayoutInflater;
@@ -29,18 +29,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.ServiceCalendar;
+
 import java.util.ArrayList;
 
-class FavstopsArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
-	private static final String TAG = "FavstopsArrayAdapter";
+public class TimesArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
+	private static final String TAG = "TimesAdapter";
 
 	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	public FavstopsArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+	public TimesArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
-		// Log.v(TAG, "FavstopsArrayAdapter()");
+		// Log.v(TAG, "TimesArrayAdapter()");
 
 		mDetails = details;
 		mInflater = LayoutInflater.from(context);
@@ -48,9 +51,8 @@ class FavstopsArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
 	}
 
 	static class ViewHolder {
-		TextView stoplabel;
-		TextView stopdesc;
 		TextView stoptime;
+		TextView desc;
 		TextView routelabel;
 		TextView routedesc;
 	}
@@ -68,9 +70,8 @@ class FavstopsArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
 
 			// Save the view when we look them up.
 			holder = new ViewHolder();
-			holder.stoplabel = (TextView) view.findViewById(R.id.stoplabel);
-			holder.stopdesc = (TextView) view.findViewById(R.id.stopdesc);
 			holder.stoptime = (TextView) view.findViewById(R.id.stoptime);
+			holder.desc = (TextView) view.findViewById(R.id.desc);
 			holder.routelabel = (TextView) view.findViewById(R.id.routelabel);
 			holder.routedesc = (TextView) view.findViewById(R.id.routedesc);
 			view.setTag(holder);
@@ -79,21 +80,20 @@ class FavstopsArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
 			holder = (ViewHolder) view.getTag();
 		}
 
-		holder.stoplabel.setText(mDetails.get(position)[0]);
-		holder.stopdesc.setText(mDetails.get(position)[1]);
-		holder.stoptime.setText(ServiceCalendar.formattedTime(mDetails.get(position)[2]));
+		holder.stoptime.setText(ServiceCalendar.formattedTime(mDetails.get(position)[0]));
+		holder.desc.setText(mDetails.get(position)[1]);
 
 		// Look for things like route 7A, where the A is part of the description
 		// TODO - char test should use a type test or something. This assumes US ASCII...
+		String route = mDetails.get(position)[2];
 		String headsign = mDetails.get(position)[3];
-		String route = mDetails.get(position)[4];
 		if (headsign.length() > 2 && headsign.charAt(1) == ' ' && headsign.charAt(0) >= 'A' && headsign.charAt(0) <= 'Z') {
 			route += headsign.charAt(0); // route number
 			headsign = headsign.substring(2); // route headsign
 		}
 
-		holder.routedesc.setText(headsign);
 		holder.routelabel.setText(route);
+		holder.routedesc.setText(headsign);
 
 		return view;
 	}
