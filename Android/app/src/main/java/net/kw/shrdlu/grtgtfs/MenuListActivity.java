@@ -17,35 +17,35 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO -- no animation if drawer dragged out on other activities.
+
 package net.kw.shrdlu.grtgtfs;
 
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerListAdapter;
 
 import java.util.ArrayList;
 
-import static android.widget.ListView.*;
+import static android.widget.ListView.OnItemClickListener;
 
 public class MenuListActivity extends ListActivity implements AnimationListener {
 	private static final String TAG = "MenuListActivity";
@@ -81,17 +81,29 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
         mDrawerToggle = new ActionBarDrawerToggle(mContext, mDrawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
 
+            CharSequence savedtitle, savedsubtitle;
+
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setSubtitle("Favourite Stops"); // TODO -- will vary by activity
+                final ActionBar ab = getActionBar();
+                if (ab != null) {
+                    ab.setSubtitle(savedsubtitle);
+                    ab.setTitle(savedtitle);
+                }
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle(R.string.app_name);
+                final ActionBar ab = getActionBar();
+                if (ab != null) {
+                    savedtitle = ab.getTitle();
+                    savedsubtitle = ab.getSubtitle();
+                    ab.setTitle(R.string.app_name);
+                    ab.setSubtitle(null);
+                }
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };

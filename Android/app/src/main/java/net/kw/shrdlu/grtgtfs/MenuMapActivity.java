@@ -21,19 +21,21 @@ package net.kw.shrdlu.grtgtfs;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -44,6 +46,10 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerListAdapter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuMapActivity extends MapActivity implements AnimationListener {
@@ -56,6 +62,13 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 	protected List<Overlay> mapOverlays;
 	protected MyLocationOverlay mMylocation;
 	protected StopsOverlay mStopsOverlay = null;
+
+        // For the navigation drawer
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerListView;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
+    private NavDrawerListAdapter mNavAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,12 +99,64 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 
 		mStopsOverlay = new StopsOverlay(mContext);
 
-        // Set up the action bar.
-        final ActionBar ab = mContext.getActionBar();
-        if (ab != null) {
-            ab.setTitle(R.string.app_name);
-            ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+        // Load up the navigation drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerListView = (ListView) findViewById(R.id.left_drawer);
+
+        mNavAdapter = new NavDrawerListAdapter(mContext, R.layout.drawer_list_item, mDrawerItems);
+        mDrawerListView.setAdapter(mNavAdapter);
+
+        mDrawerToggle = new ActionBarDrawerToggle(mContext, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            CharSequence savedtitle, savedsubtitle;
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                final ActionBar ab = getActionBar();
+                if (ab != null) {
+                    ab.setSubtitle(savedsubtitle);
+                    ab.setTitle(savedtitle);
+                }
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                final ActionBar ab = getActionBar();
+                if (ab != null) {
+                    savedtitle = ab.getTitle();
+                    savedsubtitle = ab.getSubtitle();
+                    ab.setTitle(R.string.app_name);
+                    ab.setSubtitle(null);
+                }
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                mDrawerLayout.closeDrawers();
+                TitlebarClick.onOptionsItemSelected(mContext, mDrawerItems.get(position).getId());
+            }
+        });
+
+        // Display the hamburger in the home screen, else the < home symbol.
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        String lcn = mContext.getLocalClassName();
+        if (lcn.equals("FavstopsActivity")) {   // home screen
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+        } else {
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
         }
+
 	}
 
 	@Override
@@ -108,7 +173,21 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		mMylocation.enableCompass();
 	}
 
-	@Override
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
 	public void onPause() {
 		super.onPause();
 		// Log.d(TAG, "onPause()");
@@ -119,15 +198,38 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.actionbarmenu, menu);
 
-		// Twiddle menu options
-//		menu.removeItem(R.id.menu_about);
-//		menu.removeItem(R.id.menu_preferences);
-//		menu.findItem(R.id.menu_showmap).setTitle(R.string.mylocation);
+        // This can be called multiple times, for difference activities, or the
+        // action bar & nav drawer. So try process things only once, else the menus are doubled up.
 
-		return true;
+        // Borrow this menu for a moment to expand the nav menu first.
+        if (mDrawerItems.size() == 0) {
+            inflater.inflate(R.menu.navdrawermenu, menu);
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+                mDrawerItems.add(new NavDrawerItem(item.getIcon(), item.getTitle(), item.getItemId()));
+            }
+            mNavAdapter.notifyDataSetChanged();
+            menu.clear();
+        }
+
+        inflater.inflate(R.menu.actionbarmenu, menu);
+        return super.onCreateOptionsMenu(menu);
 	}
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerListView);
+        MenuItem item;
+        item = menu.findItem(R.id.menu_search);
+        if (item != null)
+            item.setVisible(!drawerOpen);
+        item = menu.findItem(R.id.menu_refresh);
+        if (item != null)
+            item.setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

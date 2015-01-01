@@ -47,7 +47,7 @@ import java.util.ArrayList;
 public class TimesActivity extends MenuListActivity {
 	private static final String TAG = "TimesActivity";
 
-	private String mRoute_id = null, mHeadsign, mStop_id;
+	private String mRouteid = null, mHeadsign, mStopid, mStopname;
 	private ArrayList<String[]> mListDetails = null;
 	private boolean PrefChanged = true; // force redraw
 
@@ -65,9 +65,10 @@ public class TimesActivity extends MenuListActivity {
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();
-		mRoute_id = intent.getStringExtra(pkgstr + ".route_id");
+		mRouteid = intent.getStringExtra(pkgstr + ".route_id");
 		mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
-		mStop_id = intent.getStringExtra(pkgstr + ".stop_id");
+		mStopid = intent.getStringExtra(pkgstr + ".stop_id");
+        mStopname = intent.getStringExtra(pkgstr + ".stop_name");
 	}
 
 	@Override
@@ -125,16 +126,16 @@ public class TimesActivity extends MenuListActivity {
 				return null;
 			}
 
-			if (mRoute_id == null) {
+			if (mRouteid == null) {
 				// showing all routes
-				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, datenow,
+				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStopid, datenow,
 						!GRTApplication.mPreferences.showAllBusses(), this);
 			} else {
 
 				// TODO Setting a listener means not passing `this'
 
 				// showing just one route
-				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStop_id, mRoute_id, mHeadsign, datenow,
+				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStopid, mRouteid, mHeadsign, datenow,
 						!GRTApplication.mPreferences.showAllBusses(), this);
 			}
 
@@ -176,16 +177,16 @@ public class TimesActivity extends MenuListActivity {
 			}
 			lv.setOnTouchListener(mGestureListener);
 
-			if (mRoute_id == null) { // showing all routes
-                getActionBar().setTitle("Stop " + mStop_id + " - all routes");
+            getActionBar().setTitle("Stop " + mStopid + " " + mStopname);
+			if (mRouteid == null) { // showing all routes
+                getActionBar().setSubtitle("All routes");
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_route);
 				}
 				final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
 				mContext.setListAdapter(adapter);
 			} else {
-				// TODO should be route_short_name?
-                getActionBar().setTitle(mRoute_id + " - " + mHeadsign);
+                getActionBar().setSubtitle("Route " + mHeadsign);
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_trip);
 				}
@@ -262,7 +263,7 @@ public class TimesActivity extends MenuListActivity {
 		}
 
 		// Allow narrowing to one route, if we're showing many.
-		if (mRoute_id == null) { // showing all routes
+		if (mRouteid == null) { // showing all routes
 			final String route_id = items[2];
 			final String headsign = items[3];
 
@@ -270,7 +271,8 @@ public class TimesActivity extends MenuListActivity {
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			bustimes.putExtra(pkgstr + ".route_id", route_id);
 			bustimes.putExtra(pkgstr + ".headsign", headsign);
-			bustimes.putExtra(pkgstr + ".stop_id", mStop_id);
+			bustimes.putExtra(pkgstr + ".stop_id", mStopid);
+            bustimes.putExtra(pkgstr + ".stop_name", mStopname);
 			mContext.startActivity(bustimes);
 
 		} else { // 1 route
@@ -279,8 +281,9 @@ public class TimesActivity extends MenuListActivity {
 			final Intent tripstops = new Intent(mContext, TripStopsActivity.class);
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			tripstops.putExtra(pkgstr + ".trip_id", trip_id);
-			tripstops.putExtra(pkgstr + ".stop_id", mStop_id);
-			tripstops.putExtra(pkgstr + ".route_id", mRoute_id);
+			tripstops.putExtra(pkgstr + ".stop_id", mStopid);
+            tripstops.putExtra(pkgstr + ".stop_name", mStopname);
+			tripstops.putExtra(pkgstr + ".route_id", mRouteid);
 			tripstops.putExtra(pkgstr + ".headsign", mHeadsign);
 			mContext.startActivity(tripstops);
 
@@ -290,19 +293,20 @@ public class TimesActivity extends MenuListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-            case 42: { // TODO R.id.menu_showmap: {
+            case R.id.menu_showmap: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
                     .setCategory(mContext.getLocalClassName())
                     .setAction("Menu show route")
-                    .setLabel(mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign)
+                    .setLabel(mRouteid == null ? "All" : mRouteid + " - " + mHeadsign)
                     .build());
 
 			// Perform action on click
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busroutes = new Intent(mContext, RouteActivity.class);
-			busroutes.putExtra(pkgstr + ".route_id", mRoute_id);
+			busroutes.putExtra(pkgstr + ".route_id", mRouteid);
 			busroutes.putExtra(pkgstr + ".headsign", mHeadsign);
-			busroutes.putExtra(pkgstr + ".stop_id", mStop_id);
+			busroutes.putExtra(pkgstr + ".stop_id", mStopid);
+            busroutes.putExtra(pkgstr + ".stop_name", mStopname);
 			startActivity(busroutes);
 			return true;
 		}

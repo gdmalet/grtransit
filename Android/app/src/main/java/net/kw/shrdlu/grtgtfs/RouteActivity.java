@@ -25,7 +25,6 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
 
@@ -37,7 +36,7 @@ import java.util.ArrayList;
 public class RouteActivity extends MenuMapActivity {
 	private static final String TAG = "RouteActivity";
 
-	private String mRoute_id, mHeadsign, mStop_id;
+	private String mRouteid, mHeadsign, mStopid;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +49,9 @@ public class RouteActivity extends MenuMapActivity {
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();
-		mRoute_id = intent.getStringExtra(pkgstr + ".route_id");
+		mRouteid = intent.getStringExtra(pkgstr + ".route_id");
 		mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
-		mStop_id = intent.getStringExtra(pkgstr + ".stop_id"); // TODO show position?
+		mStopid = intent.getStringExtra(pkgstr + ".stop_id"); // TODO show position?
 
 		// Get the busstop overlay set up in the background
 		new PrepareOverlays().execute();
@@ -96,18 +95,18 @@ public class RouteActivity extends MenuMapActivity {
 
 			final ArrayList<RouteOverlay> overlays = new ArrayList<>(16);
 
-			if (mRoute_id != null) { // doing one route
+			if (mRouteid != null) { // doing one route
 				// final String whereclause = "stop_id in "
 				// + "(select stop_id from stop_times where trip_id = "
 				// + "(select trip_id from trips where route_id = ? and trip_headsign = ?))";
-				// final String [] selectargs = {mRoute_id, mHeadsign};
+				// final String [] selectargs = {mRouteid, mHeadsign};
 
 				// It's too slow to fish out these stops, so for now show them all
 				// mStopsOverlay.LoadDB(whereclause, selectargs, this);
 				mStopsOverlay.LoadDB(null, null, this);
 
 				// Now draw the route
-				final RouteOverlay routeoverlay = new RouteOverlay(mContext, mRoute_id, mHeadsign);
+				final RouteOverlay routeoverlay = new RouteOverlay(mContext, mRouteid, mHeadsign);
 				overlays.add(routeoverlay);
 
 			} else {
@@ -115,7 +114,7 @@ public class RouteActivity extends MenuMapActivity {
 				// final String whereclause = "stop_id in "
 				// + "(select distinct stop_id from stop_times where trip_id in "
 				// + "(select trip_id from stop_times where stop_id = ?))";
-				// String [] selectargs = {mStop_id};
+				// String [] selectargs = {mStopid};
 
 				// It's too slow to fish out these stops, so for now show them all
 				// mBusstopsOverlay.LoadDB(whereclause, selectargs, this);
@@ -130,7 +129,7 @@ public class RouteActivity extends MenuMapActivity {
 						+ " join calendar on trips.service_id = calendar.service_id where"
 						+ " trip_id in (select trip_id from stop_times where stop_id = ?) and"
 						+ " start_date <= ? and end_date >= ?";
-				final String[] selectargs = new String[] { mStop_id, datenow, datenow };
+				final String[] selectargs = new String[] { mStopid, datenow, datenow };
 				final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
 
 				final int maxcount = csr.getCount();
@@ -178,11 +177,13 @@ public class RouteActivity extends MenuMapActivity {
 			mDetailArea.startAnimation(mSlideOut);
             setProgress(10000); // max -- makes it slide away
 
-			if (mRoute_id != null) { // doing one route
+			if (mRouteid != null) { // doing one route
 				// TODO should be route_short_name?
-                getActionBar().setTitle("Rt " + mRoute_id + " - " + mHeadsign);
+                getActionBar().setTitle("Route " + mRouteid);
+                getActionBar().setSubtitle(mHeadsign);
 			} else {
-				getActionBar().setTitle("Routes using stop " + mStop_id);
+                getActionBar().setTitle("Routes using stop " + mStopid);
+                // getActionBar().setSubtitle(mStopname); TODO -- need stop description
 			}
 		}
 	}

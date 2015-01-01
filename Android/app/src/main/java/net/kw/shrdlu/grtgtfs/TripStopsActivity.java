@@ -41,7 +41,7 @@ import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
 public class TripStopsActivity extends MenuListActivity {
 	private static final String TAG = "TripStopsActivity";
 
-	private String mTrip_id, mRoute_id = null, mHeadsign, mStop_id;
+	private String mTrip_id, mRouteid = null, mHeadsign, mStopid, mStopname;
 	private Cursor mCsr;
 
 	@Override
@@ -57,8 +57,9 @@ public class TripStopsActivity extends MenuListActivity {
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();
 		mTrip_id = intent.getStringExtra(pkgstr + ".trip_id");
-		mStop_id = intent.getStringExtra(pkgstr + ".stop_id");
-		mRoute_id = intent.getStringExtra(pkgstr + ".route_id");
+		mStopid = intent.getStringExtra(pkgstr + ".stop_id");
+        mStopname = intent.getStringExtra(pkgstr + ".stop_name");
+		mRouteid = intent.getStringExtra(pkgstr + ".route_id");
 		mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
 
 		// register to get long clicks on bus stop list
@@ -99,6 +100,7 @@ public class TripStopsActivity extends MenuListActivity {
 		@Override
 		protected Integer doInBackground(Void... foo) {
 			// Log.v(TAG, "doInBackground()");
+            // TODO we already have a stop name, passed into the intent....
 
 			final String qry = "select distinct stop_times.stop_id as _id, stop_name as descr, departure_time from stop_times"
 					+ " join stops on stops.stop_id = stop_times.stop_id where trip_id = ? order by departure_time";
@@ -112,7 +114,7 @@ public class TripStopsActivity extends MenuListActivity {
 			int progresscount = 0;
 			boolean more = mCsr.moveToPosition(0);
 			while (more) {
-				if (mCsr.getString(0).equals(mStop_id)) {
+				if (mCsr.getString(0).equals(mStopid)) {
 					savedpos = progresscount;
 					break;
 				}
@@ -128,7 +130,8 @@ public class TripStopsActivity extends MenuListActivity {
 			// Log.v(TAG, "onPostExecute()");
 
             mListDetail.startAnimation(mSlideOut);
-            getActionBar().setTitle("Stops on route " + mRoute_id + ": " + mHeadsign);
+            getActionBar().setTitle("Stops on route");
+            getActionBar().setSubtitle(mHeadsign);
             setProgress(10000); // max -- makes it slide away
 
 			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.timestopdesc, mCsr);
@@ -163,14 +166,15 @@ public class TripStopsActivity extends MenuListActivity {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
                     .setCategory(mContext.getLocalClassName())
                     .setAction("Menu - show route")
-                    .setLabel(mRoute_id == null ? "All" : mRoute_id + " - " + mHeadsign)
+                    .setLabel(mRouteid == null ? "All" : mRouteid + " - " + mHeadsign)
                     .build());
 			// Perform action on click
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busroutes = new Intent(mContext, RouteActivity.class);
-			busroutes.putExtra(pkgstr + ".route_id", mRoute_id);
+			busroutes.putExtra(pkgstr + ".route_id", mRouteid);
 			busroutes.putExtra(pkgstr + ".headsign", mHeadsign);
-			busroutes.putExtra(pkgstr + ".stop_id", mStop_id);
+            busroutes.putExtra(pkgstr + ".stop_id", mStopid);
+			busroutes.putExtra(pkgstr + ".stop_name", mStopname);
 			startActivity(busroutes);
 			return true;
 		}

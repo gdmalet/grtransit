@@ -84,7 +84,9 @@ public class RouteselectActivity extends MenuListActivity {
 		bustimes.putExtra(pkgstr + ".route_id", route_id);
 		bustimes.putExtra(pkgstr + ".headsign", headsign);
 		bustimes.putExtra(pkgstr + ".stop_id", mStopid);
-		mContext.startActivity(bustimes);
+        bustimes.putExtra(pkgstr + ".stop_name", mStopname);
+
+        mContext.startActivity(bustimes);
 	}
 
 	private final View.OnTouchListener mGestureListener = new View.OnTouchListener() {
@@ -112,6 +114,7 @@ public class RouteselectActivity extends MenuListActivity {
 						final Intent bustimes = new Intent(mContext, TimesActivity.class);
 						final String pkgstr = mContext.getApplicationContext().getPackageName();
 						bustimes.putExtra(pkgstr + ".stop_id", mStopid);
+                        bustimes.putExtra(pkgstr + ".stop_name", mStopname);
 						mContext.startActivity(bustimes);
 						return true;
 					} else if (velocityX > 100 && Math.abs(velocityX) > Math.abs(velocityY)) {
@@ -139,6 +142,7 @@ public class RouteselectActivity extends MenuListActivity {
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
 			final Intent busstop = new Intent(mContext, StopsActivity.class);
 			busstop.putExtra(pkgstr + ".stop_id", mStopid);
+            busstop.putExtra(pkgstr + ".stop_name", mStopname);
 			startActivity(busstop);
 			return true;
 		}
@@ -211,7 +215,8 @@ public class RouteselectActivity extends MenuListActivity {
 			setListAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
 
             mListDetail.startAnimation(mSlideOut);
-            getActionBar().setTitle("Routes using stop " + mStopid + ", " + mStopname);
+            getActionBar().setTitle("Routes using stop " + mStopid);
+            getActionBar().setSubtitle(mStopname);
             setProgress(10000); // max -- makes it slide away
 		}
 	}

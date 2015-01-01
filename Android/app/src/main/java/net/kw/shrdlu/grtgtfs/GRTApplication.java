@@ -26,10 +26,6 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
-
-import java.util.ArrayList;
-
 public class GRTApplication extends android.app.Application {
 	public static final String TAG = "GRTApplication";
 
