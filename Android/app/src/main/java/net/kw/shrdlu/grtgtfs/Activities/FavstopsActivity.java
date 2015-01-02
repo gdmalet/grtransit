@@ -224,7 +224,6 @@ public class FavstopsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPreExecute() {
-			mListDetail.startAnimation(mSlideIn);
             setProgressBarVisibility(true);
 		}
 
@@ -270,7 +269,6 @@ public class FavstopsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPostExecute(Void foo) {
-			mListDetail.startAnimation(mSlideOut);
             getActionBar().setTitle(R.string.title_favourites);
             setProgress(10000); // max -- makes it slide away
 		}

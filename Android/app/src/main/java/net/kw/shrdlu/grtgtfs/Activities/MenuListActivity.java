@@ -17,8 +17,6 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO -- no animation if drawer dragged out on other activities.
-
 package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.app.ActionBar;
@@ -50,11 +48,10 @@ import java.util.ArrayList;
 
 import static android.widget.ListView.OnItemClickListener;
 
-public class MenuListActivity extends ListActivity implements AnimationListener {
+public class MenuListActivity extends ListActivity {
 	private static final String TAG = "MenuListActivity";
 
 	protected ListActivity mContext;
-	protected Animation mSlideIn, mSlideOut;
 	protected View mListDetail;
 
     // For the navigation drawer
@@ -69,10 +66,6 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
 		super.onCreate(savedInstanceState);
 
         mListDetail = findViewById(R.id.detail_area);
-
-		mSlideIn = AnimationUtils.loadAnimation(mContext, R.anim.slide_in);
-		mSlideOut = AnimationUtils.loadAnimation(mContext, R.anim.slide_out);
-		mSlideIn.setAnimationListener(this);
 
         // Load up the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -219,16 +212,4 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
         // Otherwise deal with the options.
         return NavOptions.onNavOptionSelected(mContext, itemid) || super.onOptionsItemSelected(item);
     }
-
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-	}
 }

@@ -98,7 +98,6 @@ public class RiderAlertsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPreExecute() {
-			mListDetail.startAnimation(mSlideIn);
             setProgressBarVisibility(true);
 		}
 
@@ -149,9 +148,7 @@ public class RiderAlertsActivity extends MenuListActivity {
 						}
 					}
 				} catch (final IOException e) {
-					// TODO Auto-generated catch block
 				} catch (final JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -167,7 +164,6 @@ public class RiderAlertsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPostExecute(Void foo) {
-            mListDetail.startAnimation(mSlideOut);
             getActionBar().setTitle(R.string.title_rider_alerts);
             setProgress(10000); // max -- makes it slide away
 

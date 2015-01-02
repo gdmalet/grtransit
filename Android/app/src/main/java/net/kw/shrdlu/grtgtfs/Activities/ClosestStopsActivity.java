@@ -187,7 +187,6 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPreExecute() {
-			mListDetail.startAnimation(mSlideIn);
             setProgressBarVisibility(true);
 		}
 
@@ -269,7 +268,6 @@ public class ClosestStopsActivity extends MenuListActivity {
             getActionBar().setTitle(R.string.title_activity_closest_stops);
             setProgress(10000); // max -- makes it slide away
 
-			mListDetail.startAnimation(mSlideOut);
 			mAdapter.notifyDataSetChanged();
 		}
 	}

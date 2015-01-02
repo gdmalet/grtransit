@@ -83,7 +83,6 @@ public class StopsActivity extends MenuMapActivity {
 		 */
 		@Override
 		protected void onPreExecute() {
-			mDetailArea.startAnimation(mSlideIn);
             setProgressBarVisibility(true);
 		}
 
@@ -151,7 +150,6 @@ public class StopsActivity extends MenuMapActivity {
 				locn.close();
 			}
 
-			mDetailArea.startAnimation(mSlideOut);
             getActionBar().setTitle(R.string.title_mapstops);
             setProgress(10000); // max -- makes it slide away
 		}

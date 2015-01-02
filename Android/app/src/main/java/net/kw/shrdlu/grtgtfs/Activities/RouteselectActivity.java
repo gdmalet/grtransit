@@ -162,7 +162,6 @@ public class RouteselectActivity extends MenuListActivity {
 
 		@Override
 		protected void onPreExecute() {
-			mListDetail.startAnimation(mSlideIn);
             setProgressBarVisibility(true);
 		}
 
@@ -218,7 +217,6 @@ public class RouteselectActivity extends MenuListActivity {
 
 			setListAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
 
-            mListDetail.startAnimation(mSlideOut);
             getActionBar().setTitle("Routes using stop " + mStopid);
             getActionBar().setSubtitle(mStopname);
             setProgress(10000); // max -- makes it slide away

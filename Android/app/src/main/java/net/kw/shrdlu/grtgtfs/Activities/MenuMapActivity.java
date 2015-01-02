@@ -62,7 +62,6 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 
 	protected MapActivity mContext;
 	protected View mDetailArea;
-	protected Animation mSlideIn, mSlideOut;
 	protected MapView mMapview;
 	protected List<Overlay> mapOverlays;
 	protected MyLocationOverlay mMylocation;
@@ -91,11 +90,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 
 		mapOverlays = mMapview.getOverlays();
 
-		// Load animations used to show/hide progress bar
 		mDetailArea = findViewById(R.id.mapview);
-		mSlideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
-		mSlideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-		mSlideIn.setAnimationListener(this);
 
 		getActionBar().setTitle(R.string.loading_stops);
 

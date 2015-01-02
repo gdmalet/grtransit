@@ -102,7 +102,6 @@ public class TimesActivity extends MenuListActivity {
 		@Override
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
-			mListDetail.startAnimation(mSlideIn);
             setProgressBarVisibility(true);
 		}
 
@@ -171,7 +170,6 @@ public class TimesActivity extends MenuListActivity {
 			}
 
             setProgress(10000); // max -- makes it slide away
-			mListDetail.startAnimation(mSlideOut);
 
 			TextView tv = null;
 			final ListView lv = getListView();

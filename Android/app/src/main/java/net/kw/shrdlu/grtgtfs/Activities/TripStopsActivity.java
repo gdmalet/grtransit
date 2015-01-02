@@ -89,7 +89,6 @@ public class TripStopsActivity extends MenuListActivity {
 		@Override
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
-			mListDetail.startAnimation(mSlideIn);
             setProgressBarVisibility(true);
         }
 
@@ -131,8 +130,7 @@ public class TripStopsActivity extends MenuListActivity {
 		protected void onPostExecute(Integer savedpos) {
 			// Log.v(TAG, "onPostExecute()");
 
-            mListDetail.startAnimation(mSlideOut);
-            getActionBar().setTitle("Stops on route");
+            getActionBar().setTitle("Stops on trip");
             getActionBar().setSubtitle(mHeadsign);
             setProgress(10000); // max -- makes it slide away
 

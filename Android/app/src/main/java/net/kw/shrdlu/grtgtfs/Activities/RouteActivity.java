@@ -80,7 +80,6 @@ public class RouteActivity extends MenuMapActivity {
 		@Override
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");
-			mDetailArea.startAnimation(mSlideIn);
             setProgressBarVisibility(true);
         }
 
@@ -178,7 +177,6 @@ public class RouteActivity extends MenuMapActivity {
 			mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
 			mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
 
-			mDetailArea.startAnimation(mSlideOut);
             setProgress(10000); // max -- makes it slide away
 
 			if (mRouteid != null) { // doing one route
