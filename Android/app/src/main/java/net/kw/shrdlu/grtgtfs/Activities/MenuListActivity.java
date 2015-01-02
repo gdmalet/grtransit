@@ -19,7 +19,7 @@
 
 // TODO -- no animation if drawer dragged out on other activities.
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.app.ActionBar;
 import android.app.ListActivity;
@@ -40,8 +40,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerListAdapter;
+import net.kw.shrdlu.grtgtfs.NavOptions;
+import net.kw.shrdlu.grtgtfs.R;
 
 import java.util.ArrayList;
 
@@ -115,7 +118,8 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 mDrawerLayout.closeDrawers();
-                TitlebarClick.onOptionsItemSelected(mContext, mDrawerItems.get(position).getId());
+                if (!onNavOptionSelected(mDrawerItems.get(position).getId()))
+                    NavOptions.onNavOptionSelected(mContext, mDrawerItems.get(position).getId());
             }
         });
 
@@ -191,6 +195,12 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
         return super.onPrepareOptionsMenu(menu);
     }
 
+    // A child activity can override this if it wants to do something with a navigation
+    // drawer option, else we'll just call NavOptions.onNavOptionSelected.
+    public boolean onNavOptionSelected(int itemid) {
+        return false;
+    }
+
     // on user selecting something from the action bar....
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -207,7 +217,7 @@ public class MenuListActivity extends ListActivity implements AnimationListener 
             }
         }
         // Otherwise deal with the options.
-        return TitlebarClick.onOptionsItemSelected(mContext, itemid) || super.onOptionsItemSelected(item);
+        return NavOptions.onNavOptionSelected(mContext, itemid) || super.onOptionsItemSelected(item);
     }
 
 	@Override

@@ -17,7 +17,7 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -31,6 +31,10 @@ import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
+
+import net.kw.shrdlu.grtgtfs.DatabaseHelper;
+import net.kw.shrdlu.grtgtfs.NotificationCallback;
+import net.kw.shrdlu.grtgtfs.R;
 
 public class StopsActivity extends MenuMapActivity {
 	private static final String TAG = "StopsActivity";

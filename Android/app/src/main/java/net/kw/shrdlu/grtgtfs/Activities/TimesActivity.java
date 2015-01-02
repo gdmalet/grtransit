@@ -17,7 +17,7 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -29,7 +29,6 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -39,8 +38,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import net.kw.shrdlu.grtgtfs.DatabaseHelper;
+import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimesArrayAdapter;
+import net.kw.shrdlu.grtgtfs.NotificationCallback;
+import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
 
@@ -129,7 +133,7 @@ public class TimesActivity extends MenuListActivity {
 			if (mRouteid == null) {
 				// showing all routes
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStopid, datenow,
-						!GRTApplication.mPreferences.showAllBusses(), this);
+                        !GRTApplication.mPreferences.showAllBusses(), this);
 			} else {
 
 				// TODO Setting a listener means not passing `this'
@@ -290,9 +294,11 @@ public class TimesActivity extends MenuListActivity {
 		}
 	}
 
+    // Catch the user selecting the map option from the navigation drawer,
+    // and show the map with this stop centered.
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+	public boolean onNavOptionSelected(int itemid) {
+		switch (itemid) {
             case R.id.menu_showmap: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
                     .setCategory(mContext.getLocalClassName())
@@ -311,7 +317,7 @@ public class TimesActivity extends MenuListActivity {
 			return true;
 		}
 		default: {
-			return TitlebarClick.onOptionsItemSelected(mContext, item.getItemId());
+			return false;
 		}
 		}
 	}

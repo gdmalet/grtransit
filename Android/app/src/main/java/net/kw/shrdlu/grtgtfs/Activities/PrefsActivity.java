@@ -17,10 +17,12 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import net.kw.shrdlu.grtgtfs.R;
 
 public class PrefsActivity extends PreferenceActivity {
 	private static final String TAG = "PreferenceActivity";

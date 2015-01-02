@@ -27,12 +27,19 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import net.kw.shrdlu.grtgtfs.Activities.ClosestStopsActivity;
+import net.kw.shrdlu.grtgtfs.Activities.FavstopsActivity;
+import net.kw.shrdlu.grtgtfs.Activities.PrefsActivity;
+import net.kw.shrdlu.grtgtfs.Activities.RiderAlertsActivity;
+import net.kw.shrdlu.grtgtfs.Activities.SearchActivity;
+import net.kw.shrdlu.grtgtfs.Activities.StopsActivity;
+
 /*
  *  Called when a button is clicked on the title bar.
  */
-public class TitlebarClick {
+public class NavOptions {
 
-	public static boolean onOptionsItemSelected(Activity context, int itemid) {
+	public static boolean onNavOptionSelected(Activity context, int itemid) {
 		switch (itemid) {
 		case android.R.id.home: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder("Option select", "Logo").build());

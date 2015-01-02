@@ -31,12 +31,12 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name=".StopsActivity"
+            android:name=".Activities.StopsActivity"
             android:hardwareAccelerated="false" >
         </activity>
-        <activity android:name=".FavstopsActivity" />
+        <activity android:name=".Activities.FavstopsActivity" />
         <activity
-            android:name=".StartupActivity"
+            android:name=".Activities.StartupActivity"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,21 +44,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RouteActivity"
+            android:name=".Activities.RouteActivity"
             android:hardwareAccelerated="false" >
         </activity>
         <activity
-            android:name=".PrefsActivity"
+            android:name=".Activities.PrefsActivity"
             android:theme="@android:style/Theme.Holo" />
-        <activity android:name=".RouteselectActivity" />
-        <activity android:name=".TimesActivity" />
-        <activity android:name=".TripStopsActivity" />
-        <activity android:name=".ClosestStopsActivity" />
-        <activity android:name=".MenuListActivity" />
-        <activity android:name=".MenuMapActivity" />
-        <activity android:name=".RiderAlertsActivity" />
+        <activity android:name=".Activities.RouteselectActivity" />
+        <activity android:name=".Activities.TimesActivity" />
+        <activity android:name=".Activities.TripStopsActivity" />
+        <activity android:name=".Activities.ClosestStopsActivity" />
+        <activity android:name=".Activities.MenuListActivity" />
+        <activity android:name=".Activities.MenuMapActivity" />
+        <activity android:name=".Activities.RiderAlertsActivity" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".Activities.SearchActivity"
             android:launchMode="singleTop" >
         </activity>
 

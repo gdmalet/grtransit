@@ -29,10 +29,10 @@ import com.google.android.gms.analytics.Tracker;
 public class GRTApplication extends android.app.Application {
 	public static final String TAG = "GRTApplication";
 
-	protected static Tracker tracker = null;
-	protected static Preferences mPreferences = null;
-	protected static DatabaseHelper dbHelper = null;
-    protected final static boolean isDebugBuild = BuildConfig.DEBUG;
+	public static Tracker tracker = null;
+	public static Preferences mPreferences = null;
+	public static DatabaseHelper dbHelper = null;
+    public final static boolean isDebugBuild = BuildConfig.DEBUG;
 
 	private Context mContext;
 

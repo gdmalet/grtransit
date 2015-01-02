@@ -17,7 +17,7 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -37,7 +37,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import net.kw.shrdlu.grtgtfs.DatabaseHelper;
+import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
+import net.kw.shrdlu.grtgtfs.R;
 
 public class SearchActivity extends MenuListActivity {
 	private static final String TAG = "SearchActivity";

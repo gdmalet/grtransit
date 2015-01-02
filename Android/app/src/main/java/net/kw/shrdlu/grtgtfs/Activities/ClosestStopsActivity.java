@@ -17,7 +17,7 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,7 +30,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -38,7 +37,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.kw.shrdlu.grtgtfs.DatabaseHelper;
+import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.timestopdescArrayAdapter;
+import net.kw.shrdlu.grtgtfs.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -290,10 +292,12 @@ public class ClosestStopsActivity extends MenuListActivity {
 		mContext.startActivity(routes);
 	}
 
+    // Catch the user selecting the map option from the navigation drawer,
+    // and show the map with this stop centered.
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case 42: { // TODO R.id.menu_showmap: {
+	public boolean onNavOptionSelected(int itemid) {
+		switch (itemid) {
+		case R.id.menu_showmap: {
 			// Centre the map on the closest stop, since the GPS takes too much time.
 			final Intent busstop = new Intent(mContext, StopsActivity.class);
 			if (mListDetails.size() > 0) {
@@ -304,7 +308,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 			return true;
 		}
 		default: {
-			return TitlebarClick.onOptionsItemSelected(mContext, item.getItemId());
+			return false;
 		}
 		}
 	}

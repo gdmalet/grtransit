@@ -17,7 +17,7 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -46,8 +46,13 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
+import net.kw.shrdlu.grtgtfs.Activities.FavstopsActivity;
+import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerListAdapter;
+import net.kw.shrdlu.grtgtfs.NavOptions;
+import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.StopsOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +148,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 mDrawerLayout.closeDrawers();
-                TitlebarClick.onOptionsItemSelected(mContext, mDrawerItems.get(position).getId());
+                NavOptions.onNavOptionSelected(mContext, mDrawerItems.get(position).getId());
             }
         });
 
@@ -263,7 +268,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 			return true;
 		}
 		default: {
-			return TitlebarClick.onOptionsItemSelected(mContext, item.getItemId());
+			return NavOptions.onNavOptionSelected(mContext, item.getItemId());
 		}
 		}
 	}

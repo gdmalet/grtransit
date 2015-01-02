@@ -17,7 +17,7 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,7 +25,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.GestureDetector;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -34,7 +33,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import net.kw.shrdlu.grtgtfs.DatabaseHelper;
+import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
+import net.kw.shrdlu.grtgtfs.R;
 
 public class RouteselectActivity extends MenuListActivity {
 	private static final String TAG = "RouteselectActivity";
@@ -130,9 +132,11 @@ public class RouteselectActivity extends MenuListActivity {
 				}
 			});
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+    // Catch the user selecting the map option from the navigation drawer,
+    // and show the map with this stop centered.
+    @Override
+	public boolean onNavOptionSelected(int itemid) {
+		switch (itemid) {
             case R.id.menu_showmap: {
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
                     .setCategory(mContext.getLocalClassName())
@@ -147,7 +151,7 @@ public class RouteselectActivity extends MenuListActivity {
 			return true;
 		}
 		default: {
-			return TitlebarClick.onOptionsItemSelected(mContext, item.getItemId());
+			return false;
 		}
 		}
 	}

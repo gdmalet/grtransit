@@ -17,7 +17,7 @@
  * along with GRTransit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.kw.shrdlu.grtgtfs;
+package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,7 +27,10 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
+import net.kw.shrdlu.grtgtfs.Activities.MenuListActivity;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
+import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.TwitterCredentials;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

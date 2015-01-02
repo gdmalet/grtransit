@@ -44,6 +44,8 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 
+import net.kw.shrdlu.grtgtfs.Activities.RouteselectActivity;
+
 import java.util.ArrayList;
 
 public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
