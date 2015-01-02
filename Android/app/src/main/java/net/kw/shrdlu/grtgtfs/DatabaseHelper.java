@@ -35,14 +35,12 @@ public class DatabaseHelper {
 	private static String DB_PATH = null;
 	private static int DB_VERSION = -1;
 	private static final String DB_NAME = "GRT.db";
-	private static Context mContext;
-	private static SQLiteDatabase DB = null;
+    private static SQLiteDatabase DB = null;
 
 	/**
 	 * Constructor takes and keeps a reference of the passed context in order to access the application assets and resources.
 	 */
 	public DatabaseHelper(Context context) {
-		mContext = context;
 
         // Fallback to old-style location if we're struggling....
 		final String DB_OLD_PATH = context.getApplicationInfo().dataDir + "/databases/";
@@ -76,7 +74,7 @@ public class DatabaseHelper {
 			// The database is on the sdcard.
 			final String sdstate = Environment.getExternalStorageState();
 			if (!sdstate.equals(Environment.MEDIA_MOUNTED)) {
-				final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+				final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 				builder.setTitle("The external database is unavailable.")
 				.setMessage("The sdcard is in state `" + sdstate
 						+ "'.\nPlease retry when it is available.").create().show();

@@ -7,22 +7,16 @@
 
     <!-- The main content view -->
     <LinearLayout
+        android:id="@+id/detail_area"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/detail_area"
+        <ListView
+            android:id="@id/android:list"
+            style="@style/List.Body"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
-
-            <ListView
-                android:id="@id/android:list"
-                style="@style/List.Body"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
-        </LinearLayout>
+            android:layout_height="fill_parent" />
     </LinearLayout>
 
     <!-- The navigation drawer -->

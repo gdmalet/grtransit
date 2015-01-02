@@ -212,7 +212,7 @@ public class TripStopsActivity extends MenuListActivity {
 	});
 
 	// Called from the listener above for a long click
-	public void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+    void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 		// Log.v(TAG, "long clicked position " + position);
 
 		final Cursor csr = (Cursor) parent.getItemAtPosition(position);

@@ -56,18 +56,17 @@ import java.util.List;
 public class MenuMapActivity extends MapActivity {
 	private static final String TAG = "MenuMapActivity";
 
-	protected MapActivity mContext;
-	protected View mDetailArea;
-	protected MapView mMapview;
-	protected List<Overlay> mapOverlays;
-	protected MyLocationOverlay mMylocation;
-	protected StopsOverlay mStopsOverlay = null;
+	MapActivity mContext;
+    MapView mMapview;
+	List<Overlay> mapOverlays;
+	MyLocationOverlay mMylocation;
+	StopsOverlay mStopsOverlay = null;
 
         // For the navigation drawer
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
+    private final ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
     private NavDrawerListAdapter mNavAdapter;
 
 	@Override
@@ -86,7 +85,7 @@ public class MenuMapActivity extends MapActivity {
 
 		mapOverlays = mMapview.getOverlays();
 
-		mDetailArea = findViewById(R.id.mapview);
+        View mDetailArea = findViewById(R.id.mapview);
 
 		getActionBar().setTitle(R.string.loading_stops);
         getActionBar().setSubtitle(null);

@@ -48,14 +48,14 @@ import static android.widget.ListView.OnItemClickListener;
 public class MenuListActivity extends ListActivity {
 	private static final String TAG = "MenuListActivity";
 
-	protected ListActivity mContext;
-	protected View mListDetail;
+	ListActivity mContext;
+	View mListDetail;
 
     // For the navigation drawer
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
+    private final ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
     private NavDrawerListAdapter mNavAdapter;
 
 	@Override
@@ -187,7 +187,7 @@ public class MenuListActivity extends ListActivity {
 
     // A child activity can override this if it wants to do something with a navigation
     // drawer option, else we'll just call NavOptions.onNavOptionSelected.
-    public boolean onNavOptionSelected(int itemid) {
+    boolean onNavOptionSelected(int itemid) {
         return false;
     }
 

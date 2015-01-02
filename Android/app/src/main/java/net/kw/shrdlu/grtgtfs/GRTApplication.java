@@ -31,18 +31,15 @@ public class GRTApplication extends android.app.Application {
 
 	public static Tracker tracker = null;
 	public static Preferences mPreferences = null;
-	public static DatabaseHelper dbHelper = null;
     public final static boolean isDebugBuild = BuildConfig.DEBUG;
     public final static String LocalClassNameHome = "Activities.FavstopsActivity";
 
-	private Context mContext;
-
-	@Override
+    @Override
 	public void onCreate() {
 		super.onCreate();
 		// Log.d(TAG, "onCreate");
 
-		mContext = this; // also returned by getApplicationContext();
+        Context context = this;
 
 		// Do this before instantiating Globals, as that may do something we'd like
 		// to see by having StrictMode on already.
@@ -59,10 +56,10 @@ public class GRTApplication extends android.app.Application {
                     //.detectLeakedClosableObjects()
 		}
 
-		mPreferences = new Preferences(mContext);
-		dbHelper = new DatabaseHelper(mContext);
+		mPreferences = new Preferences(context);
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
 
-        GoogleAnalytics analytics = GoogleAnalytics.getInstance(mContext);
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
         analytics.enableAutoActivityReports(this);
 		tracker = analytics.newTracker(getString(R.string.ga_api_key));
         tracker.enableAutoActivityTracking(true);   // need this here and in the parent?
@@ -75,7 +72,7 @@ public class GRTApplication extends android.app.Application {
 
         // Report version details (not reported if analytics DryRun is set).
         String v = "Version " + BuildConfig.VERSION_NAME + " " + BuildConfig.BUILD_TYPE;
-        v += ", Db " + dbHelper.GetDBVersion();
+        v += ", Db " + DatabaseHelper.GetDBVersion();
         tracker.send(new HitBuilders.EventBuilder()
                 .setCategory("Startup")
                 .setAction(GRTApplication.mPreferences.getUUID())

@@ -117,7 +117,7 @@ public class ServiceCalendar {
 
 	// Return a string showing the days a bus runs, or null if it doesn't
 	// run on the given date. Limit to correct days of week, or not.
-	public static String getTripDaysofWeek(String trip_id, String date, boolean limit) {
+	private static String getTripDaysofWeek(String trip_id, String date, boolean limit) {
 
 		String retstr;
 

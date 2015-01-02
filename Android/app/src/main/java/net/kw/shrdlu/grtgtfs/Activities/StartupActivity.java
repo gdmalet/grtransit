@@ -52,7 +52,7 @@ import java.util.zip.GZIPInputStream;
 public class StartupActivity extends Activity {
 	private static final String TAG = "StartupActivity";
 
-	protected Activity mContext;
+	private Activity mContext;
 
 	private static String DBVersionURL = "http://baleka.org/gdmalet/android/grtransit/GRT.db.version";
 	private static String DBDatabaseURL = "http://baleka.org/gdmalet/android/grtransit/GRT.db.gz";
@@ -90,7 +90,7 @@ public class StartupActivity extends Activity {
 
 	/*
 	 * Start FavstopsActivity ... this can be called from multiple code paths, so put it in one place. */
-	public void startFavstops()
+    void startFavstops()
 	{
 		mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
 		finish(); // take this activity off the stack.
@@ -154,9 +154,9 @@ public class StartupActivity extends Activity {
 	 */
 	private class NewDBVersion {
 
-		protected int DBVersion = -1;
-		protected float DBsize = 0.0f;
-		protected String DBmd5 = null;
+		int DBVersion = -1;
+		float DBsize = 0.0f;
+		String DBmd5 = null;
 
 		public NewDBVersion()
 		{
@@ -286,7 +286,8 @@ public class StartupActivity extends Activity {
 				final File n = new File(DB_PATH + ".new");
                 //noinspection ResultOfMethodCallIgnored
                 o.delete();
-				n.renameTo(o);
+                //noinspection ResultOfMethodCallIgnored
+                n.renameTo(o);
 
 				alliswell = true;
 

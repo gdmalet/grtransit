@@ -147,8 +147,7 @@ public class RiderAlertsActivity extends MenuListActivity {
 							AccessToken = token;	// stash it
 						}
 					}
-				} catch (final IOException e) {
-				} catch (final JSONException e) {
+				} catch (final IOException | JSONException e) {
 					e.printStackTrace();
 				}
 			}
@@ -182,7 +181,7 @@ public class RiderAlertsActivity extends MenuListActivity {
 	/**
 	 * Get the latest twitter info. Some of this copied from http://www.vogella.com/articles/AndroidJSON/article.html
 	 */
-	public ArrayList<String[]> readTwitterFeed() {
+    ArrayList<String[]> readTwitterFeed() {
 		final StringBuilder builder = new StringBuilder();
 		final HttpClient client = new DefaultHttpClient();
 		final HttpGet httpGet = new HttpGet(TwitterURL + TwitterQry);

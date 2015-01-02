@@ -26,7 +26,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
