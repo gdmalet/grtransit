@@ -60,6 +60,7 @@ public class SearchActivity extends MenuListActivity {
 		mSearchText = (EditText) findViewById(R.id.searchtext);
 
         getActionBar().setTitle(R.string.title_search);
+        getActionBar().setSubtitle(null);
 
 		mSearchText.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -241,6 +242,7 @@ public class SearchActivity extends MenuListActivity {
 		@Override
 		protected void onPostExecute(Void foo) {
             getActionBar().setTitle("Stops matching `" + mQuery + "'");
+            getActionBar().setSubtitle(null);
 			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesc, mCsr);
 			setListAdapter(adapter);
 			// adapter.notifyDataSetChanged();
@@ -269,6 +271,7 @@ public class SearchActivity extends MenuListActivity {
 		@Override
 		protected void onPostExecute(Void foo) {
             getActionBar().setTitle("Routes matching `" + mQuery + "'");
+            getActionBar().setSubtitle(null);
 			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr);
 			setListAdapter(adapter);
 			// adapter.notifyDataSetChanged();

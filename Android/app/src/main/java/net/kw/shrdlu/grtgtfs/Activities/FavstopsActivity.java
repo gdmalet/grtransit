@@ -270,6 +270,7 @@ public class FavstopsActivity extends MenuListActivity {
 		@Override
 		protected void onPostExecute(Void foo) {
             getActionBar().setTitle(R.string.title_favourites);
+            getActionBar().setSubtitle(null);
             setProgress(10000); // max -- makes it slide away
 		}
 	}

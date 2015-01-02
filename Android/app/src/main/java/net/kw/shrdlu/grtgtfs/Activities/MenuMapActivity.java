@@ -93,6 +93,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		mDetailArea = findViewById(R.id.mapview);
 
 		getActionBar().setTitle(R.string.loading_stops);
+        getActionBar().setSubtitle(null);
 
 		mMylocation = new MyLocationOverlay(this, mMapview);
 		mapOverlays.add(mMylocation);

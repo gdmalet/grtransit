@@ -185,6 +185,7 @@ public class RouteActivity extends MenuMapActivity {
                 getActionBar().setSubtitle(mHeadsign);
 			} else {
                 getActionBar().setTitle("Routes using stop " + mStopid);
+                getActionBar().setSubtitle(null);
                 // getActionBar().setSubtitle(mStopname); TODO -- need stop description
 			}
 		}

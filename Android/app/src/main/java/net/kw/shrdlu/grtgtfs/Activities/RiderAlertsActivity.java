@@ -88,6 +88,7 @@ public class RiderAlertsActivity extends MenuListActivity {
 		mListDetails = new ArrayList<>();
 
         getActionBar().setTitle(R.string.twitter_querying_feed);
+        getActionBar().setSubtitle(null);
 
 		new ProcessTweets().execute();
 	}
@@ -165,6 +166,7 @@ public class RiderAlertsActivity extends MenuListActivity {
 		@Override
 		protected void onPostExecute(Void foo) {
             getActionBar().setTitle(R.string.title_rider_alerts);
+            getActionBar().setSubtitle(null);
             setProgress(10000); // max -- makes it slide away
 
 			if (mListDetails == null) {

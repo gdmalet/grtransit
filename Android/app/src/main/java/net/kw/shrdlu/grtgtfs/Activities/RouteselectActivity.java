@@ -54,7 +54,8 @@ public class RouteselectActivity extends MenuListActivity {
         setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
-        getActionBar().setTitle("Select Route");
+        getActionBar().setTitle("Select a Route");
+        getActionBar().setSubtitle(null);
 
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent = getIntent();

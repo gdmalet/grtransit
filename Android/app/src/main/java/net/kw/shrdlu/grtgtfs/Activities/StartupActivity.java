@@ -78,6 +78,7 @@ public class StartupActivity extends Activity {
 		}
 
 		getActionBar().setTitle(R.string.db_opening);
+        getActionBar().setSubtitle(null);
 
 		DB_PATH = DatabaseHelper.GetDBPath();
 

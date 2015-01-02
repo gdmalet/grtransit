@@ -151,6 +151,7 @@ public class StopsActivity extends MenuMapActivity {
 			}
 
             getActionBar().setTitle(R.string.title_mapstops);
+            getActionBar().setSubtitle(null);
             setProgress(10000); // max -- makes it slide away
 		}
 	}

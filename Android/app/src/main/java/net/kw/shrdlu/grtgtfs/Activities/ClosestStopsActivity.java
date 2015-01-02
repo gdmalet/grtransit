@@ -39,7 +39,7 @@ import android.widget.Toast;
 
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
-import net.kw.shrdlu.grtgtfs.LayoutAdapters.timestopdescArrayAdapter;
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimeStopdescArrayAdapter;
 import net.kw.shrdlu.grtgtfs.R;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 	private LocationManager mLocationManager;
 	private Location mLocation;
-	private timestopdescArrayAdapter mAdapter;
+	private TimeStopdescArrayAdapter mAdapter;
 	private ArrayList<String[]> mListDetails;
 
     // Need to store some stuff in an array, so we can sort by distance
@@ -81,6 +81,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 		mListDetails = new ArrayList<>(NUM_CLOSEST_STOPS);
 
         getActionBar().setTitle(R.string.loading_stops);
+        getActionBar().setSubtitle(null);
 
 		// register to get long clicks on bus stop list
 		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -99,7 +100,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 		// Acquire a reference to the system Location Manager
 		mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-		mAdapter = new timestopdescArrayAdapter(mContext, R.layout.timestopdesc, mListDetails);
+		mAdapter = new TimeStopdescArrayAdapter(mContext, R.layout.timestopdesc, mListDetails);
 		mContext.setListAdapter(mAdapter);
 
 		// Get a best guess of current location

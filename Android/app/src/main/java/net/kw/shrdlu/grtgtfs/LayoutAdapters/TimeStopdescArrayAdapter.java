@@ -33,16 +33,16 @@ import net.kw.shrdlu.grtgtfs.R;
 
 import java.util.ArrayList;
 
-public class timestopdescArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
+public class TimeStopdescArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
 	private static final String TAG = "timestopdescAdapter";
 
 	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	public timestopdescArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+	public TimeStopdescArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
-		// Log.v(TAG, "timestopdescArrayAdapter()");
+		// Log.v(TAG, "TimeStopdescArrayAdapter()");
 
 		mDetails = details;
 		mInflater = LayoutInflater.from(context);
