@@ -28,7 +28,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 
-import net.kw.shrdlu.grtgtfs.Activities.FavstopsActivity;
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.R;

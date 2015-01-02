@@ -65,8 +65,8 @@ public class StopsActivity extends MenuMapActivity {
 	}
 
 	/**
-	 * Background task to handle initial load of the bus stops. This correctly shows and hides the loading animation from the
-	 * GUI thread before starting a background query to the DB. When finished, it transitions back to the GUI thread where it
+	 * Background task to handle initial load of the bus stops.
+     * When finished, it transitions back to the GUI thread where it
 	 * updates with the newly-found entries.
 	 */
 	private class LoadOverlay extends AsyncTask<Void, Integer, Void> implements NotificationCallback {
@@ -77,10 +77,6 @@ public class StopsActivity extends MenuMapActivity {
 			publishProgress(progress);
 		}
 
-		/**
-		 * Before jumping into background thread, start sliding in the {@link ProgressBar}. We'll only show it once the
-		 * animation finishes.
-		 */
 		@Override
 		protected void onPreExecute() {
             setProgressBarVisibility(true);

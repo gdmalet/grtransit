@@ -77,7 +77,6 @@ public class ClosestStopsActivity extends MenuListActivity {
         setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
-		// Load animations used to show/hide progress bar
 		mListDetails = new ArrayList<>(NUM_CLOSEST_STOPS);
 
         getActionBar().setTitle(R.string.loading_stops);

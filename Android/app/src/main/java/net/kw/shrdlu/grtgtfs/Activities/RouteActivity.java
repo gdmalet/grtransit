@@ -26,7 +26,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.Window;
-import android.widget.ProgressBar;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
@@ -73,10 +72,6 @@ public class RouteActivity extends MenuMapActivity {
 			publishProgress(progress);
 		}
 
-		/**
-		 * Before jumping into background thread, start sliding in the {@link ProgressBar}. We'll only show it once the
-		 * animation finishes.
-		 */
 		@Override
 		protected void onPreExecute() {
 			// Log.v(TAG, "onPreExecute()");

@@ -31,9 +31,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,7 +43,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
-import net.kw.shrdlu.grtgtfs.Activities.FavstopsActivity;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerListAdapter;
@@ -57,7 +53,7 @@ import net.kw.shrdlu.grtgtfs.StopsOverlay;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuMapActivity extends MapActivity implements AnimationListener {
+public class MenuMapActivity extends MapActivity {
 	private static final String TAG = "MenuMapActivity";
 
 	protected MapActivity mContext;
@@ -269,18 +265,7 @@ public class MenuMapActivity extends MapActivity implements AnimationListener {
 		}
 	}
 
-	@Override
-	public void onAnimationEnd(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-	}
-
+    // This is required for the virtual base class MapActivity
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;

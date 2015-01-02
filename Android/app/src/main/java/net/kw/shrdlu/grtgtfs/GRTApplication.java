@@ -33,6 +33,7 @@ public class GRTApplication extends android.app.Application {
 	public static Preferences mPreferences = null;
 	public static DatabaseHelper dbHelper = null;
     public final static boolean isDebugBuild = BuildConfig.DEBUG;
+    public final static String LocalClassNameHome = "Activities.FavstopsActivity";
 
 	private Context mContext;
 

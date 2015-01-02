@@ -27,7 +27,6 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
-import net.kw.shrdlu.grtgtfs.Activities.MenuListActivity;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
 import net.kw.shrdlu.grtgtfs.R;
 import net.kw.shrdlu.grtgtfs.TwitterCredentials;
