@@ -212,11 +212,11 @@ public class FavstopsActivity extends MenuListActivity {
                 .setLabel(mStopid)
                 .build());
 
-		final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+		final Intent newintent = new Intent(mContext, TimesActivity.class);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
-		routeselect.putExtra(pkgstr + ".stop_id", mStopid);
-		routeselect.putExtra(pkgstr + ".stop_name", stop_name);
-		mContext.startActivity(routeselect);
+		newintent.putExtra(pkgstr + ".stop_id", mStopid);
+		newintent.putExtra(pkgstr + ".stop_name", stop_name);
+		mContext.startActivity(newintent);
 	}
 
 	/* Do the processing to load the ArrayAdapter for display. */
