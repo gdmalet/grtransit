@@ -143,16 +143,9 @@ public class MenuMapActivity extends MapActivity {
             }
         });
 
-        // Display the hamburger in the home screen, else the < home symbol.
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        String lcn = mContext.getLocalClassName();
-        if (lcn.equals("FavstopsActivity")) {   // home screen
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
-        } else {
-            mDrawerToggle.setDrawerIndicatorEnabled(false);
-        }
-
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
 	}
 
 	@Override

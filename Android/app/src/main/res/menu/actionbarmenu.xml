@@ -9,7 +9,7 @@
     </item>
     <item
         android:id="@+id/menu_refresh"
-        android:icon="@drawable/ic_menu_refresh"
+        android:icon="@drawable/ic_menu_rotate"
         android:showAsAction="ifRoom"
         android:title="@string/refresh">
     </item>

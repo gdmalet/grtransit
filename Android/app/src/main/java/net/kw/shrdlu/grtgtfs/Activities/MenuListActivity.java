@@ -64,6 +64,10 @@ public class MenuListActivity extends ListActivity {
 
         mListDetail = findViewById(R.id.detail_area);
 
+        // Set what's shown on a new screen, before children change things
+        getActionBar().setIcon(R.drawable.grticon_leftspace);
+        getActionBar().setTitle(R.string.app_name);
+
         // Load up the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);

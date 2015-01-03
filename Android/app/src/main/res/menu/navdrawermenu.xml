@@ -13,7 +13,7 @@
     </item>
     <item
         android:id="@+id/menu_showmap"
-        android:icon="@drawable/ic_menu_mylocation"
+        android:icon="@drawable/ic_menu_mapmode"
         android:title="@string/showmap">
     </item>
     <item
