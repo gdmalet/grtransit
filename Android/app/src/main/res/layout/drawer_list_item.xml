@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="48dp">
 
-    <!-- style="@style/List" -->
-    <!-- android:background="@drawable/list_selector" -->
 
     <ImageView
         android:id="@+id/icon"
@@ -19,14 +17,12 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/List.Body"
         android:layout_toRightOf="@id/icon"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingRight="40dp"/>
-
+    <!--android:textAppearance="?android:attr/textAppearanceListItemSmall"-->
         <!-- android:textAppearance="?android:attr/textAppearanceListItemSmall" -->
 
 </RelativeLayout>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:defaultValue="false"
         android:key="@string/pref_showallbusses_key"
         android:title="@string/showallbusses" />
-    <CheckBoxPreference
+    <SwitchPreference
         android:defaultValue="false"
         android:key="@string/pref_ampmtimes_key"
         android:title="@string/ampmtimes" />
-    <CheckBoxPreference
+    <SwitchPreference
         android:defaultValue="true"
         android:key="@string/pref_db_autoupdate_key"
         android:title="@string/auto_check4dbupdate" />

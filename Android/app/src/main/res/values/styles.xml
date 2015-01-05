@@ -20,7 +20,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="ActivityTheme" parent="@android:style/Theme.Holo">
+    <style name="ActivityTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:label">@string/app_name</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
     </style>
@@ -28,11 +28,22 @@
     <!-- See http://jgilfelt.github.io/android-actionbarstylegenerator -->
     <!-- parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse"> -->
     <style name="ActionBar"
-           parent="@android:style/Widget.Holo.ActionBar.Solid">
+            parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:titleTextStyle">@style/ActionBarTitleText</item>
         <item name="android:subtitleTextStyle">@style/ActionBarSubtitleText</item>
+        <!-- TODO should allow this to default to holo, but it's not visible on current background. -->
+        <item name="android:progressBarStyle">@android:style/Widget.ProgressBar.Horizontal</item>
+        <!--<item name="android:progressBarStyle">@style/ActionBarProgress</item> -->-->
     </style>
+
+<!--
+    <style name="ActionBarProgress" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
+        <item name="progressDrawable">@android:drawable/progress_horizontal_holo_dark</item>
+        <item name="indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal_holo</item>
+    </style>
+-->
+
 
     <style name="ActionBarTitleText"
            parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
@@ -40,13 +51,13 @@
     </style>
 
     <style name="ActionBarSubtitleText"
-        parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
+            parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
         <item name="android:textColor">@color/actionbar_text</item>
     </style>
 
 
     <style name="Text" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
     <style name="Text.Loading">
@@ -59,7 +70,7 @@
     </style>
 
     <style name="List" parent="Text">
-        <item name="android:textColor">@android:color/primary_text_light</item>
+        <!--<item name="android:textColor">@android:color/primary_text_light</item>-->
         <item name="android:background">@color/list_background</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -67,37 +78,37 @@
     </style>
 
     <style name="List.Title" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@android:color/primary_text_light</item>
+        <!--<item name="android:textColor">@android:color/primary_text_light</item>-->
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">3dip</item>
     </style>
 
     <style name="List.Label">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="List.Body">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:divider">@color/grt_blue</item>
+        <item name="android:divider">@color/divider_blue</item>
         <item name="android:dividerHeight">3dip</item>
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:headerDividersEnabled">true</item>
-        <item name="android:background">@color/list_black_background</item>
+        <item name="android:background">@color/list_background</item>
     </style>
 
     <style name="List.Content">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:scrollHorizontally">false</item>
     </style>
 
     <style name="List.TweetTime">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
@@ -105,10 +116,10 @@
     </style>
 
     <style name="List.TweetText">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grt_yellow</item>
-        <item name="android:background">@drawable/routenumber</item>
+        <item name="android:textColor">@color/actionbar_text</item>
+        <item name="android:background">@color/actionbar_white_background</item>
     </style>
 
     <style name="List.Rightlabel">
@@ -125,7 +136,7 @@
     </style>
 
     <style name="List.Stopbusname">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">3dip</item>
         <item name="android:textSize">16sp</item>
