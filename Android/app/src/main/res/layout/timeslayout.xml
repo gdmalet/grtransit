@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+style="@style/ActivityTheme"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical" >
+
+    <include layout="@layout/titlelayout" />
+
+    <android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <!-- The main content view -->
     <LinearLayout
@@ -13,20 +21,13 @@
         android:orientation="vertical" >
 
         <ListView
-            android:id="@id/android:list"
+            android:id="@+id/list"
             style="@style/List.Body"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
     </LinearLayout>
 
-    <!-- The navigation drawer -->
-    <ListView android:id="@+id/left_drawer"
-        style="@style/List.Body"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
-</android.support.v4.widget.DrawerLayout>
+    <include layout="@layout/drawerlayout_bottom" />
+    </android.support.v4.widget.DrawerLayout>
 
+</LinearLayout>

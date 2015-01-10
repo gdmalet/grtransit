@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import net.kw.shrdlu.grtgtfs.Activities.MenuListActivity;
 import net.kw.shrdlu.grtgtfs.R;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
@@ -40,7 +41,7 @@ public class ListCursorAdapter extends CursorAdapter {
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	public ListCursorAdapter(ListActivity context, int layout, Cursor cursor) {
+	public ListCursorAdapter(MenuListActivity context, int layout, Cursor cursor) {
 		super(context, cursor, true);
 
 		this.mInflater = LayoutInflater.from(context);

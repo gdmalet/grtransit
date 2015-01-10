@@ -66,7 +66,7 @@ public class RouteselectActivity extends MenuListActivity {
 		new ProcessRoutes().execute();
 	}
 
-	@Override
+	//@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// Log.v(TAG, "clicked position " + position);
 
@@ -202,7 +202,7 @@ public class RouteselectActivity extends MenuListActivity {
 		protected void onPostExecute(Integer listcount) {
 			// Log.v(TAG, "onPostExecute()");
 
-			final ListView lv = getListView();
+			final ListView lv = (ListView)findViewById(R.id.list);
 			lv.setOnTouchListener(mGestureListener);
 
 			if (listcount > 1) {
@@ -216,7 +216,7 @@ public class RouteselectActivity extends MenuListActivity {
 				lv.addFooterView(tv);
 			}
 
-			setListAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
+			lv.setAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
 
             getActionBar().setTitle("Routes using stop " + mStopid);
             getActionBar().setSubtitle(mStopname);

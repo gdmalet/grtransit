@@ -60,7 +60,7 @@ public class FavstopsActivity extends MenuListActivity {
         setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
-		final ListView lv = getListView();
+		final ListView lv = (ListView)findViewById(R.id.list);
 		final TextView tv = new TextView(mContext);
 		tv.setText(R.string.longpress_removes_stop);
 		lv.addFooterView(tv);
@@ -98,8 +98,9 @@ public class FavstopsActivity extends MenuListActivity {
 				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?" });
 			}
 		}
-		mAdapter = new FavstopsArrayAdapter(this, R.layout.favouritesrow, mDetails);
-		setListAdapter(mAdapter);
+		mAdapter = new FavstopsArrayAdapter(mContext, R.layout.favouritesrow, mDetails);
+        final ListView lv = (ListView)findViewById(R.id.list);
+		lv.setAdapter(mAdapter);
 
         // TODO synchronising on non-final var... and accessing that var outside the lock, above & below.
         // See http://stackoverflow.com/questions/21458625/when-a-lock-holds-a-non-final-object-can-the-objects-reference-still-be-change/21460055#21460055
@@ -109,8 +110,8 @@ public class FavstopsActivity extends MenuListActivity {
 		// we really have to.
 		if (!mDetails.isEmpty()) {
 
-			// register to get long clicks on bus stop list
-			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			// register to get clicks on bus stop list
+			lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 					// Log.i(TAG, "onItemLongClickClick position " + position);
@@ -118,6 +119,12 @@ public class FavstopsActivity extends MenuListActivity {
 					return true; // to say we consumed the click
 				}
 			});
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    onListItemClick(parent, view, position, id);
+                }
+            });
 
 			// Load times of next bus for each stop.
 			new LoadTimes().execute();
@@ -195,8 +202,7 @@ public class FavstopsActivity extends MenuListActivity {
 		builder.show();
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
+	protected void onListItemClick(AdapterView<?> l, View v, int position, long id) {
 		// Log.v(TAG, "clicked position " + position);
 
 		final String[] strs = (String[]) l.getItemAtPosition(position);
@@ -269,8 +275,8 @@ public class FavstopsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPostExecute(Void foo) {
-            getActionBar().setTitle(R.string.title_favourites);
-            getActionBar().setSubtitle(null);
+            getSupportActionBar().setTitle(R.string.title_favourites);
+            getSupportActionBar().setSubtitle(null);
             setProgress(10000); // max -- makes it slide away
 		}
 	}

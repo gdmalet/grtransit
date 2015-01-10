@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import net.kw.shrdlu.grtgtfs.Activities.MenuListActivity;
 import net.kw.shrdlu.grtgtfs.R;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
@@ -52,7 +53,7 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 	final String mUserScheme = "http://twitter.com/";
 	final String mHashScheme = "http://twitter.com/search?q=%23";
 
-	public ListArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+	public ListArrayAdapter(MenuListActivity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
 		// Log.v(TAG, "TimesArrayAdapter()");
 

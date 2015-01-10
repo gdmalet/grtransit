@@ -37,6 +37,8 @@ public class DatabaseHelper {
 	private static final String DB_NAME = "GRT.db";
     private static SQLiteDatabase DB = null;
 
+    // TODO need to deal with quotation marks in original input files for DB.
+
 	/**
 	 * Constructor takes and keeps a reference of the passed context in order to access the application assets and resources.
 	 */

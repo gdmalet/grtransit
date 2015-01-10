@@ -25,6 +25,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Window;
 
@@ -49,7 +51,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.zip.GZIPInputStream;
 
-public class StartupActivity extends Activity {
+public class StartupActivity extends ActionBarActivity {
 	private static final String TAG = "StartupActivity";
 
 	private Activity mContext;
@@ -70,14 +72,18 @@ public class StartupActivity extends Activity {
         setContentView(R.layout.timeslayout);
 		super.onCreate(savedInstanceState);
 
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        //Toolbar will now take on default Action Bar characteristics
+        setSupportActionBar(toolbar);
+
 		/* Keep test files clear of production files. */
 		if (GRTApplication.isDebugBuild) {
 			DBVersionURL += ".dbg";
 			DBDatabaseURL += ".dbg";
 		}
 
-		getActionBar().setTitle(R.string.db_opening);
-        getActionBar().setSubtitle(null);
+		//getActionBar().setTitle(R.string.db_opening);
+        //getActionBar().setSubtitle(null);
 
 		DB_PATH = DatabaseHelper.GetDBPath();
 
@@ -217,7 +223,7 @@ public class StartupActivity extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-            getActionBar().setTitle(R.string.db_downloading);
+            getSupportActionBar().setTitle(R.string.db_downloading);
             setProgressBarVisibility(true);
         }
 

@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:21.0.+'
+    compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.android.support:support-v4:21.0.+'
     compile 'com.google.android.gms:play-services-base:6.5.+'
     compile 'com.google.android.gms:play-services-maps:6.5.+'

@@ -19,13 +19,14 @@
 
 package net.kw.shrdlu.grtgtfs.Activities;
 
-import android.app.ActionBar;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
@@ -45,10 +47,11 @@ import java.util.ArrayList;
 
 import static android.widget.ListView.OnItemClickListener;
 
-public class MenuListActivity extends ListActivity {
+public class MenuListActivity extends ActionBarActivity {
 	private static final String TAG = "MenuListActivity";
 
-	ListActivity mContext;
+	MenuListActivity mContext;
+    ProgressBar mProgress;
 	View mListDetail;
 
     // For the navigation drawer
@@ -62,11 +65,16 @@ public class MenuListActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        mListDetail = findViewById(R.id.detail_area);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        //Toolbar will now take on default Action Bar characteristics
+        setSupportActionBar(toolbar);
 
         // Set what's shown on a new screen, before children change things
-        getActionBar().setIcon(R.drawable.grticon_leftspace);
-        getActionBar().setTitle(R.string.app_name);
+        //getSupportActionBar().setIcon(R.drawable.grticon_leftspace);
+        getSupportActionBar().setTitle(R.string.app_name);
+
+        mProgress = (ProgressBar)findViewById(R.id.progress);
+        mListDetail = findViewById(R.id.detail_area);
 
         // Load up the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -83,7 +91,8 @@ public class MenuListActivity extends ListActivity {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                final ActionBar ab = getActionBar();
+                final ActionBar ab = getSupportActionBar();
+
                 if (ab != null) {
                     ab.setSubtitle(savedsubtitle);
                     ab.setTitle(savedtitle);
@@ -94,7 +103,7 @@ public class MenuListActivity extends ListActivity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                final ActionBar ab = getActionBar();
+                final ActionBar ab = getSupportActionBar();
                 if (ab != null) {
                     savedtitle = ab.getTitle();
                     savedsubtitle = ab.getSubtitle();
@@ -118,8 +127,8 @@ public class MenuListActivity extends ListActivity {
         });
 
         // Display the hamburger in the home screen, else the < home symbol.
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String lcn = mContext.getLocalClassName();
         if (lcn.equals(GRTApplication.LocalClassNameHome)) {   // home screen
             mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -150,7 +159,7 @@ public class MenuListActivity extends ListActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggle
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 

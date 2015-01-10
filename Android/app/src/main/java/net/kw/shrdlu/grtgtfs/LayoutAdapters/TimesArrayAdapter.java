@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import net.kw.shrdlu.grtgtfs.Activities.MenuListActivity;
 import net.kw.shrdlu.grtgtfs.R;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
@@ -41,7 +42,7 @@ public class TimesArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	public TimesArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+	public TimesArrayAdapter(MenuListActivity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
 		// Log.v(TAG, "TimesArrayAdapter()");
 

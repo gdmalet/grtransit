@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
@@ -173,7 +174,8 @@ public class RiderAlertsActivity extends MenuListActivity {
 				Toast.makeText(mContext, R.string.twitter_fetch_nothing, Toast.LENGTH_LONG).show();
 			} else {
 				mAdapter = new ListArrayAdapter(mContext, R.layout.tweetlayout, mListDetails);
-				mContext.setListAdapter(mAdapter);
+                final ListView lv = (ListView)findViewById(R.id.list);
+				lv.setAdapter(mAdapter);
 			}
 		}
 	}
