@@ -2,10 +2,9 @@
 # Automatically create sqlite3 db from GTFS files
 # Creates DB of given name in current dir from all files.
 # rm the sqlite3/GRT.db, then cd to the data/GRT-?? dir, and run
-# ../../bin/mksql3db.sh ../sqlite3/GRT.db *
+# ../../bin/mksql3db.sh ../sqlite3/GRT.db *.txt
 
 MYNAME=$(basename $0)
-#SQ3=/usr/local/android-sdk-linux/tools/sqlite3
 SQ3=/usr/bin/sqlite3
 
 function usage {
