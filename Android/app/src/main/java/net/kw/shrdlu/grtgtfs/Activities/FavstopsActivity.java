@@ -38,9 +38,11 @@ import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.FavstopsArrayAdapter;
 import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.Realtime;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class FavstopsActivity extends MenuListActivity {
 	private static final String TAG = "FavstopsActivity";
@@ -247,14 +249,24 @@ public class FavstopsActivity extends MenuListActivity {
 					final String stopid = pref[0];
 					// final String stopdescr = pref[1];
 
-					// Log.d(TAG, "Searching for busses for stop " + stopid + " " + stopdescr);
 					final String[] nextbus = ServiceCalendar.getNextDepartureTime(stopid, datenow);
 					if (nextbus != null) {
-						// Log.d(TAG, "Next bus for stop " + stopid + ": " + nextbus[0] + " " + nextbus[1] + " - " +
-						// nextbus[2]);
 						pref[2] = nextbus[0]; // time
 						pref[3] = nextbus[2]; // route headsign
 						pref[4] = nextbus[1]; // route number
+
+                        if (GRTApplication.mPreferences.fetchRealtime()) {
+                            Map<String, Map<String,String>> m = Realtime.GetRealtime(stopid, nextbus[1]);
+                            if (m != null) {
+                                Map<String,String> trip = m.get(nextbus[3]); // trip details
+                                if (trip != null) {
+                                    String minutes = trip.get("Minutes");
+                                    if (minutes != null)
+                                        pref[2] += " " + minutes;
+                                }
+                            }
+                        }
+
 					} else {
 						// Log.d(TAG, "Next bus for stop " + stopid + ": --none--");
 						pref[2] = " -- -- --"; // time
@@ -264,7 +276,8 @@ public class FavstopsActivity extends MenuListActivity {
 					publishProgress(++progresscount * 10000 / mDetails.size());
 				}
 			}
-			return null;
+
+            return null;
 		}
 
 		@Override

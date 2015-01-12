@@ -183,9 +183,8 @@ public class StartupActivity extends Activity {
 					}
 				}
 			} catch (final IOException | NumberFormatException e) {
-				// TODO Auto-generated catch block
+                e.printStackTrace();
 			} catch (final Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

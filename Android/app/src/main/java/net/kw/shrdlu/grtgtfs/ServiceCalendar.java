@@ -194,7 +194,7 @@ public class ServiceCalendar {
 
 			// Only add if the bus runs on this day.
 			if (daysstr != null) {
-				listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(2), csr.getString(3) });
+				listdetails.add(new String[] { csr.getString(0), daysstr, csr.getString(2), csr.getString(3), csr.getString(1) });
 			}
 
 			if (task != null) {
@@ -248,6 +248,7 @@ public class ServiceCalendar {
 	/* Return the time and route details of the next bus for any route, or null if there isn't one today. */
 	public static String[] getNextDepartureTime(String stopid, String date) {
 
+        // TODO shouldn't this be using the preference for limittotoday?
 		final ArrayList<String[]> listdetails = getRouteDepartureTimes(stopid, date, true, null);
 
 		if (listdetails == null) {
@@ -262,7 +263,7 @@ public class ServiceCalendar {
 		for (int i = 0; i < listdetails.size(); i++) {
 			final String departure_time = listdetails.get(i)[0];
 			if (departure_time.compareTo(timenow) >= 0) {
-				return new String[] { departure_time, listdetails.get(i)[2], listdetails.get(i)[3] };
+				return new String[] { departure_time, listdetails.get(i)[2], listdetails.get(i)[3], listdetails.get(i)[4] };
 			}
 		}
 
@@ -273,6 +274,7 @@ public class ServiceCalendar {
 	/* Return the time of the next bus for a given route, or null if there isn't one today. */
 	public static String getNextDepartureTime(String stopid, String routeid, String headsign, String date) {
 
+        // TODO shouldn't this be using the preference for limittotoday?
 		final ArrayList<String[]> listdetails = getRouteDepartureTimes(stopid, routeid, headsign, date, true, null);
 
 		if (listdetails == null) {

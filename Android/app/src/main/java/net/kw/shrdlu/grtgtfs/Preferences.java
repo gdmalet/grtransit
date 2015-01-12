@@ -35,7 +35,8 @@ public class Preferences {
 	private static String mPrefsFile;
 	private static SharedPreferences mPrefs;
 
-	private static String AMPMTIMES_KEY, AUTOUPDATE_KEY, FAVSTOPS_KEY, SHOWALLBUSSES_KEY, UUID_KEY;
+	private static String AMPMTIMES_KEY, AUTOUPDATE_KEY, FAVSTOPS_KEY, SHOWALLBUSSES_KEY,
+            UUID_KEY, FETCHREALTIME_KEY;
 
 	public Preferences(Context context) {
 		mContext = context;
@@ -45,6 +46,7 @@ public class Preferences {
 		AMPMTIMES_KEY = mContext.getString(R.string.pref_ampmtimes_key);
 		AUTOUPDATE_KEY = mContext.getString(R.string.pref_db_autoupdate_key);
 		FAVSTOPS_KEY = mContext.getString(R.string.pref_favstops_key);
+        FETCHREALTIME_KEY = mContext.getString(R.string.pref_fetchrealtime_key);
 		SHOWALLBUSSES_KEY = mContext.getString(R.string.pref_showallbusses_key);
 		UUID_KEY = mContext.getString(R.string.pref_uuid_key);
 	}
@@ -75,6 +77,10 @@ public class Preferences {
 	public boolean showAMPMTimes() {
 		return mPrefs.getBoolean(AMPMTIMES_KEY, false);
 	}
+
+    public boolean fetchRealtime() {
+        return mPrefs.getBoolean(FETCHREALTIME_KEY, false);
+    }
 
 	public void AddBusstopFavourite(String busstop, String stopname) {
 		String favs = mPrefs.getString(FAVSTOPS_KEY, "");

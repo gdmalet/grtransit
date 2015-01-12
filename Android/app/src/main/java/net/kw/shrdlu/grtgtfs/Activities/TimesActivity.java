@@ -44,9 +44,12 @@ import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimesArrayAdapter;
 import net.kw.shrdlu.grtgtfs.NotificationCallback;
 import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.Realtime;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TimesActivity extends MenuListActivity {
 	private static final String TAG = "TimesActivity";
@@ -133,6 +136,30 @@ public class TimesActivity extends MenuListActivity {
 				// showing all routes
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStopid, datenow,
                         !GRTApplication.mPreferences.showAllBusses(), this);
+
+                if (GRTApplication.mPreferences.fetchRealtime()) {
+                    // Keep track of which routes we've already done
+                    Map<String, Map<String, Map<String,String>>> routes = new HashMap<String, Map<String, Map<String, String>>>();
+
+                    for (int i = 0; i < mListDetails.size(); i++) {
+                        String route = mListDetails.get(i)[2];
+                        Map<String, Map<String,String>> m = routes.get(route);
+                        if (m == null) {
+                            m = Realtime.GetRealtime(mStopid, route);
+                            if (m != null)
+                                routes.put(route, m);
+                        }
+                        if (m != null && !m.isEmpty()) {
+                            Map<String, String> trip = m.get(mListDetails.get(i)[4]); // trip details
+                            if (trip != null) {
+                                String minutes = trip.get("Minutes");
+                                if (minutes != null)
+                                    mListDetails.get(i)[0] += " " + minutes;
+                            }
+                        }
+                    }
+                }
+
 			} else {
 
 				// TODO Setting a listener means not passing `this'
@@ -140,7 +167,21 @@ public class TimesActivity extends MenuListActivity {
 				// showing just one route
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStopid, mRouteid, mHeadsign, datenow,
 						!GRTApplication.mPreferences.showAllBusses(), this);
-			}
+
+                if (GRTApplication.mPreferences.fetchRealtime()) {
+                    Map<String, Map<String,String>> m = Realtime.GetRealtime(mStopid, mRouteid);
+                    if (m != null && !m.isEmpty()) {
+                        for (int i = 0; i < mListDetails.size(); i++) {
+                            Map<String, String> trip = m.get(mListDetails.get(i)[2]); // trip details
+                            if (trip != null) {
+                                String minutes = trip.get("Minutes");
+                                if (minutes != null)
+                                    mListDetails.get(i)[0] += " " + minutes;
+                            }
+                        }
+                    }
+                }
+            }
 
 			// Find when the next bus leaves
 			int savedpos = -1;

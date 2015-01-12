@@ -28,6 +28,7 @@
     <string name="favs_add_to_list">Add to your list of favourites?</string>
     <string name="favs_remove_from_list">Remove from your list of favourites?</string>
     <string name="favs_reorder_item">Reorder in your list?</string>
+    <string name="fetchrealtime">Fetch real-time schedule data</string>
     <string name="find_route">Find a route</string>
     <string name="find_stop">Find a stop</string>
     <string name="ga_api_key" tools:ignore="TypographyDashes">UA-27006918-1</string>
@@ -48,6 +49,7 @@
     <string name="pref_ampmtimes_key">ampmtimes</string>
     <string name="pref_db_autoupdate_key">autodbupdate</string>
     <string name="pref_favstops_key">favstops</string>
+    <string name="pref_fetchrealtime_key">fetchrealtime</string>
     <string name="pref_showallbusses_key">showallbusses</string>
     <string name="pref_uuid_key">uuid</string>
     <string name="refresh">Refresh</string>

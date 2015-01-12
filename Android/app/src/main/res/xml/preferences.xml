@@ -10,6 +10,10 @@
         android:key="@string/pref_ampmtimes_key"
         android:title="@string/ampmtimes" />
     <SwitchPreference
+        android:defaultValue="false"
+        android:key="@string/pref_fetchrealtime_key"
+        android:title="@string/fetchrealtime" />
+    <SwitchPreference
         android:defaultValue="true"
         android:key="@string/pref_db_autoupdate_key"
         android:title="@string/auto_check4dbupdate" />
