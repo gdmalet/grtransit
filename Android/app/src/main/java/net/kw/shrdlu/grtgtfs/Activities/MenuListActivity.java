@@ -20,6 +20,7 @@
 package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -45,10 +46,10 @@ import java.util.ArrayList;
 
 import static android.widget.ListView.OnItemClickListener;
 
-public class MenuListActivity extends ListActivity {
+public class MenuListActivity extends Activity {
 	private static final String TAG = "MenuListActivity";
 
-	ListActivity mContext;
+	Activity mContext;
 	View mListDetail;
 
     // For the navigation drawer

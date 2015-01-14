@@ -172,8 +172,8 @@ public class RiderAlertsActivity extends MenuListActivity {
 			} else if (mListDetails.isEmpty()) {
 				Toast.makeText(mContext, R.string.twitter_fetch_nothing, Toast.LENGTH_LONG).show();
 			} else {
-				mAdapter = new ListArrayAdapter(mContext, R.layout.tweetlayout, mListDetails);
-				mContext.setListAdapter(mAdapter);
+				//mAdapter = new ListArrayAdapter(mContext, R.layout.tweetlayout, mListDetails);
+				//mContext.setListAdapter(mAdapter);
 			}
 		}
 	}

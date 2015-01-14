@@ -26,9 +26,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,11 +45,13 @@ import net.kw.shrdlu.grtgtfs.Realtime;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class FavstopsActivity extends MenuListActivity {
 	private static final String TAG = "FavstopsActivity";
 
+    private LinearLayout layout;
 	private ArrayList<String[]> mDetails;
 	private String mStopid;
 	private FavstopsArrayAdapter mAdapter;
@@ -59,13 +64,14 @@ public class FavstopsActivity extends MenuListActivity {
         // Will use the action bar progress bar
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
-        setContentView(R.layout.timeslayout);
+        setContentView(R.layout.emptylayout);
 		super.onCreate(savedInstanceState);
 
-		final ListView lv = getListView();
+        layout = (LinearLayout)findViewById(R.id.vg_area);
+
 		final TextView tv = new TextView(mContext);
 		tv.setText(R.string.longpress_removes_stop);
-		lv.addFooterView(tv);
+		// TODO vg.addFooterView(tv);
 
 		/* Make sure we can access a database */
 		if (DB == null) {
@@ -97,11 +103,11 @@ public class FavstopsActivity extends MenuListActivity {
 		synchronized (mDetails) {
 			for (final String[] stop : favstops) {
 				// Just do what we can for now
-				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?" });
+				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?", "", "" });
 			}
 		}
-		mAdapter = new FavstopsArrayAdapter(this, R.layout.favouritesrow, mDetails);
-		setListAdapter(mAdapter);
+		//mAdapter = new FavstopsArrayAdapter(this, R.layout.favouritesrow, mDetails);
+		//setListAdapter(mAdapter);
 
         // TODO synchronising on non-final var... and accessing that var outside the lock, above & below.
         // See http://stackoverflow.com/questions/21458625/when-a-lock-holds-a-non-final-object-can-the-objects-reference-still-be-change/21460055#21460055
@@ -112,14 +118,14 @@ public class FavstopsActivity extends MenuListActivity {
 		if (!mDetails.isEmpty()) {
 
 			// register to get long clicks on bus stop list
-			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-				@Override
-				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-					// Log.i(TAG, "onItemLongClickClick position " + position);
-					onListItemLongClick(parent, view, position, id);
-					return true; // to say we consumed the click
-				}
-			});
+//			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//				@Override
+//				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//					// Log.i(TAG, "onItemLongClickClick position " + position);
+//					onListItemLongClick(parent, view, position, id);
+//					return true; // to say we consumed the click
+//				}
+//			});
 
 			// Load times of next bus for each stop.
 			new LoadTimes().execute();
@@ -153,7 +159,7 @@ public class FavstopsActivity extends MenuListActivity {
 			return;
 		}
 
-		mListDetail.invalidate();
+//		mListDetail.invalidate();
 		ProcessStops();
 	}
 
@@ -197,7 +203,7 @@ public class FavstopsActivity extends MenuListActivity {
 		builder.show();
 	}
 
-	@Override
+	//@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// Log.v(TAG, "clicked position " + position);
 
@@ -224,14 +230,42 @@ public class FavstopsActivity extends MenuListActivity {
 	/* Do the processing to load the ArrayAdapter for display. */
 	private class LoadTimes extends AsyncTask<Void, Integer, Void> {
 
-		@Override
+        final LayoutInflater inflater = LayoutInflater.from(mContext);
+        String[] stopdata;
+        ArrayList<String []> routedata = new ArrayList<>();
+
+        @Override
 		protected void onPreExecute() {
             setProgressBarVisibility(true);
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-			mAdapter.notifyDataSetChanged();
+            final LinearLayout stoprow = (LinearLayout)inflater.inflate(R.layout.stoplabelrow, layout, false);
+            TextView tv = (TextView) stoprow.findViewById(R.id.stoplabel);
+            tv.setText(stopdata[0]);
+            tv = (TextView) stoprow.findViewById(R.id.stopdesc);
+            tv.setText(stopdata[1]);
+            layout.addView(stoprow);
+
+            for (final String[] routerowdata : routedata) {
+                final LinearLayout routerow = (LinearLayout)inflater.inflate(R.layout.routetimerow, layout, false);
+                tv = (TextView) routerow.findViewById(R.id.stoptime);
+                tv.setText(routerowdata[0]);
+                tv = (TextView) routerow.findViewById(R.id.stopminutes);
+                tv.setText(routerowdata[1]);
+                tv = (TextView) routerow.findViewById(R.id.stoprealtime);
+                tv.setText(routerowdata[2]);
+                tv = (TextView) routerow.findViewById(R.id.routelabel);
+                tv.setText(routerowdata[3]);
+                tv = (TextView) routerow.findViewById(R.id.routedesc);
+                tv.setText(routerowdata[4]);
+                layout.addView(routerow);
+            }
+            //layout.requestLayout();
+            //layout.invalidate();
+
+//			mAdapter.notifyDataSetChanged();
             setProgress(parms[0]);
 		}
 
@@ -246,23 +280,31 @@ public class FavstopsActivity extends MenuListActivity {
 			Integer progresscount = 0;
 			synchronized (mDetails) {
 				for (final String[] pref : mDetails) {
-					final String stopid = pref[0];
-					// final String stopdescr = pref[1];
+                    stopdata = new String[] {pref[0], pref[1]}; // stop number & description
 
-					final String[] nextbus = ServiceCalendar.getNextDepartureTime(stopid, datenow);
+					final String[] nextbus = ServiceCalendar.getNextDepartureTime(pref[0], datenow);
+                    routedata.clear();
+
 					if (nextbus != null) {
 						pref[2] = nextbus[0]; // time
 						pref[3] = nextbus[2]; // route headsign
 						pref[4] = nextbus[1]; // route number
 
+                        Integer timediff = GRTApplication.TimediffNow(nextbus[0]);
+                        pref[5] = timediff.toString() + "m";
+
                         if (GRTApplication.mPreferences.fetchRealtime()) {
-                            Map<String, Map<String,String>> m = Realtime.GetRealtime(stopid, nextbus[1]);
+                            Map<String, Map<String,String>> m = Realtime.GetRealtime(pref[0], nextbus[1]);
                             if (m != null) {
                                 Map<String,String> trip = m.get(nextbus[3]); // trip details
                                 if (trip != null) {
                                     String minutes = trip.get("Minutes");
-                                    if (minutes != null)
-                                        pref[2] += " " + minutes;
+                                    if (minutes != null) {
+                                        timediff -= Integer.parseInt(minutes);
+                                        if (timediff >= 0)
+                                            pref[6] += "+";
+                                        pref[6] += timediff.toString();
+                                    }
                                 }
                             }
                         }
@@ -273,6 +315,8 @@ public class FavstopsActivity extends MenuListActivity {
 						pref[3] = getString(R.string.no_more_busses); // route details
 						pref[4] = "-";
 					}
+                    String[] details = new String[] {pref[2],pref[5],pref[6],pref[4],pref[3]};
+                    routedata.add(details);
 					publishProgress(++progresscount * 10000 / mDetails.size());
 				}
 			}

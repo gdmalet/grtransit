@@ -42,6 +42,7 @@ import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimeStopdescArrayAdapter;
 import net.kw.shrdlu.grtgtfs.R;
 
+import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -82,8 +83,10 @@ public class ClosestStopsActivity extends MenuListActivity {
         getActionBar().setTitle(R.string.loading_stops);
         getActionBar().setSubtitle(null);
 
+        final ListView lv = (ListView)findViewById(android.R.id.list);
+
 		// register to get long clicks on bus stop list
-		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				onListItemLongClick(parent, view, position, id);
@@ -91,7 +94,6 @@ public class ClosestStopsActivity extends MenuListActivity {
 			}
 		});
 
-		final ListView lv = getListView();
 		final TextView tv = new TextView(mContext);
 		tv.setText(R.string.longpress_adds_stop);
 		lv.addFooterView(tv);
@@ -99,8 +101,8 @@ public class ClosestStopsActivity extends MenuListActivity {
 		// Acquire a reference to the system Location Manager
 		mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-		mAdapter = new TimeStopdescArrayAdapter(mContext, R.layout.timestopdesc, mListDetails);
-		mContext.setListAdapter(mAdapter);
+//		mAdapter = new TimeStopdescArrayAdapter(mContext, R.layout.timestopdesc, mListDetails);
+//		mContext.setListAdapter(mAdapter);
 
 		// Get a best guess of current location
 		Location nwlocn = null, gpslocn = null;
@@ -272,7 +274,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 		}
 	}
 
-	@Override
+	//@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// Log.v(TAG, "clicked position " + position);
 

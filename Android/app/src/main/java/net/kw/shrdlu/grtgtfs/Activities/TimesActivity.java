@@ -184,6 +184,7 @@ public class TimesActivity extends MenuListActivity {
             }
 
 			// Find when the next bus leaves
+            // TODO this should be done in the loops above
 			int savedpos = -1;
 			for (int i = 0; i < mListDetails.size(); i++) {
 				final String departure_time = mListDetails.get(i)[0];
@@ -213,7 +214,7 @@ public class TimesActivity extends MenuListActivity {
             setProgress(10000); // max -- makes it slide away
 
 			TextView tv = null;
-			final ListView lv = getListView();
+			final ListView lv = (ListView)findViewById(android.R.id.list);
 			if (lv.getFooterViewsCount() == 0) {
 				tv = new TextView(mContext);
 				lv.addFooterView(tv);
@@ -226,30 +227,22 @@ public class TimesActivity extends MenuListActivity {
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_route);
 				}
-				final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
-				mContext.setListAdapter(adapter);
+				//final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
+				//mContext.setListAdapter(adapter);
 			} else {
                 getActionBar().setSubtitle("Route " + mHeadsign);
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_trip);
 				}
-				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
-				mContext.setListAdapter(adapter);
+				//final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
+				//mContext.setListAdapter(adapter);
 			}
 
 			// Calculate the time difference
 			Toast msg;
 			if (savedpos >= 0) {
-				final Time t = new Time();
-				t.setToNow();
-
 				final String nextdeparture = mListDetails.get(savedpos)[0];
-				int hourdiff = Integer.parseInt(nextdeparture.substring(0, 2));
-				hourdiff -= t.hour;
-				hourdiff *= 60;
-				int mindiff = Integer.parseInt(nextdeparture.substring(3, 5));
-				mindiff -= t.minute;
-				hourdiff += mindiff;
+				int hourdiff = GRTApplication.TimediffNow(nextdeparture);
 
 				if (hourdiff >= 60) {
 					msg = Toast.makeText(mContext, "Next bus leaves at " + ServiceCalendar.formattedTime(nextdeparture),
@@ -259,10 +252,10 @@ public class TimesActivity extends MenuListActivity {
 					msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
 
-				getListView().setSelectionFromTop(savedpos, 50); // position next bus just below top
+                lv.setSelectionFromTop(savedpos, 50); // position next bus just below top
 
 			} else {
-				setSelection(mListDetails.size()); // position the list at the last bus
+				//setSelection(mListDetails.size()); // position the list at the last bus
 				msg = Toast.makeText(mContext, R.string.no_more_busses, Toast.LENGTH_LONG);
 			}
 
@@ -296,7 +289,7 @@ public class TimesActivity extends MenuListActivity {
 		return retval;
 	}
 
-	@Override
+	//@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// Log.v(TAG, "clicked position " + position);
 

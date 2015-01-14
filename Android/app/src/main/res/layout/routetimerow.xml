@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="5dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="40dp">
+
+        <TextView
+            android:id="@+id/stoptime"
+            style="@style/List.Stoptime"
+            android:layout_alignParentTop="true"
+            android:text="99:99pm"/>
+
+        <TextView
+            android:id="@+id/stopminutes"
+            style="@style/List.Stopminutes"
+            android:layout_below="@id/stoptime"
+            android:text="999m"/>
+
+        <TextView
+            android:id="@+id/stoprealtime"
+            style="@style/List.Stoprealtime"
+            android:layout_below="@id/stoptime"
+            android:layout_toRightOf="@id/stopminutes"
+            android:text="+99"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/routelabel"
+        style="@style/List.Routelabel"/>
+
+    <TextView
+        android:id="@+id/routedesc"
+        style="@style/List.Stopdescription"
+        android:text="This is a long piece of text that hopefully wraps on the screen rather than overflowing."/>
+
+</LinearLayout>

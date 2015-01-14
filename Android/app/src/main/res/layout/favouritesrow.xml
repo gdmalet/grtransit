@@ -13,7 +13,8 @@
 
         <TextView
             android:id="@+id/stoplabel"
-            style="@style/List.Stoplabel" />
+            style="@style/List.Stoplabel"
+            />
 
         <TextView
             android:id="@+id/stopdesc"
@@ -36,7 +37,7 @@
 
         <TextView
             android:id="@+id/routedesc"
-            style="@style/List.Stopbusname" />
+            style="@style/List.Routedescription" />
     </LinearLayout>
 
 </LinearLayout>

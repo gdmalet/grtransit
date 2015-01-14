@@ -64,8 +64,10 @@ public class TripStopsActivity extends MenuListActivity {
 		mRouteid = intent.getStringExtra(pkgstr + ".route_id");
 		mHeadsign = intent.getStringExtra(pkgstr + ".headsign");
 
+        final ListView lv = (ListView)findViewById(android.R.id.list);
+
 		// register to get long clicks on bus stop list
-		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				onListItemLongClick(parent, view, position, id);
@@ -73,7 +75,6 @@ public class TripStopsActivity extends MenuListActivity {
 			}
 		});
 
-		final ListView lv = getListView();
 		final TextView tv = new TextView(mContext);
 		tv.setText(R.string.longpress_adds_stop);
 		lv.addFooterView(tv);
@@ -134,14 +135,15 @@ public class TripStopsActivity extends MenuListActivity {
             getActionBar().setSubtitle(mHeadsign);
             setProgress(10000); // max -- makes it slide away
 
-			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.timestopdesc, mCsr);
-			mContext.setListAdapter(adapter);
+			//final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.timestopdesc, mCsr);
+			//mContext.setListAdapter(adapter);
 
-			getListView().setSelectionFromTop(savedpos, 50); // position stop just below top
+            final ListView lv = (ListView)findViewById(android.R.id.list);
+            lv.setSelectionFromTop(savedpos, 50); // position stop just below top
 		}
 	}
 
-	@Override
+	//@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// Log.v(TAG, "clicked position " + position);
 
