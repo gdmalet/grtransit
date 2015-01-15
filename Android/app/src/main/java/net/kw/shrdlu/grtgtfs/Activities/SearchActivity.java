@@ -31,8 +31,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ResourceCursorAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -224,7 +227,6 @@ public class SearchActivity extends MenuListActivity {
 	}
 
 	private class FindStops extends AsyncTask<Void, Void, Void> {
-		// static final String TAG = "FindStops";
 
 		@Override
 		protected Void doInBackground(Void... foo) {
@@ -243,14 +245,14 @@ public class SearchActivity extends MenuListActivity {
 		protected void onPostExecute(Void foo) {
             getActionBar().setTitle("Stops matching `" + mQuery + "'");
             getActionBar().setSubtitle(null);
-			//final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesc, mCsr);
-			//setListAdapter(adapter);
+			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesc, mCsr);
+            ListView lv = (ListView)findViewById(android.R.id.list);
+			lv.setAdapter(adapter);
 			// adapter.notifyDataSetChanged();
 		}
 	}
 
 	private class FindRoutes extends AsyncTask<Void, Void, Void> {
-		// static final String TAG = "FindStops";
 
 		@Override
 		protected Void doInBackground(Void... foo) {
@@ -272,8 +274,9 @@ public class SearchActivity extends MenuListActivity {
 		protected void onPostExecute(Void foo) {
             getActionBar().setTitle("Routes matching `" + mQuery + "'");
             getActionBar().setSubtitle(null);
-			//final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr);
-			//setListAdapter(adapter);
+			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr);
+            ListView lv = (ListView)findViewById(android.R.id.list);
+			lv.setAdapter(adapter);
 			// adapter.notifyDataSetChanged();
 		}
 	}

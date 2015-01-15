@@ -101,8 +101,8 @@ public class ClosestStopsActivity extends MenuListActivity {
 		// Acquire a reference to the system Location Manager
 		mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-//		mAdapter = new TimeStopdescArrayAdapter(mContext, R.layout.timestopdesc, mListDetails);
-//		mContext.setListAdapter(mAdapter);
+		mAdapter = new TimeStopdescArrayAdapter(mContext, R.layout.timestopdesc, mListDetails);
+		lv.setAdapter(mAdapter);
 
 		// Get a best guess of current location
 		Location nwlocn = null, gpslocn = null;
@@ -179,7 +179,6 @@ public class ClosestStopsActivity extends MenuListActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		// Log.d(TAG, "onPause()");
 		mLocationManager.removeUpdates(locationListener);
 	}
 
@@ -200,7 +199,6 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 		@Override
 		protected Void doInBackground(Void... foo) {
-			// Log.v(TAG, "doInBackground()");
 
 			final String qry = "select stop_id as _id, stop_lat, stop_lon, stop_name from stops";
 			int maxcount;
@@ -265,7 +263,6 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPostExecute(Void foo) {
-			// Log.v(TAG, "onPostExecute()");
 
             getActionBar().setTitle(R.string.title_activity_closest_stops);
             setProgress(10000); // max -- makes it slide away

@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/stoplabelrow"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/favstop"
+    style="@style/List"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/stoplabel"
-        style="@style/List.Stoplabel"/>
+    <LinearLayout
+        android:id="@+id/stoplabelrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:longClickable="true"
+        android:clickable="true"
+        android:onClick="onListItemClick">
 
-    <TextView
-        android:id="@+id/stopdesc"
-        style="@style/List.Routedescription"/>
+        <include layout="@layout/stop_numanddesc"/>
+
+    </LinearLayout>
+
 </LinearLayout>

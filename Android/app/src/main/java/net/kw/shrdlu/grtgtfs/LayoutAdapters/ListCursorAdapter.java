@@ -22,6 +22,7 @@
  */
 package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
@@ -35,12 +36,11 @@ import net.kw.shrdlu.grtgtfs.R;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 public class ListCursorAdapter extends CursorAdapter {
-	// private static final String TAG = "ListCursorAdapter";
 
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	public ListCursorAdapter(ListActivity context, int layout, Cursor cursor) {
+	public ListCursorAdapter(Activity context, int layout, Cursor cursor) {
 		super(context, cursor, true);
 
 		this.mInflater = LayoutInflater.from(context);
@@ -49,38 +49,43 @@ public class ListCursorAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		// Log.v(TAG, "bindView()");
-		// Log.v(TAG, "cursor has " + cursor.getCount() + " entries, at " + cursor.getPosition());
 
-		final TextView labelview = (TextView) view.findViewById(R.id.label);
-		final String item = cursor.getString(cursor.getColumnIndex("_id"));
+        TextView itemview = null, descview = null;
+        final String item, desc;
 
-		final TextView valueview = (TextView) view.findViewById(R.id.value);
-		final String descr = cursor.getString(cursor.getColumnIndex("descr"));
+        if (mLayout == R.layout.route_numanddesc) {
+            itemview = (TextView) view.findViewById(R.id.routelabel);
+            descview = (TextView) view.findViewById(R.id.routedesc);
+        } else if (mLayout == R.layout.stop_numanddesc) {
+            itemview = (TextView) view.findViewById(R.id.stoplabel);
+            descview = (TextView) view.findViewById(R.id.stopdesc);
+        }
 
-		final TextView timeview;
-		final String time;
-		if (mLayout == R.layout.timestopdesc) {
-			timeview = (TextView) view.findViewById(R.id.stoptime);
-			time = cursor.getString(cursor.getColumnIndex("departure_time"));
-			timeview.setText(ServiceCalendar.formattedTime(time));
-		}
+		item = cursor.getString(cursor.getColumnIndex("_id"));
+        desc = cursor.getString(cursor.getColumnIndex("descr"));
+
+//		final TextView timeview;
+//		final String time;
+//		if (mLayout == R.layout.timestopdesc) {
+//			timeview = (TextView) view.findViewById(R.id.stoptime);
+//			time = cursor.getString(cursor.getColumnIndex("departure_time"));
+//			timeview.setText(ServiceCalendar.formattedTime(time));
+//		}
 
 		// Look for things like route 7A, where the A is part of the description
 		// TODO - char test should use a type test or something. This assumes US ASCII...
-		if (mLayout == R.layout.route_numanddesc && descr.length() > 2 && descr.charAt(1) == ' ' && descr.charAt(0) >= 'A'
-				&& descr.charAt(0) <= 'Z') {
-			labelview.setText(item + descr.charAt(0));
-			valueview.setText(descr.substring(2));
+		if (mLayout == R.layout.route_numanddesc && desc.length() > 2 && desc.charAt(1) == ' ' && desc.charAt(0) >= 'A'
+				&& desc.charAt(0) <= 'Z') {
+			itemview.setText(item + desc.charAt(0));
+			descview.setText(desc.substring(2));
 		} else {
-			labelview.setText(item);
-			valueview.setText(descr);
+			itemview.setText(item);
+			descview.setText(desc);
 		}
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		// Log.v(TAG, "newView()");
 
 		return mInflater.inflate(mLayout, parent, false);
 	}

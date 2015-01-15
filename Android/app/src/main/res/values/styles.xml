@@ -128,7 +128,7 @@
     </style>
 
     <style name="List.Stoptime">
-        <item name="android:layout_width">80sp</item>
+        <item name="android:layout_width">72sp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">3dip</item>
         <item name="android:textSize">16sp</item>
@@ -136,20 +136,21 @@
     </style>
 
     <style name="List.Stopminutes">
-        <item name="android:layout_width">48sp</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">3dip</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
+        <!--<item name="android:textStyle">bold</item>-->
     </style>
 
     <style name="List.Stoprealtime">
-        <item name="android:layout_width">40sp</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">3dip</item>
+        <item name="android:paddingRight">3dip</item>
         <item name="android:textColor">@android:color/holo_green_light</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:gravity">right</item>
     </style>
 
 

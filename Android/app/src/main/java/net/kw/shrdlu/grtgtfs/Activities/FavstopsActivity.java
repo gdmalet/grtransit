@@ -26,6 +26,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 public class FavstopsActivity extends MenuListActivity {
 	private static final String TAG = "FavstopsActivity";
@@ -117,15 +119,14 @@ public class FavstopsActivity extends MenuListActivity {
 		// we really have to.
 		if (!mDetails.isEmpty()) {
 
-			// register to get long clicks on bus stop list
-//			getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//				@Override
-//				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//					// Log.i(TAG, "onItemLongClickClick position " + position);
-//					onListItemLongClick(parent, view, position, id);
-//					return true; // to say we consumed the click
-//				}
-//			});
+//			// register to get long clicks on bus stop list
+//			layout.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//                    onListItemLongClick(view);
+//                    return true; // to say we consumed the click
+//                }
+//            });
 
 			// Load times of next bus for each stop.
 			new LoadTimes().execute();
@@ -164,25 +165,26 @@ public class FavstopsActivity extends MenuListActivity {
 	}
 
 	// Called from the listener above for a long click
-    void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+    public void onListItemLongClick(LinearLayout v) {
 		// Log.v(TAG, "long clicked position " + position);
 
-		final String[] strs = (String[]) parent.getItemAtPosition(position);
-		if (strs == null) {
-			return;
-		}
-		mStopid = strs[0];
-		final String stop_name = strs[1];
-		final int aryposn = position; // so we can access it in the listener class.
+        TextView tv = (TextView)v.getChildAt(0);
+		final String stopid = String.valueOf(tv.getText());
+        tv = (TextView)v.getChildAt(1);
+		final String stopname = String.valueOf(tv.getText());
 
 		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				switch (id) {
 				case DialogInterface.BUTTON_POSITIVE:
-					GRTApplication.mPreferences.RemoveBusstopFavourite(mStopid);
-					synchronized (mDetails) {
-						mDetails.remove(aryposn);
+					GRTApplication.mPreferences.RemoveBusstopFavourite(stopid);
+
+					for (final String [] strs : mDetails) {
+                        if (strs[0].equals(stopid)) {
+                            mDetails.remove(strs);
+                            break;
+                        }
 					}
 					// activities in the stack may contain out of date lists, so flush and start again.
 					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
@@ -196,7 +198,7 @@ public class FavstopsActivity extends MenuListActivity {
 		};
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle("Stop " + mStopid + ", " + stop_name);
+		builder.setTitle("Stop " + stopid + ", " + stopname);
 		builder.setMessage(R.string.favs_remove_from_list).setPositiveButton(R.string.yes, listener)
 		.setNegativeButton(R.string.no, listener);
 		builder.create();
@@ -204,63 +206,129 @@ public class FavstopsActivity extends MenuListActivity {
 	}
 
 	//@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// Log.v(TAG, "clicked position " + position);
+	public void onListItemClick(View view) {
+        LinearLayout v = (LinearLayout)view;
+        TextView tv;
+        String stopname, stopid;
 
-		final String[] strs = (String[]) l.getItemAtPosition(position);
-		if (strs == null) {
-			return;
-		}
-		mStopid = strs[0];
-		final String stop_name = strs[1];
+        final Intent newintent = new Intent(mContext, TimesActivity.class);
+        final String pkgstr = mContext.getApplicationContext().getPackageName();
 
-        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
-                .setCategory(mContext.getLocalClassName())
-                .setAction("Select stop")
-                .setLabel(mStopid)
-                .build());
+        if (v.getChildCount() == 2) {
+            // We're dealing with a stopid and description
+            tv = (TextView)v.getChildAt(0);
+            stopid = String.valueOf(tv.getText());
+            tv = (TextView)v.getChildAt(1);
+            stopname = String.valueOf(tv.getText());
 
-		final Intent newintent = new Intent(mContext, TimesActivity.class);
-		final String pkgstr = mContext.getApplicationContext().getPackageName();
-		newintent.putExtra(pkgstr + ".stop_id", mStopid);
-		newintent.putExtra(pkgstr + ".stop_name", stop_name);
-		mContext.startActivity(newintent);
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                    .setCategory(mContext.getLocalClassName())
+                    .setAction("Select stop")
+                    .setLabel(stopid)
+                    .build());
+
+        } else {
+            // it's a route: relativelayout, routeid, description.
+            // We're dealing with a stopid and description
+            tv = (TextView)v.getChildAt(1);
+            final String routeid = String.valueOf(tv.getText());
+            tv = (TextView)v.getChildAt(2);
+            final String routename = String.valueOf(tv.getText());
+
+            // Need to fish out the parent stop row to get the details
+            LinearLayout parent = (LinearLayout)v.getParent();      // favstop
+            LinearLayout stop = (LinearLayout)parent.getChildAt(0); // stoplabelrow
+
+            tv = (TextView)stop.getChildAt(0);
+            stopid = String.valueOf(tv.getText());
+            tv = (TextView)stop.getChildAt(1);
+            stopname = String.valueOf(tv.getText());
+
+            GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                    .setCategory(mContext.getLocalClassName())
+                    .setAction("Select route")
+                    .setLabel(routeid)
+                    .build());
+
+            newintent.putExtra(pkgstr + ".route_id", routeid);
+            newintent.putExtra(pkgstr + ".headsign", routename);
+        }
+
+        newintent.putExtra(pkgstr + ".stop_id", stopid);
+        newintent.putExtra(pkgstr + ".stop_name", stopname);
+        mContext.startActivity(newintent);
 	}
 
 	/* Do the processing to load the ArrayAdapter for display. */
 	private class LoadTimes extends AsyncTask<Void, Integer, Void> {
 
         final LayoutInflater inflater = LayoutInflater.from(mContext);
+        LinearLayout stoprow;
         String[] stopdata;
         ArrayList<String []> routedata = new ArrayList<>();
 
+        // Need to protect access to the stopdata and rowdata that are shared
+        // between threads, so make sure the foreground thread has consumed the
+        // data before the foreground thread clobbers everything for the next loop.
+        private final Semaphore lockbg = new Semaphore(1, true);
+        private final Semaphore lockfg = new Semaphore(0, true);
+
         @Override
 		protected void onPreExecute() {
+            layout.removeAllViews();
             setProgressBarVisibility(true);
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
-            final LinearLayout stoprow = (LinearLayout)inflater.inflate(R.layout.stoplabelrow, layout, false);
-            TextView tv = (TextView) stoprow.findViewById(R.id.stoplabel);
-            tv.setText(stopdata[0]);
-            tv = (TextView) stoprow.findViewById(R.id.stopdesc);
-            tv.setText(stopdata[1]);
-            layout.addView(stoprow);
+            stoprow = (LinearLayout)inflater.inflate(R.layout.stoplabelrow, layout, false);
 
-            for (final String[] routerowdata : routedata) {
-                final LinearLayout routerow = (LinearLayout)inflater.inflate(R.layout.routetimerow, layout, false);
-                tv = (TextView) routerow.findViewById(R.id.stoptime);
-                tv.setText(routerowdata[0]);
-                tv = (TextView) routerow.findViewById(R.id.stopminutes);
-                tv.setText(routerowdata[1]);
-                tv = (TextView) routerow.findViewById(R.id.stoprealtime);
-                tv.setText(routerowdata[2]);
-                tv = (TextView) routerow.findViewById(R.id.routelabel);
-                tv.setText(routerowdata[3]);
-                tv = (TextView) routerow.findViewById(R.id.routedesc);
-                tv.setText(routerowdata[4]);
-                layout.addView(routerow);
+            try {
+                lockfg.acquire();
+                TextView tv = (TextView) stoprow.findViewById(R.id.stoplabel);
+                tv.setText(stopdata[0]);
+                tv = (TextView) stoprow.findViewById(R.id.stopdesc);
+                tv.setText(stopdata[1]);
+                layout.addView(stoprow);
+
+                // TODO this is not registering
+                stoprow.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        onListItemLongClick(stoprow);
+                        return true; // to say we consumed the click
+                    }
+                });
+
+                for (final String[] routerowdata : routedata) {
+                    final LinearLayout routerow = (LinearLayout) inflater.inflate(R.layout.routetimerow, layout, false);
+                    tv = (TextView) routerow.findViewById(R.id.stoptime);
+                    tv.setText(ServiceCalendar.formattedTime(routerowdata[0]));
+                    tv = (TextView) routerow.findViewById(R.id.stopminutes);
+                    tv.setText(routerowdata[1]);
+
+                    if (routerowdata[2] != "") {
+                        tv = (TextView) routerow.findViewById(R.id.stoprealtime);
+                        Integer timediff = Integer.parseInt(routerowdata[2]);
+                        if (timediff >= 0)
+                            tv.setText("+" + routerowdata[2]);
+                        else
+                            tv.setText(routerowdata[2]);
+                        if (timediff < 0 || timediff > 3)
+                            tv.setTextColor(getResources().getColor(android.R.color.holo_red_light));  // @android:color/holo_green_light
+                    }
+
+                    tv = (TextView) routerow.findViewById(R.id.routelabel);
+                    tv.setText(routerowdata[3]);
+                    tv = (TextView) routerow.findViewById(R.id.routedesc);
+                    tv.setText(routerowdata[4]);
+
+                    LinearLayout favstop = (LinearLayout)stoprow.findViewById(R.id.favstop);
+                    favstop.addView(routerow);
+                }
+                lockbg.release();
+            } catch(InterruptedException ie) {
+                // so the screen might be slightly wrong; oh well.
             }
             //layout.requestLayout();
             //layout.invalidate();
@@ -269,60 +337,65 @@ public class FavstopsActivity extends MenuListActivity {
             setProgress(parms[0]);
 		}
 
-		@Override
-		protected Void doInBackground(Void... foo) {
+        @Override
+        protected Void doInBackground(Void... foo) {
 
-			// Find time of next bus for each stop.
-			final Time t = new Time(); // TODO - this duplicates BusTimes?
-			t.setToNow();
-			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
+            // Find time of next bus for each stop.
+            final Time t = new Time(); // TODO - this duplicates BusTimes?
+            t.setToNow();
+            final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
 
-			Integer progresscount = 0;
-			synchronized (mDetails) {
-				for (final String[] pref : mDetails) {
-                    stopdata = new String[] {pref[0], pref[1]}; // stop number & description
+            Integer progresscount = 0;
+            for (final String[] pref : mDetails) {
 
-					final String[] nextbus = ServiceCalendar.getNextDepartureTime(pref[0], datenow);
+                final String[] nextbus = ServiceCalendar.getNextDepartureTime(pref[0], datenow);
+                try {
+                    lockbg.acquire();
+
+                    stopdata = new String[]{pref[0], pref[1]}; // stop number & description
                     routedata.clear();
 
-					if (nextbus != null) {
-						pref[2] = nextbus[0]; // time
-						pref[3] = nextbus[2]; // route headsign
-						pref[4] = nextbus[1]; // route number
+                    if (nextbus != null) {
+                        pref[2] = nextbus[0]; // time
+                        pref[3] = nextbus[2]; // route headsign
+                        pref[4] = nextbus[1]; // route number
 
                         Integer timediff = GRTApplication.TimediffNow(nextbus[0]);
                         pref[5] = timediff.toString() + "m";
 
-                        if (GRTApplication.mPreferences.fetchRealtime()) {
-                            Map<String, Map<String,String>> m = Realtime.GetRealtime(pref[0], nextbus[1]);
+                        // do nothing if it's too far away
+                        if (timediff < 60 && GRTApplication.mPreferences.fetchRealtime()) {
+                            pref[6] = "";
+                            Map<String, Map<String, String>> m = Realtime.GetRealtime(pref[0], nextbus[1]);
                             if (m != null) {
-                                Map<String,String> trip = m.get(nextbus[3]); // trip details
+                                Map<String, String> trip = m.get(nextbus[3]); // trip details
                                 if (trip != null) {
                                     String minutes = trip.get("Minutes");
                                     if (minutes != null) {
                                         timediff -= Integer.parseInt(minutes);
-                                        if (timediff >= 0)
-                                            pref[6] += "+";
-                                        pref[6] += timediff.toString();
+                                        pref[6] = timediff.toString();
                                     }
                                 }
                             }
                         }
 
-					} else {
-						// Log.d(TAG, "Next bus for stop " + stopid + ": --none--");
-						pref[2] = " -- -- --"; // time
-						pref[3] = getString(R.string.no_more_busses); // route details
-						pref[4] = "-";
-					}
-                    String[] details = new String[] {pref[2],pref[5],pref[6],pref[4],pref[3]};
+                    } else {
+                        // TODO check this
+                        pref[2] = " -- -- --"; // time
+                        pref[3] = getString(R.string.no_more_busses); // route details
+                        pref[4] = "-";
+                    }
+                    String[] details = new String[]{pref[2], pref[5], pref[6], pref[4], pref[3]};
                     routedata.add(details);
-					publishProgress(++progresscount * 10000 / mDetails.size());
-				}
-			}
-
+                    lockfg.release();
+                } catch(InterruptedException ie) {
+                    // so the screen might be slightly wrong; oh well.
+                }
+                // must release lock before doing this
+                publishProgress(++progresscount * 10000 / mDetails.size());
+            }
             return null;
-		}
+        }
 
 		@Override
 		protected void onPostExecute(Void foo) {

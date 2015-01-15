@@ -22,6 +22,7 @@
  */
 package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,15 +36,13 @@ import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 import java.util.ArrayList;
 
 public class TimesArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
-	private static final String TAG = "TimesAdapter";
 
 	private final ArrayList<String[]> mDetails;
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	public TimesArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+	public TimesArrayAdapter(Activity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
-		// Log.v(TAG, "TimesArrayAdapter()");
 
 		mDetails = details;
 		mInflater = LayoutInflater.from(context);
@@ -59,14 +58,13 @@ public class TimesArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		// Log.v(TAG, "getview(): position " + position);
+
 		ViewHolder holder;
 
 		// Reuse the convertView if we already have one.... Android will create
 		// only enough to fill the screen.
 		if (view == null) {
 			view = mInflater.inflate(mLayout, parent, false);
-			// Log.d(TAG, "new view " + view);
 
 			// Save the view when we look them up.
 			holder = new ViewHolder();
@@ -76,7 +74,6 @@ public class TimesArrayAdapter extends ArrayAdapter /* <ArrayList<String[]>> */{
 			holder.routedesc = (TextView) view.findViewById(R.id.routedesc);
 			view.setTag(holder);
 		} else {
-			// Log.d(TAG, "reusing view " + view);
 			holder = (ViewHolder) view.getTag();
 		}
 

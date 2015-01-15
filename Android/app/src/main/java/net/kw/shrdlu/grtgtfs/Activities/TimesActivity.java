@@ -32,6 +32,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.RouteTimeArrayAdapter;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimesArrayAdapter;
 import net.kw.shrdlu.grtgtfs.NotificationCallback;
 import net.kw.shrdlu.grtgtfs.R;
@@ -116,7 +118,6 @@ public class TimesActivity extends MenuListActivity {
 
 		@Override
 		protected Integer doInBackground(Void... foo) {
-			// Log.v(TAG, "doInBackground()");
 
 			// Will find where to position the list of bus departure times
 			final Time t = new Time();
@@ -142,7 +143,7 @@ public class TimesActivity extends MenuListActivity {
                     Map<String, Map<String, Map<String,String>>> routes = new HashMap<String, Map<String, Map<String, String>>>();
 
                     for (int i = 0; i < mListDetails.size(); i++) {
-                        String route = mListDetails.get(i)[2];
+                        String route = mListDetails.get(i)[2], realtimemins = "";
                         Map<String, Map<String,String>> m = routes.get(route);
                         if (m == null) {
                             m = Realtime.GetRealtime(mStopid, route);
@@ -154,9 +155,10 @@ public class TimesActivity extends MenuListActivity {
                             if (trip != null) {
                                 String minutes = trip.get("Minutes");
                                 if (minutes != null)
-                                    mListDetails.get(i)[0] += " " + minutes;
+                                    realtimemins = minutes;   // replace trip id with realtime minutes
                             }
                         }
+                        mListDetails.get(i)[4] = realtimemins;
                     }
                 }
 
@@ -227,15 +229,15 @@ public class TimesActivity extends MenuListActivity {
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_route);
 				}
-				//final TimesArrayAdapter adapter = new TimesArrayAdapter(mContext, R.layout.row2layout, mListDetails);
-				//mContext.setListAdapter(adapter);
+				RouteTimeArrayAdapter adapter = new RouteTimeArrayAdapter(mContext, R.layout.routetimerow, mListDetails);
+				lv.setAdapter(adapter);
 			} else {
                 getActionBar().setSubtitle("Route " + mHeadsign);
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_trip);
 				}
-				//final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
-				//mContext.setListAdapter(adapter);
+				final ListArrayAdapter adapter = new ListArrayAdapter(mContext, R.layout.rowlayout, mListDetails);
+				lv.setAdapter(adapter);
 			}
 
 			// Calculate the time difference
@@ -255,7 +257,7 @@ public class TimesActivity extends MenuListActivity {
                 lv.setSelectionFromTop(savedpos, 50); // position next bus just below top
 
 			} else {
-				//setSelection(mListDetails.size()); // position the list at the last bus
+				lv.setSelection(mListDetails.size()); // position the list at the last bus
 				msg = Toast.makeText(mContext, R.string.no_more_busses, Toast.LENGTH_LONG);
 			}
 
@@ -289,19 +291,17 @@ public class TimesActivity extends MenuListActivity {
 		return retval;
 	}
 
-	//@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// Log.v(TAG, "clicked position " + position);
+	public void onListItemClick(View view) {
+        LinearLayout v = (LinearLayout)view;
 
-		final String[] items = (String[]) l.getAdapter().getItem(position);
-		if (items == null) {
-			return;
-		}
+		final String[] items = { "foo", "bar", "baz" }; //TODO
 
 		// Allow narrowing to one route, if we're showing many.
-		if (mRouteid == null) { // showing all routes
-			final String route_id = items[2];
-			final String headsign = items[3];
+		if (mRouteid == null) { // showing all routes, so relativelayout, route num, description
+            TextView tv = (TextView)v.getChildAt(1);
+			final String route_id = String.valueOf(tv.getText());
+            tv = (TextView)v.getChildAt(2);
+			String headsign = String.valueOf(tv.getText());
 
 			final Intent bustimes = new Intent(mContext, TimesActivity.class);
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
@@ -311,7 +311,7 @@ public class TimesActivity extends MenuListActivity {
             bustimes.putExtra(pkgstr + ".stop_name", mStopname);
 			mContext.startActivity(bustimes);
 
-		} else { // 1 route
+		} else { // 1 route  // TODO fix this
 			final String trip_id = items[2];
 
 			final Intent tripstops = new Intent(mContext, TripStopsActivity.class);

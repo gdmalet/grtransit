@@ -22,6 +22,7 @@
  */
 package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,7 @@ public class TimeStopdescArrayAdapter extends ArrayAdapter /* <ArrayList<String[
 	private final LayoutInflater mInflater;
 	private final int mLayout;
 
-	public TimeStopdescArrayAdapter(ListActivity context, int layout, ArrayList<String[]> details) {
+	public TimeStopdescArrayAdapter(Activity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
 		// Log.v(TAG, "TimeStopdescArrayAdapter()");
 
@@ -69,8 +70,8 @@ public class TimeStopdescArrayAdapter extends ArrayAdapter /* <ArrayList<String[
 			// Save the view when we look them up.
 			holder = new ViewHolder();
 			holder.stoptime = (TextView) view.findViewById(R.id.stoptime);
-			holder.label = (TextView) view.findViewById(R.id.label);
-			holder.value = (TextView) view.findViewById(R.id.value);
+			holder.label = (TextView) view.findViewById(R.id.routelabel);
+			holder.value = (TextView) view.findViewById(R.id.routedesc);
 			view.setTag(holder);
 		} else {
 			// Log.d(TAG, "reusing view " + view);
