@@ -119,15 +119,6 @@ public class FavstopsActivity extends MenuListActivity {
 		// we really have to.
 		if (!mDetails.isEmpty()) {
 
-//			// register to get long clicks on bus stop list
-//			layout.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    onListItemLongClick(view);
-//                    return true; // to say we consumed the click
-//                }
-//            });
-
 			// Load times of next bus for each stop.
 			new LoadTimes().execute();
 
@@ -360,17 +351,17 @@ public class FavstopsActivity extends MenuListActivity {
                         pref[3] = nextbus[2]; // route headsign
                         pref[4] = nextbus[1]; // route number
 
-                        Integer timediff = GRTApplication.TimediffNow(nextbus[0]);
+                        Integer timediff = ServiceCalendar.TimediffNow(nextbus[0]);
                         pref[5] = timediff.toString() + "m";
 
                         // do nothing if it's too far away
-                        if (timediff < 60 && GRTApplication.mPreferences.fetchRealtime()) {
+                        if (timediff.intValue() < 60 && GRTApplication.mPreferences.fetchRealtime()) {
                             pref[6] = "";
-                            Map<String, Map<String, String>> m = Realtime.GetRealtime(pref[0], nextbus[1]);
-                            if (m != null) {
-                                Map<String, String> trip = m.get(nextbus[3]); // trip details
-                                if (trip != null) {
-                                    String minutes = trip.get("Minutes");
+                            Realtime rt = new Realtime(pref[0], nextbus[1]);
+                            if (rt.getMap() != null) {
+                                Realtime.RealtimeStop tripstop = rt.getMap().get(nextbus[3]); // trip details
+                                if (tripstop != null) {
+                                    String minutes = tripstop.get("Minutes");
                                     if (minutes != null) {
                                         timediff -= Integer.parseInt(minutes);
                                         pref[6] = timediff.toString();

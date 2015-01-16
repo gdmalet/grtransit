@@ -19,6 +19,7 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import android.text.format.Time;
 import android.util.JsonReader;
 
 import org.apache.http.HttpEntity;
@@ -31,6 +32,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,10 +40,41 @@ public class Realtime {
 
     private static final String RealtimeURL = "http://realtimemap.grt.ca/Stop/GetStopInfo?stopId=%s&routeId=%s";
 
-    public static Map<String, Map<String, String>> GetRealtime(String stopid, String routeid) {
+    private String mStopid, mRouteid;
+    private RealtimeStopMap mMap = null;
 
+    class TripDetails extends HashMap<String, String> {};
+
+    public class RealtimeStop {
+        TripDetails details = new TripDetails();
+
+        public String get(String var)
+        {
+            return details.get(var);
+        }
+
+    }
+    // Trip id mapped to the realtime data.
+    public class RealtimeStopMap extends HashMap<String, RealtimeStop>
+    {
+        long snarfedat = new Date().getTime();
+        String stopid = mStopid;
+        String routeid = mRouteid;
+    }
+
+    public RealtimeStopMap getMap()
+    {
+        // Will only return non-empty maps, or null.
+        return mMap;
+    }
+
+    // TODO -- should cache the maps & return anything under a minute old, else re-query.
+    public Realtime(String stopid, String routeid)
+    {
+        mStopid = stopid;
+        mRouteid = routeid;
         final String url = String.format(RealtimeURL, stopid, routeid);
-        Map<String, Map<String, String>> map = null;
+        RealtimeStopMap map = null;
 
         final HttpClient client = new DefaultHttpClient();
         final HttpGet httpGet = new HttpGet(url);
@@ -61,40 +94,45 @@ public class Realtime {
             e.printStackTrace();
         }
 
-        return map;
+        // Only store non-empty maps
+        if (map != null && !map.isEmpty())
+            mMap = map;
     }
 
-    private static Map<String, Map<String, String>> readJsonStream(InputStream in) throws IOException {
+    private RealtimeStopMap readJsonStream(InputStream in) throws IOException
+    {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+
         try {
-            return readMessagesArray(reader);
+            return readStopTimesArray(reader);
         } finally {
             reader.close();
         }
     }
 
-    private static Map<String, Map<String, String>> readMessagesArray(JsonReader reader) throws IOException {
-        Map<String, Map<String, String>> messages = null;
+    private RealtimeStopMap readStopTimesArray(JsonReader reader) throws IOException
+    {
+        RealtimeStopMap rsm = null;
 
         reader.beginObject();
         String name = reader.nextName();
         if (name.equals("status")) {
             String status = reader.nextString();
             if (status.equals("success") && reader.nextName().equals("stopTimes")) {
-                messages = new HashMap<String, Map<String, String>>();
+                rsm = new RealtimeStopMap();
                 reader.beginArray();
                 while (reader.hasNext()) {
-                    Map<String, String> m = readMessage(reader);
-                    String TripId = m.get("TripId");
+                    RealtimeStop td = readTripDetails(reader);
+                    String TripId = td.details.get("TripId");
                     if (TripId != null)
-                        messages.put(TripId, m);
+                        rsm.put(TripId, td);
                 }
                 reader.endArray();
             }
         }
         reader.endObject();
 
-        return messages;
+        return rsm;
     }
 
 //  {
@@ -111,30 +149,30 @@ public class Realtime {
 //      ]
 //  }
     // Return a hash of all the values we're interested in.
-    private static Map<String, String> readMessage(JsonReader reader) throws IOException {
-
-        Map<String, String> m = new HashMap<String, String>();
+    private RealtimeStop readTripDetails(JsonReader reader) throws IOException
+    {
+        RealtimeStop stop = new RealtimeStop();
 
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
             if (name.equals("TripId")) {
-                m.put("TripId", reader.nextString());
+                stop.details.put("TripId", reader.nextString());
             } else if (name.equals("HeadSign")) {
-                m.put("HeadSign", reader.nextString());
+                stop.details.put("HeadSign", reader.nextString());
             } else if (name.equals("Name")) {
-                m.put("Name", reader.nextString());
+                stop.details.put("Name", reader.nextString());
             } else if (name.equals("Minutes")) {
                 Integer Minutes = reader.nextInt();
-                m.put("Minutes", Minutes.toString());
+                stop.details.put("Minutes", Minutes.toString());
             } else if (name.equals("ArrivalDateTime")) {
-                m.put("ArrivalDateTime", reader.nextString());
+                stop.details.put("ArrivalDateTime", reader.nextString());
             } else {
                 reader.skipValue();
             }
         }
         reader.endObject();
 
-        return m;
+        return stop;
     }
 }

@@ -43,7 +43,6 @@ import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListArrayAdapter;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.RouteTimeArrayAdapter;
-import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimesArrayAdapter;
 import net.kw.shrdlu.grtgtfs.NotificationCallback;
 import net.kw.shrdlu.grtgtfs.R;
 import net.kw.shrdlu.grtgtfs.Realtime;
@@ -140,20 +139,21 @@ public class TimesActivity extends MenuListActivity {
 
                 if (GRTApplication.mPreferences.fetchRealtime()) {
                     // Keep track of which routes we've already done
-                    Map<String, Map<String, Map<String,String>>> routes = new HashMap<String, Map<String, Map<String, String>>>();
+                    Map<String, Realtime.RealtimeStopMap> routes = new HashMap<String, Realtime.RealtimeStopMap>();
 
                     for (int i = 0; i < mListDetails.size(); i++) {
                         String route = mListDetails.get(i)[2], realtimemins = "";
-                        Map<String, Map<String,String>> m = routes.get(route);
+                        Realtime.RealtimeStopMap m = routes.get(route);
                         if (m == null) {
-                            m = Realtime.GetRealtime(mStopid, route);
+                            Realtime rt = new Realtime(mStopid, route);
+                            m = rt.getMap();
                             if (m != null)
                                 routes.put(route, m);
                         }
-                        if (m != null && !m.isEmpty()) {
-                            Map<String, String> trip = m.get(mListDetails.get(i)[4]); // trip details
-                            if (trip != null) {
-                                String minutes = trip.get("Minutes");
+                        if (m != null) {
+                            Realtime.RealtimeStop tripstop = m.get(mListDetails.get(i)[4]); // trip details
+                            if (tripstop != null) {
+                                String minutes = tripstop.get("Minutes");
                                 if (minutes != null)
                                     realtimemins = minutes;   // replace trip id with realtime minutes
                             }
@@ -171,12 +171,12 @@ public class TimesActivity extends MenuListActivity {
 						!GRTApplication.mPreferences.showAllBusses(), this);
 
                 if (GRTApplication.mPreferences.fetchRealtime()) {
-                    Map<String, Map<String,String>> m = Realtime.GetRealtime(mStopid, mRouteid);
-                    if (m != null && !m.isEmpty()) {
+                    Realtime rt = new Realtime(mStopid, mRouteid);
+                    if (rt.getMap() != null) {
                         for (int i = 0; i < mListDetails.size(); i++) {
-                            Map<String, String> trip = m.get(mListDetails.get(i)[2]); // trip details
-                            if (trip != null) {
-                                String minutes = trip.get("Minutes");
+                            Realtime.RealtimeStop tripstop = rt.getMap().get(mListDetails.get(i)[2]); // trip details
+                            if (tripstop != null) {
+                                String minutes = tripstop.get("Minutes");
                                 if (minutes != null)
                                     mListDetails.get(i)[0] += " " + minutes;
                             }
@@ -244,7 +244,7 @@ public class TimesActivity extends MenuListActivity {
 			Toast msg;
 			if (savedpos >= 0) {
 				final String nextdeparture = mListDetails.get(savedpos)[0];
-				int hourdiff = GRTApplication.TimediffNow(nextdeparture);
+				int hourdiff = ServiceCalendar.TimediffNow(nextdeparture);
 
 				if (hourdiff >= 60) {
 					msg = Toast.makeText(mContext, "Next bus leaves at " + ServiceCalendar.formattedTime(nextdeparture),
@@ -311,7 +311,9 @@ public class TimesActivity extends MenuListActivity {
             bustimes.putExtra(pkgstr + ".stop_name", mStopname);
 			mContext.startActivity(bustimes);
 
-		} else { // 1 route  // TODO fix this
+		} else { // 1 route, so two textviews (stop time, description)
+            // TODO -- need the trip id, which is in the original mListDetailsArray
+            // Could search to find it, but the time has been reformatted....?
 			final String trip_id = items[2];
 
 			final Intent tripstops = new Intent(mContext, TripStopsActivity.class);

@@ -80,30 +80,4 @@ public class GRTApplication extends android.app.Application {
                 .setLabel(v)
                 .build());
 	}
-
-    // Return the difference in minutes between a passed in time and now.
-    // Time is in "hh:mm:ss" format, presumably in the future.
-    public static int TimediffNow(String time) {
-        final Time t = new Time();
-        t.setToNow();
-
-        int diff = Integer.parseInt(time.substring(0, 2));
-        if (diff < t.hour)
-            diff += 24;
-        diff -= t.hour;
-        diff *= 60;
-
-        int mindiff = Integer.parseInt(time.substring(3, 5));
-        mindiff -= t.minute;
-        diff += mindiff;
-
-        int secs = Integer.parseInt(time.substring(6, 7));
-        secs -= t.second;
-        if (secs < -30)
-            diff -= 1;
-        else if (secs > 0)
-            diff += 1;
-
-        return diff;
-    }
 }

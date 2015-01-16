@@ -80,20 +80,20 @@ public class RouteTimeArrayAdapter extends ArrayAdapter {
 
         final String bustime = mDetails.get(position)[0];
         holder.stoptime.setText(ServiceCalendar.formattedTime(bustime));
-        Integer timediff = GRTApplication.TimediffNow(bustime);
+        Integer timediff = ServiceCalendar.TimediffNow(bustime);
         holder.stopminutes.setText(timediff.toString() + "m");
 
-        // do nothing if it's too far away, else show realtime data
-        if (timediff < 60 && GRTApplication.mPreferences.fetchRealtime()) {
+        // Do nothing if it's too far away, else show realtime data
+        if (timediff.intValue() < 60 && GRTApplication.mPreferences.fetchRealtime()) {
             String realtimediff = mDetails.get(position)[4];
             if (realtimediff != "") {
-                timediff = Integer.parseInt(realtimediff);
+                timediff -= Integer.parseInt(realtimediff);
                 if (timediff >= 0)
-                    holder.stoprealtime.setText("+" + realtimediff);
+                    holder.stoprealtime.setText("+" + timediff.toString());
                 else
-                    holder.stoprealtime.setText(realtimediff);
+                    holder.stoprealtime.setText(timediff.toString());
                 if (timediff < 0 || timediff > 3)
-                    holder.stoprealtime.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_light));  // @android:color/holo_green_light
+                    holder.stoprealtime.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_light));
             }
         }
 
