@@ -23,7 +23,6 @@
 package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +69,8 @@ public class TimeStopdescArrayAdapter extends ArrayAdapter /* <ArrayList<String[
 			// Save the view when we look them up.
 			holder = new ViewHolder();
 			holder.stoptime = (TextView) view.findViewById(R.id.stoptime);
-			holder.label = (TextView) view.findViewById(R.id.routelabel);
-			holder.value = (TextView) view.findViewById(R.id.routedesc);
+			holder.label = (TextView) view.findViewById(R.id.label);
+			holder.value = (TextView) view.findViewById(R.id.value);
 			view.setTag(holder);
 		} else {
 			// Log.d(TAG, "reusing view " + view);

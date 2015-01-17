@@ -86,7 +86,7 @@ public class RouteTimeArrayAdapter extends ArrayAdapter {
         // Do nothing if it's too far away, else show realtime data
         if (timediff.intValue() < 60 && GRTApplication.mPreferences.fetchRealtime()) {
             String realtimediff = mDetails.get(position)[4];
-            if (realtimediff != "") {
+            if (!realtimediff.equals("")) {
                 timediff -= Integer.parseInt(realtimediff);
                 if (timediff >= 0)
                     holder.stoprealtime.setText("+" + timediff.toString());

@@ -23,7 +23,6 @@
 package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -33,7 +32,6 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import net.kw.shrdlu.grtgtfs.R;
-import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 public class ListCursorAdapter extends CursorAdapter {
 

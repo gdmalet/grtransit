@@ -26,14 +26,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -46,8 +42,6 @@ import net.kw.shrdlu.grtgtfs.Realtime;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 public class FavstopsActivity extends MenuListActivity {
@@ -70,10 +64,6 @@ public class FavstopsActivity extends MenuListActivity {
 		super.onCreate(savedInstanceState);
 
         layout = (LinearLayout)findViewById(R.id.vg_area);
-
-		final TextView tv = new TextView(mContext);
-		tv.setText(R.string.longpress_removes_stop);
-		// TODO vg.addFooterView(tv);
 
 		/* Make sure we can access a database */
 		if (DB == null) {
@@ -151,13 +141,12 @@ public class FavstopsActivity extends MenuListActivity {
 			return;
 		}
 
-//		mListDetail.invalidate();
 		ProcessStops();
 	}
 
 	// Called from the listener above for a long click
-    public void onListItemLongClick(LinearLayout v) {
-		// Log.v(TAG, "long clicked position " + position);
+    public void onListItemLongClick(View view) {
+        LinearLayout v = (LinearLayout)view;
 
         TextView tv = (TextView)v.getChildAt(0);
 		final String stopid = String.valueOf(tv.getText());
@@ -250,8 +239,17 @@ public class FavstopsActivity extends MenuListActivity {
         mContext.startActivity(newintent);
 	}
 
-	/* Do the processing to load the ArrayAdapter for display. */
-	private class LoadTimes extends AsyncTask<Void, Integer, Void> {
+    View.OnLongClickListener wtf = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view) {
+            onListItemLongClick(view);
+            return true; // to say we consumed the click
+        }
+    };
+
+    /* Do the processing to load the ArrayAdapter for display. */
+	private class LoadTimes extends AsyncTask<Void, Integer, Void>
+    {
 
         final LayoutInflater inflater = LayoutInflater.from(mContext);
         LinearLayout stoprow;
@@ -274,6 +272,15 @@ public class FavstopsActivity extends MenuListActivity {
 		protected void onProgressUpdate(Integer... parms) {
             stoprow = (LinearLayout)inflater.inflate(R.layout.stoplabelrow, layout, false);
 
+            stoprow.setOnLongClickListener(wtf);
+//            stoprow.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//                    onListItemLongClick(view);
+//                    return true; // to say we consumed the click
+//                }
+//            });
+
             try {
                 lockfg.acquire();
                 TextView tv = (TextView) stoprow.findViewById(R.id.stoplabel);
@@ -282,15 +289,6 @@ public class FavstopsActivity extends MenuListActivity {
                 tv.setText(stopdata[1]);
                 layout.addView(stoprow);
 
-                // TODO this is not registering
-                stoprow.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        onListItemLongClick(stoprow);
-                        return true; // to say we consumed the click
-                    }
-                });
-
                 for (final String[] routerowdata : routedata) {
                     final LinearLayout routerow = (LinearLayout) inflater.inflate(R.layout.routetimerow, layout, false);
                     tv = (TextView) routerow.findViewById(R.id.stoptime);
@@ -298,7 +296,7 @@ public class FavstopsActivity extends MenuListActivity {
                     tv = (TextView) routerow.findViewById(R.id.stopminutes);
                     tv.setText(routerowdata[1]);
 
-                    if (routerowdata[2] != "") {
+                    if (!routerowdata[2].equals("")) {
                         tv = (TextView) routerow.findViewById(R.id.stoprealtime);
                         Integer timediff = Integer.parseInt(routerowdata[2]);
                         if (timediff >= 0)
@@ -321,10 +319,7 @@ public class FavstopsActivity extends MenuListActivity {
             } catch(InterruptedException ie) {
                 // so the screen might be slightly wrong; oh well.
             }
-            //layout.requestLayout();
-            //layout.invalidate();
 
-//			mAdapter.notifyDataSetChanged();
             setProgress(parms[0]);
 		}
 
@@ -390,6 +385,10 @@ public class FavstopsActivity extends MenuListActivity {
             getActionBar().setTitle(R.string.title_favourites);
             getActionBar().setSubtitle(null);
             setProgress(10000); // max -- makes it slide away
-		}
+
+            final TextView tv = new TextView(mContext);
+            tv.setText(R.string.longpress_removes_stop);
+            layout.addView(tv);
+        }
 	}
 }

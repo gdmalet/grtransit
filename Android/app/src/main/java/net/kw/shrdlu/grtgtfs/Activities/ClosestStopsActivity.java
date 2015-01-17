@@ -40,9 +40,9 @@ import android.widget.Toast;
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimeStopdescArrayAdapter;
+import net.kw.shrdlu.grtgtfs.NavOptions;
 import net.kw.shrdlu.grtgtfs.R;
 
-import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -85,7 +85,14 @@ public class ClosestStopsActivity extends MenuListActivity {
 
         final ListView lv = (ListView)findViewById(android.R.id.list);
 
-		// register to get long clicks on bus stop list
+        lv.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onListItemClick(parent, view, position, id);
+            }
+        });
+
+        // register to get long clicks on bus stop list
 		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -184,7 +191,6 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 	/* Do the processing to load the ArrayAdapter for display. */
 	private class ProcessBusStops extends AsyncTask<Void, Integer, Void> {
-		// static final String TAG = "ProcessBusStops";
 
 		@Override
 		protected void onPreExecute() {
@@ -195,6 +201,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 		@Override
 		protected void onProgressUpdate(Integer... parms) {
             setProgress(parms[0]);
+            mAdapter.notifyDataSetChanged();
 		}
 
 		@Override
@@ -272,8 +279,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 	}
 
 	//@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// Log.v(TAG, "clicked position " + position);
+	protected void onListItemClick(AdapterView<?> l, View v, int position, long id) {
 
 		final String[] strs = (String[]) l.getItemAtPosition(position);
 		if (strs == null) {
@@ -312,7 +318,6 @@ public class ClosestStopsActivity extends MenuListActivity {
 
 	// Called from the listener above for a long click
     void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-		// Log.v(TAG, "long clicked position " + position);
 
 		final String[] strs = (String[]) parent.getItemAtPosition(position);
 		if (strs == null) {

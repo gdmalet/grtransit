@@ -216,7 +216,7 @@ public class RouteselectActivity extends MenuListActivity {
 				lv.addFooterView(tv);
 			}
 
-			//setListAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
+			lv.setAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
 
             getActionBar().setTitle("Routes using stop " + mStopid);
             getActionBar().setSubtitle(mStopname);

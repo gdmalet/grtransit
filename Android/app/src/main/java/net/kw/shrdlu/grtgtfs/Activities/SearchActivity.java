@@ -31,11 +31,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ResourceCursorAdapter;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -48,8 +45,7 @@ import net.kw.shrdlu.grtgtfs.R;
 public class SearchActivity extends MenuListActivity {
 	private static final String TAG = "SearchActivity";
 
-	private EditText mSearchText;
-	private Cursor mCsr;
+    private Cursor mCsr;
 
 	private int mSearchType = R.id.button_searchstops; // default
 	private String mQuery;
@@ -60,29 +56,29 @@ public class SearchActivity extends MenuListActivity {
 		setContentView(R.layout.searchlayout);
 		super.onCreate(savedInstanceState);
 
-		mSearchText = (EditText) findViewById(R.id.searchtext);
+        EditText searchText = (EditText) findViewById(R.id.searchtext);
 
         getActionBar().setTitle(R.string.title_search);
         getActionBar().setSubtitle(null);
 
-		mSearchText.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void afterTextChanged(Editable s) {
-				// Log.d(TAG, "afterTextChanged");
-			}
+		searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Log.d(TAG, "afterTextChanged");
+            }
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// Log.d(TAG, "beforeTextChanged");
-			}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Log.d(TAG, "beforeTextChanged");
+            }
 
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// Log.d(TAG, "onTextChanged");
-				mQuery = String.valueOf(s);
-				DoSearch(mSearchType, getIntent());
-			}
-		});
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Log.d(TAG, "onTextChanged");
+                mQuery = String.valueOf(s);
+                DoSearch(mSearchType, getIntent());
+            }
+        });
 	}
 
 	@Override

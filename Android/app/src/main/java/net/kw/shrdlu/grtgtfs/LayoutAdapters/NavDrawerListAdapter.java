@@ -35,12 +35,12 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
     private final ArrayList<NavDrawerItem> mNavDrawerItems;
     private final LayoutInflater mInflater;
-    private final int mLayout;
+    //private final int mLayout;
 
     public NavDrawerListAdapter(Context context, int layout, ArrayList<NavDrawerItem> navDrawerItems){
         mInflater = LayoutInflater.from(context);
         mNavDrawerItems = navDrawerItems;
-        mLayout = layout;
+        //mLayout = layout;
     }
 
     @Override

@@ -182,8 +182,6 @@ public class StartupActivity extends Activity {
 						DBmd5 = s.substring(s.lastIndexOf(' ') + 1);
 					}
 				}
-			} catch (final IOException | NumberFormatException e) {
-                e.printStackTrace();
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}

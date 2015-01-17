@@ -19,8 +19,9 @@
 
 package net.kw.shrdlu.grtgtfs;
 
-import android.text.format.Time;
 import android.util.JsonReader;
+
+import com.google.android.gms.analytics.HitBuilders;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -34,7 +35,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Realtime {
 
@@ -42,7 +42,7 @@ public class Realtime {
 
     private String mStopid, mRouteid;
 
-    class TripDetails extends HashMap<String, String> {};
+    class TripDetails extends HashMap<String, String> {}
 
     public class RealtimeStop {
         TripDetails details = new TripDetails();
@@ -65,10 +65,22 @@ public class Realtime {
     {
         mStopid = stopid;
         mRouteid = routeid;
+
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Realtime")
+                .setAction(stopid)
+                .setLabel(routeid)
+                .build());
     }
 
     public String getTripDetail(String trip, String var)
     {
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Realtime")
+                .setAction("Tripdetail")
+                .setLabel(trip + " " + var)
+                .build());
+
         Realtime.RealtimeStopMap rsm = getMap();
 
         if (rsm != null) {
@@ -188,19 +200,26 @@ public class Realtime {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
-            if (name.equals("TripId")) {
-                stop.details.put("TripId", reader.nextString());
-            } else if (name.equals("HeadSign")) {
-                stop.details.put("HeadSign", reader.nextString());
-            } else if (name.equals("Name")) {
-                stop.details.put("Name", reader.nextString());
-            } else if (name.equals("Minutes")) {
-                Integer Minutes = reader.nextInt();
-                stop.details.put("Minutes", Minutes.toString());
-            } else if (name.equals("ArrivalDateTime")) {
-                stop.details.put("ArrivalDateTime", reader.nextString());
-            } else {
-                reader.skipValue();
+            switch (name) {
+                case "TripId":
+                    stop.details.put("TripId", reader.nextString());
+                    break;
+                case "HeadSign":
+                    stop.details.put("HeadSign", reader.nextString());
+                    break;
+                case "Name":
+                    stop.details.put("Name", reader.nextString());
+                    break;
+                case "Minutes":
+                    Integer Minutes = reader.nextInt();
+                    stop.details.put("Minutes", Minutes.toString());
+                    break;
+                case "ArrivalDateTime":
+                    stop.details.put("ArrivalDateTime", reader.nextString());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();

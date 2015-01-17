@@ -49,8 +49,6 @@ import net.kw.shrdlu.grtgtfs.Realtime;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TimesActivity extends MenuListActivity {
 	private static final String TAG = "TimesActivity";
@@ -93,9 +91,8 @@ public class TimesActivity extends MenuListActivity {
 
 	/* Do the processing to load the ArrayAdapter for display. */
 	private class ProcessBusTimes extends AsyncTask<Void, Integer, Integer> implements NotificationCallback {
-		static final String TAG = "";
 
-		// TODO -- should set a listener that will call this callback.
+        final ListView lv = (ListView)findViewById(android.R.id.list);
 
 		// A callback from CalendarService, for updating our progress bar
 		@Override
@@ -105,7 +102,6 @@ public class TimesActivity extends MenuListActivity {
 
 		@Override
 		protected void onPreExecute() {
-			// Log.v(TAG, "onPreExecute()");
             setProgressBarVisibility(true);
 		}
 
@@ -138,7 +134,7 @@ public class TimesActivity extends MenuListActivity {
                         !GRTApplication.mPreferences.showAllBusses(), this);
 
                 if (GRTApplication.mPreferences.fetchRealtime()) {
-                    for (int i = 0; i < mListDetails.size(); i++) {
+                    for (Integer i = 0; i < mListDetails.size(); i++) {
                         String route = mListDetails.get(i)[2], realtimemins = "";
                         Realtime rt = new Realtime(mStopid, route);
                         if (rt.getMap() != null) {
@@ -202,7 +198,6 @@ public class TimesActivity extends MenuListActivity {
             setProgress(10000); // max -- makes it slide away
 
 			TextView tv = null;
-			final ListView lv = (ListView)findViewById(android.R.id.list);
 			if (lv.getFooterViewsCount() == 0) {
 				tv = new TextView(mContext);
 				lv.addFooterView(tv);
@@ -215,8 +210,8 @@ public class TimesActivity extends MenuListActivity {
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_route);
 				}
-				RouteTimeArrayAdapter adapter = new RouteTimeArrayAdapter(mContext, R.layout.routetimerow, mListDetails);
-				lv.setAdapter(adapter);
+                RouteTimeArrayAdapter adapter = new RouteTimeArrayAdapter(mContext, R.layout.routetimerow, mListDetails);
+                lv.setAdapter(adapter);
 			} else {
                 getActionBar().setSubtitle("Route " + mHeadsign);
 				if (tv != null) {

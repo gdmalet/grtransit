@@ -37,7 +37,6 @@ import com.google.android.gms.analytics.HitBuilders;
 
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
-import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
 import net.kw.shrdlu.grtgtfs.R;
 
 public class TripStopsActivity extends MenuListActivity {

@@ -21,7 +21,6 @@ package net.kw.shrdlu.grtgtfs;
 
 import android.content.Context;
 import android.os.StrictMode;
-import android.text.format.Time;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;

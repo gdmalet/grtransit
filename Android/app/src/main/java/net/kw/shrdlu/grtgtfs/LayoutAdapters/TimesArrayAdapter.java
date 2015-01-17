@@ -23,7 +23,6 @@
 package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
