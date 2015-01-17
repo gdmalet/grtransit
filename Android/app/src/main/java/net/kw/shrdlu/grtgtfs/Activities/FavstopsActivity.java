@@ -359,13 +359,10 @@ public class FavstopsActivity extends MenuListActivity {
                             pref[6] = "";
                             Realtime rt = new Realtime(pref[0], nextbus[1]);
                             if (rt.getMap() != null) {
-                                Realtime.RealtimeStop tripstop = rt.getMap().get(nextbus[3]); // trip details
-                                if (tripstop != null) {
-                                    String minutes = tripstop.get("Minutes");
-                                    if (minutes != null) {
-                                        timediff -= Integer.parseInt(minutes);
-                                        pref[6] = timediff.toString();
-                                    }
+                                String minutes = rt.getTripDetail(nextbus[3], "Minutes");
+                                if (minutes != null) {
+                                    timediff -= Integer.parseInt(minutes);
+                                    pref[6] = timediff.toString();
                                 }
                             }
                         }

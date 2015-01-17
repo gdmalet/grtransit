@@ -41,7 +41,6 @@ public class Realtime {
     private static final String RealtimeURL = "http://realtimemap.grt.ca/Stop/GetStopInfo?stopId=%s&routeId=%s";
 
     private String mStopid, mRouteid;
-    private RealtimeStopMap mMap = null;
 
     class TripDetails extends HashMap<String, String> {};
 
@@ -57,46 +56,79 @@ public class Realtime {
     // Trip id mapped to the realtime data.
     public class RealtimeStopMap extends HashMap<String, RealtimeStop>
     {
-        long snarfedat = new Date().getTime();
-        String stopid = mStopid;
-        String routeid = mRouteid;
+        final long expirytime = new Date().getTime() + 60*1000;   // 1 minute
+        //final String stopid = mStopid;
+        //final String routeid = mRouteid;
     }
 
-    public RealtimeStopMap getMap()
-    {
-        // Will only return non-empty maps, or null.
-        return mMap;
-    }
-
-    // TODO -- should cache the maps & return anything under a minute old, else re-query.
     public Realtime(String stopid, String routeid)
     {
         mStopid = stopid;
         mRouteid = routeid;
-        final String url = String.format(RealtimeURL, stopid, routeid);
-        RealtimeStopMap map = null;
+    }
 
-        final HttpClient client = new DefaultHttpClient();
-        final HttpGet httpGet = new HttpGet(url);
+    public String getTripDetail(String trip, String var)
+    {
+        Realtime.RealtimeStopMap rsm = getMap();
 
-        try {
-            final HttpResponse response = client.execute(httpGet);
-            final StatusLine statusLine = response.getStatusLine();
-            final int statusCode = statusLine.getStatusCode();
-
-            if (statusCode == 200) {
-                final HttpEntity responseEntity = response.getEntity();
-                InputStream is = responseEntity.getContent();
-
-                map = readJsonStream(is);
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
+        if (rsm != null) {
+            RealtimeStop rts = rsm.get(trip);
+            if (rts != null)
+                return rts.get(var);
         }
 
-        // Only store non-empty maps
-        if (map != null && !map.isEmpty())
-            mMap = map;
+        return null;
+    }
+
+    public RealtimeStopMap getMap()
+    {
+        if (GRTApplication.mRealtimeStops == null)
+            GRTApplication.mRealtimeStops = new HashMap<>();
+
+        // Check the cache first
+        final String key = mStopid + "::" + mRouteid;
+        RealtimeStopMap rts = GRTApplication.mRealtimeStops.get(key);
+        if (rts != null) {
+            long exp = rts.expirytime;
+            if (exp < new Date().getTime()) {
+                GRTApplication.mRealtimeStops.remove(key);
+                rts = null;
+            }
+        }
+
+        // Nothing in cache; must query.
+        if (rts == null) {
+            final String url = String.format(RealtimeURL, mStopid, mRouteid);
+
+            final HttpClient client = new DefaultHttpClient();
+            final HttpGet httpGet = new HttpGet(url);
+
+            try {
+                final HttpResponse response = client.execute(httpGet);
+                final StatusLine statusLine = response.getStatusLine();
+                final int statusCode = statusLine.getStatusCode();
+
+                if (statusCode == 200) {
+                    final HttpEntity responseEntity = response.getEntity();
+                    InputStream is = responseEntity.getContent();
+
+                    rts = readJsonStream(is);
+                }
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+
+            // Put this in the cache
+            if (rts != null) {
+                GRTApplication.mRealtimeStops.put(key, rts);
+            }
+        }
+
+        // Will only return non-empty maps, or null.
+        if (rts != null && !rts.isEmpty())
+            return rts;
+        else
+            return null;
     }
 
     private RealtimeStopMap readJsonStream(InputStream in) throws IOException

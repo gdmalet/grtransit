@@ -138,25 +138,13 @@ public class TimesActivity extends MenuListActivity {
                         !GRTApplication.mPreferences.showAllBusses(), this);
 
                 if (GRTApplication.mPreferences.fetchRealtime()) {
-                    // Keep track of which routes we've already done
-                    Map<String, Realtime.RealtimeStopMap> routes = new HashMap<String, Realtime.RealtimeStopMap>();
-
                     for (int i = 0; i < mListDetails.size(); i++) {
                         String route = mListDetails.get(i)[2], realtimemins = "";
-                        Realtime.RealtimeStopMap m = routes.get(route);
-                        if (m == null) {
-                            Realtime rt = new Realtime(mStopid, route);
-                            m = rt.getMap();
-                            if (m != null)
-                                routes.put(route, m);
-                        }
-                        if (m != null) {
-                            Realtime.RealtimeStop tripstop = m.get(mListDetails.get(i)[4]); // trip details
-                            if (tripstop != null) {
-                                String minutes = tripstop.get("Minutes");
-                                if (minutes != null)
-                                    realtimemins = minutes;   // replace trip id with realtime minutes
-                            }
+                        Realtime rt = new Realtime(mStopid, route);
+                        if (rt.getMap() != null) {
+                            String minutes = rt.getTripDetail(mListDetails.get(i)[4], "Minutes");
+                            if (minutes != null)
+                                realtimemins = minutes;   // replace trip id with realtime minutes
                         }
                         mListDetails.get(i)[4] = realtimemins;
                     }
@@ -174,12 +162,10 @@ public class TimesActivity extends MenuListActivity {
                     Realtime rt = new Realtime(mStopid, mRouteid);
                     if (rt.getMap() != null) {
                         for (int i = 0; i < mListDetails.size(); i++) {
-                            Realtime.RealtimeStop tripstop = rt.getMap().get(mListDetails.get(i)[2]); // trip details
-                            if (tripstop != null) {
-                                String minutes = tripstop.get("Minutes");
-                                if (minutes != null)
-                                    mListDetails.get(i)[0] += " " + minutes;
-                            }
+                            String minutes = rt.getTripDetail(mListDetails.get(i)[2], "Minutes");
+                            if (minutes != null)
+                                // TODO need to fix layouts etc.
+                                mListDetails.get(i)[0] += " " + minutes;
                         }
                     }
                 }

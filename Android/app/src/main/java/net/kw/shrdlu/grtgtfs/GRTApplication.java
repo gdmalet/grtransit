@@ -27,6 +27,8 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.HashMap;
+
 public class GRTApplication extends android.app.Application {
 	public static final String TAG = "GRTApplication";
 
@@ -34,6 +36,7 @@ public class GRTApplication extends android.app.Application {
 	public static Preferences mPreferences = null;
     public final static boolean isDebugBuild = BuildConfig.DEBUG;
     public final static String LocalClassNameHome = "Activities.FavstopsActivity";
+    public static HashMap<String, Realtime.RealtimeStopMap> mRealtimeStops;
 
     @Override
 	public void onCreate() {
