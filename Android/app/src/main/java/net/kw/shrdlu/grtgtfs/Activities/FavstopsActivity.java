@@ -36,7 +36,6 @@ import com.google.android.gms.analytics.HitBuilders;
 
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
-import net.kw.shrdlu.grtgtfs.LayoutAdapters.FavstopsArrayAdapter;
 import net.kw.shrdlu.grtgtfs.R;
 import net.kw.shrdlu.grtgtfs.Realtime;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
@@ -50,7 +49,6 @@ public class FavstopsActivity extends MenuListActivity {
     private LinearLayout layout;
 	private ArrayList<String[]> mDetails;
 	private String mStopid;
-	private FavstopsArrayAdapter mAdapter;
 	private final SQLiteDatabase DB = DatabaseHelper.ReadableDB();
 
 	@Override
@@ -98,8 +96,6 @@ public class FavstopsActivity extends MenuListActivity {
 				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?", "", "" });
 			}
 		}
-		//mAdapter = new FavstopsArrayAdapter(this, R.layout.favouritesrow, mDetails);
-		//setListAdapter(mAdapter);
 
         // TODO synchronising on non-final var... and accessing that var outside the lock, above & below.
         // See http://stackoverflow.com/questions/21458625/when-a-lock-holds-a-non-final-object-can-the-objects-reference-still-be-change/21460055#21460055
