@@ -75,12 +75,6 @@ public class Realtime {
 
     public String getTripDetail(String trip, String var)
     {
-        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Realtime")
-                .setAction("Tripdetail")
-                .setLabel(trip + " " + var)
-                .build());
-
         Realtime.RealtimeStopMap rsm = getMap();
 
         if (rsm != null) {

@@ -32,6 +32,7 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 public class ListCursorAdapter extends CursorAdapter {
 
@@ -51,24 +52,19 @@ public class ListCursorAdapter extends CursorAdapter {
         TextView itemview = null, descview = null;
         final String item, desc;
 
-        if (mLayout == R.layout.route_numanddesc) {
-            itemview = (TextView) view.findViewById(R.id.routelabel);
-            descview = (TextView) view.findViewById(R.id.routedesc);
-        } else if (mLayout == R.layout.stop_numanddesc) {
-            itemview = (TextView) view.findViewById(R.id.stoplabel);
-            descview = (TextView) view.findViewById(R.id.stopdesc);
-        }
+        itemview = (TextView) view.findViewById(R.id.label);
+        descview = (TextView) view.findViewById(R.id.desc);
 
 		item = cursor.getString(cursor.getColumnIndex("_id"));
         desc = cursor.getString(cursor.getColumnIndex("descr"));
 
-//		final TextView timeview;
-//		final String time;
-//		if (mLayout == R.layout.timestopdesc) {
-//			timeview = (TextView) view.findViewById(R.id.stoptime);
-//			time = cursor.getString(cursor.getColumnIndex("departure_time"));
-//			timeview.setText(ServiceCalendar.formattedTime(time));
-//		}
+        final TextView timeview;
+        final String time;
+        if (mLayout == R.layout.timestopdesc) {
+            timeview = (TextView) view.findViewById(R.id.stoptime);
+            time = cursor.getString(cursor.getColumnIndex("departure_time"));
+            timeview.setText(ServiceCalendar.formattedTime(time));
+        }
 
 		// Look for things like route 7A, where the A is part of the description
 		// TODO - char test should use a type test or something. This assumes US ASCII...

@@ -71,8 +71,8 @@ public class RouteTimeArrayAdapter extends ArrayAdapter {
             holder.stoptime = (TextView) view.findViewById(R.id.stoptime);
             holder.stopminutes = (TextView) view.findViewById(R.id.stopminutes);
             holder.stoprealtime = (TextView) view.findViewById(R.id.stoprealtime);
-            holder.routelabel = (TextView) view.findViewById(R.id.routelabel);
-            holder.routedesc = (TextView) view.findViewById(R.id.routedesc);
+            holder.routelabel = (TextView) view.findViewById(R.id.label);
+            holder.routedesc = (TextView) view.findViewById(R.id.desc);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();

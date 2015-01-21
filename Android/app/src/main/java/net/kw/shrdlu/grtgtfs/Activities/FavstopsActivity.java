@@ -140,7 +140,15 @@ public class FavstopsActivity extends MenuListActivity {
 		ProcessStops();
 	}
 
-	// Called from the listener above for a long click
+    final View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view) {
+            onListItemLongClick(view);
+            return true; // to say we consumed the click
+        }
+    };
+
+    // Called from the listener above for a long click
     public void onListItemLongClick(View view) {
         LinearLayout v = (LinearLayout)view;
 
@@ -235,20 +243,11 @@ public class FavstopsActivity extends MenuListActivity {
         mContext.startActivity(newintent);
 	}
 
-    View.OnLongClickListener wtf = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View view) {
-            onListItemLongClick(view);
-            return true; // to say we consumed the click
-        }
-    };
-
     /* Do the processing to load the ArrayAdapter for display. */
 	private class LoadTimes extends AsyncTask<Void, Integer, Void>
     {
 
         final LayoutInflater inflater = LayoutInflater.from(mContext);
-        LinearLayout stoprow;
         String[] stopdata;
         ArrayList<String []> routedata = new ArrayList<>();
 
@@ -265,23 +264,17 @@ public class FavstopsActivity extends MenuListActivity {
 		}
 
 		@Override
-		protected void onProgressUpdate(Integer... parms) {
-            stoprow = (LinearLayout)inflater.inflate(R.layout.stoplabelrow, layout, false);
-
-            stoprow.setOnLongClickListener(wtf);
-//            stoprow.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    onListItemLongClick(view);
-//                    return true; // to say we consumed the click
-//                }
-//            });
+		protected void onProgressUpdate(Integer... parms)
+        {
+            LinearLayout stoprow;
+            stoprow = (LinearLayout)inflater.inflate(R.layout.stoplabelrow, null);
+            stoprow.findViewById(R.id.stoplabelrow).setOnLongClickListener(mLongClickListener);
 
             try {
                 lockfg.acquire();
-                TextView tv = (TextView) stoprow.findViewById(R.id.stoplabel);
+                TextView tv = (TextView) stoprow.findViewById(R.id.label);
                 tv.setText(stopdata[0]);
-                tv = (TextView) stoprow.findViewById(R.id.stopdesc);
+                tv = (TextView) stoprow.findViewById(R.id.desc);
                 tv.setText(stopdata[1]);
                 layout.addView(stoprow);
 
@@ -303,9 +296,9 @@ public class FavstopsActivity extends MenuListActivity {
                             tv.setTextColor(getResources().getColor(android.R.color.holo_red_light));  // @android:color/holo_green_light
                     }
 
-                    tv = (TextView) routerow.findViewById(R.id.routelabel);
+                    tv = (TextView) routerow.findViewById(R.id.label);
                     tv.setText(routerowdata[3]);
-                    tv = (TextView) routerow.findViewById(R.id.routedesc);
+                    tv = (TextView) routerow.findViewById(R.id.desc);
                     tv.setText(routerowdata[4]);
 
                     LinearLayout favstop = (LinearLayout)stoprow.findViewById(R.id.favstop);

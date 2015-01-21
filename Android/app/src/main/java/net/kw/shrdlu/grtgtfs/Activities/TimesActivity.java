@@ -154,17 +154,18 @@ public class TimesActivity extends MenuListActivity {
 				mListDetails = ServiceCalendar.getRouteDepartureTimes(mStopid, mRouteid, mHeadsign, datenow,
 						!GRTApplication.mPreferences.showAllBusses(), this);
 
-                if (GRTApplication.mPreferences.fetchRealtime()) {
-                    Realtime rt = new Realtime(mStopid, mRouteid);
-                    if (rt.getMap() != null) {
-                        for (int i = 0; i < mListDetails.size(); i++) {
-                            String minutes = rt.getTripDetail(mListDetails.get(i)[2], "Minutes");
-                            if (minutes != null)
-                                // TODO need to fix layouts etc.
-                                mListDetails.get(i)[0] += " " + minutes;
-                        }
-                    }
-                }
+//                // TODO - do we want realtime data here?
+//                if (GRTApplication.mPreferences.fetchRealtime()) {
+//                    Realtime rt = new Realtime(mStopid, mRouteid);
+//                    if (rt.getMap() != null) {
+//                        for (int i = 0; i < mListDetails.size(); i++) {
+//                            String minutes = rt.getTripDetail(mListDetails.get(i)[2], "Minutes");
+//                            if (minutes != null)
+//                                // TODO need to fix layouts etc.
+//                                mListDetails.get(i)[0] += " " + minutes;
+//                        }
+//                    }
+//                }
             }
 
 			// Find when the next bus leaves
@@ -275,8 +276,6 @@ public class TimesActivity extends MenuListActivity {
 	public void onListItemClick(View view) {
         LinearLayout v = (LinearLayout)view;
 
-		final String[] items = { "foo", "bar", "baz" }; //TODO
-
 		// Allow narrowing to one route, if we're showing many.
 		if (mRouteid == null) { // showing all routes, so relativelayout, route num, description
             TextView tv = (TextView)v.getChildAt(1);
@@ -293,8 +292,8 @@ public class TimesActivity extends MenuListActivity {
 			mContext.startActivity(bustimes);
 
 		} else { // 1 route, so two textviews (stop time, description)
-            // TODO -- need the trip id, which is in the original mListDetailsArray
-            // Could search to find it, but the time has been reformatted....?
+            int position = ListArrayAdapter.getViewPostion(view);
+            final String[] items = mListDetails.get(position);
 			final String trip_id = items[2];
 
 			final Intent tripstops = new Intent(mContext, TripStopsActivity.class);

@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,13 +85,6 @@ public class ClosestStopsActivity extends MenuListActivity {
         getActionBar().setSubtitle(null);
 
         final ListView lv = (ListView)findViewById(android.R.id.list);
-
-        lv.setOnItemClickListener(new ListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onListItemClick(parent, view, position, id);
-            }
-        });
 
         // register to get long clicks on bus stop list
 		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -279,14 +273,14 @@ public class ClosestStopsActivity extends MenuListActivity {
 	}
 
 	//@Override
-	protected void onListItemClick(AdapterView<?> l, View v, int position, long id) {
+	public void onListItemClick(View view) {
+        LinearLayout v = (LinearLayout)view;
+        TextView tv;
 
-		final String[] strs = (String[]) l.getItemAtPosition(position);
-		if (strs == null) {
-			return;
-		}
-		final String stop_id = strs[1];
-		final String stop_name = strs[2];
+        tv = (TextView)v.getChildAt(1);
+        final String stop_id = String.valueOf(tv.getText());
+        tv = (TextView)v.getChildAt(2);
+        final String stop_name = String.valueOf(tv.getText());
 
 		final Intent routes = new Intent(mContext, RouteselectActivity.class);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();

@@ -120,6 +120,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/actionbar_text</item>
         <item name="android:background">@color/actionbar_white_background</item>
+        <item name="android:paddingLeft">12dip</item>
+        <item name="android:paddingRight">3dip</item>
+        <item name="android:paddingTop">3dip</item>
+        <item name="android:paddingBottom">12dip</item>
     </style>
 
     <style name="List.Rightlabel">
@@ -127,12 +131,15 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <!-- TODO should be <item name="android:layout_width">76sp</item>-->
     <style name="List.Stoptime">
-        <item name="android:layout_width">72sp</item>
+        <item name="android:layout_width">76sp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">3dip</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:scrollHorizontally">false</item>
     </style>
 
     <style name="List.Stopminutes">
@@ -164,7 +171,6 @@
     </style>
 
     <style name="List.Stopdescription" parent="List.Routedescription">
-        <item name="android:scrollHorizontally">true</item>
     </style>
 
     <style name="List.RouteandStoplabel">
@@ -173,18 +179,19 @@
         <item name="android:paddingLeft">8dip</item>
         <item name="android:paddingRight">8dip</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:minWidth">48sp</item>
+        <item name="android:minWidth">64sp</item>
         <item name="android:textSize">24sp</item>
         <item name="android:gravity">center</item>
     </style>
 
     <style name="List.Stoplabel" parent="List.RouteandStoplabel">
+        <item name="android:layout_height">48sp</item>
         <item name="android:textColor">@color/grt_blue</item>
         <item name="android:background">@drawable/stopnumber</item>
     </style>
 
     <style name="List.Routelabel" parent="List.RouteandStoplabel">
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">48sp</item>
         <item name="android:textColor">@color/grt_yellow</item>
         <item name="android:background">@drawable/routenumber</item>
     </style>

@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/List"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:id="@+id/stoplabel"
-        style="@style/List.Stoplabel" />
+        android:id="@+id/label"
+        style="@style/List.Stoplabel"
+        android:elevation="5dp"/>
 
     <TextView
-        android:id="@+id/stopdesc"
+        android:id="@+id/desc"
         style="@style/List.Stopdescription" />
 
 </merge>

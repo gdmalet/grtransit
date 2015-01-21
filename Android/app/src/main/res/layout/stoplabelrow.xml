@@ -14,7 +14,8 @@
         android:orientation="horizontal"
         android:longClickable="true"
         android:clickable="true"
-        android:onClick="onListItemClick">
+        android:onClick="onListItemClick"
+        android:divider="@android:drawable/divider_horizontal_dark">
 
         <include layout="@layout/stop_numanddesc"/>
 

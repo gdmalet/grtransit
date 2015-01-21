@@ -3,11 +3,13 @@
     style="@style/List"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:longClickable="true"
+    android:onClick="onListItemClick">
 
+    <!--android:layout_height="match_parent"-->
     <TextView
-        android:layout_width="96sp"
-        android:layout_height="match_parent"
         android:id="@+id/stoptime"
         style="@style/List.Stoptime" />
     
@@ -16,7 +18,7 @@
         style="@style/List.Stoplabel" />
 
     <TextView
-        android:id="@+id/value"
-        style="@style/List.Content" />
+        android:id="@+id/desc"
+        style="@style/List.Stopdescription" />
 
 </LinearLayout>

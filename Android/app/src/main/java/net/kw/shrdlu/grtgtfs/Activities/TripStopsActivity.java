@@ -30,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ import com.google.android.gms.analytics.HitBuilders;
 
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
 import net.kw.shrdlu.grtgtfs.R;
 
 public class TripStopsActivity extends MenuListActivity {
@@ -84,7 +86,6 @@ public class TripStopsActivity extends MenuListActivity {
 
 	/* Do the processing to load the ArrayAdapter for display. */
 	private class ProcessBusStops extends AsyncTask<Void, Integer, Integer> {
-		// static final String TAG = "ProcessBusStops";
 
 		@Override
 		protected void onPreExecute() {
@@ -128,30 +129,26 @@ public class TripStopsActivity extends MenuListActivity {
 
 		@Override
 		protected void onPostExecute(Integer savedpos) {
-			// Log.v(TAG, "onPostExecute()");
 
             getActionBar().setTitle("Stops on trip");
             getActionBar().setSubtitle(mHeadsign);
             setProgress(10000); // max -- makes it slide away
 
-			//final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.timestopdesc, mCsr);
-			//mContext.setListAdapter(adapter);
-
+			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.timestopdesc, mCsr);
             final ListView lv = (ListView)findViewById(android.R.id.list);
+            lv.setAdapter(adapter);
             lv.setSelectionFromTop(savedpos, 50); // position stop just below top
 		}
 	}
 
-	//@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// Log.v(TAG, "clicked position " + position);
+	public void onListItemClick(View view) {
+        LinearLayout v = (LinearLayout)view;
+        TextView tv;
 
-		final Cursor csr = (Cursor) l.getItemAtPosition(position);
-		if (csr == null) {
-			return;
-		}
-		final String stop_id = csr.getString(0);
-		final String stop_name = csr.getString(1);
+        tv = (TextView)v.getChildAt(1);
+        final String stop_id = String.valueOf(tv.getText());
+        tv = (TextView)v.getChildAt(2);
+        final String stop_name = String.valueOf(tv.getText());
 
 		final Intent routes = new Intent(mContext, RouteselectActivity.class);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();

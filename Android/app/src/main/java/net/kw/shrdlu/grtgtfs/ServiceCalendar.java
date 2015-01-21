@@ -362,6 +362,7 @@ public class ServiceCalendar {
 
     // Return the difference in minutes between a passed in time and now.
     // Time is in "hh:mm:ss" format, presumably in the future.
+    // TODO flaky, should convert big minutes to h & min.
     public static int TimediffNow(String time) {
         final Time t = new Time();
         t.setToNow();

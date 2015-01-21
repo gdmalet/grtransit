@@ -32,6 +32,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -151,21 +152,24 @@ public class SearchActivity extends MenuListActivity {
 		}
 	}
 
-	//@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// Log.v(TAG, "clicked position " + position);
+	public void onListItemClick(View view)
+    {
+        LinearLayout v = (LinearLayout)view;
 
-		final Cursor csr = (Cursor) l.getItemAtPosition(position);
-		if (csr == null) {
-			return;
-		}
-
-		final String what = csr.getString(0);
-		final String name = csr.getString(1);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
 		final Intent intent;
+        TextView tv;
 
-		if (mSearchType == R.id.button_searchstops) {
+        tv = (TextView)v.getChildAt(0);
+        final String what = String.valueOf(tv.getText());
+        tv = (TextView)v.getChildAt(1);
+        final String name = String.valueOf(tv.getText());
+
+        if (what == null || name == null) {
+            return;
+        }
+
+        if (mSearchType == R.id.button_searchstops) {
 
 			intent = new Intent(mContext, RouteselectActivity.class);
 			intent.putExtra(pkgstr + ".stop_id", what);
@@ -187,7 +191,6 @@ public class SearchActivity extends MenuListActivity {
 
 	// Called from the listener above for a long click
     void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-		// Log.v(TAG, "long clicked position " + position);
 
 		if (mSearchType != R.id.button_searchstops) {
 			return; // only makes sense for stops
@@ -241,7 +244,7 @@ public class SearchActivity extends MenuListActivity {
 		protected void onPostExecute(Void foo) {
             getActionBar().setTitle("Stops matching `" + mQuery + "'");
             getActionBar().setSubtitle(null);
-			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesc, mCsr);
+			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.stop_numanddesclayout, mCsr);
             ListView lv = (ListView)findViewById(android.R.id.list);
 			lv.setAdapter(adapter);
 			// adapter.notifyDataSetChanged();
@@ -270,7 +273,7 @@ public class SearchActivity extends MenuListActivity {
 		protected void onPostExecute(Void foo) {
             getActionBar().setTitle("Routes matching `" + mQuery + "'");
             getActionBar().setSubtitle(null);
-			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr);
+			final ListCursorAdapter adapter = new ListCursorAdapter(mContext, R.layout.route_numanddesclayout, mCsr);
             ListView lv = (ListView)findViewById(android.R.id.list);
 			lv.setAdapter(adapter);
 			// adapter.notifyDataSetChanged();

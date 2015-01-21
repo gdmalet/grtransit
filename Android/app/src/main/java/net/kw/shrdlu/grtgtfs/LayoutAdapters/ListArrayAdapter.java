@@ -54,7 +54,6 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 
 	public ListArrayAdapter(Activity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
-		// Log.v(TAG, "TimesArrayAdapter()");
 
 		mDetails = details;
 		mInflater = LayoutInflater.from(context);
@@ -64,7 +63,13 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 	static class ViewHolder {
 		TextView stoptime;
 		TextView desc;
+        int listposition;
 	}
+
+    public static int getViewPostion(View view) {
+        ViewHolder holder = (ViewHolder) view.getTag();
+        return holder.listposition;
+    }
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
@@ -80,6 +85,7 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 			holder = new ViewHolder();
 			holder.stoptime = (TextView) view.findViewById(R.id.stoptime);
 			holder.desc = (TextView) view.findViewById(R.id.desc);
+            holder.listposition = position;
 
 			view.setTag(holder);
 

@@ -3,16 +3,21 @@
     style="@style/List"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:paddingLeft="8dp"
     android:orientation="horizontal"
     android:stretchColumns="1"
     android:onClick="onListItemClick">
 
     <TextView
         android:id="@+id/stoptime"
-        style="@style/List.Stoptime" />
+        style="@style/List.Stoptime"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/desc"
-        style="@style/List.Content" />
+        style="@style/List.Stopdescription"
+        android:paddingLeft="8dp"/>
 
 </LinearLayout>

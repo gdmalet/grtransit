@@ -28,6 +28,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -62,16 +63,23 @@ public class RouteselectActivity extends MenuListActivity {
 		mStopid = intent.getStringExtra(pkgstr + ".stop_id");
 		mStopname = intent.getStringExtra(pkgstr + ".stop_name");
 
+        View v = findViewById(R.id.detail_area);
+        v.setOnTouchListener(mGestureListener);
+
 		// Do the rest off the main thread
 		new ProcessRoutes().execute();
 	}
 
-	//@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// Log.v(TAG, "clicked position " + position);
+	public void onListItemClick(View view)
+    {
+        LinearLayout v = (LinearLayout)view;
+        TextView tv;
 
-		final String route_id = mCsr.getString(0);
-		final String headsign = mCsr.getString(1);
+        tv = (TextView)v.getChildAt(0);
+        final String route_id = String.valueOf(tv.getText());
+        tv = (TextView)v.getChildAt(1);
+        final String headsign = String.valueOf(tv.getText());
+
 		if (route_id == null || headsign == null) {
 			return;
 		}
@@ -199,8 +207,8 @@ public class RouteselectActivity extends MenuListActivity {
 		}
 
 		@Override
-		protected void onPostExecute(Integer listcount) {
-			// Log.v(TAG, "onPostExecute()");
+		protected void onPostExecute(Integer listcount)
+        {
 
 			final ListView lv = (ListView)findViewById(android.R.id.list);
 			lv.setOnTouchListener(mGestureListener);
@@ -216,7 +224,7 @@ public class RouteselectActivity extends MenuListActivity {
 				lv.addFooterView(tv);
 			}
 
-			lv.setAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesc, mCsr));
+			lv.setAdapter(new ListCursorAdapter(mContext, R.layout.route_numanddesclayout, mCsr));
 
             getActionBar().setTitle("Routes using stop " + mStopid);
             getActionBar().setSubtitle(mStopname);
