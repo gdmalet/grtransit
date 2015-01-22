@@ -229,11 +229,11 @@ public class TimesActivity extends MenuListActivity {
 				int hourdiff = ServiceCalendar.TimediffNow(nextdeparture);
 
 				if (hourdiff >= 60) {
-					msg = Toast.makeText(mContext, "Next bus leaves at " + ServiceCalendar.formattedTime(nextdeparture),
+					msg = Toast.makeText(mContext, "Next bus due at " + ServiceCalendar.formattedTime(nextdeparture),
 							Toast.LENGTH_LONG);
 				} else {
 					final String plural = hourdiff > 1 ? "s" : "";
-					msg = Toast.makeText(mContext, "Next bus leaves in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
+					msg = Toast.makeText(mContext, "Next bus due in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
 
                 lv.setSelectionFromTop(savedpos, 50); // position next bus just below top

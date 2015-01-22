@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="about">About</string>
-    <string name="ampmtimes">Show times as am/pm</string>
+    <string name="ampmtimes">Show schedules as am/pm</string>
     <string name="app_description">Grand River Transit details for the Region of Waterloo, Ontario, Canada.\n\nAll data for this application is freely available in Google GTFS format from http://www.grt.ca</string>
     <string name="app_credits">Version: %1$s (internal %2$d), DB %3$d\n\nAuthor: Giles Malet\ngdmalet+GRTransit@gmail.com</string>
     <string name="app_name">Grand River Transit</string>
@@ -56,7 +56,7 @@
     <string name="rider_alerts">Rider alerts</string>
     <string name="route_fling">Swipe left to show all routes, or tap to show one.</string>
     <string name="search">Search</string>
-    <string name="showallbusses">Show busses for all days</string>
+    <string name="showallbusses">Show schedules for all days</string>
     <string name="showmap">Show map</string>
     <string name="stop_unused">No routes use this stop in the current schedule.</string>
     <string name="tap_time_for_route">Tap a time to show one route.</string>

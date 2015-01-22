@@ -223,9 +223,10 @@ public class FavstopsActivity extends MenuListActivity {
             LinearLayout parent = (LinearLayout)v.getParent();      // favstop
             LinearLayout stop = (LinearLayout)parent.getChildAt(0); // stoplabelrow
 
-            tv = (TextView)stop.getChildAt(0);
-            stopid = String.valueOf(tv.getText());
+            // childAt(0) is the divider
             tv = (TextView)stop.getChildAt(1);
+            stopid = String.valueOf(tv.getText());
+            tv = (TextView)stop.getChildAt(2);
             stopname = String.valueOf(tv.getText());
 
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
