@@ -66,8 +66,8 @@ public class MenuMapActivity extends MapActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private final ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
-    private NavDrawerListAdapter mNavAdapter;
+    final ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
+    NavDrawerListAdapter mNavAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

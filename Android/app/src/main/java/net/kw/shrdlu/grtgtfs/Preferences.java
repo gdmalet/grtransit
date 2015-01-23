@@ -79,6 +79,9 @@ public class Preferences {
 	}
 
     public boolean fetchRealtime() {
+        if (!mPrefs.contains(FETCHREALTIME_KEY)) {
+            mPrefs.edit().putBoolean(FETCHREALTIME_KEY, true).apply();
+        }
         return mPrefs.getBoolean(FETCHREALTIME_KEY, false);
     }
 

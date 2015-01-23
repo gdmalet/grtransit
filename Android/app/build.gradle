@@ -7,8 +7,7 @@ android {
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
         minSdkVersion 15
-        targetSdkVersion 21
-        versionCode 33
+        versionCode 34
         versionName "2.1"
     }
 

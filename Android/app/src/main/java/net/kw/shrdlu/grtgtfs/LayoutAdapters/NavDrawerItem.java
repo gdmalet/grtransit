@@ -46,4 +46,8 @@ public class NavDrawerItem {
     public int getId(){
         return mId;
     }
+
+    public void setId(int id){
+        mId = id;
+    }
 }

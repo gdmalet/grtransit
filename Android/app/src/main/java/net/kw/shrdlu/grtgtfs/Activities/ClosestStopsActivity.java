@@ -282,11 +282,11 @@ public class ClosestStopsActivity extends MenuListActivity {
         tv = (TextView)v.getChildAt(2);
         final String stop_name = String.valueOf(tv.getText());
 
-		final Intent routes = new Intent(mContext, RouteselectActivity.class);
+		final Intent newintent = new Intent(mContext, TimesActivity.class);
 		final String pkgstr = mContext.getApplicationContext().getPackageName();
-		routes.putExtra(pkgstr + ".stop_id", stop_id);
-		routes.putExtra(pkgstr + ".stop_name", stop_name);
-		mContext.startActivity(routes);
+		newintent.putExtra(pkgstr + ".stop_id", stop_id);
+		newintent.putExtra(pkgstr + ".stop_name", stop_name);
+		mContext.startActivity(newintent);
 	}
 
     // Catch the user selecting the map option from the navigation drawer,

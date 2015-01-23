@@ -25,6 +25,9 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
+import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
 import net.kw.shrdlu.grtgtfs.NotificationCallback;
 import net.kw.shrdlu.grtgtfs.R;
 
@@ -62,6 +66,25 @@ public class StopsActivity extends MenuMapActivity {
 		// Get the busstop overlay set up in the background
 		new LoadOverlay().execute();
 	}
+
+// TODO -- not working
+//   	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu)
+//    {
+//
+//        for (int i = 0; i < mDrawerItems.size(); i++) {
+//            NavDrawerItem item = mDrawerItems.get(i);
+//            if (item.getId() == R.id.menu_showmap) {
+//                item.setId(R.string.mylocation);
+//                mNavAdapter.notifyDataSetChanged();
+//                menu.clear();
+//                break;
+//            }
+//        }
+//
+//        boolean ret = super.onPrepareOptionsMenu(menu);
+//        return ret;
+//	}
 
 	/**
 	 * Background task to handle initial load of the bus stops.
