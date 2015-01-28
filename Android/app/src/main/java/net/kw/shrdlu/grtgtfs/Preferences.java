@@ -36,7 +36,7 @@ public class Preferences {
 	private static SharedPreferences mPrefs;
 
 	private static String AMPMTIMES_KEY, AUTOUPDATE_KEY, FAVSTOPS_KEY, SHOWALLBUSSES_KEY,
-            UUID_KEY, FETCHREALTIME_KEY;
+            UUID_KEY, FETCHREALTIME_KEY, VERSIONFLAG_KEY;
 
 	public Preferences(Context context) {
 		mContext = context;
@@ -48,7 +48,8 @@ public class Preferences {
 		FAVSTOPS_KEY = mContext.getString(R.string.pref_favstops_key);
         FETCHREALTIME_KEY = mContext.getString(R.string.pref_fetchrealtime_key);
 		SHOWALLBUSSES_KEY = mContext.getString(R.string.pref_showallbusses_key);
-		UUID_KEY = mContext.getString(R.string.pref_uuid_key);
+        UUID_KEY = mContext.getString(R.string.pref_uuid_key);
+		VERSIONFLAG_KEY = mContext.getString(R.string.pref_versionflag_key);
 	}
 
 	// If we don't already have a uuid, generate and save one.
@@ -152,4 +153,13 @@ public class Preferences {
 		}
 		return details;
 	}
+
+    // This is used to decide if we need to show an alert for a new version of the app.
+    public int getVersionFlag() {
+        return mPrefs.getInt(VERSIONFLAG_KEY, 0);
+    }
+
+    public void setVersionFlag() {
+        mPrefs.edit().putInt(VERSIONFLAG_KEY, BuildConfig.VERSION_CODE).apply();
+    }
 }

@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import net.kw.shrdlu.grtgtfs.BuildConfig;
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.R;
@@ -44,102 +45,9 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class FavstopsActivity extends MenuListActivity {
-	private static final String TAG = "FavstopsActivity";
-
-    private LinearLayout layout;
-	private ArrayList<String[]> mDetails;
-	private String mStopid;
-	private final SQLiteDatabase DB = DatabaseHelper.ReadableDB();
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		mContext = this;
-
-        // Will use the action bar progress bar
-        requestWindowFeature(Window.FEATURE_PROGRESS);
-
-        setContentView(R.layout.emptylayout);
-		super.onCreate(savedInstanceState);
-
-        layout = (LinearLayout)findViewById(R.id.vg_area);
-
-		/* Make sure we can access a database */
-		if (DB == null) {
-			final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					mContext.finish();
-                }
-			};
-			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-			builder.setTitle(R.string.db_is_awol)
-			.setMessage(R.string.db_not_avail)
-			.setNegativeButton(R.string.exit, listener)
-			.create()
-			.show();
-		}
-
-		// ProcessStops(); // will be done in onResume()
-	}
-
-	/* Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent. */
-	private static boolean mShownalert = false;
-
-	void ProcessStops() {
-
-		mDetails = new ArrayList<>();
-		final ArrayList<String[]> favstops = GRTApplication.mPreferences.GetBusstopFavourites();
-		// Convert from stop/description to required 4-entry layout.
-		synchronized (mDetails) {
-			for (final String[] stop : favstops) {
-				// Just do what we can for now
-				mDetails.add(new String[] { stop[0], stop[1], "", getString(R.string.loading_times), "?", "", "" });
-			}
-		}
-
-        // TODO synchronising on non-final var... and accessing that var outside the lock, above & below.
-        // See http://stackoverflow.com/questions/21458625/when-a-lock-holds-a-non-final-object-can-the-objects-reference-still-be-change/21460055#21460055
-
-        // Must do all this without doing a database read, which allows database upgrade
-		// to happen in the background on a service thread, without us blocking, until
-		// we really have to.
-		if (!mDetails.isEmpty()) {
-
-			// Load times of next bus for each stop.
-			new LoadTimes().execute();
-
-		} else if (!mShownalert) {
-			mShownalert = true;
-
-			TextView textView;
-			final View messageView = mContext.getLayoutInflater().inflate(R.layout.about, null, false);
-
-			textView = (TextView) messageView.findViewById(R.id.about_header);
-			textView.setVisibility(TextView.GONE);
-			textView = (TextView) messageView.findViewById(R.id.about_credits);
-			textView.setText(R.string.no_favourites);
-			textView.setHorizontallyScrolling(false); // make text wrap.
-
-			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-			// builder.setIcon(R.drawable.grticon);
-			builder.setTitle(R.string.title_favourites).setView(messageView).create().show();
-		}
-	}
-
-	// If we're popping back down the stack, the favourites list could have been added to
-	// since we were last here, so make sure it is reloaded before display.
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		/* Give up if there's no database */
-		if (DB == null) {
-			return;
-		}
-
-		ProcessStops();
-	}
-
+    private static final String TAG = "FavstopsActivity";
+    /* Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent. */
+    private static boolean mShownalert = false;
     final View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View view) {
@@ -147,51 +55,155 @@ public class FavstopsActivity extends MenuListActivity {
             return true; // to say we consumed the click
         }
     };
+    private final SQLiteDatabase DB = DatabaseHelper.ReadableDB();
+    private LinearLayout layout;
+    private ArrayList<String[]> mDetails;
+    private String mStopid;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        mContext = this;
+
+        // Will use the action bar progress bar
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setContentView(R.layout.emptylayout);
+        super.onCreate(savedInstanceState);
+
+        layout = (LinearLayout) findViewById(R.id.vg_area);
+
+		/* Make sure we can access a database */
+        if (DB == null) {
+            final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    mContext.finish();
+                }
+            };
+            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(R.string.db_is_awol)
+                    .setMessage(R.string.db_not_avail)
+                    .setNegativeButton(R.string.exit, listener)
+                    .create()
+                    .show();
+        }
+
+        // ProcessStops(); // will be done in onResume()
+    }
+
+    void ProcessStops() {
+
+        mDetails = new ArrayList<>();
+        final ArrayList<String[]> favstops = GRTApplication.mPreferences.GetBusstopFavourites();
+        // Convert from stop/description to required 4-entry layout.
+        synchronized (mDetails) {
+            for (final String[] stop : favstops) {
+                // Just do what we can for now
+                mDetails.add(new String[]{stop[0], stop[1], "", getString(R.string.loading_times), "?", "", ""});
+            }
+        }
+
+        // TODO synchronising on non-final var... and accessing that var outside the lock, above & below.
+        // See http://stackoverflow.com/questions/21458625/when-a-lock-holds-a-non-final-object-can-the-objects-reference-still-be-change/21460055#21460055
+
+        // Must do all this without doing a database read, which allows database upgrade
+        // to happen in the background on a service thread, without us blocking, until
+        // we really have to.
+
+        // Load times of next bus for each stop.
+        if (!mDetails.isEmpty())
+            new LoadTimes().execute();
+
+        // Tell 'em to search for stops to put on the favs screen.
+        if (mDetails.isEmpty() && !mShownalert) {
+            mShownalert = true;
+
+            TextView textView;
+            final View messageView = mContext.getLayoutInflater().inflate(R.layout.about, null, false);
+
+            textView = (TextView) messageView.findViewById(R.id.about_header);
+            textView.setVisibility(TextView.GONE);
+            textView = (TextView) messageView.findViewById(R.id.about_credits);
+            textView.setText(R.string.no_favourites);
+            textView.setHorizontallyScrolling(false); // make text wrap.
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(R.string.title_favourites).setView(messageView).create().show();
+
+        } else if (GRTApplication.mPreferences.getVersionFlag() != BuildConfig.VERSION_CODE) {
+            GRTApplication.mPreferences.setVersionFlag();
+            // Show alert on new version of the app
+            TextView textView;
+            final View messageView = mContext.getLayoutInflater().inflate(R.layout.about, null, false);
+
+            textView = (TextView) messageView.findViewById(R.id.about_header);
+            textView.setVisibility(TextView.GONE);
+            textView = (TextView) messageView.findViewById(R.id.about_credits);
+            textView.setText(R.string.newversion_text);
+            textView.setHorizontallyScrolling(false); // make text wrap.
+            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(R.string.newversion).setView(messageView).create().show();
+        }
+    }
+
+    // If we're popping back down the stack, the favourites list could have been added to
+    // since we were last here, so make sure it is reloaded before display.
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+		/* Give up if there's no database */
+        if (DB == null) {
+            return;
+        }
+
+        ProcessStops();
+    }
 
     // Called from the listener above for a long click
     public void onListItemLongClick(View view) {
-        LinearLayout v = (LinearLayout)view;
+        LinearLayout v = (LinearLayout) view;
 
-        TextView tv = (TextView)v.getChildAt(0);
-		final String stopid = String.valueOf(tv.getText());
-        tv = (TextView)v.getChildAt(1);
-		final String stopname = String.valueOf(tv.getText());
+        TextView tv = (TextView) v.getChildAt(0);
+        final String stopid = String.valueOf(tv.getText());
+        tv = (TextView) v.getChildAt(1);
+        final String stopname = String.valueOf(tv.getText());
 
-		final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				switch (id) {
-				case DialogInterface.BUTTON_POSITIVE:
-					GRTApplication.mPreferences.RemoveBusstopFavourite(stopid);
+        final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                switch (id) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        GRTApplication.mPreferences.RemoveBusstopFavourite(stopid);
 
-					for (final String [] strs : mDetails) {
-                        if (strs[0].equals(stopid)) {
-                            mDetails.remove(strs);
-                            break;
+                        for (final String[] strs : mDetails) {
+                            if (strs[0].equals(stopid)) {
+                                mDetails.remove(strs);
+                                break;
+                            }
                         }
-					}
-					// activities in the stack may contain out of date lists, so flush and start again.
-					mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
-					break;
-					// case DialogInterface.BUTTON_NEGATIVE:
-					// // nothing
-					// break;
-				}
-				dialog.cancel();
-			}
-		};
+                        // activities in the stack may contain out of date lists, so flush and start again.
+                        mContext.startActivity(new Intent(mContext, FavstopsActivity.class));
+                        break;
+                    // case DialogInterface.BUTTON_NEGATIVE:
+                    // // nothing
+                    // break;
+                }
+                dialog.cancel();
+            }
+        };
 
-		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle("Stop " + stopid + ", " + stopname);
-		builder.setMessage(R.string.favs_remove_from_list).setPositiveButton(R.string.yes, listener)
-		.setNegativeButton(R.string.no, listener);
-		builder.create();
-		builder.show();
-	}
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Stop " + stopid + ", " + stopname);
+        builder.setMessage(R.string.favs_remove_from_list).setPositiveButton(R.string.yes, listener)
+                .setNegativeButton(R.string.no, listener);
+        builder.create();
+        builder.show();
+    }
 
-	//@Override
-	public void onListItemClick(View view) {
-        LinearLayout v = (LinearLayout)view;
+    //@Override
+    public void onListItemClick(View view) {
+        LinearLayout v = (LinearLayout) view;
         TextView tv;
         String stopname, stopid;
 
@@ -200,9 +212,9 @@ public class FavstopsActivity extends MenuListActivity {
 
         if (v.getChildCount() == 2) {
             // We're dealing with a stopid and description
-            tv = (TextView)v.getChildAt(0);
+            tv = (TextView) v.getChildAt(0);
             stopid = String.valueOf(tv.getText());
-            tv = (TextView)v.getChildAt(1);
+            tv = (TextView) v.getChildAt(1);
             stopname = String.valueOf(tv.getText());
 
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
@@ -214,19 +226,19 @@ public class FavstopsActivity extends MenuListActivity {
         } else {
             // it's a route: relativelayout, routeid, description.
             // We're dealing with a stopid and description
-            tv = (TextView)v.getChildAt(1);
+            tv = (TextView) v.getChildAt(1);
             final String routeid = String.valueOf(tv.getText());
-            tv = (TextView)v.getChildAt(2);
+            tv = (TextView) v.getChildAt(2);
             final String routename = String.valueOf(tv.getText());
 
             // Need to fish out the parent stop row to get the details
-            LinearLayout parent = (LinearLayout)v.getParent();      // favstop
+            LinearLayout parent = (LinearLayout) v.getParent();      // favstop
             // childAt(0) is the divider
-            LinearLayout stop = (LinearLayout)parent.getChildAt(1); // stoplabelrow
+            LinearLayout stop = (LinearLayout) parent.getChildAt(1); // stoplabelrow
 
-            tv = (TextView)stop.getChildAt(0);
+            tv = (TextView) stop.getChildAt(0);
             stopid = String.valueOf(tv.getText());
-            tv = (TextView)stop.getChildAt(1);
+            tv = (TextView) stop.getChildAt(1);
             stopname = String.valueOf(tv.getText());
 
             GRTApplication.tracker.send(new HitBuilders.EventBuilder()
@@ -242,33 +254,30 @@ public class FavstopsActivity extends MenuListActivity {
         newintent.putExtra(pkgstr + ".stop_id", stopid);
         newintent.putExtra(pkgstr + ".stop_name", stopname);
         mContext.startActivity(newintent);
-	}
+    }
 
     /* Do the processing to load the ArrayAdapter for display. */
-	private class LoadTimes extends AsyncTask<Void, Integer, Void>
-    {
+    private class LoadTimes extends AsyncTask<Void, Integer, Void> {
 
         final LayoutInflater inflater = LayoutInflater.from(mContext);
-        String[] stopdata;
-        ArrayList<String []> routedata = new ArrayList<>();
-
         // Need to protect access to the stopdata and rowdata that are shared
         // between threads, so make sure the foreground thread has consumed the
         // data before the foreground thread clobbers everything for the next loop.
         private final Semaphore lockbg = new Semaphore(1, true);
         private final Semaphore lockfg = new Semaphore(0, true);
+        String[] stopdata;
+        ArrayList<String[]> routedata = new ArrayList<>();
 
         @Override
-		protected void onPreExecute() {
+        protected void onPreExecute() {
             layout.removeAllViews();
             setProgressBarVisibility(true);
-		}
+        }
 
-		@Override
-		protected void onProgressUpdate(Integer... parms)
-        {
+        @Override
+        protected void onProgressUpdate(Integer... parms) {
             LinearLayout stoprow;
-            stoprow = (LinearLayout)inflater.inflate(R.layout.stoplabelrow, null);
+            stoprow = (LinearLayout) inflater.inflate(R.layout.stoplabelrow, null);
             stoprow.findViewById(R.id.stoplabelrow).setOnLongClickListener(mLongClickListener);
 
             try {
@@ -302,16 +311,16 @@ public class FavstopsActivity extends MenuListActivity {
                     tv = (TextView) routerow.findViewById(R.id.desc);
                     tv.setText(routerowdata[4]);
 
-                    LinearLayout favstop = (LinearLayout)stoprow.findViewById(R.id.favstop);
+                    LinearLayout favstop = (LinearLayout) stoprow.findViewById(R.id.favstop);
                     favstop.addView(routerow);
                 }
                 lockbg.release();
-            } catch(InterruptedException ie) {
+            } catch (InterruptedException ie) {
                 // so the screen might be slightly wrong; oh well.
             }
 
             setProgress(parms[0]);
-		}
+        }
 
         @Override
         protected Void doInBackground(Void... foo) {
@@ -361,7 +370,7 @@ public class FavstopsActivity extends MenuListActivity {
                     String[] details = new String[]{pref[2], pref[5], pref[6], pref[4], pref[3]};
                     routedata.add(details);
                     lockfg.release();
-                } catch(InterruptedException ie) {
+                } catch (InterruptedException ie) {
                     // so the screen might be slightly wrong; oh well.
                 }
                 // must release lock before doing this
@@ -370,8 +379,8 @@ public class FavstopsActivity extends MenuListActivity {
             return null;
         }
 
-		@Override
-		protected void onPostExecute(Void foo) {
+        @Override
+        protected void onPostExecute(Void foo) {
             getActionBar().setTitle(R.string.title_favourites);
             getActionBar().setSubtitle(null);
             setProgress(10000); // max -- makes it slide away
@@ -380,5 +389,5 @@ public class FavstopsActivity extends MenuListActivity {
             tv.setText(R.string.longpress_removes_stop);
             layout.addView(tv);
         }
-	}
+    }
 }
