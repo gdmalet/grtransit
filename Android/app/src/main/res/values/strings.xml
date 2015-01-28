@@ -41,6 +41,8 @@
     <string name="longpress_removes_stop">Search to add stops, long press to remove.</string>
     <string name="menu_settings">Settings</string>
     <string name="mylocation">My location</string>
+    <string name="newversion">New this version</string>
+    <string name="newversion_text">Real time bus data! While this is still experimental, it mostly works, but if you don\'t want it, turn it off in the preferences.\n\nUses a small bit of your data connection.</string>
     <string name="no">No</string>
     <string name="no_favourites">Use the search facility from the menu to find stops, or locate them on the map, and long-press to add them to your favourites list. Then a click shows all routes using that stop, and another shows the times.\n\nTo remove a favourite, long-press on the favourites list.</string>
     <string name="no_location_fix">No usable location fix! Searching....</string>
@@ -52,6 +54,7 @@
     <string name="pref_fetchrealtime_key">fetchrealtime</string>
     <string name="pref_showallbusses_key">showallbusses</string>
     <string name="pref_uuid_key">uuid</string>
+    <string name="pref_versionflag_key">versionflag</string>
     <string name="refresh">Refresh</string>
     <string name="rider_alerts">Rider alerts</string>
     <string name="route_fling">Swipe left to show all routes, or tap to show one.</string>
