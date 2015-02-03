@@ -226,14 +226,14 @@ public class TimesActivity extends MenuListActivity {
 			Toast msg;
 			if (savedpos >= 0) {
 				final String nextdeparture = mListDetails.get(savedpos)[0];
-				int hourdiff = ServiceCalendar.TimediffNow(nextdeparture);
+				int minsdiff = ServiceCalendar.TimediffNow(nextdeparture);
 
-				if (hourdiff >= 60) {
+				if (minsdiff >= 60) {
 					msg = Toast.makeText(mContext, "Next bus due at " + ServiceCalendar.formattedTime(nextdeparture),
 							Toast.LENGTH_LONG);
 				} else {
-					final String plural = hourdiff > 1 ? "s" : "";
-					msg = Toast.makeText(mContext, "Next bus due in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
+					final String plural = minsdiff > 1 ? "s" : "";
+					msg = Toast.makeText(mContext, "Next bus due in " + minsdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
 
                 lv.setSelectionFromTop(savedpos, 50); // position next bus just below top

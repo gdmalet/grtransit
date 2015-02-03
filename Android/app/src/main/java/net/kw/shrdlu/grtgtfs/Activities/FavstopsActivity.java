@@ -345,18 +345,18 @@ public class FavstopsActivity extends MenuListActivity {
                         pref[3] = nextbus[2]; // route headsign
                         pref[4] = nextbus[1]; // route number
 
-                        Integer timediff = ServiceCalendar.TimediffNow(nextbus[0]);
-                        pref[5] = timediff.toString() + "m";
+                        int diffmins = ServiceCalendar.TimediffNow(nextbus[0]);
+                        pref[5] = ServiceCalendar.formattedMins(diffmins);
 
                         // do nothing if it's too far away
-                        if (timediff.intValue() < 60 && GRTApplication.mPreferences.fetchRealtime()) {
+                        if (diffmins < 60 && GRTApplication.mPreferences.fetchRealtime()) {
                             pref[6] = "";
                             Realtime rt = new Realtime(pref[0], nextbus[1]);
                             if (rt.getMap() != null) {
                                 String minutes = rt.getTripDetail(nextbus[3], "Minutes");
                                 if (minutes != null) {
-                                    timediff -= Integer.parseInt(minutes);
-                                    pref[6] = timediff.toString();
+                                    diffmins -= Integer.parseInt(minutes);
+                                    pref[6] = ServiceCalendar.formattedMins(diffmins);
                                 }
                             }
                         }
