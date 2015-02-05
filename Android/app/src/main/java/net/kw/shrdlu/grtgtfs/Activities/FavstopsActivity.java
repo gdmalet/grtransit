@@ -297,12 +297,9 @@ public class FavstopsActivity extends MenuListActivity {
 
                     if (!routerowdata[2].equals("")) {
                         tv = (TextView) routerow.findViewById(R.id.stoprealtime);
-                        Integer timediff = Integer.parseInt(routerowdata[2]);
-                        if (timediff >= 0)
-                            tv.setText("+" + routerowdata[2]);
-                        else
-                            tv.setText(routerowdata[2]);
-                        if (timediff < 0 || timediff > 3)
+                        tv.setText(routerowdata[2]);
+                        // highlight if negative, or >3 minutes.
+                        if (routerowdata[2].charAt(0) == '-' || routerowdata[2].charAt(1) >= '3')
                             tv.setTextColor(getResources().getColor(android.R.color.holo_red_light));  // @android:color/holo_green_light
                     }
 

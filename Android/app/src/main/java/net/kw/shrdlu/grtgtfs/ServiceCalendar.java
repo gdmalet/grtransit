@@ -366,7 +366,7 @@ public class ServiceCalendar {
      * If <60 then format is nnm */
     public static String formattedMins(int mins) {
         if (mins < 60)
-            return String.format("%dm", mins);
+            return String.format("%+dm", mins);
 
         int hours = mins / 60;
         mins %= 60;
