@@ -35,7 +35,7 @@ public class ServiceCalendar {
     // Cache some results, to save db lookups
     private static final HashMap<String, String> truemap = new HashMap<>(32);
     private static final HashMap<String, String> falsemap = new HashMap<>(32);
-    private static final HashMap<String, String> trip2servicemap = new HashMap<>(64);
+    private static final HashMap<String, String> trip2servicemap = new HashMap<>(1024*8);
 
     // Match day number to a string and an abbreviation
     private static final String[] mWeekDays = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
@@ -117,26 +117,34 @@ public class ServiceCalendar {
 
     // Return a string showing the days a bus runs, or null if it doesn't
     // run on the given date. Limit to correct days of week, or not.
-    private static String getTripDaysofWeek(String trip_id, String date, boolean limit) {
-
+    static boolean loaded_cache = false;
+    private static String getTripDaysofWeek(String trip_id, String date, boolean limit)
+    {
         String retstr;
+
+        // Preload the cache.... Turns out it's faster to take this hit once,
+        // than repeatedly do small queries to the db.
+        if (!loaded_cache) {
+            loaded_cache = true;
+            final String svsq = "select trip_id, service_id from trips";
+            final Cursor svs = DatabaseHelper.ReadableDB().rawQuery(svsq, null);
+            boolean more = svs.moveToFirst();
+            while (more) {
+                String trip = svs.getString(0);
+                String service = svs.getString(1);
+                if (service != null && !service.equals("")) {
+                    trip2servicemap.put(trip, service);
+                }
+                more = svs.moveToNext();
+            }
+            svs.close();
+        }
 
         // Get and translate the service id
         String service_id;
         if (trip2servicemap.containsKey(trip_id)) {
             service_id = trip2servicemap.get(trip_id);
         } else {
-            final String svsq = "select service_id from trips where trip_id = ?";
-            final String[] svsargs = {trip_id};
-            final Cursor svs = DatabaseHelper.ReadableDB().rawQuery(svsq, svsargs);
-            svs.moveToFirst();
-            service_id = svs.getString(0);
-            svs.close();
-            if (service_id != null && !service_id.equals("")) {
-                trip2servicemap.put(trip_id, service_id);
-            }
-        }
-        if (service_id == null) {
             return null;
         }
 
@@ -170,11 +178,11 @@ public class ServiceCalendar {
         return retstr;
     }
 
-    /* Return a list of times that all busses for all routes depart a given stop, sorted by time. List is departure_time,
-	 * route_id, trip_headsign. */
+    /* Return a list of times that all busses for all routes depart a given stop, sorted by time.
+     * List is departure_time, service days, route short name, trip_headsign, trip id. */
     public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String date, boolean limittotoday,
-                                                             NotificationCallback task) {
-
+                                                             NotificationCallback task)
+    {
         final String q = "select distinct departure_time as _id, trips.trip_id, routes.route_short_name, trip_headsign from stop_times "
                 + "join trips on stop_times.trip_id = trips.trip_id " + "join routes on routes.route_id = trips.route_id  "
                 + "where stop_id = ? order by departure_time";
@@ -197,7 +205,7 @@ public class ServiceCalendar {
                 listdetails.add(new String[]{csr.getString(0), daysstr, csr.getString(2), csr.getString(3), csr.getString(1)});
             }
 
-            if (task != null) {
+            if (task != null && maxcount % 10 == 0) {
                 task.notificationCallback((int) ((++progresscount / (float) maxcount) * 10000));
             }
 
@@ -208,11 +216,11 @@ public class ServiceCalendar {
         return listdetails;
     }
 
-    /* Return a list of times that all busses for a given route depart a given stop, sorted by time. List is departure_times,
-	 * days of week the bus runs, and trip_id. */
+    /* Return a list of times that all busses for a given route depart a given stop, sorted by time.
+     * List is departure_times, days of week the bus runs, and trip_id. */
     public static ArrayList<String[]> getRouteDepartureTimes(String stopid, String routeid, String headsign, String date,
-                                                             boolean limittotoday, NotificationCallback task) {
-
+                                                             boolean limittotoday, NotificationCallback task)
+    {
         final String q = "select distinct departure_time as _id, trip_id from stop_times where stop_id = ? and trip_id in "
                 + "(select trip_id from trips where route_id = ? and trip_headsign = ?) order by departure_time";
         final String[] selectargs = new String[]{stopid, routeid, headsign};
