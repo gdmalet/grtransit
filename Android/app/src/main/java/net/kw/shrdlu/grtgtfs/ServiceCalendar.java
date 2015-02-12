@@ -20,6 +20,7 @@
 package net.kw.shrdlu.grtgtfs;
 
 import android.database.Cursor;
+import android.os.Debug;
 import android.text.format.Time;
 import android.util.Log;
 import android.util.TimeFormatException;
@@ -263,9 +264,7 @@ public class ServiceCalendar {
             return null;
         }
 
-        final Time t = new Time();
-        t.setToNow();
-        final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+        final String timenow = formattedHMS();
 
         // Find when the next bus leaves
         for (int i = 0; i < listdetails.size(); i++) {
@@ -289,9 +288,7 @@ public class ServiceCalendar {
             return null;
         }
 
-        final Time t = new Time();
-        t.setToNow();
-        final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+        final String timenow = formattedHMS();
 
         // Find when the next bus leaves
         for (int i = 0; i < listdetails.size(); i++) {
@@ -303,6 +300,22 @@ public class ServiceCalendar {
 
         // No more busses today.
         return null;
+    }
+
+    /* Return route number & description for all routes using a stop.
+     * Output is limited to the current day. */
+    public static Cursor getRoutesUsingStop(String stopid)
+    {
+        final String datenow = formattedDMY();
+        final String qry = "select distinct routes.route_short_name as _id, trip_headsign as descr from trips"
+                + " join routes on routes.route_id = trips.route_id"
+                + " join calendar on trips.service_id = calendar.service_id where "
+                + " trip_id in (select trip_id from stop_times where stop_id = ?) and "
+                + " start_date <= ? and end_date >= ?";
+        final String[] selectargs = { stopid, datenow, datenow };
+        final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
+
+        return csr;
     }
 
     /* Return a properly formatted time. Assumes nn:nn[:nn] input somewhere in the string, may return just that, or convert and
@@ -369,6 +382,21 @@ public class ServiceCalendar {
         return newtime;
     }
 
+    /* Formatted YYYYMMDD string for now for comparison with schedule data. */
+    public static String formattedDMY()
+    {
+        final Time t = new Time();
+        t.setToNow();
+        return String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
+    }
+
+    /* Formatted HH:MM:SS string for now for time comparisons. */
+    public static String formattedHMS()
+    {
+        final Time t = new Time();
+        t.setToNow();
+        return String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+    }
 
     /* Format minutes into nnhnn format if >= 60.
      * If <60 then format is nnm */
@@ -378,7 +406,7 @@ public class ServiceCalendar {
 
         int hours = mins / 60;
         mins %= 60;
-        return String.format("%dh%d", hours, mins);
+        return String.format("%dh%02d", hours, mins);
     }
 
     // Return the difference in minutes between a passed in time and now.

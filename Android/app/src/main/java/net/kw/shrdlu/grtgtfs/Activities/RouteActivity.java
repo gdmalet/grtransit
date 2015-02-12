@@ -33,6 +33,7 @@ import com.google.android.maps.MapController;
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.NotificationCallback;
 import net.kw.shrdlu.grtgtfs.RouteOverlay;
+import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
 
@@ -119,10 +120,8 @@ public class RouteActivity extends MenuMapActivity {
 				mStopsOverlay.LoadDB(null, null, this);
 
 				// Now draw the routes - taken from RouteselectActivity
-				final Time t = new Time(); // TODO - this duplicates BusTimes?
-				t.setToNow();
-				final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
-				final String qry = "select distinct routes.route_short_name, trip_headsign from trips"
+                final String datenow = ServiceCalendar.formattedDMY();
+                final String qry = "select distinct routes.route_short_name, trip_headsign from trips"
 						+ " join routes on routes.route_id = trips.route_id"
 						+ " join calendar on trips.service_id = calendar.service_id where"
 						+ " trip_id in (select trip_id from stop_times where stop_id = ?) and"

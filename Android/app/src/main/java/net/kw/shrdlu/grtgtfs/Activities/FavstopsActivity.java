@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -320,12 +321,12 @@ public class FavstopsActivity extends MenuListActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... foo) {
+        protected Void doInBackground(Void... foo)
+        {
+//            Debug.startMethodTracing("dmtrace.trace", 86*1024*1024);
 
             // Find time of next bus for each stop.
-            final Time t = new Time(); // TODO - this duplicates BusTimes?
-            t.setToNow();
-            final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
+            final String datenow = ServiceCalendar.formattedDMY();
 
             Integer progresscount = 0;
             for (final String[] pref : mDetails) {
@@ -349,12 +350,10 @@ public class FavstopsActivity extends MenuListActivity {
                         if (diffmins < 60 && GRTApplication.mPreferences.fetchRealtime()) {
                             pref[6] = "";
                             Realtime rt = new Realtime(pref[0], nextbus[1]);
-                            if (rt.getMap() != null) {
-                                String minutes = rt.getTripDetail(nextbus[3], "Minutes");
-                                if (minutes != null) {
-                                    diffmins -= Integer.parseInt(minutes);
-                                    pref[6] = ServiceCalendar.formattedMins(diffmins);
-                                }
+                            String minutes = rt.getTripDetail(nextbus[3], "Minutes");
+                            if (minutes != null) {
+                                diffmins -= Integer.parseInt(minutes);
+                                pref[6] = ServiceCalendar.formattedMins(diffmins);
                             }
                         }
 
@@ -373,6 +372,7 @@ public class FavstopsActivity extends MenuListActivity {
                 // must release lock before doing this
                 publishProgress(++progresscount * 10000 / mDetails.size());
             }
+//            Debug.stopMethodTracing();
             return null;
         }
 

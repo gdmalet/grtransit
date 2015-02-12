@@ -86,7 +86,7 @@ public class Realtime {
         return null;
     }
 
-    public RealtimeStopMap getMap()
+    private RealtimeStopMap getMap()
     {
         if (GRTApplication.mRealtimeStops == null)
             GRTApplication.mRealtimeStops = new HashMap<>();

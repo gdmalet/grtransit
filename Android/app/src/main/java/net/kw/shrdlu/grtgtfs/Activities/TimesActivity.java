@@ -115,10 +115,8 @@ public class TimesActivity extends MenuListActivity {
 		protected Integer doInBackground(Void... foo) {
 
 			// Will find where to position the list of bus departure times
-			final Time t = new Time();
-			t.setToNow();
-			final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
-			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
+            final String timenow = ServiceCalendar.formattedHMS();
+            final String datenow = ServiceCalendar.formattedDMY();
 
 			// Make sure we actually have some valid data, since schedules change often.
 			if (!mCalendarChecked) {
@@ -137,11 +135,9 @@ public class TimesActivity extends MenuListActivity {
                     for (Integer i = 0; i < mListDetails.size(); i++) {
                         String route = mListDetails.get(i)[2], realtimemins = "";
                         Realtime rt = new Realtime(mStopid, route);
-                        if (rt.getMap() != null) {
-                            String minutes = rt.getTripDetail(mListDetails.get(i)[4], "Minutes");
-                            if (minutes != null)
-                                realtimemins = minutes;   // replace trip id with realtime minutes
-                        }
+                        String minutes = rt.getTripDetail(mListDetails.get(i)[4], "Minutes");
+                        if (minutes != null)
+                            realtimemins = minutes;   // replace trip id with realtime minutes
                         mListDetails.get(i)[4] = realtimemins;
                     }
                 }
