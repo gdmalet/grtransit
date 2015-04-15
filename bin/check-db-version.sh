@@ -24,7 +24,9 @@ egrep -q "${newfile}\$" .webcache.new || {
 		if (match($NF, m)) {print $NF}
 	}' .webcache)
 }
-numfiles=$(echo $newfile | wc -l)
+
+numfiles=0
+test -n "$newfile" && numfiles=$(set $newfile; echo $#)
 if test -z "$newfile" -o $numfiles -ne 1
 then
 	cat <<-EOT 1>&2
