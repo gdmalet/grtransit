@@ -84,4 +84,11 @@ bzip2 -9v ../$name.tar
 new=$(ls -tr GRT.db-*.version | tail -1)
 cp -p ${new} ${new/%version/gz} $dest
 
+# Make links to the new files so they are available for download immediately.
+cd $dest && {
+    rm -f GRT.db.version GRT.db.gz 
+    ln -s ${new} GRT.db.version
+    ln -s ${new/%version/gz} GRT.db.gz
+}
+
 exit 0
