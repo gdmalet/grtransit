@@ -4,7 +4,7 @@
 dir=~/src/GRT-GTFS/data/sqlite3
 dest=/var/www/html/gdmalet/android/grtransit/
 url="http://www.regionofwaterloo.ca/opendatadownloads/"
-file=GRT_GTFS.zip
+file=GRT_Daily_GTFS.zip
 
 cd $dir || { echo "can't cd to $dir" 1>&2; exit 42; }
 
