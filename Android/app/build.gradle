@@ -1,16 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 'Google Inc.:Google APIs:21'
     buildToolsVersion "21.1.2"
-
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
         minSdkVersion 15
-        versionCode 34
-        versionName "2.1"
+        versionCode 35
+        versionName '2.1.1'
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -19,6 +19,8 @@ android {
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
+    }
+    productFlavors {
     }
 }
 
