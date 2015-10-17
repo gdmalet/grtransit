@@ -4,16 +4,19 @@
 ;;; become 24:nn:nn, but `now' is the following day, so lookups in calendar_dates
 ;;; don't match..... True of GRTransit app too.
 
-;(defpackage :grtransit
-;  (:use :common-lisp))
-;;  (:export check-passwords))
-;(in-package :grtransit)
+;;; Assuming asdf is set up on your system, you should be able to get the ball rolling
+;;; by starting lisp, and doing this:
+;;; (require 'asdf)
+;;; (asdf:load-system 'grtransit)
 
 ;; Need this for parsing the JSON returned from the realtime site
-(require 'asdf)
-(asdf:load-system :jsown)
+;(require 'jsown)
 
-(defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "GRT-GTFS" "lisp" "tmp") "Where we're doing it")
+(defpackage :grtransit
+  (:use :common-lisp :jsown))
+;;(in-package :grtransit)
+
+(defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "grtransit" "lisp" "tmp") "Where we're doing it")
 
 (defparameter *working-date* (multiple-value-list (get-decoded-time)) "System's notion of today's date and time")
 (defparameter *tomorrow* (multiple-value-list (decode-universal-time (+ (get-universal-time) (* 60 60 24))))
@@ -37,11 +40,16 @@
 	   ("trips.txt" . 32768))
 	   "A list of files to slurp in, and approximate number of lines per file.")
 
+(defparameter *realtime-cache* (make-hash-table :test 'equal))
+
 (defconstant *day-names* '(MONDAY TUESDAY WEDNESDAY THURSDAY FRIDAY SATURDAY SUNDAY)
   "Used with index (day-of-week) to fetch values out of the calendar.")
 
 (defun get-table (table)
   "Return the hash table associated with the table name."
+  (unless *tables*
+	(format t "Loading tables~%")
+	(main))
   (cdr (assoc table *tables* :test #'equalp)))
 
 (defun day-of-week ()
@@ -122,7 +130,7 @@
 	 (string< (cadr a) (cadr b)))))
 
 (defun next-bus-at-stop (stop-id)
-  "Return route and time of the next bus to come through the given stop."
+  "For each route, return route and time of the next bus to come through the given stop."
   (let ((routes-hash (make-hash-table :test 'equal :size 42))
 		(routes-list ())
 		(now (multiple-value-bind (s m h)
@@ -364,14 +372,14 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 		   (nth 2 hms)					;second
 		   (nth 1 hms)					;minute
 		   (nth 0 hms)					;hour
-		   (nth 3 *working-date*)			;day of month
-		   (nth 4 *working-date*)			;month
-		   (nth 5 *working-date*)))))			;year
+		   (nth 3 *working-date*)		;day of month
+		   (nth 4 *working-date*)		;month
+		   (nth 5 *working-date*)))))	;year
 
 
 ;;; See http://www.clisp.org/impnotes/socket.html for other examples
-;;; Returns simple-base-string of returned web page, minus headers.
 (defun wget-text (host page &optional (port 80))
+  "Returns simple-base-string of fetched web page, minus headers."
   (with-open-stream (socket (socket:socket-connect port host :external-format :DOS))
 	(format socket "GET ~A HTTP/1.1~%Host: ~A~%Connection: close~2%" page host)
    (LOOP :with content-length :for line = (READ-LINE socket nil nil)
@@ -396,8 +404,8 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 								(subseq data 0 (min content-length fill-pointer)))))))))
 
 (defun next-bus-at-stop-realtime (stop-id)
-  "Return realtime data with route and time of the next bus to come
-through the given stop."
+  "For each route, return realtime data with route and time of the
+next bus to come through the given stop."
   (let ((routes-hash (make-hash-table :test 'equal :size 42))
 		(times-list ()))
 	;; Get a unique list of route numbers, so we can grab realtime data for them
@@ -414,6 +422,7 @@ through the given stop."
 	;; Get RT data for each unique route
 	(maphash
 	 (lambda (route foo)
+	   (declare (ignore foo))
 	   (format t "fetching ~A~%" route)
 	   (push (get-realtime stop-id route) times-list))
 	 routes-hash)
@@ -422,9 +431,44 @@ through the given stop."
 (defun get-realtime (stop-id route)
   "Get the realtime data for a given route at given stop.
 Returns a list of JSO objects, one for each arrival."
-  (let ((url (make-array 0 :fill-pointer t :adjustable t :element-type 'character))
-		(jso))
-	(format url "/Stop/GetStopInfo?stopId=~A&routeId=~A" stop-id route)
-	(setf jso (jsown:parse (wget-text "realtimemap.grt.ca" url)))
-	(when (string= (jsown:val jso "status") "success")
-	  (jsown:val jso "stopTimes"))))
+  ;; First see if we have this in the cache
+  (format t "Fetching realtime for stop-id ~a, route ~a~%" stop-id route)
+  (let* ((key (format nil "~A:~A" stop-id route))
+		 (cached (gethash key *realtime-cache*))
+		 (now (get-universal-time)))
+	(format t " cashed cache: ~A~%" cached)
+	(unless (and cached
+				  (> (car cached) now))
+	  (format t " querying GRT....~%")
+	  (let ((url (make-array 0 :fill-pointer t :adjustable t :element-type 'character))
+			(jso))
+		(format url "/Stop/GetStopInfo?stopId=~A&routeId=~A" stop-id route)
+		(format t "querying http://realtimemap.grt.ca~A~%" url)
+		(setf jso (jsown:parse (wget-text "realtimemap.grt.ca" url)))
+		(when (string= (jsown:val jso "status") "success")
+;;;; TODO cache value should be 60
+		  (setf cached (cons (+ now 600) (jsown:val jso "stopTimes")))
+		  (setf (gethash key *realtime-cache*) cached))))
+	(cdr cached)))
+
+(defun get-trip-realtime (trip stop-id route)
+  "Get realtime data for a particular trip at a stop.
+Returns a cons of minutes until arrival, and JSON date of arrival."
+  (mapc
+   (lambda (p)
+	 (format t "----> ~A~%" p)
+	 (when (equal (jsown:val p "TripId") trip)
+	   (return-from get-trip-realtime
+		 (cons (jsown:val p "Minutes")
+			   (jsown:val p "ArrivalDateTime")))))
+   (get-realtime stop-id route))
+  nil)
+
+(defun universal-time-from-json-date (json-date)
+  "Given a JSON string of the form \"/Date(1445120640000)/\", convert
+it to a unversal time. This involves extracting the date part, and
+converting from Unix 1970/01/01 to Lisp 1900/01/01.
+GRT seems to be returning times from GMT, so use that."
+  (+
+   (parse-integer (subseq json-date 6 16))
+   (encode-universal-time 0 0 0 1 1 1970 0)))
