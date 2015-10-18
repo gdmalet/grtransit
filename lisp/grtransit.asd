@@ -6,5 +6,6 @@
   :licence "GPL 2"
   :description "Grok Grand River Transit bus data."
   :serial t
-  :components ((:file "grtransit"))
-  :depends-on ("jsown"))
+  :depends-on ("jsown")
+  :components ((:file "grtransit")
+			   (:file "utilities")))
