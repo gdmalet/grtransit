@@ -4,7 +4,7 @@
 dir=~/src/GRT-GTFS/data/sqlite3
 dest=/var/www/html/gdmalet/android/grtransit/
 url="http://www.regionofwaterloo.ca/opendatadownloads/"
-file=GRT_GTFS.zip
+file=GRT_Daily_GTFS.zip
 
 cd $dir || { echo "can't cd to $dir" 1>&2; exit 42; }
 
@@ -24,7 +24,9 @@ egrep -q "${newfile}\$" .webcache.new || {
 		if (match($NF, m)) {print $NF}
 	}' .webcache)
 }
-numfiles=$(echo $newfile | wc -l)
+
+numfiles=0
+test -n "$newfile" && numfiles=$(set $newfile; echo $#)
 if test -z "$newfile" -o $numfiles -ne 1
 then
 	cat <<-EOT 1>&2
@@ -81,5 +83,12 @@ bzip2 -9v ../$name.tar
 
 new=$(ls -tr GRT.db-*.version | tail -1)
 cp -p ${new} ${new/%version/gz} $dest
+
+# Make links to the new files so they are available for download immediately.
+cd $dest && {
+    rm -f GRT.db.version GRT.db.gz 
+    ln -s ${new} GRT.db.version
+    ln -s ${new/%version/gz} GRT.db.gz
+}
 
 exit 0
