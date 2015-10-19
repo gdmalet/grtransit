@@ -181,11 +181,21 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 		   (nth 5 *working-date*)))))	;year
 
 (defun timediff (timestr)
-  "Return a printable representation of the different between the time
-now and the passed in HH:MM:SS string."
+  "Return the number of minutes between the time now and the passed in
+HH:MM:SS string."
   (round (/ (- (timestr-to-epoch timestr)
 			   (get-universal-time))
 			60)))
+
+(defun pretty-print-mins (mins &optional (with-sign nil))
+  "Return a string that is suitable for display. Either just 99m if
+|mins| < 60 (and force leading sign if with-sign is true), else
+[-]9h09."
+  (if (< (abs mins) 60)
+	  (format nil (if with-sign "~@Dm" "~Dm") mins)	; format as +99m,
+	  (format nil "~Dh~2,'0D"						;  else 9h09
+			  (truncate mins 60)
+			  (abs (rem mins 60)))))
 
 (defun universal-time-from-json-date (json-date)
   "Given a JSON string of the form \"/Date(1445120640000)/\", convert

@@ -89,27 +89,30 @@ If parm realtime is true; append minutes until, & date of arrival."
   "Pretty-printed version of all-busses-at-stop."
   (mapc
    (lambda (trip)
-	 (let ((pretty-time (timediff (cadr trip))))
-	   (case (type-of (nth 5 trip))		; if we have realtime data
-		 (CONS
-		  (multiple-value-bind (sec min hour)
-			  (decode-universal-time
-			   (universal-time-from-json-date (cdr (nth 5 trip))))
-			(format t "~A ~A ~2,'0d:~2,'0d:~2,'0d ~A~%"
-					(nth 1 trip)
-					(car (nth 5 trip))
-					hour min sec
-					(nth 4 trip))))
-		 (t
-		  (if realtime
-			  (format t "~A ~10@D ~A~%"
+	 (let* ((exp-diff (timediff (cadr trip)))
+			(pretty-diff (pretty-print-mins exp-diff)))
+	   (if realtime
+		   (case (type-of (nth 5 trip))		; if we have realtime data
+			 (CONS
+			  (multiple-value-bind (sec min hour)
+				  (decode-universal-time
+				   (universal-time-from-json-date (cdr (nth 5 trip))))
+				(format t "~A ~5@A ~4@A ~32A (~3D ~2,'0d:~2,'0d:~2,'0d)~%"
+						(nth 1 trip)
+						pretty-diff
+						(pretty-print-mins (- (car (nth 5 trip)) exp-diff) t)
+						(nth 4 trip)
+						(car (nth 5 trip))
+						hour min sec)))
+			 (t
+			  (format t "~A ~5@A      ~A~%"
 					  (nth 1 trip)
-					  pretty-time
-					  (nth 4 trip))
-			  (format t "~A ~4@D ~A~%"
-					  (nth 1 trip)
-					  pretty-time
-					  (nth 4 trip)))))))
+					  pretty-diff
+					  (nth 4 trip))))
+		   (format t "~A ~5@A  ~A~%"
+				   (nth 1 trip)
+				   pretty-diff
+				   (nth 4 trip)))))
    (all-busses-at-stop stop-id realtime))
   t)
 
