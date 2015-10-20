@@ -115,7 +115,7 @@ Given \"foo_bar.txt\", return \"FOO-BAR\""
 (defun get-table (table)
   "Return the hash table associated with the table name."
   (unless *tables*
-	(format t "Loading tables~%")
+	;;(format t "Loading tables~%")
 	(grtransit-startup))
   (cdr (assoc table *tables* :test #'equalp)))
 
@@ -182,7 +182,8 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 
 (defun timediff (timestr)
   "Return the number of minutes between the time now and the passed in
-HH:MM:SS string."
+HH:MM:SS string. Will be negative if the string is earlier than now."
+  ;;(format t " -- timediff \"~A\"~%" timestr)
   (round (/ (- (timestr-to-epoch timestr)
 			   (get-universal-time))
 			60)))
@@ -231,3 +232,20 @@ GRT seems to be returning times from GMT, so use that."
 						   ;;(format t "fill-pointer: ~A~%~A~%" fill-pointer data)
 						   (map 'string #'code-char
 								(subseq data 0 (min content-length fill-pointer)))))))))
+
+(defun show-table (table)
+  "Show the first few entries in a table. Mostly for debugging."
+  (let ((count 0))
+	(maphash
+	 (lambda (key val)
+	   (format t "key \"~A\", val \"~A\"~%" key val)
+	   (when (= count 0)
+		 (format t " val is a ~A~%" (type-of val))
+		 (case (type-of val)
+		   (CONS
+			(describe (car val)))
+		   (t
+			(describe val))))
+	   (when (> (setf count (1+ count)) 10)
+		 (return-from show-table)))
+	 (get-table table))))

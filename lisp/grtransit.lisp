@@ -293,3 +293,41 @@ Returns a cons of minutes until arrival, and JSON date of arrival."
 			   (jsown:val p "ArrivalDateTime")))))
    (get-realtime stop-id route))
   nil)
+
+(defun active-trips (&optional (realtime nil))
+  "Show all trips that are currently active, with optional realtime data."
+  (let ((trips ()))
+	;; iterate over all the stop times
+	(maphash
+	 (lambda (key value)
+	   ;; check if this trip is active
+	   (when
+		   (and
+			  (<= (timediff (slot-value (car value) 'departure-time)) 0)
+			  (>= (timediff (slot-value (car (last value)) 'arrival-time)) 0))
+
+		 ;; Find the closest stop time to now
+		 (let* ((best
+				(block the-best
+				  (mapc
+				   (lambda (trip)
+					 (when (>= (timediff (slot-value trip 'departure-time)) 0)
+					   (return-from the-best trip)))
+				   (cdr value)))))
+
+		   ;; Catch special case when we somehow don't match; must be
+		   ;; the last entry that we want (mapc returned the whole list).
+		   (when (eql (type-of best) 'CONS)
+			 (setf best (car (last value))))
+
+		   (format t "Trip ~A starts ~A, ends ~A; at stop-id ~A ~A ~A~%"
+				   key
+				   (slot-value (car value) 'departure-time)
+				   (slot-value (car (last value)) 'arrival-time)
+				   (slot-value best 'stop-id)
+				   (slot-value best 'arrival-time)
+				   (slot-value best 'departure-time))
+
+		   (push best trips))))
+	 (get-table "stop-times"))
+	trips))
