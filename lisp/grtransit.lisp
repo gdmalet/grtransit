@@ -13,8 +13,11 @@
 ;(require 'jsown)
 
 (defpackage :grtransit
-  (:use :common-lisp :jsown))
-;;(in-package :grtransit)
+  (:export active-trips)
+  (:use common-lisp jsown))
+(in-package grtransit)
+
+(declaim (optimize (speed 3) (debug 3) (safety 0)))
 
 (defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "grtransit" "lisp" "tmp") "Where we're doing it")
 
@@ -279,6 +282,7 @@ Returns a list of JSO objects, one for each arrival."
 		(setf jso (jsown:parse (wget-text "realtimemap.grt.ca" url)))
 		(when (string= (jsown:val jso "status") "success")
 		  (setf cached (cons (+ now 60) (jsown:val jso "stopTimes")))
+		  ;;(format t " --> new cached values: ~A~%" cached)
 		  (setf (gethash key *realtime-cache*) cached))))
 	(cdr cached)))
 
@@ -299,12 +303,12 @@ Returns a cons of minutes until arrival, and JSON date of arrival."
   (let ((trips ()))
 	;; iterate over all the stop times
 	(maphash
-	 (lambda (key value)
+	 (lambda (trip-id stop-times)
 	   ;; check if this trip is active
 	   (when
 		   (and
-			  (<= (timediff (slot-value (car value) 'departure-time)) 0)
-			  (>= (timediff (slot-value (car (last value)) 'arrival-time)) 0))
+			  (<= (timediff (slot-value (car stop-times) 'departure-time)) 0)
+			  (>= (timediff (slot-value (car (last stop-times)) 'arrival-time)) 0))
 
 		 ;; Find the closest stop time to now
 		 (let* ((best
@@ -313,21 +317,53 @@ Returns a cons of minutes until arrival, and JSON date of arrival."
 				   (lambda (trip)
 					 (when (>= (timediff (slot-value trip 'departure-time)) 0)
 					   (return-from the-best trip)))
-				   (cdr value)))))
+				   (cdr stop-times)))))
 
 		   ;; Catch special case when we somehow don't match; must be
 		   ;; the last entry that we want (mapc returned the whole list).
 		   (when (eql (type-of best) 'CONS)
-			 (setf best (car (last value))))
+			 (setf best (car (last stop-times))))
 
-		   (format t "Trip ~A starts ~A, ends ~A; at stop-id ~A ~A ~A~%"
-				   key
-				   (slot-value (car value) 'departure-time)
-				   (slot-value (car (last value)) 'arrival-time)
-				   (slot-value best 'stop-id)
-				   (slot-value best 'arrival-time)
-				   (slot-value best 'departure-time))
+		   (multiple-value-bind (route-id headsign service-id)
+			   (get-route-details-for-trip trip-id)
 
-		   (push best trips))))
+			 ;; Make sure the trip runs today
+			 (when (check-calendar service-id)
+
+			   (unless realtime
+				 (format t "Trip ~A starts ~A, ends ~A; ~A~% at stop-id ~A ~A ~A~%"
+						 trip-id
+						 (slot-value (car stop-times) 'departure-time)
+						 (slot-value (car (last stop-times)) 'arrival-time)
+						 headsign
+						 (slot-value best 'stop-id)
+						 (slot-value best 'arrival-time)
+						 (slot-value best 'departure-time))
+				 (push best trips))
+
+			   (when realtime
+				 (let* ((rt (get-trip-realtime trip-id (slot-value best 'stop-id) route-id))
+						(hms (if rt (multiple-value-bind (sec min hour)
+										(decode-universal-time
+										 (universal-time-from-json-date (cdr rt)))
+									  (format nil "~2,'0d:~2,'0d:~2,'0d" hour min sec))
+								 ":-(  ")))
+
+				   (format t "Trip ~A starts ~A, ends ~A; ~A~% at stop-id ~A ~A ~A [~3D ~A]~%"
+						   trip-id
+						   (slot-value (car stop-times) 'departure-time)
+						   (slot-value (car (last stop-times)) 'arrival-time)
+						   headsign
+						   (slot-value best 'stop-id)
+						   (slot-value best 'arrival-time)
+						   (slot-value best 'departure-time)
+						   (if rt (pretty-print-mins (- (car rt)
+														(timediff (slot-value best 'arrival-time)))
+													 t)
+							   "")
+						   hms)
+
+				   (push (cons best rt) trips))))))))
+
 	 (get-table "stop-times"))
 	trips))

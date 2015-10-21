@@ -2,7 +2,9 @@
 
 ;;; Utility functions to support main grtransit.lisp
 
-;;(in-package :grtransit)
+(in-package grtransit)
+
+(declaim (optimize (speed 3) (debug 3) (safety 0)))
 
 (defun grtransit-startup ()
   "Load the files into internal tables, and get ready for work."
@@ -155,7 +157,31 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 		 nil)
 		(t nil)))))						;no override
 
+;; Faster?
 (defun timestr-to-epoch (timestr)
+  "Convert a given HH:MM:SS time string to seconds since the epoch."
+  ;(format t "time conversion \"~A\"~%" timestr)
+  (let ((h (parse-integer (subseq timestr 0 2)))
+		(m (parse-integer (subseq timestr 3 5)))
+		(s (parse-integer (subseq timestr 6))))
+
+	(if (> h 23)
+		  (encode-universal-time
+		   s							;second
+		   m							;minute
+		   (- h 24)						;hour
+		   (nth 3 *tomorrow*)			;day of month
+		   (nth 4 *tomorrow*)			;month
+		   (nth 5 *tomorrow*))			;year
+		  (encode-universal-time
+		   s							;second
+		   m							;minute
+		   h							;hour
+		   (nth 3 *working-date*)		;day of month
+		   (nth 4 *working-date*)		;month
+		   (nth 5 *working-date*)))))	;year
+
+(defun timestr-to-epoch-slower? (timestr)
   "Convert a given HH:MM:SS time string to seconds since the epoch."
   ;(format t "time conversion \"~A\"~%" timestr)
   (let ((hms
