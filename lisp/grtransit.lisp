@@ -192,29 +192,13 @@ limited to one route."
 	 routes-hash)
   routes-list))
 
-;;; TODO -- this is a sequential search through values to return a key....
 (defun get-route-details-for-trip (trip-id)
   "Return the route-id, trip headsign & service-id for a given trip-id"
-  (maphash 
-	 (lambda (route-id trips-instance)
-	   (case (type-of trips-instance)
-		 (CONS
-		  (mapc (lambda (route)
-				  (when (equalp trip-id (slot-value route 'trip-id))
-					(return-from get-route-details-for-trip
-					  (values
-					   route-id
-					   (slot-value route 'trip-headsign)
-					   (slot-value route 'service-id)))))
-				trips-instance))
-		 (t
-		  (if (equalp trip-id (slot-value trips-instance 'trip-id))
-			  (return-from get-route-details-for-trip
-				(values
-				 route-id
-				 (slot-value trips-instance 'trip-headsign)
-				 (slot-value trips-instance 'service-id)))))))
-	 (get-table "trips")))
+  (let ((trip (gethash trip-id (get-table "trips-by-trip"))))
+	(values
+	 (slot-value trip 'route-id)
+	 (slot-value trip 'trip-headsign)
+	 (slot-value trip 'service-id))))
 
 (defun trip-runs-today-p (trip-id)
   "Check whether a certain trip runs today."

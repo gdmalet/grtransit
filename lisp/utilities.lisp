@@ -16,6 +16,21 @@
 					   *tables*)))
 		*table-files*)
 
+  ;; The trips table has them indexed by route, but we often want to index by trip;
+  ;; so build a table specifically for that.
+  (setq *tables*
+		(acons (string-to-symbol-name "trips-by-trip")
+			   (let ((tbl (make-hash-table :test 'equal
+										   :size (cdr (find "stops.txt" *table-files*
+															:test (lambda (const l) (string= const (car l))))))))
+				 (maphash (lambda (route trips)
+							(mapc (lambda (trip)
+									(setf (gethash (slot-value trip 'trip-id) tbl) trip))
+								  trips))
+						  (get-table "trips"))
+				 tbl)
+			   *tables*))
+
   ;; Create a table giving all trips using a stop, since this is such a common need.
   (setq *tables*
 		(acons (string-to-symbol-name "stop-trips")
