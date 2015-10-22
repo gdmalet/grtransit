@@ -55,7 +55,7 @@ Given \"foo_bar.txt\", return \"FOO-BAR\""
 ;;; of a class that is created from the header line of the file. Each
 ;;; column heading is a slot name, and the truncated file name "foo" is
 ;;; used to name the class.
-;;; The returned has table contains all these instances, each indexed by
+;;; The returned hash table contains all these instances, each indexed by
 ;;; the first column in the file. If the value in that column is unique,
 ;;; then gethash will return an instance of the class; else it will
 ;;; return a list of instances.
@@ -161,6 +161,14 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 (defun timestr-to-epoch (timestr)
   "Convert a given HH:MM:SS time string to seconds since the epoch."
   ;(format t "time conversion \"~A\"~%" timestr)
+
+  ;;; This loops is more general, but about 2/3rds of the speed.
+  ;;(let ((hms
+  ;;		 (loop with last-colon = -1
+  ;;			while last-colon
+  ;;			collect (parse-integer (subseq timestr (1+ last-colon)
+  ;;							(setf last-colon (position #\: timestr :start (1+ last-colon))))))))
+
   (let ((h (parse-integer (subseq timestr 0 2)))
 		(m (parse-integer (subseq timestr 3 5)))
 		(s (parse-integer (subseq timestr 6))))
@@ -177,31 +185,6 @@ Returns string '1' if it is added today, '2' removed, nil if no exception."
 		   s							;second
 		   m							;minute
 		   h							;hour
-		   (nth 3 *working-date*)		;day of month
-		   (nth 4 *working-date*)		;month
-		   (nth 5 *working-date*)))))	;year
-
-(defun timestr-to-epoch-slower? (timestr)
-  "Convert a given HH:MM:SS time string to seconds since the epoch."
-  ;(format t "time conversion \"~A\"~%" timestr)
-  (let ((hms
-		 (loop with last-colon = -1
-			while last-colon
-			collect (parse-integer (subseq timestr (1+ last-colon)
-							(setf last-colon (position #\: timestr :start (1+ last-colon))))))))
-
-	(if (> (nth 0 hms) 23)
-		  (encode-universal-time
-		   (nth 2 hms)					;second
-		   (nth 1 hms)					;minute
-		   (- (nth 0 hms) 24)			;hour
-		   (nth 3 *tomorrow*)			;day of month
-		   (nth 4 *tomorrow*)			;month
-		   (nth 5 *tomorrow*))			;year
-		  (encode-universal-time
-		   (nth 2 hms)					;second
-		   (nth 1 hms)					;minute
-		   (nth 0 hms)					;hour
 		   (nth 3 *working-date*)		;day of month
 		   (nth 4 *working-date*)		;month
 		   (nth 5 *working-date*)))))	;year
