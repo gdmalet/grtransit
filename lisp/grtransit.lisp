@@ -12,41 +12,9 @@
 ;; Need this for parsing the JSON returned from the realtime site
 ;(require 'jsown)
 
-(defpackage :grtransit
-  (:export active-trips)
-  (:use common-lisp jsown))
-(in-package grtransit)
+(in-package :grtransit)
 
 (declaim (optimize (speed 3) (debug 3) (safety 0)))
-
-(defparameter *work-directory* '(:absolute "home" "gdmalet" "src" "grtransit" "lisp" "tmp") "Where we're doing it")
-
-(defparameter *working-date* (multiple-value-list (get-decoded-time)) "System's notion of today's date and time")
-(defparameter *tomorrow* (multiple-value-list (decode-universal-time (+ (get-universal-time) (* 60 60 24))))
-  "Tomorrow's date, used for dealing with times of the form 25:00:00")
-(defparameter *yesterday* (multiple-value-list (decode-universal-time (- (get-universal-time) (* 60 60 24))))
-  "Yesterday's date, used for dealing with times of the form 25:00:00")
-(defparameter *today-ymd* (format nil "~D~2,'0D~2,'0D"
-								  (nth 5 *working-date*) (nth 4 *working-date*) (nth 3 *working-date*))
-  "Today's date in yyyymmdd format, for comparisons with calendar entries.")
-
-(defparameter *tables* () "Root of all the tables read from the input files.")
-(defparameter *table-files*
-	 '(("agency.txt" . 2)
-	   ("calendar_dates.txt" . 32)
-	   ("calendar.txt" . 32)
-	   ("fare_attributes.txt" . 32)
-	   ("routes.txt" . 256)
-	   ("shapes.txt" . 131072)
-	   ("stops.txt" . 3072)
-	   ("stop_times.txt" . 524288)
-	   ("trips.txt" . 32768))
-	   "A list of files to slurp in, and approximate number of lines per file.")
-
-(defparameter *realtime-cache* (make-hash-table :test 'equal))
-
-(defconstant *day-names* '(MONDAY TUESDAY WEDNESDAY THURSDAY FRIDAY SATURDAY SUNDAY)
-  "Used with index (day-of-week) to fetch values out of the calendar.")
 
 (defun stops-with-no-trips ()
   "Find bogus stops."
@@ -88,7 +56,7 @@ If parm realtime is true; append minutes until, & date of arrival."
    (lambda (a b)
 	 (string< (cadr a) (cadr b)))))
 
-(defun all-busses-at-stop* (stop-id &optional (realtime nil))
+(defun all-busses-at-stop* (stop-id &optional (realtime nil) (only-realtime nil))
   "Pretty-printed version of all-busses-at-stop."
   (mapc
    (lambda (trip)
@@ -108,14 +76,16 @@ If parm realtime is true; append minutes until, & date of arrival."
 						(car (nth 5 trip))
 						hour min sec)))
 			 (t
-			  (format t "~A ~5@A      ~A~%"
-					  (nth 1 trip)
-					  pretty-diff
-					  (nth 4 trip))))
-		   (format t "~A ~5@A  ~A~%"
-				   (nth 1 trip)
-				   pretty-diff
-				   (nth 4 trip)))))
+			  (unless only-realtime
+				(format t "~A ~5@A      ~A~%"
+						(nth 1 trip)
+						pretty-diff
+						(nth 4 trip)))))
+
+			 (format t "~A ~5@A  ~A~%"
+					 (nth 1 trip)
+					 pretty-diff
+					 (nth 4 trip)))))
    (all-busses-at-stop stop-id realtime))
   t)
 
@@ -265,6 +235,7 @@ Returns a list of JSO objects, one for each arrival."
 		(format t "querying http://realtimemap.grt.ca~A~%" url)
 		(setf jso (jsown:parse (wget-text "realtimemap.grt.ca" url)))
 		(when (string= (jsown:val jso "status") "success")
+;;;; TODO cache time should be 60, not 600
 		  (setf cached (cons (+ now 60) (jsown:val jso "stopTimes")))
 		  ;;(format t " --> new cached values: ~A~%" cached)
 		  (setf (gethash key *realtime-cache*) cached))))
@@ -282,8 +253,57 @@ Returns a cons of minutes until arrival, and JSON date of arrival."
    (get-realtime stop-id route))
   nil)
 
+(defun active-trips* (&optional (realtime nil))
+  "A pretty-printed version of active-trips."
+  (mapc (lambda (value)
+		  (let* ((next-stop (if (eql (type-of value) 'CONS)
+								(car value)
+								value))
+				 (rt (if realtime (cdr value) nil))
+				 (stop-times (gethash (slot-value next-stop 'trip-id) (get-table "stop-times"))))
+
+			(multiple-value-bind (route-id headsign service-id)
+				(get-route-details-for-trip (slot-value next-stop 'trip-id))
+			  (declare (ignore service-id))
+
+			  (if realtime
+				  (let ((hms (if rt
+								 (multiple-value-bind (sec min hour)
+									 (decode-universal-time
+									  (universal-time-from-json-date (cdr rt)))
+								   (format nil "~2,'0d:~2,'0d:~2,'0d" hour min sec))
+								 ":-(  ")))
+
+					(format t "Trip ~A starts ~A, ends ~A; ~A~% next stop ~A ~A ~A [~3D ~A]~%"
+							(slot-value next-stop 'trip-id)
+							(slot-value (car stop-times) 'departure-time)
+							(slot-value (car (last stop-times)) 'arrival-time)
+							headsign
+							(slot-value next-stop 'stop-id)
+							(slot-value next-stop 'arrival-time)
+							(slot-value next-stop 'departure-time)
+							(if rt (pretty-print-mins (- (car rt)
+														 (timediff (slot-value next-stop 'arrival-time)))
+													  t)
+								"")
+							hms))
+
+				  (format t "Trip ~A starts ~A, ends ~A; ~A~% next stop ~A ~A ~A~%"
+						  (slot-value next-stop 'trip-id)
+						  (slot-value (car stop-times) 'departure-time)
+						  (slot-value (car (last stop-times)) 'arrival-time)
+						  headsign
+						  (slot-value next-stop 'stop-id)
+						  (slot-value next-stop 'arrival-time)
+						  (slot-value next-stop 'departure-time))))))
+
+		(active-trips realtime))
+  t)
+
 (defun active-trips (&optional (realtime nil))
-  "Show all trips that are currently active, with optional realtime data."
+  "Return a list of stop-times for all trips that are currently
+active, with optional realtime data. Each stop-time is for the current
+stop the bus is at, or then next stop if it's between stops."
   (let ((trips ()))
 	;; iterate over all the stop times
 	(maphash
@@ -294,7 +314,7 @@ Returns a cons of minutes until arrival, and JSON date of arrival."
 			  (<= (timediff (slot-value (car stop-times) 'departure-time)) 0)
 			  (>= (timediff (slot-value (car (last stop-times)) 'arrival-time)) 0))
 
-		 ;; Find the closest stop time to now
+		 ;; Find the closest stop time to now by walking along the stops
 		 (let* ((best
 				(block the-best
 				  (mapc
@@ -310,44 +330,14 @@ Returns a cons of minutes until arrival, and JSON date of arrival."
 
 		   (multiple-value-bind (route-id headsign service-id)
 			   (get-route-details-for-trip trip-id)
+			   (declare (ignore headsign))
 
 			 ;; Make sure the trip runs today
 			 (when (check-calendar service-id)
-
-			   (unless realtime
-				 (format t "Trip ~A starts ~A, ends ~A; ~A~% at stop-id ~A ~A ~A~%"
-						 trip-id
-						 (slot-value (car stop-times) 'departure-time)
-						 (slot-value (car (last stop-times)) 'arrival-time)
-						 headsign
-						 (slot-value best 'stop-id)
-						 (slot-value best 'arrival-time)
-						 (slot-value best 'departure-time))
-				 (push best trips))
-
-			   (when realtime
-				 (let* ((rt (get-trip-realtime trip-id (slot-value best 'stop-id) route-id))
-						(hms (if rt (multiple-value-bind (sec min hour)
-										(decode-universal-time
-										 (universal-time-from-json-date (cdr rt)))
-									  (format nil "~2,'0d:~2,'0d:~2,'0d" hour min sec))
-								 ":-(  ")))
-
-				   (format t "Trip ~A starts ~A, ends ~A; ~A~% at stop-id ~A ~A ~A [~3D ~A]~%"
-						   trip-id
-						   (slot-value (car stop-times) 'departure-time)
-						   (slot-value (car (last stop-times)) 'arrival-time)
-						   headsign
-						   (slot-value best 'stop-id)
-						   (slot-value best 'arrival-time)
-						   (slot-value best 'departure-time)
-						   (if rt (pretty-print-mins (- (car rt)
-														(timediff (slot-value best 'arrival-time)))
-													 t)
-							   "")
-						   hms)
-
-				   (push (cons best rt) trips))))))))
+			   (if realtime
+				 (let ((rt (get-trip-realtime trip-id (slot-value best 'stop-id) route-id)))
+				   (push (cons best rt) trips))
+				 (push best trips)))))))
 
 	 (get-table "stop-times"))
 	trips))

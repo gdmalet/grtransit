@@ -2,7 +2,7 @@
 
 ;;; Utility functions to support main grtransit.lisp
 
-(in-package grtransit)
+(in-package :grtransit)
 
 (declaim (optimize (speed 3) (debug 3) (safety 0)))
 
@@ -24,6 +24,7 @@
 										   :size (cdr (find "stops.txt" *table-files*
 															:test (lambda (const l) (string= const (car l))))))))
 				 (maphash (lambda (route trips)
+							(declare (ignore route))
 							(mapc (lambda (trip)
 									(setf (gethash (slot-value trip 'trip-id) tbl) trip))
 								  trips))

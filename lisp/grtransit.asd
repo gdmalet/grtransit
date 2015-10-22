@@ -7,5 +7,6 @@
   :description "Grok Grand River Transit bus data."
   :serial t
   :depends-on ("jsown")
-  :components ((:file "grtransit")
+  :components ((:file "globals")
+			   (:file "grtransit")
 			   (:file "utilities")))
