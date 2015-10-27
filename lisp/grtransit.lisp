@@ -264,7 +264,7 @@ Returns a cons of minutes until arrival, and JSON date of arrival."
 
 			(multiple-value-bind (route-id headsign service-id)
 				(get-route-details-for-trip (slot-value next-stop 'trip-id))
-			  (declare (ignore service-id))
+			  (declare (ignore route-id service-id))
 
 			  (if realtime
 				  (let ((hms (if rt

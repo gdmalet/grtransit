@@ -25,9 +25,13 @@
 															:test (lambda (const l) (string= const (car l))))))))
 				 (maphash (lambda (route trips)
 							(declare (ignore route))
-							(mapc (lambda (trip)
-									(setf (gethash (slot-value trip 'trip-id) tbl) trip))
-								  trips))
+							(case (type-of trips)
+									(CONS
+									 (mapc (lambda (trip)
+											 (setf (gethash (slot-value trip 'trip-id) tbl) trip))
+										   trips))
+									(t
+									 (setf (gethash (slot-value trips 'trip-id) tbl) trips))))
 						  (get-table "trips"))
 				 tbl)
 			   *tables*))
