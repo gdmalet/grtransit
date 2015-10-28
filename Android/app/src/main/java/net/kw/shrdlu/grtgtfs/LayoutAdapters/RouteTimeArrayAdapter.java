@@ -87,11 +87,8 @@ public class RouteTimeArrayAdapter extends ArrayAdapter {
         if (diffmins < 60 && GRTApplication.mPreferences.fetchRealtime()) {
             String realtimediff = mDetails.get(position)[4];
             if (!realtimediff.equals("")) {
-                diffmins -= Integer.parseInt(realtimediff);
-                if (diffmins >= 0)
-                    holder.stoprealtime.setText(String.format("+%d", diffmins));
-                else
-                    holder.stoprealtime.setText(String.format("%s", diffmins));
+                diffmins = Integer.parseInt(realtimediff) - diffmins;
+                holder.stoprealtime.setText(ServiceCalendar.formattedMins(diffmins, true));
                 if (diffmins < 0 || diffmins > 3)
                     holder.stoprealtime.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_light));
             }

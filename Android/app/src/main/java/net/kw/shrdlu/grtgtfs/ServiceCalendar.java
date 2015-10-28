@@ -401,9 +401,15 @@ public class ServiceCalendar {
     /* Format minutes into nnhnn format if >= 60.
      * If <60 then format is nnm */
     public static String formattedMins(int mins) {
-        if (mins < 60)
-            return String.format("%+dm", mins);
-
+        return formattedMins(mins, false);
+    }
+    public static String formattedMins(int mins, boolean withsign) {
+        if (mins < 60) {
+            if (withsign)
+                return String.format("%+dm", mins);
+            else
+                return String.format("%dm", mins);
+        }
         int hours = mins / 60;
         mins %= 60;
         return String.format("%dh%02d", hours, mins);

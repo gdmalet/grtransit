@@ -226,7 +226,6 @@ public class FavstopsActivity extends MenuListActivity {
 
         } else {
             // it's a route: relativelayout, routeid, description.
-            // We're dealing with a stopid and description
             tv = (TextView) v.getChildAt(1);
             final String routeid = String.valueOf(tv.getText());
             tv = (TextView) v.getChildAt(2);
@@ -352,7 +351,7 @@ public class FavstopsActivity extends MenuListActivity {
                             Realtime rt = new Realtime(pref[0], nextbus[1]);
                             String minutes = rt.getTripDetail(nextbus[3], "Minutes");
                             if (minutes != null) {
-                                diffmins -= Integer.parseInt(minutes);
+                                diffmins = Integer.parseInt(minutes) - diffmins;
                                 pref[6] = ServiceCalendar.formattedMins(diffmins);
                             }
                         }
