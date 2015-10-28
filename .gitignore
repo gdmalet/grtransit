@@ -6,6 +6,7 @@
 /Android/app/build/
 /Android/build/
 /Android/app/src/main/java/net/kw/shrdlu/grtgtfs/TwitterCredentials.java
+/Android/local.properties
 /data/sqlite3
 /.gitreview
 /lisp/*.fas

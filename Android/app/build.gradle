@@ -1,10 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
+    useLibrary 'org.apache.http.legacy'
     signingConfigs {
     }
-    compileSdkVersion 'Google Inc.:Google APIs:21'
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 'Google Inc.:Google APIs:23'
+    buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
         minSdkVersion 15
@@ -25,8 +26,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.+'
-    compile 'com.android.support:support-v4:23.1.+'
-    compile 'com.google.android.gms:play-services-base:8.1.+'
-    compile 'com.google.android.gms:play-services-maps:8.1.+'
+    compile 'com.google.android.gms:play-services-maps:8.1.0'
+    compile 'com.google.android.gms:play-services:8.1.0'
 }
