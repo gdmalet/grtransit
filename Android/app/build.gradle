@@ -3,6 +3,12 @@ apply plugin: 'com.android.application'
 android {
     useLibrary 'org.apache.http.legacy'
     signingConfigs {
+        Release {
+            keyAlias 'Release'
+            keyPassword 'RyldaFrud2'
+            storeFile file('/home/gdmalet/.android/release.keystore')
+            storePassword 'RyldaFrud2'
+        }
     }
     compileSdkVersion 'Google Inc.:Google APIs:23'
     buildToolsVersion "23.0.1"
@@ -14,8 +20,14 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.Release
+        }
+        debug {
+            jniDebuggable true
+            renderscriptDebuggable true
+            zipAlignEnabled false
         }
     }
     compileOptions {
