@@ -83,13 +83,15 @@ public class RouteTimeArrayAdapter extends ArrayAdapter {
         int diffmins = ServiceCalendar.TimediffNow(bustime);
         holder.stopminutes.setText(ServiceCalendar.formattedMins(diffmins));
 
-        // Do nothing if it's too far away, else show realtime data
-        if (diffmins < 60 && GRTApplication.mPreferences.fetchRealtime()) {
+        // Show realtime data if we have it
+        holder.stoprealtime.setText("");
+        if (GRTApplication.mPreferences.fetchRealtime()) {
             String realtimediff = mDetails.get(position)[4];
             if (!realtimediff.equals("")) {
-                diffmins = Integer.parseInt(realtimediff) - diffmins;
-                holder.stoprealtime.setText(ServiceCalendar.formattedMins(diffmins, true));
-                if (diffmins < 0 || diffmins > 3)
+                holder.stoprealtime.setText(realtimediff);
+                // highlight if < -1, or >3 minutes.
+                if ((realtimediff.charAt(0) == '-' && realtimediff.charAt(1) > '1')
+                        || realtimediff.charAt(1) >= '3')
                     holder.stoprealtime.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_light));
             }
         }

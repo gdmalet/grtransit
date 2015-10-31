@@ -298,8 +298,9 @@ public class FavstopsActivity extends MenuListActivity {
                     if (!routerowdata[2].equals("")) {
                         tv = (TextView) routerow.findViewById(R.id.stoprealtime);
                         tv.setText(routerowdata[2]);
-                        // highlight if negative, or >3 minutes.
-                        if (routerowdata[2].charAt(0) == '-' || routerowdata[2].charAt(1) >= '3')
+                        // highlight if < -1, or >3 minutes.
+                        if ((routerowdata[2].charAt(0) == '-' && routerowdata[2].charAt(0) > '1')
+                                || routerowdata[2].charAt(1) >= '3')
                             tv.setTextColor(getResources().getColor(android.R.color.holo_red_light));  // @android:color/holo_green_light
                     }
 
@@ -351,8 +352,11 @@ public class FavstopsActivity extends MenuListActivity {
                             Realtime rt = new Realtime(pref[0], nextbus[1]);
                             String minutes = rt.getTripDetail(nextbus[3], "Minutes");
                             if (minutes != null) {
-                                diffmins = Integer.parseInt(minutes) - diffmins;
-                                pref[6] = ServiceCalendar.formattedMins(diffmins);
+                                String arrivaltime = ServiceCalendar.getTripArrivalTime(pref[0], nextbus[3]);
+                                if (arrivaltime != "") {
+                                    diffmins = Integer.parseInt(minutes) - ServiceCalendar.TimediffNow(arrivaltime);
+                                    pref[6] = ServiceCalendar.formattedMins(diffmins, true);
+                                }
                             }
                         }
 

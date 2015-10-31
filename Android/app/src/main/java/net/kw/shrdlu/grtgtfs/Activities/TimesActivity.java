@@ -133,12 +133,21 @@ public class TimesActivity extends MenuListActivity {
 
                 if (GRTApplication.mPreferences.fetchRealtime()) {
                     for (Integer i = 0; i < mListDetails.size(); i++) {
-                        String route = mListDetails.get(i)[2], realtimemins = "";
-                        Realtime rt = new Realtime(mStopid, route);
-                        String minutes = rt.getTripDetail(mListDetails.get(i)[4], "Minutes");
-                        if (minutes != null)
-                            realtimemins = minutes;   // replace trip id with realtime minutes
-                        mListDetails.get(i)[4] = realtimemins;
+						String realtimemins = "";
+						int diffmins = ServiceCalendar.TimediffNow(mListDetails.get(i)[0]);
+						if (diffmins < 60) {    // only bother if departure time is close
+							String route = mListDetails.get(i)[2];
+							Realtime rt = new Realtime(mStopid, route);
+							String minutes = rt.getTripDetail(mListDetails.get(i)[4], "Minutes");
+							if (minutes != null) {
+								String arrivaltime = ServiceCalendar.getTripArrivalTime(mStopid, mListDetails.get(i)[4]);
+								if (arrivaltime != "") {
+									diffmins = Integer.parseInt(minutes) - ServiceCalendar.TimediffNow(arrivaltime);
+									realtimemins = ServiceCalendar.formattedMins(diffmins, true);
+								}
+							}
+						}
+						mListDetails.get(i)[4] = realtimemins;	// replace trip id with realtime minutes
                     }
                 }
 
@@ -225,11 +234,11 @@ public class TimesActivity extends MenuListActivity {
 				int minsdiff = ServiceCalendar.TimediffNow(nextdeparture);
 
 				if (minsdiff >= 60) {
-					msg = Toast.makeText(mContext, "Next bus due at " + ServiceCalendar.formattedTime(nextdeparture),
+					msg = Toast.makeText(mContext, "Next bus leaves at " + ServiceCalendar.formattedTime(nextdeparture),
 							Toast.LENGTH_LONG);
 				} else {
 					final String plural = minsdiff > 1 ? "s" : "";
-					msg = Toast.makeText(mContext, "Next bus due in " + minsdiff + " minute" + plural, Toast.LENGTH_LONG);
+					msg = Toast.makeText(mContext, "Next bus leaves in " + minsdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
 
                 lv.setSelectionFromTop(savedpos, 50); // position next bus just below top

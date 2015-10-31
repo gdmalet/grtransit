@@ -302,6 +302,23 @@ public class ServiceCalendar {
         return null;
     }
 
+    public static String getTripArrivalTime(String stopid, String trip_id)
+    {
+        final String q = "select arrival_time as _id from stop_times "
+                + "where stop_id = ? and trip_id = ?";
+        final String[] selectargs = new String[]{stopid, trip_id};
+        final Cursor csr = DatabaseHelper.ReadableDB().rawQuery(q, selectargs);
+
+        String arrivaltime = "";
+
+        if (csr.moveToFirst())
+            arrivaltime  = csr.getString(0);
+
+        csr.close();
+
+        return arrivaltime;
+    }
+
     /* Return route number & description for all routes using a stop.
      * Output is limited to the current day. */
     public static Cursor getRoutesUsingStop(String stopid)
