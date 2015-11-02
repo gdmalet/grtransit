@@ -143,7 +143,7 @@ public class TimesActivity extends MenuListActivity {
 								String arrivaltime = ServiceCalendar.getTripArrivalTime(mStopid, mListDetails.get(i)[4]);
 								if (arrivaltime != "") {
 									diffmins = Integer.parseInt(minutes) - ServiceCalendar.TimediffNow(arrivaltime);
-									realtimemins = ServiceCalendar.formattedMins(diffmins, true);
+									realtimemins = String.format("%d", diffmins);
 								}
 							}
 						}
@@ -234,11 +234,11 @@ public class TimesActivity extends MenuListActivity {
 				int minsdiff = ServiceCalendar.TimediffNow(nextdeparture);
 
 				if (minsdiff >= 60) {
-					msg = Toast.makeText(mContext, "Next bus leaves at " + ServiceCalendar.formattedTime(nextdeparture),
+					msg = Toast.makeText(mContext, "Next bus due to leave at " + ServiceCalendar.formattedTime(nextdeparture),
 							Toast.LENGTH_LONG);
 				} else {
 					final String plural = minsdiff > 1 ? "s" : "";
-					msg = Toast.makeText(mContext, "Next bus leaves in " + minsdiff + " minute" + plural, Toast.LENGTH_LONG);
+					msg = Toast.makeText(mContext, "Next bus due to leave in " + minsdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
 
                 lv.setSelectionFromTop(savedpos, 50); // position next bus just below top

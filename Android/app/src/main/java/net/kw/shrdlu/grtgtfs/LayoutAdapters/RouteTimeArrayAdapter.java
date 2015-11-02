@@ -88,10 +88,10 @@ public class RouteTimeArrayAdapter extends ArrayAdapter {
         if (GRTApplication.mPreferences.fetchRealtime()) {
             String realtimediff = mDetails.get(position)[4];
             if (!realtimediff.equals("")) {
-                holder.stoprealtime.setText(realtimediff);
-                // highlight if < -1, or >3 minutes.
-                if ((realtimediff.charAt(0) == '-' && realtimediff.charAt(1) > '1')
-                        || realtimediff.charAt(1) >= '3')
+                diffmins = Integer.parseInt(realtimediff);
+                holder.stoprealtime.setText(ServiceCalendar.formattedMins(diffmins, true));
+                // highlight if there's a big difference
+                if ( diffmins < -1 || diffmins > 3)
                     holder.stoprealtime.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_light));
             }
         }
