@@ -13,3 +13,4 @@
 /lisp/*.lib
 /lisp/tmp/
 *~
+/Android/local.properties
