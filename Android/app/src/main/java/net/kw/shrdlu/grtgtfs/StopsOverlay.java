@@ -209,7 +209,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	// This is called when a bus stop is clicked on in the map.
-    void onScreenTap(int index, boolean longpress) {
+	private void onScreenTap(int index, boolean longpress)
+	{
 		// Log.d(TAG, "OnTap(" + index + ")");
 		final stopDetail stop = mStops.get(index);
 		mStopid = stop.num;

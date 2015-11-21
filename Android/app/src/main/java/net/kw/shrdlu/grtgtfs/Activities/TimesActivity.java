@@ -25,7 +25,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -49,6 +48,7 @@ import net.kw.shrdlu.grtgtfs.Realtime;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class TimesActivity extends MenuListActivity {
 	private static final String TAG = "TimesActivity";
@@ -141,9 +141,9 @@ public class TimesActivity extends MenuListActivity {
 							String minutes = rt.getTripDetail(mListDetails.get(i)[4], "Minutes");
 							if (minutes != null) {
 								String arrivaltime = ServiceCalendar.getTripArrivalTime(mStopid, mListDetails.get(i)[4]);
-								if (arrivaltime != "") {
+								if (!arrivaltime.equals("")) {
 									diffmins = Integer.parseInt(minutes) - ServiceCalendar.TimediffNow(arrivaltime);
-									realtimemins = String.format("%d", diffmins);
+									realtimemins = String.format(Locale.CANADA, "%d", diffmins);
 								}
 							}
 						}
@@ -237,7 +237,7 @@ public class TimesActivity extends MenuListActivity {
 					msg = Toast.makeText(mContext, "Next bus due to leave at " + ServiceCalendar.formattedTime(nextdeparture),
 							Toast.LENGTH_LONG);
 				} else {
-					final String plural = minsdiff > 1 ? "s" : "";
+					final String plural = minsdiff != 1 ? "s" : "";
 					msg = Toast.makeText(mContext, "Next bus due to leave in " + minsdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
 

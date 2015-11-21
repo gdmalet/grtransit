@@ -25,8 +25,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -49,7 +47,8 @@ public class FavstopsActivity extends MenuListActivity {
     private static final String TAG = "FavstopsActivity";
     /* Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent. */
     private static boolean mShownalert = false;
-    final View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
+
+    private final View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View view) {
             onListItemLongClick(view);
@@ -59,7 +58,7 @@ public class FavstopsActivity extends MenuListActivity {
     private final SQLiteDatabase DB = DatabaseHelper.ReadableDB();
     private LinearLayout layout;
     private ArrayList<String[]> mDetails;
-    private String mStopid;
+    //private String mStopid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +91,7 @@ public class FavstopsActivity extends MenuListActivity {
         // ProcessStops(); // will be done in onResume()
     }
 
-    void ProcessStops() {
+    private void ProcessStops() {
 
         mDetails = new ArrayList<>();
         final ArrayList<String[]> favstops = GRTApplication.mPreferences.GetBusstopFavourites();
@@ -162,7 +161,8 @@ public class FavstopsActivity extends MenuListActivity {
     }
 
     // Called from the listener above for a long click
-    public void onListItemLongClick(View view) {
+    private void onListItemLongClick(View view)
+    {
         LinearLayout v = (LinearLayout) view;
 
         TextView tv = (TextView) v.getChildAt(0);
@@ -353,7 +353,7 @@ public class FavstopsActivity extends MenuListActivity {
                             String minutes = rt.getTripDetail(nextbus[3], "Minutes");
                             if (minutes != null) {
                                 String arrivaltime = ServiceCalendar.getTripArrivalTime(pref[0], nextbus[3]);
-                                if (arrivaltime != "") {
+                                if (!arrivaltime.equals("")) {
                                     diffmins = Integer.parseInt(minutes) - ServiceCalendar.TimediffNow(arrivaltime);
                                     pref[6] = String.format("%d",diffmins);
                                 }

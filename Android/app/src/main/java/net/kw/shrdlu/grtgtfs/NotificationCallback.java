@@ -24,5 +24,5 @@ package net.kw.shrdlu.grtgtfs;
  */
 public interface NotificationCallback {
 
-	public void notificationCallback(Integer progress);
+	void notificationCallback(Integer progress);
 }

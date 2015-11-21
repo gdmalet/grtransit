@@ -66,8 +66,8 @@ public class MenuMapActivity extends MapActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
-    final ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
-    NavDrawerListAdapter mNavAdapter;
+    private final ArrayList<NavDrawerItem> mDrawerItems = new ArrayList<>();
+    private NavDrawerListAdapter mNavAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,8 +84,6 @@ public class MenuMapActivity extends MapActivity {
 		mMapview.setBuiltInZoomControls(true);
 
 		mapOverlays = mMapview.getOverlays();
-
-        View mDetailArea = findViewById(R.id.mapview);
 
 		getActionBar().setTitle(R.string.loading_stops);
         getActionBar().setSubtitle(null);

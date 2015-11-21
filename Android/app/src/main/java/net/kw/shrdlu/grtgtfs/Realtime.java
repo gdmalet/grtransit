@@ -66,11 +66,12 @@ public class Realtime {
         mStopid = stopid;
         mRouteid = routeid;
 
-        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Realtime")
-                .setAction(stopid)
-                .setLabel(routeid)
-                .build());
+        // TODO this generates too much traffic, so is being throttled.
+        //GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+        //        .setCategory("Realtime")
+        //        .setAction(stopid)
+        //        .setLabel(routeid)
+        //        .build());
     }
 
     public String getTripDetail(String trip, String var)
