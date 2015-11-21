@@ -212,7 +212,7 @@ public class RiderAlertsActivity extends MenuListActivity {
 				final ArrayList<String[]> tweets = new ArrayList<>();
 
 				// Need to grok dates of form "created_at": "Thu, 15 Nov 2012 18:27:17 +0000"
-				final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+				final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.CANADA);
 				dateFormat.setLenient(true);
 
 				for (int i = 0; i < arr.length(); i++) {
@@ -230,7 +230,7 @@ public class RiderAlertsActivity extends MenuListActivity {
                         day = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
                         mon = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
 
-						tweettime = String.format("%s %02d:%02d - %s %d", day, cal.get(Calendar.HOUR_OF_DAY),
+						tweettime = String.format(Locale.CANADA, "%s %02d:%02d - %s %d", day, cal.get(Calendar.HOUR_OF_DAY),
 								cal.get(Calendar.MINUTE), mon, cal.get(Calendar.DAY_OF_MONTH));
 
 					} catch (final Exception e) {

@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 
-import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
 import net.kw.shrdlu.grtgtfs.R;
@@ -74,6 +72,8 @@ public class RouteselectActivity extends MenuListActivity {
     @Override
     public void onDestroy()
     {
+		super.onDestroy();
+
         if (mCsr != null)
             mCsr.close();
     }

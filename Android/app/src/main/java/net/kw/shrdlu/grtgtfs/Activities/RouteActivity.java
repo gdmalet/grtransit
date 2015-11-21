@@ -24,7 +24,6 @@ import android.database.Cursor;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.Window;
 
 import com.google.android.maps.GeoPoint;

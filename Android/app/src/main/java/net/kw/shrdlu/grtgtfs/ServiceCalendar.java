@@ -20,13 +20,13 @@
 package net.kw.shrdlu.grtgtfs;
 
 import android.database.Cursor;
-import android.os.Debug;
 import android.text.format.Time;
 import android.util.Log;
 import android.util.TimeFormatException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class ServiceCalendar {
     private static final String TAG = "ServiceCalendar";
@@ -389,10 +389,10 @@ public class ServiceCalendar {
             // Reformat to drop leading zero, add prefix
             final int where = newtime.indexOf(" ", i); // to put the suffix
             if (where > 0) {
-                newtime = String.format("%s%d%s%s%s", newtime.subSequence(0, i - 2), hours, newtime.substring(i, where),
+                newtime = String.format(Locale.CANADA, "%s%d%s%s%s", newtime.subSequence(0, i - 2), hours, newtime.substring(i, where),
                         prefix, newtime.substring(where));
             } else { // stick it on the end
-                newtime = String.format("%s%d%s%s", newtime.subSequence(0, i - 2), hours, newtime.substring(i), prefix);
+                newtime = String.format(Locale.CANADA, "%s%d%s%s", newtime.subSequence(0, i - 2), hours, newtime.substring(i), prefix);
             }
         }
 
@@ -404,7 +404,7 @@ public class ServiceCalendar {
     {
         final Time t = new Time();
         t.setToNow();
-        return String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
+        return String.format(Locale.CANADA, "%04d%02d%02d", t.year, t.month + 1, t.monthDay);
     }
 
     /* Formatted HH:MM:SS string for now for time comparisons. */
@@ -412,7 +412,7 @@ public class ServiceCalendar {
     {
         final Time t = new Time();
         t.setToNow();
-        return String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
+        return String.format(Locale.CANADA, "%02d:%02d:%02d", t.hour, t.minute, t.second);
     }
 
     /* Format minutes into nnhnn format if >= 60.
@@ -423,13 +423,13 @@ public class ServiceCalendar {
     public static String formattedMins(int mins, boolean withsign) {
         if (mins < 60) {
             if (withsign)
-                return String.format("%+dm", mins);
+                return String.format(Locale.CANADA, "%+dm", mins);
             else
-                return String.format("%dm", mins);
+                return String.format(Locale.CANADA, "%dm", mins);
         }
         int hours = mins / 60;
         mins %= 60;
-        return String.format("%dh%02d", hours, mins);
+        return String.format(Locale.CANADA, "%dh%02d", hours, mins);
     }
 
     // Return the difference in minutes between a passed in time and now.
