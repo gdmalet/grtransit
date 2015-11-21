@@ -1,27 +1,49 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 'Google Inc.:Google APIs:21'
-    buildToolsVersion "21.1.2"
-
+    useLibrary 'org.apache.http.legacy'
+    signingConfigs {
+        Release {
+            keyAlias 'androidreleasekey'
+            keyPassword 'RyldaFrud2'
+            storeFile file('/home/gdmalet/.android/release.keystore')
+            storePassword 'RyldaFrud2'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    compileSdkVersion 'Google Inc.:Google APIs:23'
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
-        minSdkVersion 15
-        versionCode 34
-        versionName "2.1"
+        minSdkVersion 16
+        versionCode 35
+        versionName '2.1.1'
+        targetSdkVersion 23
+        signingConfig signingConfigs.Release
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+        debug {
+            jniDebuggable true
+            renderscriptDebuggable true
+            zipAlignEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    productFlavors {
     }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:21.0.+'
-    compile 'com.android.support:support-v4:21.0.+'
-    compile 'com.google.android.gms:play-services-base:6.5.+'
-    compile 'com.google.android.gms:play-services-maps:6.5.+'
+    compile 'com.google.android.gms:play-services-maps:8.3.0'
+    compile 'com.google.android.gms:play-services-analytics:8.3.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
 }

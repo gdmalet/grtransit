@@ -25,7 +25,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -49,6 +48,7 @@ import net.kw.shrdlu.grtgtfs.Realtime;
 import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class TimesActivity extends MenuListActivity {
 	private static final String TAG = "TimesActivity";
@@ -115,10 +115,8 @@ public class TimesActivity extends MenuListActivity {
 		protected Integer doInBackground(Void... foo) {
 
 			// Will find where to position the list of bus departure times
-			final Time t = new Time();
-			t.setToNow();
-			final String timenow = String.format("%02d:%02d:%02d", t.hour, t.minute, t.second);
-			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
+            final String timenow = ServiceCalendar.formattedHMS();
+            final String datenow = ServiceCalendar.formattedDMY();
 
 			// Make sure we actually have some valid data, since schedules change often.
 			if (!mCalendarChecked) {
@@ -135,14 +133,21 @@ public class TimesActivity extends MenuListActivity {
 
                 if (GRTApplication.mPreferences.fetchRealtime()) {
                     for (Integer i = 0; i < mListDetails.size(); i++) {
-                        String route = mListDetails.get(i)[2], realtimemins = "";
-                        Realtime rt = new Realtime(mStopid, route);
-                        if (rt.getMap() != null) {
-                            String minutes = rt.getTripDetail(mListDetails.get(i)[4], "Minutes");
-                            if (minutes != null)
-                                realtimemins = minutes;   // replace trip id with realtime minutes
-                        }
-                        mListDetails.get(i)[4] = realtimemins;
+						String realtimemins = "";
+						int diffmins = ServiceCalendar.TimediffNow(mListDetails.get(i)[0]);
+						if (diffmins < 60) {    // only bother if departure time is close
+							String route = mListDetails.get(i)[2];
+							Realtime rt = new Realtime(mStopid, route);
+							String minutes = rt.getTripDetail(mListDetails.get(i)[4], "Minutes");
+							if (minutes != null) {
+								String arrivaltime = ServiceCalendar.getTripArrivalTime(mStopid, mListDetails.get(i)[4]);
+								if (!arrivaltime.equals("")) {
+									diffmins = Integer.parseInt(minutes) - ServiceCalendar.TimediffNow(arrivaltime);
+									realtimemins = String.format(Locale.CANADA, "%d", diffmins);
+								}
+							}
+						}
+						mListDetails.get(i)[4] = realtimemins;	// replace trip id with realtime minutes
                     }
                 }
 
@@ -226,14 +231,14 @@ public class TimesActivity extends MenuListActivity {
 			Toast msg;
 			if (savedpos >= 0) {
 				final String nextdeparture = mListDetails.get(savedpos)[0];
-				int hourdiff = ServiceCalendar.TimediffNow(nextdeparture);
+				int minsdiff = ServiceCalendar.TimediffNow(nextdeparture);
 
-				if (hourdiff >= 60) {
-					msg = Toast.makeText(mContext, "Next bus due at " + ServiceCalendar.formattedTime(nextdeparture),
+				if (minsdiff >= 60) {
+					msg = Toast.makeText(mContext, "Next bus due to leave at " + ServiceCalendar.formattedTime(nextdeparture),
 							Toast.LENGTH_LONG);
 				} else {
-					final String plural = hourdiff > 1 ? "s" : "";
-					msg = Toast.makeText(mContext, "Next bus due in " + hourdiff + " minute" + plural, Toast.LENGTH_LONG);
+					final String plural = minsdiff != 1 ? "s" : "";
+					msg = Toast.makeText(mContext, "Next bus due to leave in " + minsdiff + " minute" + plural, Toast.LENGTH_LONG);
 				}
 
                 lv.setSelectionFromTop(savedpos, 50); // position next bus just below top

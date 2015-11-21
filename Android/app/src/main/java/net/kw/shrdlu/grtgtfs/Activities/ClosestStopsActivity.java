@@ -41,12 +41,12 @@ import android.widget.Toast;
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.TimeStopdescArrayAdapter;
-import net.kw.shrdlu.grtgtfs.NavOptions;
 import net.kw.shrdlu.grtgtfs.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Locale;
 
 public class ClosestStopsActivity extends MenuListActivity {
 	private static final String TAG = "ClosestStopsActivity";
@@ -109,12 +109,12 @@ public class ClosestStopsActivity extends MenuListActivity {
 		Location nwlocn = null, gpslocn = null;
 		try {
 			nwlocn = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		} catch (final IllegalArgumentException e) {
+		} catch (final SecurityException e) {
 			Log.e(TAG, "Exception requesting last location from GPS_PROVIDER");
 		}
 		try {
 			gpslocn = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		} catch (final IllegalArgumentException e) {
+		} catch (final SecurityException e) {
 			Log.e(TAG, "Exception requesting last location from NETWORK_PROVIDER");
 		}
 		if (isBetterLocation(gpslocn, nwlocn)) {
@@ -165,14 +165,14 @@ public class ClosestStopsActivity extends MenuListActivity {
 		try {
 			mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_LOCN_UPDATE_TIME, MIN_LOCN_UPDATE_DIST,
 					locationListener);
-		} catch (final IllegalArgumentException e) {
+		} catch (final SecurityException e) {
 			Log.e(TAG, "Exception requesting location from GPS_PROVIDER");
 		}
 
 		try {
 			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_LOCN_UPDATE_TIME,
 					MIN_LOCN_UPDATE_DIST, locationListener);
-		} catch (final IllegalArgumentException e) {
+		} catch (final SecurityException e) {
 			Log.e(TAG, "Exception requesting location from NETWORK_PROVIDER");
 		}
 	}
@@ -180,7 +180,11 @@ public class ClosestStopsActivity extends MenuListActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(locationListener);
+		try {
+			mLocationManager.removeUpdates(locationListener);
+		} catch (final SecurityException e) {
+			Log.e(TAG, "Exception removing location updates");
+		}
 	}
 
 	/* Do the processing to load the ArrayAdapter for display. */
@@ -252,9 +256,9 @@ public class ClosestStopsActivity extends MenuListActivity {
 				final String dir = DIRS[(int) (s.bearing + 180 + 22.5) % 360 / 45];
 				String dist;
 				if (s.dist < 1000) {
-					dist = String.format("%3.0fm %s", s.dist, dir);
+					dist = String.format(Locale.CANADA, "%3.0fm %s", s.dist, dir);
 				} else {
-					dist = String.format("%3.1fkm %s", s.dist / 1000.0, dir);
+					dist = String.format(Locale.CANADA, "%3.1fkm %s", s.dist / 1000.0, dir);
 				}
 				mListDetails.add(new String[] { dist, s.stop_id, s.stop_name });
 			}
@@ -311,7 +315,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 	}
 
 	// Called from the listener above for a long click
-    void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+	private void onListItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 
 		final String[] strs = (String[]) parent.getItemAtPosition(position);
 		if (strs == null) {
@@ -349,7 +353,7 @@ public class ClosestStopsActivity extends MenuListActivity {
 	 * @param currentBestLocation
 	 *            The current Location fix, to which you want to compare the new one
 	 */
-    boolean isBetterLocation(Location location, Location currentBestLocation) {
+	private boolean isBetterLocation(Location location, Location currentBestLocation) {
 		if (location == null) {
 			// An old location is always better than no location
 			return false;

@@ -209,7 +209,8 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	// This is called when a bus stop is clicked on in the map.
-    void onScreenTap(int index, boolean longpress) {
+	private void onScreenTap(int index, boolean longpress)
+	{
 		// Log.d(TAG, "OnTap(" + index + ")");
 		final stopDetail stop = mStops.get(index);
 		mStopid = stop.num;
@@ -291,7 +292,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 
 		// Some constants used in measuring.
-		final int textZoomLimit = 17, textSize = 20, padding = 4;
+		final int textZoomLimit = 16, textSize = 30, padding = 4;
 
 		final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setTextAlign(Paint.Align.LEFT);
@@ -381,7 +382,7 @@ public class StopsOverlay extends ItemizedOverlay<OverlayItem> {
 			}
 
 			// Then do it all again for the stop name.
-			if (zoom > textZoomLimit + 3) {
+			if (zoom > textZoomLimit + 2) {
 				for (final cachedStop stop : cachedStops) {
 					paint.getTextBounds(stop.name, 0, stop.name.length(), textbounds);
 					textbounds.inset(-padding * 2, -padding * 2); // add a bit of padding

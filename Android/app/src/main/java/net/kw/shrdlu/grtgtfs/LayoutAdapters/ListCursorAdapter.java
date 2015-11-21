@@ -47,13 +47,12 @@ public class ListCursorAdapter extends CursorAdapter {
 	}
 
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
+	public void bindView(View view, Context context, Cursor cursor)
+	{
+		final String item, desc;
 
-        TextView itemview = null, descview = null;
-        final String item, desc;
-
-        itemview = (TextView) view.findViewById(R.id.label);
-        descview = (TextView) view.findViewById(R.id.desc);
+        TextView itemview = (TextView) view.findViewById(R.id.label);
+        TextView descview = (TextView) view.findViewById(R.id.desc);
 
 		item = cursor.getString(cursor.getColumnIndex("_id"));
         desc = cursor.getString(cursor.getColumnIndex("descr"));

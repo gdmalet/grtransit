@@ -1,0 +1,3 @@
+[submodule "lisp/jsown"]
+	path = lisp/jsown
+	url = https://github.com/madnificent/jsown.git

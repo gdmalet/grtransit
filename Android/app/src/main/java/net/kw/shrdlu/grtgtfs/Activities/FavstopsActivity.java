@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -48,7 +47,8 @@ public class FavstopsActivity extends MenuListActivity {
     private static final String TAG = "FavstopsActivity";
     /* Separate the processing of stops, so we can re-do it when we need to refresh the screen on a new intent. */
     private static boolean mShownalert = false;
-    final View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
+
+    private final View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View view) {
             onListItemLongClick(view);
@@ -58,7 +58,7 @@ public class FavstopsActivity extends MenuListActivity {
     private final SQLiteDatabase DB = DatabaseHelper.ReadableDB();
     private LinearLayout layout;
     private ArrayList<String[]> mDetails;
-    private String mStopid;
+    //private String mStopid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +91,7 @@ public class FavstopsActivity extends MenuListActivity {
         // ProcessStops(); // will be done in onResume()
     }
 
-    void ProcessStops() {
+    private void ProcessStops() {
 
         mDetails = new ArrayList<>();
         final ArrayList<String[]> favstops = GRTApplication.mPreferences.GetBusstopFavourites();
@@ -161,7 +161,8 @@ public class FavstopsActivity extends MenuListActivity {
     }
 
     // Called from the listener above for a long click
-    public void onListItemLongClick(View view) {
+    private void onListItemLongClick(View view)
+    {
         LinearLayout v = (LinearLayout) view;
 
         TextView tv = (TextView) v.getChildAt(0);
@@ -225,7 +226,6 @@ public class FavstopsActivity extends MenuListActivity {
 
         } else {
             // it's a route: relativelayout, routeid, description.
-            // We're dealing with a stopid and description
             tv = (TextView) v.getChildAt(1);
             final String routeid = String.valueOf(tv.getText());
             tv = (TextView) v.getChildAt(2);
@@ -297,12 +297,10 @@ public class FavstopsActivity extends MenuListActivity {
 
                     if (!routerowdata[2].equals("")) {
                         tv = (TextView) routerow.findViewById(R.id.stoprealtime);
-                        Integer timediff = Integer.parseInt(routerowdata[2]);
-                        if (timediff >= 0)
-                            tv.setText("+" + routerowdata[2]);
-                        else
-                            tv.setText(routerowdata[2]);
-                        if (timediff < 0 || timediff > 3)
+                        int diffmins = Integer.parseInt(routerowdata[2]);
+                        tv.setText(ServiceCalendar.formattedMins(diffmins, true));
+                        // highlight if < -1, or >3 minutes.
+                        if (diffmins < -1 || diffmins > 3)
                             tv.setTextColor(getResources().getColor(android.R.color.holo_red_light));  // @android:color/holo_green_light
                     }
 
@@ -323,12 +321,12 @@ public class FavstopsActivity extends MenuListActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... foo) {
+        protected Void doInBackground(Void... foo)
+        {
+//            Debug.startMethodTracing("dmtrace.trace", 86*1024*1024);
 
             // Find time of next bus for each stop.
-            final Time t = new Time(); // TODO - this duplicates BusTimes?
-            t.setToNow();
-            final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
+            final String datenow = ServiceCalendar.formattedDMY();
 
             Integer progresscount = 0;
             for (final String[] pref : mDetails) {
@@ -345,18 +343,19 @@ public class FavstopsActivity extends MenuListActivity {
                         pref[3] = nextbus[2]; // route headsign
                         pref[4] = nextbus[1]; // route number
 
-                        Integer timediff = ServiceCalendar.TimediffNow(nextbus[0]);
-                        pref[5] = timediff.toString() + "m";
+                        int diffmins = ServiceCalendar.TimediffNow(nextbus[0]);
+                        pref[5] = ServiceCalendar.formattedMins(diffmins);
 
                         // do nothing if it's too far away
-                        if (timediff.intValue() < 60 && GRTApplication.mPreferences.fetchRealtime()) {
+                        if (diffmins < 60 && GRTApplication.mPreferences.fetchRealtime()) {
                             pref[6] = "";
                             Realtime rt = new Realtime(pref[0], nextbus[1]);
-                            if (rt.getMap() != null) {
-                                String minutes = rt.getTripDetail(nextbus[3], "Minutes");
-                                if (minutes != null) {
-                                    timediff -= Integer.parseInt(minutes);
-                                    pref[6] = timediff.toString();
+                            String minutes = rt.getTripDetail(nextbus[3], "Minutes");
+                            if (minutes != null) {
+                                String arrivaltime = ServiceCalendar.getTripArrivalTime(pref[0], nextbus[3]);
+                                if (!arrivaltime.equals("")) {
+                                    diffmins = Integer.parseInt(minutes) - ServiceCalendar.TimediffNow(arrivaltime);
+                                    pref[6] = String.format("%d",diffmins);
                                 }
                             }
                         }
@@ -376,6 +375,7 @@ public class FavstopsActivity extends MenuListActivity {
                 // must release lock before doing this
                 publishProgress(++progresscount * 10000 / mDetails.size());
             }
+//            Debug.stopMethodTracing();
             return null;
         }
 

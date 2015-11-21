@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,16 +33,16 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 
-import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.ListCursorAdapter;
 import net.kw.shrdlu.grtgtfs.R;
+import net.kw.shrdlu.grtgtfs.ServiceCalendar;
 
 public class RouteselectActivity extends MenuListActivity {
 	private static final String TAG = "RouteselectActivity";
 
 	private String mStopid, mStopname;
-	private Cursor mCsr;
+	private Cursor mCsr = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +68,15 @@ public class RouteselectActivity extends MenuListActivity {
 		// Do the rest off the main thread
 		new ProcessRoutes().execute();
 	}
+
+    @Override
+    public void onDestroy()
+    {
+		super.onDestroy();
+
+        if (mCsr != null)
+            mCsr.close();
+    }
 
 	public void onListItemClick(View view)
     {
@@ -188,19 +196,9 @@ public class RouteselectActivity extends MenuListActivity {
 
 			// Find which routes use the given stop.
 			// Only show bus routes where the schedule is valid for the current date
-			final Time t = new Time(); // TODO - this duplicates BusTimes?
-			t.setToNow();
-			final String datenow = String.format("%04d%02d%02d", t.year, t.month + 1, t.monthDay);
-			final String qry = "select distinct routes.route_short_name as _id, trip_headsign as descr from trips"
-					+ " join routes on routes.route_id = trips.route_id"
-					+ " join calendar on trips.service_id = calendar.service_id where "
-					+ " trip_id in (select trip_id from stop_times where stop_id = ?) and "
-					+ " start_date <= ? and end_date >= ?";
-			final String[] selectargs = { mStopid, datenow, datenow };
-			mCsr = DatabaseHelper.ReadableDB().rawQuery(qry, selectargs);
+			mCsr = ServiceCalendar.getRoutesUsingStop(mStopid);
 
 			publishProgress(5000); // fake it
-			startManagingCursor(mCsr);
 
 			publishProgress(7500); // fake it
 			return mCsr.getCount();
