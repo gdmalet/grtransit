@@ -21,6 +21,8 @@ newfile=$(diff .webcache .webcache.new | egrep '^> ' | \
     awk -v year=$(date +%Y) '{
 	if ($NF == "GRT_Daily_GTFS.zip") {
 	    print $NF; exit; }
+	if ($NF == "GRT_Merged_GTFS.zip") {
+	    print $NF; exit; }
 	if ($NF == "GRT_GTFS.zip") {
 	    print $NF; exit; }
 	    m="GRT_GTFS.*" year ".zip";
