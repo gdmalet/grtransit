@@ -17,17 +17,19 @@ cmp -s .webcache.new .webcache && exit 0
 
 # Now we play silly buggers trying to find what file to download.
 # If there's no simple match, look for something with the year in it.
+# These are output in priority order.
 newfile=$(diff .webcache .webcache.new | egrep '^> ' | \
     awk -v year=$(date +%Y) '{
-	if ($NF == "GRT_Daily_GTFS.zip") {
-	    print $NF; exit; }
-	if ($NF == "GRT_Merged_GTFS.zip") {
-	    print $NF; exit; }
-	if ($NF == "GRT_GTFS.zip") {
-	    print $NF; exit; }
-	    m="GRT_GTFS.*" year ".zip";
-	if (match($NF, m)) {print $NF}
-}')
+	if ($NF == "GRT_Daily_GTFS.zip")
+	    print "1", $NF;
+	if ($NF == "GRT_Merged_GTFS.zip")
+	    print "2", $NF;
+	if ($NF == "GRT_GTFS.zip")
+	    print "3", $NF;
+	m="GRT_GTFS.*" year ".zip";
+	if (match($NF, m))
+	    {print "4", $NF}
+}' | sort -n | head -1 | cut -d' ' -f2)
 
 numfiles=0
 test -n "$newfile" && numfiles=$(set $newfile; echo $#)
