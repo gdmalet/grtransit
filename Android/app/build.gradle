@@ -18,8 +18,8 @@ android {
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
         minSdkVersion 16
-        versionCode 35
-        versionName '2.1.1'
+        versionCode 36
+        versionName '2.1.2'
         targetSdkVersion 23
         signingConfig signingConfigs.Release
     }

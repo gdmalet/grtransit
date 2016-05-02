@@ -6,6 +6,7 @@
 /Android/.settings/
 /Android/build/
 /Android/app/build/
+/Android/app/app.iml
 /Android/app/src/main/java/net/kw/shrdlu/grtgtfs/TwitterCredentials.java
 /Android/local.properties
 /data/sqlite3
