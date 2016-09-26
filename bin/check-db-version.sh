@@ -35,14 +35,14 @@ numfiles=0
 test -n "$newfile" && numfiles=$(set $newfile; echo $#)
 if test -z "$newfile" -o $numfiles -ne 1
 then
-	cat <<-EOT 1>&2
-		echo "Unable to determine what file to download..."
-		echo -e "\nOld cache:"
-		cat .webcache
-		echo -e "\nNew cache:"
-		cat .webcache.new
-	EOT
-	exit 42
+    exec 1>&2	# send to stderr
+    echo "Unable to determine what file to download..."
+    echo -e "\nOld cache:"
+    cat .webcache
+    echo -e "\nNew cache:"
+    cat .webcache.new
+    mv .webcache.new .webcache.new_saved
+    exit 42
 fi
 
 diff -c .webcache .webcache.new
