@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 
@@ -116,53 +117,56 @@ public class StopsActivity extends MenuMapActivity {
 		}
 
 		/**
-		 * When finished, link in the new overlay.
+		 * When finished, add markers to the map.
 		 */
 		@Override
 		protected void onPostExecute(Void foo) {
 			// Log.v(TAG, "onPostExecute()");
 
-			mapOverlays.add(mStopsOverlay);
+			// Put all the markers on the map.
+			for (final MarkerOptions markeropt : mStopsOverlay.getStops()) {
+				mMap.addMarker(markeropt);
+			}
 
 			// Centre the map over given bus stop, else location, else the whole
 			// area
-			final MapController mcp = mMapview.getController();
-			GeoPoint center;
-			if (mStopId == null) {
-				center = mMylocation.getMyLocation();
-				if (center == null) {
-					final Location l = mMylocation.getLastFix();
-					if (l != null) {
-						Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
-						center = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
-					}
-				}
-				if (center != null) {
-					mcp.animateTo(center);
-					while (mMapview.getZoomLevel() < 17) {
-						if (!mcp.zoomIn()) {
-							break;
-						}
-					}
-				} else {
-					Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
-					final Rect boundingbox = mStopsOverlay.getBoundingBoxE6();
-					mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
-					mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
-				}
-			} else {
-				final String table = "stops", where = "stop_id = ?";
-				final String[] columns = { "stop_lat", "stop_lon" }, selectargs = { mStopId };
-				final Cursor locn = DatabaseHelper.ReadableDB().query(table, columns, where, selectargs, null, null, null);
-				if (locn.moveToFirst()) {
-					final int stop_lat = (int) (locn.getFloat(0) * 1000000); // microdegrees
-					final int stop_lon = (int) (locn.getFloat(1) * 1000000);
-					center = new GeoPoint(stop_lat, stop_lon);
-					mcp.setCenter(center);
-					mcp.setZoom(19);
-				}
-				locn.close();
-			}
+//			final MapController mcp = mMapFragment.getController();
+//			GeoPoint center;
+//			if (mStopId == null) {
+//				center = mMylocation.getMyLocation();
+//				if (center == null) {
+//					final Location l = mMylocation.getLastFix();
+//					if (l != null) {
+//						Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
+//						center = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
+//					}
+//				}
+//				if (center != null) {
+//					mcp.animateTo(center);
+//					while (mMapFragment.getZoomLevel() < 17) {
+//						if (!mcp.zoomIn()) {
+//							break;
+//						}
+//					}
+//				} else {
+//					Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
+//					final Rect boundingbox = mStopsOverlay.getBoundingBoxE6();
+//					mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
+//					mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
+//				}
+//			} else {
+//				final String table = "stops", where = "stop_id = ?";
+//				final String[] columns = { "stop_lat", "stop_lon" }, selectargs = { mStopId };
+//				final Cursor locn = DatabaseHelper.ReadableDB().query(table, columns, where, selectargs, null, null, null);
+//				if (locn.moveToFirst()) {
+//					final int stop_lat = (int) (locn.getFloat(0) * 1000000); // microdegrees
+//					final int stop_lon = (int) (locn.getFloat(1) * 1000000);
+//					center = new GeoPoint(stop_lat, stop_lon);
+//					mcp.setCenter(center);
+//					mcp.setZoom(19);
+//				}
+//				locn.close();
+//			}
 
             getActionBar().setTitle(R.string.title_mapstops);
             getActionBar().setSubtitle(null);

@@ -151,36 +151,36 @@ public class RouteActivity extends MenuMapActivity {
 			// Log.v(TAG, "onPostExecute()");
 
 			// Overlays must be added on the GIU thread
-			mapOverlays.add(mStopsOverlay);
-
-			Rect boundingbox = null;
-
-			// Need to calculate span and centre of overlays
-			for (final RouteOverlay overlay : overlays) {
-				mapOverlays.add(overlay);
-				if (boundingbox == null) {
-					boundingbox = overlay.getBoundingBoxE6();
-				} else {
-					boundingbox.union(overlay.getBoundingBoxE6());
-				}
-			}
-
-			// Centre the map over the bus stops
-			final MapController mcp = mMapview.getController();
-			mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
-			mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
-
-            setProgress(10000); // max -- makes it slide away
-
-			if (mRouteid != null) { // doing one route
-				// TODO should be route_short_name?
-                getActionBar().setTitle("Route " + mRouteid);
-                getActionBar().setSubtitle(mHeadsign);
-			} else {
-                getActionBar().setTitle("Routes using stop " + mStopid);
-                getActionBar().setSubtitle(null);
-                // getActionBar().setSubtitle(mStopname); TODO -- need stop description
-			}
+//			mapOverlays.add(mStopsOverlay);
+//
+//			Rect boundingbox = null;
+//
+//			// Need to calculate span and centre of overlays
+//			for (final RouteOverlay overlay : overlays) {
+//				mapOverlays.add(overlay);
+//				if (boundingbox == null) {
+//					boundingbox = overlay.getBoundingBoxE6();
+//				} else {
+//					boundingbox.union(overlay.getBoundingBoxE6());
+//				}
+//			}
+//
+//			// Centre the map over the bus stops
+//			final MapController mcp = mMapFragment.getController();
+//			mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
+//			mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
+//
+//            setProgress(10000); // max -- makes it slide away
+//
+//			if (mRouteid != null) { // doing one route
+//				// TODO should be route_short_name?
+//                getActionBar().setTitle("Route " + mRouteid);
+//                getActionBar().setSubtitle(mHeadsign);
+//			} else {
+//                getActionBar().setTitle("Routes using stop " + mStopid);
+//                getActionBar().setSubtitle(null);
+//                // getActionBar().setSubtitle(mStopname); TODO -- need stop description
+//			}
 		}
 	}
 }

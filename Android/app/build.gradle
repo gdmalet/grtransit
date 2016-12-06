@@ -13,14 +13,14 @@ android {
     lintOptions {
         abortOnError false
     }
-    compileSdkVersion 'Google Inc.:Google APIs:23'
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 'Google Inc.:Google APIs:24'
+    buildToolsVersion '25.0.1'
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
         minSdkVersion 16
-        versionCode 36
-        versionName '2.1.2'
-        targetSdkVersion 23
+        versionCode 37
+        versionName '3.0'
+        targetSdkVersion 25
         signingConfig signingConfigs.Release
     }
     buildTypes {
@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services-maps:8.3.0'
-    compile 'com.google.android.gms:play-services-analytics:8.3.0'
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.google.android.gms:play-services-analytics:9.8.0'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
 }
