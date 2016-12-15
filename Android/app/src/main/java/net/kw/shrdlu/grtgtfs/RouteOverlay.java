@@ -73,8 +73,8 @@ public class RouteOverlay {
 		LatLngBounds.Builder boundsbuilder = new LatLngBounds.Builder();
 
 		for (int i = 0; i < mCount; i++) {
-			final int stop_lat = (int) (csr.getFloat(0) * 1000000); // microdegrees
-			final int stop_lon = (int) (csr.getFloat(1) * 1000000);
+			final double stop_lat = csr.getDouble(0);
+			final double stop_lon = csr.getDouble(1);
 
 			mPoints[i] = new LatLng(stop_lat, stop_lon);
 
@@ -92,7 +92,7 @@ public class RouteOverlay {
 
 	// Seeing we don't store all points in the overlay, we need to provide our own
 	// span values, since the overlay has no clue of what we're doing.
-	public LatLngBounds getBoundingBoxE6() {
+	public LatLngBounds getBoundingBox() {
 		return mBoundingBox;
 	}
 

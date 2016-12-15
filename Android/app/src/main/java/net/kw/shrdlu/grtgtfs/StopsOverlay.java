@@ -19,6 +19,7 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,11 +34,14 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -47,16 +51,22 @@ import net.kw.shrdlu.grtgtfs.Activities.RouteselectActivity;
 
 import java.util.ArrayList;
 
-public class StopsOverlay  {
+public class StopsOverlay {
 	private static final String TAG = "StopsOverlay";
 
 //	private final ArrayList mStopItems = new ArrayList<>(1);
 	private LatLngBounds mBoundingBox;
 	private static LatLngBounds mCachedBoundingBox;
 	private String mStopid;
+    private Context mContext = null;
 
 	private ArrayList<MarkerOptions> mStops = new ArrayList<>(3000);
 	private static ArrayList<MarkerOptions> mCachedStops = null;
+
+   public StopsOverlay(Context context) {
+       mContext = context;
+   }
+
 
 	// This is time consuming, and should not be called on the GUI thread
 	public void LoadDB(String whereclause, String[] selectargs, NotificationCallback task) {
@@ -89,14 +99,15 @@ public class StopsOverlay  {
 
 			boolean more = csr.moveToPosition(0);
 			while (more) {
-				final int stop_lat = (int) (csr.getFloat(0) * 1000000); // microdegrees
-				final int stop_lon = (int) (csr.getFloat(1) * 1000000);
+				final double stop_lat = csr.getDouble(0);
+				final double stop_lon = csr.getDouble(1);
 
 				final LatLng point = new LatLng(stop_lat, stop_lon);
                 final MarkerOptions marker = new MarkerOptions()
                         .position(point)
                         .title(csr.getString(2))
-                        .snippet(csr.getString(3));
+                        .snippet(csr.getString(3))
+						.icon(BitmapDescriptorFactory.fromResource(R.drawable.bluepin));
                 mStops.add(marker);
 
 				more = csr.moveToNext();
@@ -181,14 +192,12 @@ public class StopsOverlay  {
 //		mView = mapView; // TODO this is messy
 //		return mGestureDetector.onTouchEvent(e);
 //	}
-//
-//	// Seeing we don't store all points in the overlay, we need to provide our
-//	// own
-//	// span values, since the overlay has no clue of what we're doing.
-//	public LatLngBounds getBoundingBoxE6() {
-//		return mBoundingBox;
-//	}
-//
+
+	public LatLngBounds getBoundingBox()
+	{
+		return mBoundingBox;
+	}
+
 //	// This is called when a bus stop is clicked on in the map.
 //	private void onScreenTap(int index, boolean longpress)
 //	{

@@ -22,9 +22,12 @@ package net.kw.shrdlu.grtgtfs.Activities;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -38,10 +41,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Marker;
 
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
@@ -54,13 +61,17 @@ import java.util.ArrayList;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-public class MenuMapActivity extends Activity {
+public class MenuMapActivity extends Activity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowLongClickListener {
 	private static final String TAG = "MenuMapActivity";
 
 	MenuMapActivity mContext = this;
     MapFragment mMapFragment;
     GoogleMap mMap;
     StopsOverlay mStopsOverlay = null;
+    GoogleApiClient mGoogleApiClient = null;
+    Location mLastLocation = null;
 
         // For the navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -75,6 +86,15 @@ public class MenuMapActivity extends Activity {
 
         setContentView(R.layout.mapview);
 
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(mContext)
+                .addApi(LocationServices.API)
+                .build();
+        }
+
         mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapview);
         mMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -82,14 +102,16 @@ public class MenuMapActivity extends Activity {
                  if (googleMap != null) {
                      mMap = googleMap;
                      UiSettings settings = mMap.getUiSettings();
-                     settings.setZoomControlsEnabled(false);
-                     settings.setMyLocationButtonEnabled(false);
-                     settings.setCompassEnabled(true);
+                     settings.setZoomControlsEnabled(true); // documented as the default, but it isn't?
+                     settings.setMyLocationButtonEnabled(true);
                      if (mContext.checkCallingPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                          ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 42);
                      } else {
                          mMap.setMyLocationEnabled(true);
                      }
+                     mMap.setOnMarkerClickListener(mContext);
+                     mMap.setOnInfoWindowClickListener(mContext);
+                     mMap.setOnInfoWindowLongClickListener(mContext);
                  }
             }
         });
@@ -97,7 +119,7 @@ public class MenuMapActivity extends Activity {
 		getActionBar().setTitle(R.string.loading_stops);
         getActionBar().setSubtitle(null);
 
-        mStopsOverlay = new StopsOverlay();
+        mStopsOverlay = new StopsOverlay(mContext);
 
         // Load up the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,7 +185,87 @@ public class MenuMapActivity extends Activity {
         }
     }
 
-	@Override
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        // TODO requestLocationUpdates https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderApi#requestLocationUpdates(com.google.android.gms.common.api.GoogleApiClient, com.google.android.gms.location.LocationRequest, com.google.android.gms.location.LocationListener)
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // TODO ... should not use services while in this state.
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult cause) {
+        // TODO ...
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Map click")
+                .setAction("stop")
+                .setLabel(marker.getTitle())
+                .build());
+
+        return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        // Show route select activity
+        final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+        final String pkgstr = mContext.getApplicationContext().getPackageName();
+        routeselect.putExtra(pkgstr + ".stop_id", marker.getTitle());
+        routeselect.putExtra(pkgstr + ".stop_name", marker.getSnippet());
+        mContext.startActivity(routeselect);
+    }
+
+    @Override
+    public void onInfoWindowLongClick(final Marker marker) {
+
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+        .setCategory("Map longclick")
+        .setAction("Stop")
+        .setLabel(marker.getTitle())
+        .build());
+
+        final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                switch (id) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    GRTApplication.mPreferences.AddBusstopFavourite(marker.getTitle(), marker.getSnippet());
+                    break;
+                }
+                dialog.cancel();
+            }
+        };
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Stop " + marker.getTitle() + ", " + marker.getSnippet())
+                .setMessage(R.string.favs_add_to_list)
+                .setPositiveButton(R.string.yes, listener)
+                .setNegativeButton(R.string.no, listener)
+                .create()
+                .show();
+    }
+
+    @Override
 	public void onResume() {
 		super.onResume();
 		// We want to track a pageView every time this activity gets the focus - but if the activity was
@@ -279,11 +381,4 @@ public class MenuMapActivity extends Activity {
 		}
 		}
 	}
-
-//    // This is required for the virtual base class MapActivity
-//	@Override
-//	protected boolean isRouteDisplayed() {
-//		return false;
-//	}
-
 }
