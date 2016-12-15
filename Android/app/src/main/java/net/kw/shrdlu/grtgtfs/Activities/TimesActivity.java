@@ -219,7 +219,7 @@ public class TimesActivity extends MenuListActivity {
                 RouteTimeArrayAdapter adapter = new RouteTimeArrayAdapter(mContext, R.layout.routetimerow, mListDetails);
                 lv.setAdapter(adapter);
 			} else {
-                getActionBar().setSubtitle("Route " + mHeadsign);
+                getActionBar().setSubtitle(mRouteid + " " + mHeadsign);
 				if (tv != null) {
 					tv.setText(R.string.tap_time_for_trip);
 				}
@@ -284,13 +284,20 @@ public class TimesActivity extends MenuListActivity {
 		// Allow narrowing to one route, if we're showing many.
 		if (mRouteid == null) { // showing all routes, so relativelayout, route num, description
             TextView tv = (TextView)v.getChildAt(1);
-			final String route_id = String.valueOf(tv.getText());
+			String routeid = String.valueOf(tv.getText());
             tv = (TextView)v.getChildAt(2);
 			String headsign = String.valueOf(tv.getText());
 
+			// Must undo this from the layout adapter:
+			// Look for things like route 7A, where the A is part of the description
+			if (routeid.length() > 1 && Character.isUpperCase(routeid.charAt(routeid.length()-1))) {
+				headsign = routeid.charAt(routeid.length()-1) + " - " + headsign;
+				routeid = routeid.substring(0,routeid.length()-1);
+			}
+
 			final Intent bustimes = new Intent(mContext, TimesActivity.class);
 			final String pkgstr = mContext.getApplicationContext().getPackageName();
-			bustimes.putExtra(pkgstr + ".route_id", route_id);
+			bustimes.putExtra(pkgstr + ".route_id", routeid);
 			bustimes.putExtra(pkgstr + ".headsign", headsign);
 			bustimes.putExtra(pkgstr + ".stop_id", mStopid);
             bustimes.putExtra(pkgstr + ".stop_name", mStopname);

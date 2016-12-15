@@ -66,11 +66,13 @@ public class ListCursorAdapter extends CursorAdapter {
         }
 
 		// Look for things like route 7A, where the A is part of the description
-		// TODO - char test should use a type test or something. This assumes US ASCII...
-		if (mLayout == R.layout.route_numanddesc && desc.length() > 2 && desc.charAt(1) == ' ' && desc.charAt(0) >= 'A'
-				&& desc.charAt(0) <= 'Z') {
+		if (mLayout == R.layout.route_numanddesc && desc.length() > 4
+				&& desc.charAt(1) == ' '
+				&& desc.charAt(2) == '-'
+				&& desc.charAt(3) == ' '
+				&& Character.isUpperCase(desc.charAt(0))) {
 			itemview.setText(item + desc.charAt(0));
-			descview.setText(desc.substring(2));
+			descview.setText(desc.substring(4));
 		} else {
 			itemview.setText(item);
 			descview.setText(desc);

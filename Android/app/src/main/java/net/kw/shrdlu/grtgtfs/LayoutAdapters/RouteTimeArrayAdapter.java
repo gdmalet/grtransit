@@ -97,12 +97,15 @@ public class RouteTimeArrayAdapter extends ArrayAdapter {
         }
 
         // Look for things like route 7A, where the A is part of the description
-        // TODO - char test should use a type test or something. This assumes US ASCII...
         String route = mDetails.get(position)[2];
         String headsign = mDetails.get(position)[3];
-        if (headsign.length() > 2 && headsign.charAt(1) == ' ' && headsign.charAt(0) >= 'A' && headsign.charAt(0) <= 'Z') {
+        if (headsign.length() > 4
+                && headsign.charAt(1) == ' '
+                && headsign.charAt(2) == '-'
+                && headsign.charAt(3) == ' '
+                && Character.isUpperCase(headsign.charAt(0))) {
             route += headsign.charAt(0); // route number
-            headsign = headsign.substring(2); // route headsign
+            headsign = headsign.substring(4); // route headsign
         }
 
         holder.routelabel.setText(route);
