@@ -22,6 +22,7 @@ package net.kw.shrdlu.grtgtfs;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
+import android.support.multidex.MultiDexApplication;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -29,15 +30,15 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.HashMap;
 
-public class GRTApplication extends Application { // todo extends MultiDexApplication
+public class GRTApplication extends MultiDexApplication {
 	public static final String TAG = "GRTApplication";
 
 	public static Tracker tracker = null;
-	public static Preferences mPreferences = null; // TODO warning on this line about static
-    public final static boolean isDebugBuild = BuildConfig.DEBUG;
+	public static Preferences mPreferences = null;
+	public final static boolean isDebugBuild = BuildConfig.DEBUG;
     public final static String LocalClassNameHome = "Activities.FavstopsActivity";
     public static HashMap<String, Realtime.RealtimeStopMap> mRealtimeStops;
-	public static Context mAppContext;
+	public Context mAppContext;
 
     @Override
 	public void onCreate() {

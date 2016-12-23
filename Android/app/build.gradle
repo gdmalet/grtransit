@@ -20,42 +20,54 @@ android {
         minSdkVersion 16
         versionCode 37
         versionName '3.0'
-        targetSdkVersion 24
+        targetSdkVersion 25
         signingConfig signingConfigs.Release
         multiDexEnabled true
+    }
+    productFlavors {
+        dev {
+            // Enable pre-dexing to produce an APK that can be tested on
+            // Android 5.0+ without the time-consuming DEX build processes.
+            minSdkVersion 21
+        }
+        prod {
+            // The actual minSdkVersion for the production version.
+            minSdkVersion 16
+        }
     }
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.txt'
             signingConfig signingConfigs.Release
+
+            multiDexKeepFile file ('multidex-config.txt')
+            zipAlignEnabled true
         }
         debug {
             jniDebuggable true
             renderscriptDebuggable true
             zipAlignEnabled false
             signingConfig signingConfigs.Release
-            minifyEnabled true
+            multiDexKeepFile file  ('multidex-config.txt')
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-    productFlavors {
-    }
     dexOptions {
-        javaMaxHeapSize "4g"
+        javaMaxHeapSize "6g"
     }
 }
 
 dependencies {
-    //    compile 'com.google.android.gms:play-services-analytics:9.8.0'
     compile 'com.google.android.gms:play-services-analytics:10.0.1'
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
-    //    compile 'com.google.firebase:firebase-messaging:9.0.0'
     compile 'com.android.support:multidex:1.0.1'
+    //    compile 'com.google.firebase:firebase-messaging:9.0.0'
 }
 
 // Cut out the sodding firebase stuff for now.
