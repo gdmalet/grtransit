@@ -273,7 +273,7 @@ public class FavstopsActivity extends MenuListActivity {
         private final Semaphore lockbg = new Semaphore(1, true);
         private final Semaphore lockfg = new Semaphore(0, true);
         String[] stopdata;
-        ArrayList<String[]> routedata = new ArrayList<>();
+        final ArrayList<String[]> routedata = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {

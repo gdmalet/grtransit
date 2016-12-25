@@ -29,6 +29,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -45,9 +46,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.Marker;
 
 import net.kw.shrdlu.grtgtfs.GRTApplication;
@@ -112,6 +114,12 @@ public class MenuMapActivity extends Activity implements
                      mMap.setOnMarkerClickListener(mContext);
                      mMap.setOnInfoWindowClickListener(mContext);
                      mMap.setOnInfoWindowLongClickListener(mContext);
+
+                     // Stop java.lang.NullPointerException: IBitmapDescriptorFactory is not initialized
+                     // TODO not working
+                     // https://developers.google.com/android/guides/setup sez:
+                     // "The Android emulator with an AVD that runs the Google APIs platform based on Android 4.2.2 or higher."
+                     //MapsInitializer.initialize(getApplicationContext());
                  }
             }
         });
@@ -175,7 +183,7 @@ public class MenuMapActivity extends Activity implements
 	}
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
         //ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 42);
         if (requestCode == 42 && permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 grantResults[0] == PERMISSION_GRANTED) {
@@ -209,7 +217,7 @@ public class MenuMapActivity extends Activity implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult cause) {
+    public void onConnectionFailed(@NonNull ConnectionResult cause) {
         // TODO ...
     }
 

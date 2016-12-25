@@ -20,6 +20,7 @@
 package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +57,9 @@ public class RouteTimeArrayAdapter extends ArrayAdapter {
         TextView routedesc;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
 
         ViewHolder holder;
 

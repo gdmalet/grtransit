@@ -21,8 +21,6 @@ package net.kw.shrdlu.grtgtfs;
 
 import android.util.JsonReader;
 
-import com.google.android.gms.analytics.HitBuilders;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -40,12 +38,13 @@ public class Realtime {
 
     private static final String RealtimeURL = "http://realtimemap.grt.ca/Stop/GetStopInfo?stopId=%s&routeId=%s";
 
-    private String mStopid, mRouteid;
+    private final String mStopid;
+    private final String mRouteid;
 
     class TripDetails extends HashMap<String, String> {}
 
     public class RealtimeStop {
-        TripDetails details = new TripDetails();
+        final TripDetails details = new TripDetails();
 
         public String get(String var)
         {

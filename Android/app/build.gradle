@@ -13,11 +13,11 @@ android {
     lintOptions {
         abortOnError false
     }
-    compileSdkVersion 'Google Inc.:Google APIs:24'
+    compileSdkVersion 25
     buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
-        minSdkVersion 16
+        minSdkVersion 19
         versionCode 37
         versionName '3.0'
         targetSdkVersion 25
@@ -32,18 +32,18 @@ android {
         }
         prod {
             // The actual minSdkVersion for the production version.
-            minSdkVersion 16
+            minSdkVersion 19
         }
     }
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
             signingConfig signingConfigs.Release
-
+            debuggable false
             multiDexKeepFile file ('multidex-config.txt')
             zipAlignEnabled true
+            shrinkResources true
         }
         debug {
             jniDebuggable true
@@ -51,6 +51,7 @@ android {
             zipAlignEnabled false
             signingConfig signingConfigs.Release
             multiDexKeepFile file  ('multidex-config.txt')
+            //versionNameSuffix "-debug"
         }
     }
     compileOptions {
@@ -58,7 +59,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     dexOptions {
-        javaMaxHeapSize "6g"
+        javaMaxHeapSize "8g"
     }
 }
 
@@ -71,9 +72,9 @@ dependencies {
 }
 
 // Cut out the sodding firebase stuff for now.
-configurations {
-    all*.exclude group: 'com.google.firebase', module: 'firebase-common'
-    all*.exclude group: 'com.google.firebase', module: 'firebase-core'
-    all*.exclude group: 'com.google.firebase', module: 'firebase-iid'
-}
+//configurations {
+//    all*.exclude group: 'com.google.firebase', module: 'firebase-common'
+//    all*.exclude group: 'com.google.firebase', module: 'firebase-core'
+//    all*.exclude group: 'com.google.firebase', module: 'firebase-iid'
+//}
 //apply plugin: 'com.google.gms.google-services'

@@ -21,11 +21,9 @@ package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Rect;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -34,14 +32,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
 
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.NotificationCallback;
 import net.kw.shrdlu.grtgtfs.R;
-
-import java.util.ArrayList;
 
 public class StopsActivity extends MenuMapActivity {
 	private static final String TAG = "StopsActivity";
@@ -128,10 +122,10 @@ public class StopsActivity extends MenuMapActivity {
 
 			// Put all the markers on the map.
             Marker savedMarker = null;
-			for (final MarkerOptions markeropt : mStopsOverlay.getStops()) {
+			for (final MarkerOptions markeropt : mStopsOverlay.getStopMarkerOptions()) {
 				final Marker stopMarker = mMap.addMarker(markeropt);
                 if (mStopId != null && stopMarker.getTitle().equals(mStopId)) {
-                    savedMarker = stopMarker;
+                    savedMarker = stopMarker; // TODO can do this better
                 }
 			}
 

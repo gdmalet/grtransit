@@ -22,15 +22,13 @@ package net.kw.shrdlu.grtgtfs;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.zip.Adler32;
 
@@ -39,8 +37,9 @@ public class RouteOverlay {
 
 	private int mCount;
 	private LatLng[] mPoints = null;
-	private final int mColourDiff;
+	private int mColourDiff = 0;
 	private LatLngBounds mBoundingBox;
+    private PolylineOptions mRoutePolyOptions = null;
 
 	public RouteOverlay(Context context, String route, String headsign) {
 		super();
@@ -49,7 +48,7 @@ public class RouteOverlay {
 		// Try get different colours for different routes
 		final Adler32 chksum = new Adler32();
 		chksum.update((route + headsign).getBytes());
-		mColourDiff = chksum.hashCode() % 128;
+		mColourDiff = ((int)chksum.getValue() & 0x00FFFFFF) | 0xFF000000; // opacity is the high bits
 
 		final String table = "shapes";
 		final String[] columns = { "shape_pt_lat", "shape_pt_lon" };
@@ -87,42 +86,22 @@ public class RouteOverlay {
 		// Stash values needed for later calls
 		mBoundingBox = boundsbuilder.build();
 
+        mRoutePolyOptions = new PolylineOptions()
+                .add(mPoints)
+                .width(20)
+                .color(mColourDiff);
+
 		// Log.v(TAG, "ending RouteOverlay");
 	}
 
-	// Seeing we don't store all points in the overlay, we need to provide our own
-	// span values, since the overlay has no clue of what we're doing.
-	public LatLngBounds getBoundingBox() {
+	public LatLngBounds getBoundingBox()
+	{
 		return mBoundingBox;
 	}
 
-//	@Override
-//	public void draw(Canvas canvas, MapView view, boolean shadow) {
-//		super.draw(canvas, view, shadow);
-//		// Log.v(TAG, "draw " + shadow);
-//
-//		if (shadow || mPoints == null || mCount <= 0) return;
-//
-//		// Convert geo points to points on the canvas
-//		final Projection proj = view.getProjection();
-//		final Point pt_scr = new Point();
-//		final Path path = new Path();
-//
-//		proj.toPixels(new GeoPoint(mPoints[0], mPoints[1]), pt_scr);
-//		path.moveTo(pt_scr.x, pt_scr.y);
-//
-//		for (int i = 1; i < mCount; i++) {
-//			proj.toPixels(new GeoPoint(mPoints[i * 2], mPoints[(i * 2) + 1]), pt_scr);
-//			path.lineTo(pt_scr.x, pt_scr.y);
-//		}
-//
-//		final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//		// paint.setARGB(128, 224, 64, 32);
+    public PolylineOptions getRoutePolyOptions()
+    {
+        return mRoutePolyOptions;
+    }
 //		paint.setARGB(255, 96 + mColourDiff, 128 - mColourDiff / 4, 128 + mColourDiff / 2);
-//		paint.setStyle(Paint.Style.STROKE);
-//		paint.setStrokeWidth(5);
-//		canvas.drawPath(path, paint);
-//
-//		// Log.v(TAG, "draw exit");
-//	}
 }

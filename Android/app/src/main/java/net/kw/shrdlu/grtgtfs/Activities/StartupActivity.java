@@ -71,6 +71,8 @@ public class StartupActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		/* Keep test files clear of production files. */
+		// TODO Gradle build file specifies a debug suffix -debug -- use that instead?-l
+
 		if (GRTApplication.isDebugBuild) {
 			DBVersionURL += ".dbg";
 			DBDatabaseURL += ".dbg";
@@ -288,6 +290,7 @@ public class StartupActivity extends Activity {
 
 				alliswell = true;
 
+                // TODO catch out of space exception
 			} catch (final FileNotFoundException e) {
 				Log.e(TAG, "FileNotFoundException exception");
 				e.printStackTrace();
@@ -322,7 +325,7 @@ public class StartupActivity extends Activity {
 					}
 					dialog.cancel();
 					startFavstops();
-                }
+                 }
 			};
 
 			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
