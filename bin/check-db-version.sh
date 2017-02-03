@@ -87,6 +87,9 @@ bzip2 -9v ../$name.tar
 
 ../../bin/mksql3db.sh GRT.db ../$name/*.txt
 
+# Don't need uncompressed files anymore
+rm -r ../$name
+
 new=$(ls -tr GRT.db-*.version | tail -1)
 cp -p ${new} ${new/%version/gz} $dest
 
