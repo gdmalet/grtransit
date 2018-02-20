@@ -13,8 +13,8 @@ android {
     lintOptions {
         abortOnError false
     }
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "net.kw.shrdlu.grtgtfs"
         minSdkVersion 19
@@ -24,13 +24,16 @@ android {
         signingConfig signingConfigs.Release
         multiDexEnabled true
     }
+    flavorDimensions "free"
     productFlavors {
         dev {
+            dimension "free"
             // Enable pre-dexing to produce an APK that can be tested on
             // Android 5.0+ without the time-consuming DEX build processes.
             minSdkVersion 21
         }
         prod {
+            dimension "free"
             // The actual minSdkVersion for the production version.
             minSdkVersion 19
         }
