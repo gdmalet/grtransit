@@ -1,8 +1,9 @@
 #!/bin/bash
 # Check for new versions of the GRT database, and upload if so.
 
-dir=~/src/GRT-GTFS/data/sqlite3
-dest=/var/www/html/gdmalet/android/grtransit/
+dir=~/src/grtransit/data/sqlite3
+#dest=/var/www/html/gdmalet/android/grtransit/
+dest=~/src/grtransit/www/
 url="http://www.regionofwaterloo.ca/opendatadownloads/"
 file=GRT_Daily_GTFS.zip
 
@@ -80,6 +81,10 @@ do
 	sed -e 's/\(^\|,\)"/\1/' -e 's/"\(,\|$\)/\1/' $file > .foo
 	cmp -s .foo $file || { mv $file $file.orig; mv .foo $file; }
 done
+rm -f .foo
+
+# Sometimes there is no calendar table, so make an empty one if so.
+test -f calendar.txt || echo "service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date" > calendar.txt
 
 cd -
 tar cvf ../$name.tar ../$name
