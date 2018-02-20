@@ -23,6 +23,7 @@
 package net.kw.shrdlu.grtgtfs.LayoutAdapters;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.text.util.Linkify.TransformFilter;
@@ -47,10 +48,10 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
 	private final int mLayout;
 
 	// For Twitter linkify
-	final Pattern mUserPattern = Pattern.compile("@([A-Za-z0-9_-]+)");
-	final Pattern mHashPattern = Pattern.compile("#([A-Za-z0-9_-]+)");
-	final String mUserScheme = "http://twitter.com/";
-	final String mHashScheme = "http://twitter.com/search?q=%23";
+	private final Pattern mUserPattern = Pattern.compile("@([A-Za-z0-9_-]+)");
+	private final Pattern mHashPattern = Pattern.compile("#([A-Za-z0-9_-]+)");
+	private final String mUserScheme = "http://twitter.com/";
+	private final String mHashScheme = "http://twitter.com/search?q=%23";
 
 	public ListArrayAdapter(Activity context, int layout, ArrayList<String[]> details) {
 		super(context, layout, details);
@@ -71,6 +72,7 @@ public class ListArrayAdapter extends ArrayAdapter/* <ArrayList<String[]>> */{
         return holder.listposition;
     }
 
+	@NonNull
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 

@@ -19,11 +19,18 @@
 
 package net.kw.shrdlu.grtgtfs.Activities;
 
+import android.Manifest;
 import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -33,15 +40,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.Overlay;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.Marker;
 
 import net.kw.shrdlu.grtgtfs.GRTApplication;
 import net.kw.shrdlu.grtgtfs.LayoutAdapters.NavDrawerItem;
@@ -51,16 +60,20 @@ import net.kw.shrdlu.grtgtfs.R;
 import net.kw.shrdlu.grtgtfs.StopsOverlay;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MenuMapActivity extends MapActivity {
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
+public class MenuMapActivity extends Activity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowLongClickListener {
 	private static final String TAG = "MenuMapActivity";
 
-	MapActivity mContext;
-    MapView mMapview;
-	List<Overlay> mapOverlays;
-	MyLocationOverlay mMylocation;
-	StopsOverlay mStopsOverlay = null;
+	MenuMapActivity mContext = this;
+    MapFragment mMapFragment;
+    GoogleMap mMap;
+    StopsOverlay mStopsOverlay = null;
+    GoogleApiClient mGoogleApiClient = null;
+    Location mLastLocation = null;
 
         // For the navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -73,25 +86,48 @@ public class MenuMapActivity extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Make sure we get the correct API key to match the build key.
-		if (GRTApplication.isDebugBuild) {
-			setContentView(R.layout.mapview_debug);
-		} else {
-			setContentView(R.layout.mapview);
-		}
+        setContentView(R.layout.mapview);
 
-		mMapview = (MapView) findViewById(R.id.mapview);
-		mMapview.setBuiltInZoomControls(true);
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(mContext)
+                .addApi(LocationServices.API)
+                .build();
+        }
 
-		mapOverlays = mMapview.getOverlays();
+        mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapview);
+        mMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                 if (googleMap != null) {
+                     mMap = googleMap;
+                     UiSettings settings = mMap.getUiSettings();
+                     settings.setZoomControlsEnabled(true); // documented as the default, but it isn't?
+                     settings.setMyLocationButtonEnabled(true);
+                     if (mContext.checkCallingPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                         ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 42);
+                     } else {
+                         mMap.setMyLocationEnabled(true);
+                     }
+                     mMap.setOnMarkerClickListener(mContext);
+                     mMap.setOnInfoWindowClickListener(mContext);
+                     mMap.setOnInfoWindowLongClickListener(mContext);
+
+                     // Stop java.lang.NullPointerException: IBitmapDescriptorFactory is not initialized
+                     // TODO not working
+                     // https://developers.google.com/android/guides/setup sez:
+                     // "The Android emulator with an AVD that runs the Google APIs platform based on Android 4.2.2 or higher."
+                     //MapsInitializer.initialize(getApplicationContext());
+                 }
+            }
+        });
 
 		getActionBar().setTitle(R.string.loading_stops);
         getActionBar().setSubtitle(null);
 
-		mMylocation = new MyLocationOverlay(this, mMapview);
-		mapOverlays.add(mMylocation);
-
-		mStopsOverlay = new StopsOverlay(mContext);
+        mStopsOverlay = new StopsOverlay(mContext);
 
         // Load up the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -146,7 +182,98 @@ public class MenuMapActivity extends MapActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(false);
 	}
 
-	@Override
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
+        //ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 42);
+        if (requestCode == 42 && permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                grantResults[0] == PERMISSION_GRANTED) {
+            //if (mContext.checkCallingPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                mMap.setMyLocationEnabled(true);
+            // TODO silliness - above check is supposedly redundant (but it fails?), but ide complains otherwise
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        // TODO requestLocationUpdates https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderApi#requestLocationUpdates(com.google.android.gms.common.api.GoogleApiClient, com.google.android.gms.location.LocationRequest, com.google.android.gms.location.LocationListener)
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // TODO ... should not use services while in this state.
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult cause) {
+        // TODO ...
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Map click")
+                .setAction("stop")
+                .setLabel(marker.getTitle())
+                .build());
+
+        return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        // Show route select activity
+        final Intent routeselect = new Intent(mContext, RouteselectActivity.class);
+        final String pkgstr = mContext.getApplicationContext().getPackageName();
+        routeselect.putExtra(pkgstr + ".stop_id", marker.getTitle());
+        routeselect.putExtra(pkgstr + ".stop_name", marker.getSnippet());
+        mContext.startActivity(routeselect);
+    }
+
+    @Override
+    public void onInfoWindowLongClick(final Marker marker) {
+
+        GRTApplication.tracker.send(new HitBuilders.EventBuilder()
+        .setCategory("Map longclick")
+        .setAction("Stop")
+        .setLabel(marker.getTitle())
+        .build());
+
+        final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                switch (id) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    GRTApplication.mPreferences.AddBusstopFavourite(marker.getTitle(), marker.getSnippet());
+                    break;
+                }
+                dialog.cancel();
+            }
+        };
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Stop " + marker.getTitle() + ", " + marker.getSnippet())
+                .setMessage(R.string.favs_add_to_list)
+                .setPositiveButton(R.string.yes, listener)
+                .setNegativeButton(R.string.no, listener)
+                .create()
+                .show();
+    }
+
+    @Override
 	public void onResume() {
 		super.onResume();
 		// We want to track a pageView every time this activity gets the focus - but if the activity was
@@ -156,8 +283,11 @@ public class MenuMapActivity extends MapActivity {
 			startActivity(new Intent(this, FavstopsActivity.class));
 		}
 
-		mMylocation.enableMyLocation();
-		mMylocation.enableCompass();
+// TODO mapv2
+//        mMap.getUiSettings().setCompassEnabled(true);
+//        if (mContext.checkCallingPermission("android.permission.ACCESS_FINE_LOCATION") == PERMISSION_GRANTED) {
+//            mMap.setMyLocationEnabled(true);
+//        }
 	}
 
     @Override
@@ -178,8 +308,11 @@ public class MenuMapActivity extends MapActivity {
 	public void onPause() {
 		super.onPause();
 		// Log.d(TAG, "onPause()");
-		mMylocation.disableMyLocation();
-		mMylocation.disableCompass();
+// TODO mapv2
+//        mMap.getUiSettings().setCompassEnabled(false);
+//        if (mContext.checkCallingPermission("android.permission.ACCESS_FINE_LOCATION") == PERMISSION_GRANTED) {
+//            mMap.setMyLocationEnabled(false);
+//        }
 	}
 
 	@Override
@@ -227,26 +360,28 @@ public class MenuMapActivity extends MapActivity {
                     .setAction("Menu")
                     .setLabel("My location")
                     .build());
-			// Center the map over the current location
-			GeoPoint locn = mMylocation.getMyLocation();
-			if (locn == null) {
-				final Location l = mMylocation.getLastFix();
-				if (l != null) {
-					Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
-					locn = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
-				}
-			}
-			if (locn != null) {
-				final MapController mcp = mMapview.getController();
-				mcp.animateTo(locn);
-				while (mMapview.getZoomLevel() < 17) {
-					if (!mcp.zoomIn()) {
-						break;
-					}
-				}
-			} else {
-				Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
-			}
+// TODO ... use selects "my location". Should be handled automatically
+// https://developers.google.com/android/reference/com/google/android/gms/maps/GoogleMap.OnMyLocationButtonClickListener
+//			// Center the map over the current location
+//			GeoPoint locn = mMylocation.getMyLocation();
+//			if (locn == null) {
+//				final Location l = mMylocation.getLastFix();
+//				if (l != null) {
+//					Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
+//					locn = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
+//				}
+//			}
+//			if (locn != null) {
+//				final MapController mcp = mMapFragment.getController();
+//				mcp.animateTo(locn);
+//				while (mMapFragment.getZoomLevel() < 17) {
+//					if (!mcp.zoomIn()) {
+//						break;
+//					}
+//				}
+//			} else {
+//				Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
+//			}
 			return true;
 		}
 		default: {
@@ -254,11 +389,4 @@ public class MenuMapActivity extends MapActivity {
 		}
 		}
 	}
-
-    // This is required for the virtual base class MapActivity
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
-	}
-
 }

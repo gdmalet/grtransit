@@ -19,8 +19,10 @@
 
 package net.kw.shrdlu.grtgtfs;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
+import android.support.multidex.MultiDexApplication;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -28,21 +30,22 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.HashMap;
 
-public class GRTApplication extends android.app.Application {
+public class GRTApplication extends MultiDexApplication {
 	public static final String TAG = "GRTApplication";
 
 	public static Tracker tracker = null;
 	public static Preferences mPreferences = null;
-    public final static boolean isDebugBuild = BuildConfig.DEBUG;
+	public final static boolean isDebugBuild = BuildConfig.DEBUG;
     public final static String LocalClassNameHome = "Activities.FavstopsActivity";
     public static HashMap<String, Realtime.RealtimeStopMap> mRealtimeStops;
+	public Context mAppContext;
 
     @Override
 	public void onCreate() {
 		super.onCreate();
 		// Log.d(TAG, "onCreate");
 
-        Context context = this;
+        mAppContext = getApplicationContext();
 
 		// Do this before instantiating Globals, as that may do something we'd like
 		// to see by having StrictMode on already.
@@ -59,10 +62,10 @@ public class GRTApplication extends android.app.Application {
                     //.detectLeakedClosableObjects()
 		}
 
-		mPreferences = new Preferences(context);
-        DatabaseHelper dbHelper = new DatabaseHelper(context);
+		mPreferences = new Preferences(mAppContext);
+        DatabaseHelper dbHelper = new DatabaseHelper(mAppContext);
 
-        GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(mAppContext);
         analytics.enableAutoActivityReports(this);
 		tracker = analytics.newTracker(getString(R.string.ga_api_key));
         tracker.enableAutoActivityTracking(true);   // need this here and in the parent?

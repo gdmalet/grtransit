@@ -227,9 +227,16 @@ public class FavstopsActivity extends MenuListActivity {
         } else {
             // it's a route: relativelayout, routeid, description.
             tv = (TextView) v.getChildAt(1);
-            final String routeid = String.valueOf(tv.getText());
+            String routeid = String.valueOf(tv.getText());
             tv = (TextView) v.getChildAt(2);
-            final String routename = String.valueOf(tv.getText());
+            String routename = String.valueOf(tv.getText());
+
+            // See doInBackground. Must undo this:
+            // Look for things like route 7A, where the A is part of the description
+            if (routeid.length() > 1 && Character.isUpperCase(routeid.charAt(routeid.length()-1))) {
+                routename = routeid.charAt(routeid.length()-1) + " - " + routename;
+                routeid = routeid.substring(0,routeid.length()-1);
+            }
 
             // Need to fish out the parent stop row to get the details
             LinearLayout parent = (LinearLayout) v.getParent();      // favstop
@@ -266,7 +273,7 @@ public class FavstopsActivity extends MenuListActivity {
         private final Semaphore lockbg = new Semaphore(1, true);
         private final Semaphore lockfg = new Semaphore(0, true);
         String[] stopdata;
-        ArrayList<String[]> routedata = new ArrayList<>();
+        final ArrayList<String[]> routedata = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
@@ -340,8 +347,18 @@ public class FavstopsActivity extends MenuListActivity {
 
                     if (nextbus != null) {
                         pref[2] = nextbus[0]; // time
-                        pref[3] = nextbus[2]; // route headsign
-                        pref[4] = nextbus[1]; // route number
+                        // Look for things like route 7A, where the A is part of the description
+                        if (nextbus[2].length() > 4
+                                && nextbus[2].charAt(1) == ' '
+                                && nextbus[2].charAt(2) == '-'
+                                && nextbus[2].charAt(3) == ' '
+                                && Character.isUpperCase(nextbus[2].charAt(0))) {
+                            pref[3] = nextbus[2].substring(4);
+                            pref[4] = nextbus[1] + nextbus[2].charAt(0);
+                        } else {
+                            pref[3] = nextbus[2]; // route headsign
+                            pref[4] = nextbus[1]; // route number
+                        }
 
                         int diffmins = ServiceCalendar.TimediffNow(nextbus[0]);
                         pref[5] = ServiceCalendar.formattedMins(diffmins);

@@ -20,7 +20,7 @@
     <string name="db_downloading">Downloading the schedule database</string>
     <string name="db_is_corrupt">The new database is corrupt or incomplete.</string>
     <string name="db_new_avail">A new schedule database is available.</string>
-    <string name="db_not_avail">You need to download the schedule database.</string>
+    <string name="db_not_avail">You need to download the schedule database; make sure you have Internet connectivity.</string>
     <string name="db_opening">Checking schedule database versions&#8230;</string>
     <string name="drawer_close">Close drawer</string>
     <string name="drawer_open">Open drawer</string>

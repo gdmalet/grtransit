@@ -21,15 +21,17 @@ package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Rect;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.NotificationCallback;
@@ -54,10 +56,6 @@ public class StopsActivity extends MenuMapActivity {
 		final String stopstr = mContext.getApplicationContext().getPackageName() + ".stop_id";
 		final Intent intent = getIntent();
 		mStopId = intent.getStringExtra(stopstr);
-
-		if (mStopId != null && mStopId.equals("2040")) {
-			Toast.makeText(mContext, "Aaaaarrrrr!", Toast.LENGTH_LONG).show();
-		}
 
 		// Get the busstop overlay set up in the background
 		new LoadOverlay().execute();
@@ -116,50 +114,44 @@ public class StopsActivity extends MenuMapActivity {
 		}
 
 		/**
-		 * When finished, link in the new overlay.
+		 * When finished, add markers to the map.
 		 */
 		@Override
 		protected void onPostExecute(Void foo) {
 			// Log.v(TAG, "onPostExecute()");
 
-			mapOverlays.add(mStopsOverlay);
+			// Put all the markers on the map.
+            Marker savedMarker = null;
+			for (final MarkerOptions markeropt : mStopsOverlay.getStopMarkerOptions()) {
+				final Marker stopMarker = mMap.addMarker(markeropt);
+                if (mStopId != null && stopMarker.getTitle().equals(mStopId)) {
+                    savedMarker = stopMarker; // TODO can do this better
+                }
+			}
 
-			// Centre the map over given bus stop, else location, else the whole
-			// area
-			final MapController mcp = mMapview.getController();
-			GeoPoint center;
+			// Centre the map over given bus stop, else location, else the whole area
 			if (mStopId == null) {
-				center = mMylocation.getMyLocation();
-				if (center == null) {
-					final Location l = mMylocation.getLastFix();
-					if (l != null) {
-						Toast.makeText(mContext, R.string.last_location_fix, Toast.LENGTH_LONG).show();
-						center = new GeoPoint((int) (l.getLatitude() * 1000000), (int) (l.getLongitude() * 1000000));
-					}
-				}
+				final Location center = mLastLocation;
 				if (center != null) {
-					mcp.animateTo(center);
-					while (mMapview.getZoomLevel() < 17) {
-						if (!mcp.zoomIn()) {
-							break;
-						}
-					}
+					final LatLng ll = new LatLng(center.getLatitude(), center.getLongitude());
+					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 17.0f));
 				} else {
 					Toast.makeText(mContext, R.string.no_location_fix, Toast.LENGTH_LONG).show();
-					final Rect boundingbox = mStopsOverlay.getBoundingBoxE6();
-					mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
-					mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
+					final LatLngBounds boundingbox = mStopsOverlay.getBoundingBox();
+					mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundingbox, 32));
 				}
 			} else {
 				final String table = "stops", where = "stop_id = ?";
 				final String[] columns = { "stop_lat", "stop_lon" }, selectargs = { mStopId };
 				final Cursor locn = DatabaseHelper.ReadableDB().query(table, columns, where, selectargs, null, null, null);
 				if (locn.moveToFirst()) {
-					final int stop_lat = (int) (locn.getFloat(0) * 1000000); // microdegrees
-					final int stop_lon = (int) (locn.getFloat(1) * 1000000);
-					center = new GeoPoint(stop_lat, stop_lon);
-					mcp.setCenter(center);
-					mcp.setZoom(19);
+					final double stop_lat = locn.getDouble(0);
+					final double stop_lon = locn.getDouble(1);
+					final LatLng ll = new LatLng(stop_lat, stop_lon);
+					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 18.0f));
+                    if (savedMarker != null) {
+                        savedMarker.showInfoWindow();
+                    }
 				}
 				locn.close();
 			}

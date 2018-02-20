@@ -5,6 +5,9 @@
 
     <uses-sdk/>
 
+    <!-- Need the following for maps api v2. -->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -12,14 +15,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- android:uiOptions="splitActionBarWhenNarrow" -->
-
-
-    <!--
-         Hardware acceleration is turned off on the maps, else zooming on the maps causes lines to
-		 eventually disappear, and sudden crashes.  Logcat also says "Shape path too
-		 large to be rendered into a texture".
-		 See http://stackoverflow.com/questions/9896804/android-paths-for-real-time-charting
-    -->
 
     <application
         android:name=".GRTApplication"
@@ -30,9 +25,11 @@
         android:theme="@style/ActivityTheme" >
         <uses-library android:name="com.google.android.maps" />
 
+        <!-- Turn this off while developing, as it slows things down. -->
+        <meta-data android:name="firebase_analytics_collection_deactivated" android:value="true" />
+
         <activity
-            android:name=".Activities.StopsActivity"
-            android:hardwareAccelerated="false" >
+            android:name=".Activities.StopsActivity">
         </activity>
         <activity android:name=".Activities.FavstopsActivity" />
         <activity
@@ -44,8 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.RouteActivity"
-            android:hardwareAccelerated="false" >
+            android:name=".Activities.RouteActivity">
         </activity>
         <activity
             android:name=".Activities.PrefsActivity"
@@ -62,23 +58,10 @@
             android:launchMode="singleTop" >
         </activity>
 
-        <!--
-        Need the following for maps api v2.
-        <uses-feature
-        	android:glEsVersion="0x00020000"
-        	android:required="true" />
-        
-        <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-
+        <!-- This key is restricted to being used by only this app. -->
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBnV3o4q37PV6uz5RmXd2Z17li8MIAWmjI" />
-
-        Release
-            android:value="AIzaSyBKsFJiBLKH-i2ejI7Pcpfwm7dooqiEsno" />
-        Debug
-            android:value="AIzaSyBnV3o4q37PV6uz5RmXd2Z17li8MIAWmjI" />
-        -->
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAhJoQwBbH5vapYB4kHuki-gM5rb7yy9Cg" />
 
     </application>
 

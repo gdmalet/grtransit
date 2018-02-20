@@ -54,8 +54,9 @@ public class StartupActivity extends Activity {
 
 	private Activity mContext;
 
-	private static String DBVersionURL = "http://162.244.31.216/gdmalet/android/grtransit/GRT.db.version";
-	private static String DBDatabaseURL = "http://162.244.31.216/gdmalet/android/grtransit/GRT.db.gz";
+	private static String DBbase = "http://192.168.122.1/grtransit/www/";
+	private static String DBVersionURL = DBbase + "GRT.db.version";
+	private static String DBDatabaseURL = DBbase + "GRT.db.gz";
 
 	private static String DB_PATH;
 	private static NewDBVersion DBV = null;
@@ -71,6 +72,8 @@ public class StartupActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		/* Keep test files clear of production files. */
+		// TODO Gradle build file specifies a debug suffix -debug -- use that instead?-l
+
 		if (GRTApplication.isDebugBuild) {
 			DBVersionURL += ".dbg";
 			DBDatabaseURL += ".dbg";
@@ -288,6 +291,7 @@ public class StartupActivity extends Activity {
 
 				alliswell = true;
 
+                // TODO catch out of space exception
 			} catch (final FileNotFoundException e) {
 				Log.e(TAG, "FileNotFoundException exception");
 				e.printStackTrace();
@@ -322,7 +326,7 @@ public class StartupActivity extends Activity {
 					}
 					dialog.cancel();
 					startFavstops();
-                }
+                 }
 			};
 
 			final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

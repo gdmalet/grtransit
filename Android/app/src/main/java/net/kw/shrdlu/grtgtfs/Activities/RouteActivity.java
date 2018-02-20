@@ -21,13 +21,18 @@ package net.kw.shrdlu.grtgtfs.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Rect;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import net.kw.shrdlu.grtgtfs.DatabaseHelper;
 import net.kw.shrdlu.grtgtfs.NotificationCallback;
@@ -150,25 +155,23 @@ public class RouteActivity extends MenuMapActivity {
 		protected void onPostExecute(ArrayList<RouteOverlay> overlays) {
 			// Log.v(TAG, "onPostExecute()");
 
-			// Overlays must be added on the GIU thread
-			mapOverlays.add(mStopsOverlay);
-
-			Rect boundingbox = null;
-
-			// Need to calculate span and centre of overlays
-			for (final RouteOverlay overlay : overlays) {
-				mapOverlays.add(overlay);
-				if (boundingbox == null) {
-					boundingbox = overlay.getBoundingBoxE6();
-				} else {
-					boundingbox.union(overlay.getBoundingBoxE6());
-				}
+			// Put all the markers on the map.
+			for (final MarkerOptions stops : mStopsOverlay.getStopMarkerOptions()) {
+				mMap.addMarker(stops);
 			}
 
-			// Centre the map over the bus stops
-			final MapController mcp = mMapview.getController();
-			mcp.setCenter(new GeoPoint(boundingbox.centerX(), boundingbox.centerY()));
-			mcp.zoomToSpan(boundingbox.right - boundingbox.left, boundingbox.bottom - boundingbox.top);
+			// Add the routes, and calculate the bounds
+			LatLngBounds.Builder boundsbuilder = new LatLngBounds.Builder();
+			for (final RouteOverlay overlay : overlays) {
+				mMap.addPolyline(overlay.getRoutePolyOptions());
+				boundsbuilder.include(overlay.getBoundingBox().northeast);
+				boundsbuilder.include(overlay.getBoundingBox().southwest);
+			}
+
+			final LatLngBounds boundingbox = boundsbuilder.build();
+
+			// Centre the map over the bounds
+			mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundingbox, 32));
 
             setProgress(10000); // max -- makes it slide away
 
