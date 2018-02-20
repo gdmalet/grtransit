@@ -54,8 +54,9 @@ public class StartupActivity extends Activity {
 
 	private Activity mContext;
 
-	private static String DBVersionURL = "http://shrdlu.baleka.xyz/gdmalet/android/grtransit/GRT.db.version";
-	private static String DBDatabaseURL = "http://shrdlu.baleka.xyz/gdmalet/android/grtransit/GRT.db.gz";
+	private static String DBbase = "http://192.168.122.1/grtransit/www/";
+	private static String DBVersionURL = DBbase + "GRT.db.version";
+	private static String DBDatabaseURL = DBbase + "GRT.db.gz";
 
 	private static String DB_PATH;
 	private static NewDBVersion DBV = null;
